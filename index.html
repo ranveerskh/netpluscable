@@ -8,34 +8,58 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 20px;
+      padding: 0;
       background: #f5f5f5;
+      color: #333;
     }
-    .logo {
+    .header {
+      background: #333;
+      color: white;
+      padding: 20px;
       text-align: center;
-      margin-bottom: 30px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 2.5em;
     }
     .logo img {
       max-width: 200px;
-      width: 80%;
       height: auto;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .plans {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
     }
     .plan {
       background: white;
       border-radius: 10px;
       padding: 20px;
-      margin-bottom: 20px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       text-align: center;
+      flex: 1 1 calc(33.333% - 40px);
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+    }
+    .plan:hover {
+      transform: translateY(-10px);
     }
     .plan h2 {
       color: #333;
+      font-size: 1.8em;
       margin-bottom: 15px;
     }
     .plan ul {
       list-style: none;
       padding: 0;
       text-align: left;
+      margin-bottom: 20px;
     }
     .plan ul li {
       margin: 10px 0;
@@ -49,7 +73,6 @@
     }
     .whatsapp-button {
       display: inline-block;
-      margin-top: 20px;
       padding: 12px 20px;
       background-color: #25D366;
       color: white;
@@ -62,48 +85,85 @@
     .whatsapp-button:hover {
       background-color: #1ebe57;
     }
+    .footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+    }
+    .footer a {
+      color: white;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 768px) {
+      .plans {
+        flex-direction: column;
+        align-items: center;
+      }
+      .plan {
+        flex: 1 1 100%;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <div class="logo">
-    <img src="your-logo.png" alt="Logo">
+  <div class="header">
+    <div class="logo">
+      <img src="your-logo.png" alt="Logo">
+    </div>
+    <h1>Our Plans</h1>
   </div>
 
-  <div class="plan">
-    <h2>Basic Plan</h2>
-    <ul>
-      <li>Benefit 1</li>
-      <li>Benefit 2</li>
-      <li>Benefit 3</li>
-      <li>Benefit 4</li>
-      <li>Benefit 5</li>
-    </ul>
-    <a class="whatsapp-button" href="https://wa.me/11234567890" target="_blank">Contact on WhatsApp</a>
+  <div class="container">
+    <div class="plans">
+      <div class="plan">
+        <h2>Basic Plan</h2>
+        <ul>
+          <li>Benefit 1</li>
+          <li>Benefit 2</li>
+          <li>Benefit 3</li>
+          <li>Benefit 4</li>
+          <li>Benefit 5</li>
+        </ul>
+        <a class="whatsapp-button" href="https://wa.me/11234567890" target="_blank">Contact on WhatsApp</a>
+      </div>
+
+      <div class="plan">
+        <h2>Standard Plan</h2>
+        <ul>
+          <li>Benefit 1</li>
+          <li>Benefit 2</li>
+          <li>Benefit 3</li>
+          <li>Benefit 4</li>
+          <li>Benefit 5</li>
+        </ul>
+        <a class="whatsapp-button" href="https://wa.me/11234567890" target="_blank">Contact on WhatsApp</a>
+      </div>
+
+      <div class="plan">
+        <h2>Premium Plan</h2>
+        <ul>
+          <li>Benefit 1</li>
+          <li>Benefit 2</li>
+          <li>Benefit 3</li>
+          <li>Benefit 4</li>
+          <li>Benefit 5</li>
+        </ul>
+        <a class="whatsapp-button" href="https://wa.me/11234567890" target="_blank">Contact on WhatsApp</a>
+      </div>
+    </div>
   </div>
 
-  <div class="plan">
-    <h2>Standard Plan</h2>
-    <ul>
-      <li>Benefit 1</li>
-      <li>Benefit 2</li>
-      <li>Benefit 3</li>
-      <li>Benefit 4</li>
-      <li>Benefit 5</li>
-    </ul>
-    <a class="whatsapp-button" href="https://wa.me/11234567890" target="_blank">Contact on WhatsApp</a>
-  </div>
-
-  <div class="plan">
-    <h2>Premium Plan</h2>
-    <ul>
-      <li>Benefit 1</li>
-      <li>Benefit 2</li>
-      <li>Benefit 3</li>
-      <li>Benefit 4</li>
-      <li>Benefit 5</li>
-    </ul>
-    <a class="whatsapp-button" href="https://wa.me/11234567890" target="_blank">Contact on WhatsApp</a>
+  <div class="footer">
+    <p>For inquiries, contact us at <a href="mailto:ranvexsi@amazon.com">ranvexsi@amazon.com</a></p>
+    <p>&copy; 2025 Your Company. All rights reserved.</p>
   </div>
 
 </body>
