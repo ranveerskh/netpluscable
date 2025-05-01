@@ -3,63 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Plans Page</title>
+  <title>Net + Cable Plans</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0;
-      background: #f5f5f5;
-      color: #333;
-    }
-    .header {
-      background: #333;
-      color: white;
       padding: 20px;
-      text-align: center;
+      background: #f5f5f5;
     }
-    .header h1 {
-      margin: 0;
-      font-size: 2.5em;
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
     }
     .logo img {
       max-width: 200px;
+      width: 80%;
       height: auto;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .plans {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
     }
     .plan {
       background: white;
       border-radius: 10px;
       padding: 20px;
+      margin-bottom: 20px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       text-align: center;
-      flex: 1 1 calc(33.333% - 40px);
-      margin-bottom: 20px;
-      transition: transform 0.3s ease;
-    }
-    .plan:hover {
-      transform: translateY(-10px);
     }
     .plan h2 {
       color: #333;
-      font-size: 1.8em;
       margin-bottom: 15px;
+    }
+    .plan .price {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .old-price {
+      text-decoration: line-through;
+      color: #888;
+      margin-right: 10px;
+    }
+    .new-price {
+      color: red;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
     }
     .plan ul {
       list-style: none;
       padding: 0;
       text-align: left;
-      margin-bottom: 20px;
     }
     .plan ul li {
       margin: 10px 0;
@@ -73,6 +68,7 @@
     }
     .whatsapp-button {
       display: inline-block;
+      margin-top: 20px;
       padding: 12px 20px;
       background-color: #25D366;
       color: white;
@@ -86,84 +82,142 @@
       background-color: #1ebe57;
     }
     .footer {
-      background-color: #333;
+      background: #333;
       color: white;
       text-align: center;
-      padding: 20px;
-      position: absolute;
-      width: 100%;
-      bottom: 0;
-    }
-    .footer a {
-      color: white;
-      text-decoration: none;
-    }
-    .footer a:hover {
-      text-decoration: underline;
-    }
-    @media (max-width: 768px) {
-      .plans {
-        flex-direction: column;
-        align-items: center;
-      }
-      .plan {
-        flex: 1 1 100%;
-      }
+      padding: 20px 10px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <div class="logo">
-      <img src="your-logo.png" alt="Logo">
-    </div>
-    <h1>Our Plans</h1>
+  <div class="logo">
+    <img src="logo.png" alt="Net + Cable">
   </div>
 
-  <div class="container">
-    <div class="plans">
-      <div class="plan">
-        <h2>Basic Plan</h2>
-        <ul>
-          <li>Benefit 1</li>
-          <li>Benefit 2</li>
-          <li>Benefit 3</li>
-          <li>Benefit 4</li>
-          <li>Benefit 5</li>
-        </ul>
-        <a class="whatsapp-button" href="https://wa.me/11234567890" target="_blank">Contact on WhatsApp</a>
-      </div>
+  <!-- Free Trial Plan -->
+  <div class="plan">
+    <h2>Free Trial</h2>
+    <div class="price">$0 for 2 days</div>
+    <ul>
+      <li>10000+ TV Channels</li>
+      <li>All Worldwide Movies</li>
+      <li>All Web Series</li>
+      <li>All Sports Channels</li>
+      <li>Full HD and 4K Content</li>
+      <li>No IPTV Box Needed</li>
+    </ul>
+    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%20Free%20Trial" target="_blank">Start Free Trial</a>
+  </div>
 
-      <div class="plan">
-        <h2>Standard Plan</h2>
-        <ul>
-          <li>Benefit 1</li>
-          <li>Benefit 2</li>
-          <li>Benefit 3</li>
-          <li>Benefit 4</li>
-          <li>Benefit 5</li>
-        </ul>
-        <a class="whatsapp-button" href="https://wa.me/11234567890" target="_blank">Contact on WhatsApp</a>
-      </div>
+  <!-- Regular Plans -->
+  <div class="plan">
+    <h2>1 Month Plan</h2>
+    <div class="price">$14.99 CAD</div>
+    <ul>
+      <li>10000+ TV Channels</li>
+      <li>All Worldwide Movies</li>
+      <li>All Web Series</li>
+      <li>All Sports Channels</li>
+      <li>Full HD and 4K Content</li>
+      <li>No IPTV Box Needed</li>
+    </ul>
+    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%201%20Month%20Plan" target="_blank">Subscribe</a>
+  </div>
 
-      <div class="plan">
-        <h2>Premium Plan</h2>
-        <ul>
-          <li>Benefit 1</li>
-          <li>Benefit 2</li>
-          <li>Benefit 3</li>
-          <li>Benefit 4</li>
-          <li>Benefit 5</li>
-        </ul>
-        <a class="whatsapp-button" href="https://wa.me/11234567890" target="_blank">Contact on WhatsApp</a>
-      </div>
-    </div>
+  <div class="plan">
+    <h2>3 Month Plan</h2>
+    <div class="price">$34.99 CAD</div>
+    <ul>
+      <li>10000+ TV Channels</li>
+      <li>All Worldwide Movies</li>
+      <li>All Web Series</li>
+      <li>All Sports Channels</li>
+      <li>Full HD and 4K Content</li>
+      <li>No IPTV Box Needed</li>
+    </ul>
+    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%203%20Month%20Plan" target="_blank">Subscribe</a>
+  </div>
+
+  <div class="plan">
+    <h2>6 Month Plan</h2>
+    <div class="price">$54.99 CAD</div>
+    <ul>
+      <li>10000+ TV Channels</li>
+      <li>All Worldwide Movies</li>
+      <li>All Web Series</li>
+      <li>All Sports Channels</li>
+      <li>Full HD and 4K Content</li>
+      <li>No IPTV Box Needed</li>
+    </ul>
+    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%206%20Month%20Plan" target="_blank">Subscribe</a>
+  </div>
+
+  <!-- Adult Plans -->
+  <div class="plan">
+    <h2>2 Day Trial</h2>
+    <div class="price">$0</div>
+    <ul>
+      <li>10000+ TV Channels</li>
+      <li>All Worldwide Movies</li>
+      <li>All Web Series</li>
+      <li>All Sports Channels</li>
+      <li>All Adult Channels</li>
+      <li>Full HD and 4K Content</li>
+      <li>No IPTV Box Needed</li>
+    </ul>
+    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%20Adult%20Trial" target="_blank">Start Free Trial</a>
+  </div>
+
+  <div class="plan">
+    <h2>1 Month Plan</h2>
+    <div class="price"><span class="old-price">$19.99</span> <span class="new-price">$15.99 CAD</span></div>
+    <ul>
+      <li>10000+ TV Channels</li>
+      <li>All Worldwide Movies</li>
+      <li>All Web Series</li>
+      <li>All Sports Channels</li>
+      <li>All Adult Channels</li>
+      <li>Full HD and 4K Content</li>
+      <li>No IPTV Box Needed</li>
+    </ul>
+    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%20Adult%201%20Month%20Plan" target="_blank">Subscribe</a>
+  </div>
+
+  <div class="plan">
+    <h2>3 Month Plan</h2>
+    <div class="price"><span class="old-price">$39.99</span> <span class="new-price">$35.99 CAD</span></div>
+    <ul>
+      <li>10000+ TV Channels</li>
+      <li>All Worldwide Movies</li>
+      <li>All Web Series</li>
+      <li>All Sports Channels</li>
+      <li>All Adult Channels</li>
+      <li>Full HD and 4K Content</li>
+      <li>No IPTV Box Needed</li>
+    </ul>
+    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%20Adult%203%20Month%20Plan" target="_blank">Subscribe</a>
+  </div>
+
+  <div class="plan">
+    <h2>6 Month Plan</h2>
+    <div class="price"><span class="old-price">$64.99</span> <span class="new-price">$59.99 CAD</span></div>
+    <ul>
+      <li>10000+ TV Channels</li>
+      <li>All Worldwide Movies</li>
+      <li>All Web Series</li>
+      <li>All Sports Channels</li>
+      <li>All Adult Channels</li>
+      <li>Full HD and 4K Content</li>
+      <li>No IPTV Box Needed</li>
+    </ul>
+    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%20Adult%206%20Month%20Plan" target="_blank">Subscribe</a>
   </div>
 
   <div class="footer">
-    <p>For inquiries, contact us at <a href="mailto:ranvexsi@amazon.com">ranvexsi@amazon.com</a></p>
-    <p>&copy; 2025 Your Company. All rights reserved.</p>
+    WhatsApp Live Chat: <a href="https://wa.me/917888528055" style="color: #25D366; text-decoration: underline;">Click Here</a><br>
+    &copy; 2025 Net + Cable. All rights reserved.
   </div>
 
 </body>
