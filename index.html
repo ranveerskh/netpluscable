@@ -4,13 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Net + Cable Plans</title>
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
   <style>
+    /* General Styles */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
       background: #f5f5f5;
+      font-size: 1.2rem;
+      line-height: 1.6;
     }
+
     .logo {
       text-align: center;
       margin-bottom: 30px;
@@ -20,77 +25,69 @@
       width: 80%;
       height: auto;
     }
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .header h1 {
-      font-size: 28px;
-      color: #333;
-      margin-bottom: 10px;
-    }
-    .header p {
-      font-size: 18px;
-      color: #555;
-      line-height: 1.6;
-    }
-    .plan-container {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
+
+    /* Plan Cards */
     .plan {
       background: white;
       border-radius: 10px;
       padding: 20px;
-      width: 22%;
+      margin-bottom: 20px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       text-align: center;
-      transition: transform 0.3s, box-shadow 0.3s;
+      transition: transform 0.3s ease;
     }
+
     .plan:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
+
     .plan h2 {
       color: #333;
       margin-bottom: 15px;
     }
+
     .plan .price {
       font-size: 20px;
       font-weight: bold;
       margin: 10px 0;
     }
+
     .old-price {
       text-decoration: line-through;
       color: #888;
       margin-right: 10px;
     }
+
     .new-price {
       color: red;
       animation: blink 1s infinite;
     }
+
     @keyframes blink {
       0% { opacity: 1; }
       50% { opacity: 0; }
       100% { opacity: 1; }
     }
+
     .plan ul {
       list-style: none;
       padding: 0;
       text-align: left;
     }
+
     .plan ul li {
       margin: 10px 0;
       padding-left: 20px;
       position: relative;
     }
+
     .plan ul li::before {
       content: "✔️";
       position: absolute;
       left: 0;
     }
+
     .whatsapp-button {
       display: inline-block;
       margin-top: 20px;
@@ -102,72 +99,143 @@
       text-decoration: none;
       font-size: 16px;
       transition: background-color 0.3s;
+      cursor: pointer;
     }
+
     .whatsapp-button:hover {
       background-color: #1ebe57;
     }
-    .footer {
-      background: #333;
-      color: white;
+
+    /* Floating Action Button (FAB) */
+    .fab {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366;
+      border-radius: 50%;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .fab img {
+      width: 30px;
+      height: 30px;
+    }
+
+    /* Sticky Navigation Bar */
+    .sticky-nav {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      background-color: #333;
+      padding: 15px;
       text-align: center;
-      padding: 20px 10px;
-      font-size: 14px;
+      color: white;
     }
 
-    /* Mobile responsiveness */
-    @media screen and (max-width: 768px) {
-      .plan-container {
-        justify-content: center;
-      }
-      .plan {
-        width: 90%; /* Make plans take full width on mobile */
-        margin-bottom: 20px;
-      }
-      .header h1 {
-        font-size: 24px;
-      }
-      .header p {
-        font-size: 16px;
-      }
+    .sticky-nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
     }
 
-    @media screen and (max-width: 480px) {
+    /* Back to Top Button */
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #333;
+      color: white;
+      border-radius: 50%;
+      padding: 15px;
+      font-size: 20px;
+      cursor: pointer;
+      display: none;
+    }
+
+    .back-to-top:hover {
+      background-color: #555;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
       .plan {
-        width: 100%; /* Full width for each plan on very small screens */
         padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
       }
-      .header h1 {
-        font-size: 20px;
-      }
-      .header p {
-        font-size: 14px;
-      }
+
       .whatsapp-button {
-        padding: 10px 15px;
         font-size: 14px;
+        padding: 10px 15px;
+      }
+
+      .sticky-nav a {
+        display: block;
+        padding: 10px;
+      }
+    }
+
+    /* Progressively Disclosure for Plan Details */
+    .toggle-details {
+      background-color: #f1f1f1;
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    .plan-details {
+      margin-top: 15px;
+      display: none;
+    }
+
+    /* Ripple Effect on Buttons */
+    .whatsapp-button {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .whatsapp-button:focus::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200%;
+      height: 200%;
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      animation: ripple 0.6s linear;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0;
       }
     }
   </style>
 </head>
 <body>
 
+  <!-- Logo -->
   <div class="logo">
     <img src="newlogo.png" alt="Net + Cable">
   </div>
 
-  <div class="header">
-    <h1>Watch All Your Favorite Content Without a Set-Top Box!</h1>
-    <p>Have an Android TV? No need for a set-top box. Enjoy:</p>
-    <ul>
-      <li>All TV Channels</li>
-      <li>All Movies & Web Series</li>
-      <li>OTT Content in English, Hindi, Punjabi, Urdu, Gujarati, French</li>
-      <li>Live Sports & Local Channels</li>
-      <li>Same-Day Movie and Web Series Releases</li>
-    </ul>
+  <!-- Sticky Navigation Bar -->
+  <div class="sticky-nav">
+    <a href="#plans">Plans</a>
+    <a href="#contact">Contact</a>
+    <a href="#help">Help</a>
   </div>
 
-  <div class="plan-container">
+  <!-- Plans Section -->
+  <section id="plans">
     <!-- Free Trial Plan -->
     <div class="plan">
       <h2>Free Trial</h2>
@@ -187,14 +255,17 @@
     <div class="plan">
       <h2>1 Month Plan</h2>
       <div class="price"><span class="old-price">$20</span> <span class="new-price">$15 CAD</span></div>
-      <ul>
-        <li>10000+ TV Channels</li>
-        <li>All Worldwide Movies</li>
-        <li>All Web Series</li>
-        <li>All Sports Channels</li>
-        <li>Full HD and 4K Content</li>
-        <li>No IPTV Box Needed</li>
-      </ul>
+      <button class="toggle-details">Show Details</button>
+      <div class="plan-details">
+        <ul>
+          <li>10000+ TV Channels</li>
+          <li>All Worldwide Movies</li>
+          <li>All Web Series</li>
+          <li>All Sports Channels</li>
+          <li>Full HD and 4K Content</li>
+          <li>No IPTV Box Needed</li>
+        </ul>
+      </div>
       <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%201%20Month%20Plan" target="_blank">Subscribe</a>
     </div>
 
@@ -202,14 +273,17 @@
     <div class="plan">
       <h2>3 Month Plan</h2>
       <div class="price"><span class="old-price">$45</span> <span class="new-price">$35 CAD</span></div>
-      <ul>
-        <li>10000+ TV Channels</li>
-        <li>All Worldwide Movies</li>
-        <li>All Web Series</li>
-        <li>All Sports Channels</li>
-        <li>Full HD and 4K Content</li>
-        <li>No IPTV Box Needed</li>
-      </ul>
+      <button class="toggle-details">Show Details</button>
+      <div class="plan-details">
+        <ul>
+          <li>10000+ TV Channels</li>
+          <li>All Worldwide Movies</li>
+          <li>All Web Series</li>
+          <li>All Sports Channels</li>
+          <li>Full HD and 4K Content</li>
+          <li>No IPTV Box Needed</li>
+        </ul>
+      </div>
       <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%203%20Month%20Plan" target="_blank">Subscribe</a>
     </div>
 
@@ -217,22 +291,74 @@
     <div class="plan">
       <h2>6 Month Plan</h2>
       <div class="price"><span class="old-price">$90</span> <span class="new-price">$60 CAD</span></div>
-      <ul>
-        <li>10000+ TV Channels</li>
-        <li>All Worldwide Movies</li>
-        <li>All Web Series</li>
-        <li>All Sports Channels</li>
-        <li>Full HD and 4K Content</li>
-        <li>No IPTV Box Needed</li>
-      </ul>
+      <button class="toggle-details">Show Details</button>
+      <div class="plan-details">
+        <ul>
+          <li>10000+ TV Channels</li>
+          <li>All Worldwide Movies</li>
+          <li>All Web Series</li>
+          <li>All Sports Channels</li>
+          <li>Full HD and 4K Content</li>
+          <li>No IPTV Box Needed</li>
+        </ul>
+      </div>
       <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%206%20Month%20Plan" target="_blank">Subscribe</a>
     </div>
+
+    <!-- 1 Year Plan -->
+    <div class="plan">
+      <h2>1 Year Plan</h2>
+      <div class="price"><span class="old-price">$150</span> <span class="new-price">$100 CAD</span></div>
+      <button class="toggle-details">Show Details</button>
+      <div class="plan-details">
+        <ul>
+          <li>10000+ TV Channels</li>
+          <li>All Worldwide Movies</li>
+          <li>All Web Series</li>
+          <li>All Sports Channels</li>
+          <li>Full HD and 4K Content</li>
+          <li>No IPTV Box Needed</li>
+        </ul>
+      </div>
+      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%201%20Year%20Plan" target="_blank">Subscribe</a>
+    </div>
+  </section>
+
+  <!-- Floating Action Button (FAB) -->
+  <div class="fab">
+    <img src="whatsapp-icon.png" alt="WhatsApp">
   </div>
 
-  <div class="footer">
-    WhatsApp Live Chat: <a href="https://wa.me/917888528055" style="color: #25D366; text-decoration: underline;">Click Here</a><br>
-    &copy; 2025 Net + Cable. All rights reserved.
-  </div>
+  <!-- Back to Top Button -->
+  <button class="back-to-top" onclick="window.scrollTo(0, 0)">↑</button>
 
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script>
+    // WhatsApp Button Click Effect
+    document.querySelectorAll('.whatsapp-button').forEach(button => {
+      button.addEventListener('click', function() {
+        this.classList.add('clicked');
+      });
+    });
+
+    // Show Details Toggle
+    const toggleButtons = document.querySelectorAll('.toggle-details');
+    toggleButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const details = button.nextElementSibling;
+        details.style.display = details.style.display === 'block' ? 'none' : 'block';
+      });
+    });
+
+    // Show Back to Top Button
+    window.onscroll = () => {
+      const backToTopButton = document.querySelector('.back-to-top');
+      if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+        backToTopButton.style.display = 'block';
+      } else {
+        backToTopButton.style.display = 'none';
+      }
+    };
+  </script>
 </body>
 </html>
