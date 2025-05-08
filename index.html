@@ -34,13 +34,24 @@
       color: #555;
       line-height: 1.6;
     }
+    .plan-container {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
     .plan {
       background: white;
       border-radius: 10px;
       padding: 20px;
-      margin-bottom: 20px;
+      margin: 10px;
+      width: 22%;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .plan:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
     }
     .plan h2 {
       color: #333;
@@ -122,61 +133,66 @@
     </ul>
   </div>
 
-  <!-- Free Trial Plan -->
-  <div class="plan">
-    <h2>Free Trial</h2>
-    <div class="price">$0 for 2 days</div>
-    <ul>
-      <li>10000+ TV Channels</li>
-      <li>All Worldwide Movies</li>
-      <li>All Web Series</li>
-      <li>All Sports Channels</li>
-      <li>Full HD and 4K Content</li>
-      <li>No IPTV Box Needed</li>
-    </ul>
-    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%20Free%20Trial" target="_blank">Start Free Trial</a>
-  </div>
+  <div class="plan-container">
+    <!-- Free Trial Plan -->
+    <div class="plan">
+      <h2>Free Trial</h2>
+      <div class="price">$0 for 2 days</div>
+      <ul>
+        <li>10000+ TV Channels</li>
+        <li>All Worldwide Movies</li>
+        <li>All Web Series</li>
+        <li>All Sports Channels</li>
+        <li>Full HD and 4K Content</li>
+        <li>No IPTV Box Needed</li>
+      </ul>
+      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%20Free%20Trial" target="_blank">Start Free Trial</a>
+    </div>
 
-  <div class="plan">
-    <h2>1 Month Plan</h2>
-    <div class="price"><span class="old-price">$20</span> <span class="new-price">$15 CAD</span></div>
-    <ul>
-      <li>10000+ TV Channels</li>
-      <li>All Worldwide Movies</li>
-      <li>All Web Series</li>
-      <li>All Sports Channels</li>
-      <li>Full HD and 4K Content</li>
-      <li>No IPTV Box Needed</li>
-    </ul>
-   <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%201%20Month%20Plan" target="_blank">Subscribe</a>
-  </div>
+    <!-- 1 Month Plan -->
+    <div class="plan">
+      <h2>1 Month Plan</h2>
+      <div class="price"><span class="old-price">$20</span> <span class="new-price">$15 CAD</span></div>
+      <ul>
+        <li>10000+ TV Channels</li>
+        <li>All Worldwide Movies</li>
+        <li>All Web Series</li>
+        <li>All Sports Channels</li>
+        <li>Full HD and 4K Content</li>
+        <li>No IPTV Box Needed</li>
+      </ul>
+      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%201%20Month%20Plan" target="_blank">Subscribe</a>
+    </div>
 
-  <div class="plan">
-    <h2>3 Month Plan</h2>
-    <div class="price"><span class="old-price">$45</span> <span class="new-price">$35 CAD</span></div>
-    <ul>
-      <li>10000+ TV Channels</li>
-      <li>All Worldwide Movies</li>
-      <li>All Web Series</li>
-      <li>All Sports Channels</li>
-      <li>Full HD and 4K Content</li>
-      <li>No IPTV Box Needed</li>
-    </ul>
-    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%203%20Month%20Plan" target="_blank">Subscribe</a>
-  </div>
+    <!-- 3 Month Plan -->
+    <div class="plan">
+      <h2>3 Month Plan</h2>
+      <div class="price"><span class="old-price">$45</span> <span class="new-price">$35 CAD</span></div>
+      <ul>
+        <li>10000+ TV Channels</li>
+        <li>All Worldwide Movies</li>
+        <li>All Web Series</li>
+        <li>All Sports Channels</li>
+        <li>Full HD and 4K Content</li>
+        <li>No IPTV Box Needed</li>
+      </ul>
+      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%203%20Month%20Plan" target="_blank">Subscribe</a>
+    </div>
 
-  <div class="plan">
-    <h2>6 Month Plan</h2>
-    <div class="price"><span class="old-price">$90</span> <span class="new-price">$60 CAD</span></div>
-    <ul>
-      <li>10000+ TV Channels</li>
-      <li>All Worldwide Movies</li>
-      <li>All Web Series</li>
-      <li>All Sports Channels</li>
-      <li>Full HD and 4K Content</li>
-      <li>No IPTV Box Needed</li>
-    </ul>
-    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%206%20Month%20Plan" target="_blank">Subscribe</a>
+    <!-- 6 Month Plan -->
+    <div class="plan">
+      <h2>6 Month Plan</h2>
+      <div class="price"><span class="old-price">$90</span> <span class="new-price">$60 CAD</span></div>
+      <ul>
+        <li>10000+ TV Channels</li>
+        <li>All Worldwide Movies</li>
+        <li>All Web Series</li>
+        <li>All Sports Channels</li>
+        <li>Full HD and 4K Content</li>
+        <li>No IPTV Box Needed</li>
+      </ul>
+      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%206%20Month%20Plan" target="_blank">Subscribe</a>
+    </div>
   </div>
 
   <div class="footer">
