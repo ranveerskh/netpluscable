@@ -9,7 +9,6 @@
       --gradient-bg: linear-gradient(135deg, #6a11cb, #2575fc);
       --card-bg: #ffffff;
       --text-main: #333;
-      --text-muted: #555;
       --whatsapp: #25D366;
     }
 
@@ -23,90 +22,119 @@
       font-family: "Segoe UI", sans-serif;
       background: #f4f6fb;
       color: var(--text-main);
-      padding: 20px;
+      padding: 0;
     }
 
-    .logo {
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .menu-button {
+      font-size: 26px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .hero {
+      padding: 40px 20px;
       text-align: center;
-      margin-bottom: 30px;
     }
 
-    .logo img {
-      max-width: 180px;
-      height: auto;
-    }
-
-    .header {
+    .hero-card {
       background: var(--gradient-bg);
       color: white;
-      padding: 40px 20px;
-      border-radius: 16px;
-      text-align: center;
-      margin-bottom: 40px;
+      border-radius: 20px;
+      padding: 30px 20px;
+      margin: 20px auto;
+      max-width: 600px;
     }
 
-    .header h1 {
-      font-size: 28px;
+    .hero-card h1 {
+      font-size: 24px;
       margin-bottom: 10px;
     }
 
-    .header p {
-      font-size: 16px;
-      opacity: 0.95;
+    .hero-card p {
+      font-size: 14px;
+      margin-bottom: 10px;
     }
 
-    .header ul {
-      margin-top: 20px;
-      padding-left: 0;
+    .hero-card ul {
       list-style: none;
-      display: inline-block;
+      padding-left: 0;
       text-align: left;
+      margin: 0 auto;
+      max-width: 400px;
     }
 
-    .header ul li {
-      margin: 8px 0;
-      position: relative;
-      padding-left: 24px;
+    .hero-card ul li {
+      margin: 10px 0;
     }
 
-    .header ul li::before {
-      content: "✔️";
-      position: absolute;
-      left: 0;
+    .button-section {
+      display: none;
+      padding: 30px 20px;
+      text-align: center;
     }
 
-    .plan-container {
-      display: flex;
-      flex-wrap: wrap;
+    .menu-buttons {
+      display: grid;
       gap: 20px;
-      justify-content: center;
+    }
+
+    .menu-buttons button {
+      background: var(--gradient-bg);
+      color: white;
+      font-size: 18px;
+      padding: 18px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .menu-buttons button:hover {
+      opacity: 0.9;
+    }
+
+    .section-content {
+      display: none;
+      padding: 30px 20px;
+      background: #fff;
     }
 
     .plan {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 24px;
-      width: 260px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 400px;
       text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    .plan:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
     }
 
     .plan h2 {
-      margin-bottom: 10px;
-      font-size: 20px;
-      color: #444;
+      margin-bottom: 8px;
     }
 
     .price {
-      font-size: 18px;
       font-weight: bold;
-      margin: 10px 0;
+      font-size: 16px;
+      margin-bottom: 12px;
     }
 
     .old-price {
@@ -116,25 +144,25 @@
     }
 
     .new-price {
-      color: #ff3c3c;
+      color: red;
       animation: blink 1s infinite;
     }
 
     @keyframes blink {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
+      50% { opacity: 0.5; }
     }
 
     .plan ul {
       list-style: none;
       padding: 0;
+      margin: 10px 0;
       text-align: left;
-      margin: 20px 0;
     }
 
     .plan ul li {
-      margin: 8px 0;
-      padding-left: 22px;
+      padding-left: 20px;
+      margin: 6px 0;
       position: relative;
     }
 
@@ -147,136 +175,132 @@
     .whatsapp-button {
       display: inline-block;
       margin-top: 10px;
-      padding: 10px 18px;
+      padding: 10px 16px;
       background-color: var(--whatsapp);
       color: white;
       border: none;
       border-radius: 8px;
-      text-decoration: none;
-      font-size: 15px;
-      transition: 0.3s ease;
-    }
-
-    .whatsapp-button:hover {
-      background-color: #1ebe57;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 40px;
-      padding: 20px;
       font-size: 14px;
-      color: #888;
-    }
-
-    .footer a {
-      color: var(--whatsapp);
-      text-decoration: underline;
+      text-decoration: none;
     }
 
     /* Responsive */
-    @media (max-width: 768px) {
-      .header h1 {
-        font-size: 22px;
-      }
-      .header p {
-        font-size: 14px;
-      }
-      .plan {
-        width: 100%;
-        max-width: 360px;
+    @media (min-width: 600px) {
+      .menu-buttons {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="logo">
-    <img src="newlogo.png" alt="Net + Cable Logo">
+  <div class="top-bar">
+    <div class="logo-text">Net<span style="color:#6a11cb">+</span>Cable</div>
+    <button class="menu-button" onclick="window.location.href='https://wa.me/917888528055'">☰</button>
   </div>
 
-  <div class="header">
-    <h1>🎬 Unlimited Entertainment in Stunning 4K Quality</h1>
-<p><strong>One platform. Every channel. Every language. Endless possibilities.</strong></p>
-<ul>
-  <li>10,000+ Live TV Channels</li>
-  <li>All Latest Movies & Web Series</li>
-  <li>4K & Full HD Streaming Experience</li>
-  <li>OTT Content in English, Hindi, Punjabi, Urdu, Gujarati, French</li>
-  <li>Live Sports, Local Channels & Global Access</li>
-  <li>Same-Day Releases of New Movies & Shows</li>
-</ul>
+  <div class="hero" id="top">
+    <div class="hero-card">
+      <h1>🎬 Unlimited Entertainment in Stunning 4K Quality</h1>
+      <p><strong>One platform. Every channel. Every language. Endless possibilities.</strong></p>
+      <ul>
+        <li>✅ 10,000+ Live TV Channels</li>
+        <li>✅ All Latest Movies & Web Series</li>
+        <li>✅ 4K & Full HD Streaming Experience</li>
+        <li>✅ OTT Content in English, Hindi, Punjabi, Urdu, Gujarati, French</li>
+        <li>✅ Live Sports, Local Channels & Global Access</li>
+        <li>✅ Same-Day Releases of New Movies & Shows</li>
+      </ul>
+    </div>
   </div>
 
-  <div class="plan-container">
+  <div class="button-section" id="menuButtons">
+    <div class="menu-buttons">
+      <button onclick="toggleSection('new')">📦 New Set-Top Box Plans</button>
+      <button onclick="toggleSection('own')">🖥️ Your Own Set-Top Box Plan</button>
+      <button onclick="toggleSection('recharge')">🔁 Recharge</button>
+      <button onclick="toggleSection('support')">💬 Contact Support</button>
+    </div>
+  </div>
+
+  <!-- Own Plan Subscriptions -->
+  <div class="section-content" id="own">
     <div class="plan">
       <h2>2-Day Free Trial</h2>
-<div class="price">$0 — No Payment Required</div>
-<ul>
-  <li>10,000+ Live TV Channels</li>
-  <li>Unlimited Movies & Web Series</li>
-  <li>Premium Sports Access</li>
-  <li>Multilingual Content (English, Hindi, Punjabi...)</li>
-  <li>HD & 4K Streaming Quality</li>
-</ul>
-<a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I'd%20like%20to%20start%20the%20Free%20Trial" target="_blank">Activate Free Trial</a>
-    </div>
-
-      <div class="plan">
-  <h2>1 Month Subscription</h2>
-  <div class="price"><span class="new-price">$15 CAD</span></div>
-  <ul>
-    <li>10,000+ Live TV Channels</li>
-    <li>Unlimited Movies & Web Series</li>
-    <li>All Premium Sports Channels</li>
-    <li>Multilingual Content (6+ Languages)</li>
-    <li>Full HD & 4K Streaming</li>
-  </ul>
-  <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%201%20Month%20Subscription" target="_blank">Subscribe Now</a>
+      <div class="price">$0 — No Payment Required</div>
+      <ul>
+        <li>10,000+ Live Channels</li>
+        <li>All Movies & Series</li>
+        <li>Sports + 4K Streaming</li>
+      </ul>
+      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I'd%20like%20the%20Free%20Trial">Start Free Trial</a>
     </div>
 
     <div class="plan">
-  <h2>3 Month Subscription</h2>
-  <div class="price"><span class="old-price">$45</span> <span class="new-price">$35 CAD</span></div>
-  <ul>
-    <li>10,000+ Live TV Channels</li>
-    <li>Unlimited Movies & Web Series</li>
-    <li>All Premium Sports Channels</li>
-    <li>Content in English, Hindi, Punjabi & More</li>
-    <li>HD & 4K Ultra Streaming</li>
-  </ul>
-  <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%203%20Month%20Subscription" target="_blank">Subscribe Now</a>
-</div>
+      <h2>1 Month Subscription</h2>
+      <div class="price"><span class="new-price">$15 CAD</span></div>
+      <ul>
+        <li>All Features + 4K</li>
+      </ul>
+      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I'd%20like%20to%20buy%201%20month">Subscribe Now</a>
+    </div>
 
     <div class="plan">
-  <h2>6 Month Subscription</h2>
-  <div class="price"><span class="old-price">$90</span> <span class="new-price">$65 CAD</span></div>
-  <ul>
-    <li>10,000+ Live TV Channels</li>
-    <li>Unlimited Movies & Web Series</li>
-    <li>All Premium Sports Channels</li>
-    <li>Multilingual Content Access (All Major Regions)</li>
-    <li>Full HD & 4K Quality Streaming</li>
-  </ul>
-  <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%206%20Month%20Subscription" target="_blank">Subscribe Now</a>
-</div>
- 
-<div class="plan">
-  <h2>1 Year Subscription</h2>
-  <div class="price"><span class="old-price">150</span> <span class="new-price">$100 CAD</span></div>
-  <ul>
-    <li>10,000+ Live TV Channels</li>
-    <li>Unlimited Movies & Web Series</li>
-    <li>All Premium Sports Channels</li>
-    <li>Multilingual Content: English, Hindi, Punjabi, Urdu, Gujarati, French</li>
-    <li>Full HD & 4K Streaming Quality</li>
-    <li>Priority Support via WhatsApp</li>
-  </ul>
-  <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%201%20Year%20Subscription" target="_blank">Subscribe Now</a>
-</div>
- <div class="footer">
-    WhatsApp Live Chat: <a href="https://wa.me/917888528055">Click Here</a><br>
-    &copy; 2025 Net + Cable. All rights reserved.
+      <h2>3 Month Subscription</h2>
+      <div class="price"><span class="old-price">$45</span> <span class="new-price">$35 CAD</span></div>
+      <ul>
+        <li>All Features + 4K</li>
+      </ul>
+      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I'd%20like%20to%20buy%203%20months">Subscribe Now</a>
+    </div>
+
+    <div class="plan">
+      <h2>6 Month Subscription</h2>
+      <div class="price"><span class="old-price">$90</span> <span class="new-price">$65 CAD</span></div>
+      <ul>
+        <li>All Features + 4K</li>
+      </ul>
+      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I'd%20like%20to%20buy%206%20months">Subscribe Now</a>
+    </div>
+
+    <div class="plan">
+      <h2>1 Year Subscription</h2>
+      <div class="price"><span class="old-price">$180</span> <span class="new-price">$99 CAD</span></div>
+      <ul>
+        <li>All Features + 4K</li>
+        <li>Priority WhatsApp Support</li>
+      </ul>
+      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I'd%20like%20to%20buy%201%20year">Subscribe Now</a>
+    </div>
   </div>
+
+  <!-- Placeholder for other sections -->
+  <div class="section-content" id="new">
+    <p style="text-align:center;">Coming soon: New Set-Top Box Plans</p>
+  </div>
+  <div class="section-content" id="recharge">
+    <p style="text-align:center;">Recharge your plan via WhatsApp or payment gateway (coming soon).</p>
+  </div>
+  <div class="section-content" id="support">
+    <p style="text-align:center;">Contact us on WhatsApp for support: <a href="https://wa.me/917888528055">Click here</a></p>
+  </div>
+
+  <script>
+    // Reveal menu buttons after scroll
+    window.addEventListener("scroll", function () {
+      const buttons = document.getElementById("menuButtons");
+      if (window.scrollY > 100) {
+        buttons.style.display = "block";
+      }
+    });
+
+    // Expand/Collapse menu sections
+    function toggleSection(id) {
+      const sections = document.querySelectorAll(".section-content");
+      sections.forEach(sec => sec.style.display = "none");
+      document.getElementById(id).style.display = "block";
+      window.scrollTo({ top: document.getElementById(id).offsetTop - 80, behavior: 'smooth' });
+    }
+  </script>
 </body>
 </html>
