@@ -1,238 +1,534 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Net + Cable Plans</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Net + Cable</title>
   <style>
+    :root {
+      --gradient-bg: linear-gradient(135deg, #6a11cb, #2575fc);
+      --card-bg: #ffffff;
+      --text-main: #333;
+      --whatsapp: #25D366;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background: #f5f5f5;
+      font-family: "Segoe UI", sans-serif;
+      background: #f4f6fb;
+      color: var(--text-main);
     }
-    .logo {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .logo img {
-      max-width: 200px;
-      width: 80%;
-      height: auto;
-    }
-    .header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .header h1 {
-      font-size: 28px;
-      color: #333;
-      margin-bottom: 10px;
-    }
-    .header p {
-      font-size: 18px;
-      color: #555;
-      line-height: 1.6;
-    }
-    .plan-container {
+
+    .top-bar {
       display: flex;
       justify-content: space-between;
-      flex-wrap: wrap;
+      align-items: center;
+      padding: 15px 20px;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .menu-button {
+      font-size: 26px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .dropdown-menu {
+  position: fixed; /* changed from absolute to fixed */
+  right: 20px;
+  top: 60px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 10px;
+  display: none;
+  z-index: 9999;
+}
+
+    .dropdown-menu a {
+      display: block;
+      padding: 8px 12px;
+      color: #333;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .hero {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .hero-card {
+      background: var(--gradient-bg);
+      color: white;
+      border-radius: 20px;
+      padding: 30px 20px;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+
+    .hero-card h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .hero-card p {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .hero-card ul {
+      list-style: none;
+      padding-left: 0;
+      text-align: left;
+      margin: 0 auto;
+      max-width: 400px;
+    }
+
+    .hero-card ul li {
+      margin: 10px 0;
+    }
+
+    .button-section {
+      display: none;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .menu-buttons {
+      display: grid;
       gap: 20px;
     }
+
+    .menu-buttons button {
+      background: var(--gradient-bg);
+      color: white;
+      font-size: 18px;
+      padding: 18px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .menu-buttons button:hover {
+      opacity: 0.9;
+    }
+
+    .section-content {
+      display: none;
+      padding: 30px 20px;
+      background: #fff;
+    }
+
     .plan {
-      background: white;
-      border-radius: 10px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
       padding: 20px;
-      width: 22%;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      max-width: 400px;
       text-align: center;
-      transition: transform 0.3s, box-shadow 0.3s;
     }
-    .plan:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-    }
+
     .plan h2 {
-      color: #333;
-      margin-bottom: 15px;
+      margin-bottom: 8px;
     }
-    .plan .price {
-      font-size: 20px;
+
+    .price {
       font-weight: bold;
-      margin: 10px 0;
+      font-size: 16px;
+      margin-bottom: 12px;
     }
-    .old-price {
-      text-decoration: line-through;
-      color: #888;
-      margin-right: 10px;
-    }
-    .new-price {
-      color: red;
-      animation: blink 1s infinite;
-    }
-    @keyframes blink {
-      0% { opacity: 1; }
-      50% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-    .plan ul {
-      list-style: none;
-      padding: 0;
-      text-align: left;
-    }
-    .plan ul li {
-      margin: 10px 0;
-      padding-left: 20px;
-      position: relative;
-    }
-    .plan ul li::before {
-      content: "✔️";
-      position: absolute;
-      left: 0;
-    }
+
     .whatsapp-button {
       display: inline-block;
-      margin-top: 20px;
-      padding: 12px 20px;
-      background-color: #25D366;
+      margin-top: 10px;
+      padding: 10px 16px;
+      background-color: var(--whatsapp);
       color: white;
       border: none;
-      border-radius: 5px;
-      text-decoration: none;
-      font-size: 16px;
-      transition: background-color 0.3s;
-    }
-    .whatsapp-button:hover {
-      background-color: #1ebe57;
-    }
-    .footer {
-      background: #333;
-      color: white;
-      text-align: center;
-      padding: 20px 10px;
+      border-radius: 8px;
       font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
     }
 
-    /* Mobile responsiveness */
-    @media screen and (max-width: 768px) {
-      .plan-container {
-        justify-content: center;
-      }
-      .plan {
-        width: 90%; /* Make plans take full width on mobile */
-        margin-bottom: 20px;
-      }
-      .header h1 {
-        font-size: 24px;
-      }
-      .header p {
-        font-size: 16px;
-      }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
 
-    @media screen and (max-width: 480px) {
-      .plan {
-        width: 100%; /* Full width for each plan on very small screens */
-        padding: 15px;
-      }
-      .header h1 {
-        font-size: 20px;
-      }
-      .header p {
-        font-size: 14px;
-      }
-      .whatsapp-button {
-        padding: 10px 15px;
-        font-size: 14px;
+    @media (min-width: 600px) {
+      .menu-buttons {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="logo">
-    <img src="newlogo.png" alt="Net + Cable">
-  </div>
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="logo-text">Net<span style="color:#6a11cb">+</span>Cable</div>
+  <button class="menu-button" onclick="toggleMenu()">☰</button>
+</div>
 
-  <div class="header">
-    <h1>Watch All Your Favorite Content Without a Set-Top Box!</h1>
-    <p>Have an Android TV? No need for a set-top box. Enjoy:</p>
+<!-- Dropdown Menu -->
+<div class="dropdown-menu" id="dropdownMenu">
+  <a href="#" onclick="toggleSection('new')">New Set-Top Box Plans</a>
+  <a href="#" onclick="toggleSection('own')">Your Own Set-Top Box Plan</a>
+  <a href="#" onclick="toggleSection('recharge')">Recharge</a>
+  <a href="#" onclick="toggleSection('support')">Contact Support</a>
+</div>
+
+<!-- Hero Section -->
+<div class="hero">
+  <div class="hero-card">
+    <h1>🎬 Unlimited Entertainment in Stunning 4K Quality</h1>
+    <p><strong>One platform. Every channel. Every language. Endless possibilities.</strong></p>
     <ul>
-      <li>All TV Channels</li>
-      <li>All Movies & Web Series</li>
-      <li>OTT Content in English, Hindi, Punjabi, Urdu, Gujarati, French</li>
-      <li>Live Sports & Local Channels</li>
-      <li>Same-Day Movie and Web Series Releases</li>
+      <li>✅ 10,000+ Live TV Channels</li>
+      <li>✅ All Latest Movies & Web Series</li>
+      <li>✅ 4K & Full HD Streaming Experience</li>
+      <li>✅ OTT Content in English, Hindi, Punjabi, Urdu, Gujarati, French and More</li>
+      <li>✅ Live Sports, Local Channels & Global Access</li>
+      <li>✅ Same-Day Releases of New Movies & Shows</li>
     </ul>
   </div>
+</div>
 
-  <div class="plan-container">
-    <!-- Free Trial Plan -->
-    <div class="plan">
-      <h2>Free Trial</h2>
-      <div class="price">$0 for 2 days</div>
-      <ul>
-        <li>10000+ TV Channels</li>
-        <li>All Worldwide Movies</li>
-        <li>All Web Series</li>
-        <li>All Sports Channels</li>
-        <li>Full HD and 4K Content</li>
-        <li>No IPTV Box Needed</li>
-      </ul>
-      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%20Free%20Trial" target="_blank">Start Free Trial</a>
-    </div>
+<!-- Auto-Reveal Button Section -->
+<div class="button-section" id="menuButtons">
+  <div class="menu-buttons">
+    <button onclick="toggleSection('new')">📦 New Set-Top Box Plans</button>
+    <button onclick="toggleSection('own')">🖥️ Your Own Set-Top Box Plan</button>
+    <button onclick="toggleSection('recharge')">🔁 Recharge</button>
+    <button onclick="toggleSection('support')">💬 Contact Support</button>
+  </div>
+</div>
 
-    <!-- 1 Month Plan -->
-    <div class="plan">
-      <h2>1 Month Plan</h2>
-      <div class="price"><span class="old-price">$20</span> <span class="new-price">$15 CAD</span></div>
-      <ul>
-        <li>10000+ TV Channels</li>
-        <li>All Worldwide Movies</li>
-        <li>All Web Series</li>
-        <li>All Sports Channels</li>
-        <li>Full HD and 4K Content</li>
-        <li>No IPTV Box Needed</li>
-      </ul>
-      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%201%20Month%20Plan" target="_blank">Subscribe</a>
-    </div>
-
-    <!-- 3 Month Plan -->
-    <div class="plan">
-      <h2>3 Month Plan</h2>
-      <div class="price"><span class="old-price">$45</span> <span class="new-price">$35 CAD</span></div>
-      <ul>
-        <li>10000+ TV Channels</li>
-        <li>All Worldwide Movies</li>
-        <li>All Web Series</li>
-        <li>All Sports Channels</li>
-        <li>Full HD and 4K Content</li>
-        <li>No IPTV Box Needed</li>
-      </ul>
-      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%203%20Month%20Plan" target="_blank">Subscribe</a>
-    </div>
-
-    <!-- 6 Month Plan -->
-    <div class="plan">
-      <h2>6 Month Plan</h2>
-      <div class="price"><span class="old-price">$90</span> <span class="new-price">$60 CAD</span></div>
-      <ul>
-        <li>10000+ TV Channels</li>
-        <li>All Worldwide Movies</li>
-        <li>All Web Series</li>
-        <li>All Sports Channels</li>
-        <li>Full HD and 4K Content</li>
-        <li>No IPTV Box Needed</li>
-      </ul>
-      <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C%20I%20want%20to%20purchase%20the%206%20Month%20Plan" target="_blank">Subscribe</a>
-    </div>
+<!-- New Set-Top Box Plans -->
+<div class="section-content" id="new">
+  <div class="plan">
+    <h2>Only Set-Top Box</h2>
+    <div class="price">$120</div>
+    <ul>
+      <li>📺 4K Quality Streaming</li>
+      <li>⚙️ Linux-Based Operating System</li>
+      <li>🎮 Remote Control Included</li>
+      <li>🚀 Responsive & Fast User Interface</li>
+    </ul>
+    <button class="whatsapp-button" onclick="openSubscribeForm('Only Set-Top Box')">Subscribe</button>
   </div>
 
-  <div class="footer">
-    WhatsApp Live Chat: <a href="https://wa.me/917888528055" style="color: #25D366; text-decoration: underline;">Click Here</a><br>
-    &copy; 2025 Net + Cable. All rights reserved.
+  <div class="plan">
+    <h2>3 Months + Box</h2>
+    <div class="price">$155</div>
+    <ul>
+      <li>✅ 10,000+ Live TV Channels</li>
+      <li>🎞️ Unlimited Movies & Web Series</li>
+      <li>🏆 All Premium Sports Channels</li>
+      <li>🌍 Multilingual Content</li>
+      <li>📡 Full HD & 4K Streaming</li>
+      <li>💬 24/7 WhatsApp Support</li>
+    </ul>
+    <button class="whatsapp-button" onclick="openSubscribeForm('3 Months + Box')">Subscribe</button>
   </div>
+
+  <div class="plan">
+    <h2>6 Months + Box</h2>
+    <div class="price">$180</div>
+    <ul>
+      <li>✅ 10,000+ Live TV Channels</li>
+      <li>🎞️ Unlimited Movies & Web Series</li>
+      <li>🏆 All Premium Sports Channels</li>
+      <li>🌍 Multilingual Content</li>
+      <li>📡 Full HD & 4K Streaming</li>
+      <li>💬 24/7 WhatsApp Support</li>
+    </ul>
+    <button class="whatsapp-button" onclick="openSubscribeForm('6 Months + Box')">Subscribe</button>
+  </div>
+
+  <div class="plan">
+    <h2>1 Year + Box</h2>
+    <div class="price">$200</div>
+    <ul>
+      <li>✅ 10,000+ Live TV Channels</li>
+      <li>🎞️ Unlimited Movies & Web Series</li>
+      <li>🏆 All Premium Sports Channels</li>
+      <li>🌍 Multilingual Content</li>
+      <li>📡 Full HD & 4K Streaming</li>
+      <li>💬 24/7 WhatsApp Support</li>
+    </ul>
+    <button class="whatsapp-button" onclick="openSubscribeForm('1 Year + Box')">Subscribe</button>
+  </div>
+</div>
+<!-- Your Own Set-Top Box Plans -->
+<div class="section-content" id="own">
+  <div class="plan">
+    <h2>1 Month Plan</h2>
+    <div class="price">$15</div>
+    <ul>
+      <li>✅ 10,000+ Live TV Channels</li>
+      <li>🎞️ Unlimited Movies & Web Series</li>
+      <li>🌍 Multilingual VOD</li>
+      <li>📡 Full HD + 4K Streaming</li>
+      <li>💬 24/7 WhatsApp Support</li>
+      <li>⚙️ Works on any Android/Linux Box</li>
+    </ul>
+    <button class="whatsapp-button" onclick="openSubscribeForm('1 Month Plan (Own Box)')">Subscribe</button>
+  </div>
+
+  <div class="plan">
+    <h2>3 Months Plan</h2>
+    <div class="price">$35</div>
+    <ul>
+      <li>🕒 Everything in 1 Month Plan</li>
+      <li>💰 Better Value</li>
+      <li>🔐 Fast Activation</li>
+    </ul>
+    <button class="whatsapp-button" onclick="openSubscribeForm('3 Months Plan (Own Box)')">Subscribe</button>
+  </div>
+
+  <div class="plan">
+    <h2>6 Months Plan</h2>
+    <div class="price">$65</div>
+    <ul>
+      <li>📺 180 Days Full Access</li>
+      <li>🌎 Global Channel Coverage</li>
+      <li>🛠️ Supports Most Devices</li>
+      <li>🧑‍💻 VIP WhatsApp Support</li>
+    </ul>
+    <button class="whatsapp-button" onclick="openSubscribeForm('6 Months Plan (Own Box)')">Subscribe</button>
+  </div>
+
+  <div class="plan">
+    <h2>1 Year Plan</h2>
+    <div class="price">$99</div>
+    <ul>
+      <li>🚀 Best Value</li>
+      <li>🏆 All TV, Movies & Sports</li>
+      <li>🔄 Tech Support Included</li>
+      <li>🎯 No Hidden Fees</li>
+    </ul>
+    <button class="whatsapp-button" onclick="openSubscribeForm('1 Year Plan (Own Box)')">Subscribe</button>
+  </div>
+</div>
+<!-- Subscription Form -->
+<div class="section-content" id="subscribeForm">
+  <form onsubmit="sendToWhatsApp('subscribe'); return false;" style="max-width:400px;margin:auto">
+    <h2>Subscribe to a Plan</h2>
+    <input type="text" id="subName" placeholder="Full Name" required>
+    <input type="tel" id="subPhone" placeholder="Phone Number" required>
+    <input type="email" id="subEmail" placeholder="Email" required>
+    <input type="hidden" id="selectedPlan">
+
+    <label for="tvChannel">Select TV Channels:</label>
+    <select id="tvChannel" multiple required>
+      <option>ENGLISH</option><option>PUNJABI</option><option>HINDI</option><option>URDU</option><option>FRENCH</option>
+      <option>AFGHAN</option><option>ARABIC</option><option>ASSAM</option><option>BENGALI</option><option>SPORTS</option><option>GUJARATI</option>
+  <option>BENGALI</option>
+  <option>CARIBBEAN</option>
+  <option>FILIPINO</option>
+  <option>FRENCH</option>
+  <option>KANNADA</option>
+  <option>MALAYALAM</option>
+  <option>NEPALI</option>
+  <option>PAKISTAN</option>
+  <option>PORTUGUESE</option>
+  <option>TAMIL</option>
+  <option>MARATHI</option>
+  <option>PERSIAN</option>
+  <option>SINHALA</option>
+  <option>TELUGU</option>
+  <option>ODIA</option>
+  <option>POLISH</option>
+  <option>SPANISH</option><option>ADULT</option>
+    </select>
+
+    <label for="vod">Select VOD Categories:</label>
+    <select id="vod" multiple required>
+      <option>ENGLISH</option><option>PUNJABI</option><option>HINDI</option><option>URDU</option><option>FRENCH</option>
+      <option>ANIME</option><option>KIDS</option><option>SPORTS</option><option>BANGLA</option>
+<option>GUJARATI</option>
+<option>KANNADA</option>
+<option>MALAYALAM</option>
+<option>MARATHI</option>
+<option>SINHALA</option>
+<option>TAMIL</option>
+<option>TELUGU</option><option>ADULT</option>
+    </select>
+
+    <textarea id="subNote" placeholder="Note (optional)"></textarea>
+    <button class="whatsapp-button" type="submit">Send via WhatsApp</button>
+  </form>
+</div>
+<!-- Recharge Section -->
+<div class="section-content" id="recharge">
+  <form onsubmit="sendToWhatsApp('recharge'); return false;" style="max-width:400px;margin:auto">
+    <h2>Recharge Your Account</h2>
+
+    <input type="text" id="rechargeName" placeholder="Full Name" required>
+    <input type="text" id="rechargeUserId" placeholder="User ID" required>
+    <input type="email" id="rechargeEmail" placeholder="Email" required>
+
+    <label for="rechargePlan">Select Plan:</label>
+    <select id="rechargePlan" required>
+      <option disabled selected value="">-- Choose Recharge Plan --</option>
+      <option>1 Month - $15</option>
+      <option>3 Months - $35</option>
+      <option>6 Months - $65</option>
+      <option>1 Year - $99</option>
+    </select>
+
+    <textarea id="rechargeNote" placeholder="Note (optional)"></textarea>
+
+    <button class="whatsapp-button" type="submit">Recharge via WhatsApp</button>
+  </form>
+</div>
+<!-- Contact Support Section -->
+<!-- Contact Support Section -->
+<div class="section-content" id="support">
+  <div style="max-width: 700px; margin: auto;">
+    <h2>Need Help?</h2>
+    <p>We're here 24/7 to assist you with setup, issues, or questions.</p>
+
+    <a class="whatsapp-button" href="https://wa.me/917888528055?text=Hi%2C+I+need+help+with+Net+%2B+Cable+services." target="_blank">
+      💬 Chat on WhatsApp
+    </a>
+
+    <h3 style="margin-top: 30px;">📖 Frequently Asked Questions</h3>
+
+    <details>
+      <summary>📦 What is included with the Set-Top Box?</summary>
+      <p>Your set-top box comes with 4K quality, a Linux-based OS, remote control, and a super responsive user interface.</p>
+    </details>
+
+    <details>
+      <summary>📺 How many channels do I get?</summary>
+      <p>You get access to over 10,000+ live TV channels including international, local, and premium categories.</p>
+    </details>
+
+    <details>
+      <summary>🎬 Do you offer movies and web series?</summary>
+      <p>Yes! You get unlimited movies, latest web series, and daily updated VOD content in multiple languages.</p>
+    </details>
+
+    <details>
+      <summary>💻 Can I use it on my own device?</summary>
+      <p>Yes, our plans work on Android TV, Android Boxes, and Linux-based set-top boxes.</p>
+    </details>
+
+    <details>
+      <summary>🛠️ How do I get support?</summary>
+      <p>We offer 24/7 WhatsApp support. Just click the "Contact Support" button to get instant help.</p>
+    </details>
+
+    <details>
+      <summary>🔁 How can I recharge my plan?</summary>
+      <p>Go to the "Recharge" section, fill the form with your details, and we'll assist you via WhatsApp right away.</p>
+    </details>
+
+    <details>
+      <summary>🚫 Are there any hidden charges?</summary>
+      <p>No hidden fees. All our pricing is transparent, one-time, and inclusive of all services.</p>
+    </details>
+
+    <details>
+      <summary>📦 How fast will I get activated after subscribing?</summary>
+      <p>Most accounts are activated within a few hours. You'll receive instructions on WhatsApp after you subscribe.</p>
+    </details>
+  </div>
+</div>
+</div>
+<!-- JavaScript -->
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById("dropdownMenu");
+    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+  }
+
+  function toggleSection(id) {
+  document.querySelectorAll('.section-content').forEach(el => el.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  window.scrollTo({ top: document.getElementById(id).offsetTop - 60, behavior: 'smooth' });
+
+  // Only close the dropdown if it's currently open
+  const menu = document.getElementById("dropdownMenu");
+  if (menu.style.display === "block") {
+    menu.style.display = "none";
+  }
+}
+
+  function openSubscribeForm(planName) {
+  document.getElementById('selectedPlan').value = planName;
+  toggleSection('subscribeForm');
+}
+
+  function openFAQ() {
+  toggleSection('faq');
+}
+  function openAbout() { alert("About us section coming soon!"); }
+  function openParentalPIN() { toggleSection('parentalpin'); }
+
+  function sendToWhatsApp(type) {
+    let message = "Hello,\n";
+
+    if (type === 'subscribe') {
+      const name = document.getElementById('subName').value;
+      const phone = document.getElementById('subPhone').value;
+      const email = document.getElementById('subEmail').value;
+      const plan = document.getElementById('selectedPlan').value;
+      const tvChannels = Array.from(document.getElementById('tvChannel').selectedOptions).map(opt => opt.value).join(', ');
+      const vods = Array.from(document.getElementById('vod').selectedOptions).map(opt => opt.value).join(', ');
+      const note = document.getElementById('subNote').value;
+
+      message += `New Subscription Request\nPlan: ${plan}\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nTV Channels: ${tvChannels}\nVOD Categories: ${vods}\nNote: ${note}`;
+    } else if (type === 'recharge') {
+      const name = document.getElementById("rechargeName").value;
+      const userId = document.getElementById("rechargeUserId").value;
+      const email = document.getElementById("rechargeEmail").value;
+      const plan = document.getElementById("rechargePlan").value;
+      const note = document.getElementById("rechargeNote").value;
+
+      message += `Recharge Request\nName: ${name}\nUser ID: ${userId}\nEmail: ${email}\nPlan: ${plan}\nNote: ${note}`;
+    } else if (type === 'pin') {
+      const name = document.getElementById("pinName").value;
+      const phone = document.getElementById("pinPhone").value;
+      const note = document.getElementById("pinNote").value;
+
+      message += `Parental PIN Request\nName: ${name}\nPhone: ${phone}\nNote: ${note}`;
+    }
+
+    const url = "https://wa.me/917888528055?text=" + encodeURIComponent(message);
+    window.open(url, "_blank");
+  }
+
+  window.addEventListener("scroll", () => {
+    const buttons = document.getElementById("menuButtons");
+    if (window.scrollY > 100) buttons.style.display = "block";
+  });
+</script>
 
 </body>
 </html>
