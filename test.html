@@ -340,62 +340,60 @@
     <input type="tel" id="subPhone" placeholder="Phone Number" required>
     <input type="email" id="subEmail" placeholder="Email" required>
 
-    <label for="tvChannel">Select TV Channel:</label>
-    <select id="tvChannel" required>
-      <option disabled selected>Select TV Channel</option>
-      <option>ENGLISH</option>
-      <option>PUNJABI</option>
-      <option>HINDI</option>
-      <option>URDU</option>
-      <option>FRENCH</option>
-      <option>AFGHAN</option>
-      <option>ARABIC</option>
-      <option>ASSAM</option>
-      <option>BENGALI</option>
-      <option>CARIBBEAN</option>
-      <option>FILIPINO</option>
-      <option>GUJARATI</option>
-      <option>KANNADA</option>
-      <option>KIDS</option>
-      <option>MALAYALAM</option>
-      <option>MARATHI</option>
-      <option>NEPALI</option>
-      <option>NEWS</option>
-      <option>ODIA</option>
-      <option>PAKISTAN</option>
-      <option>PERSIAN</option>
-      <option>POLISH</option>
-      <option>PORTUGUESE</option>
-      <option>PREMIUM</option>
-      <option>SINHALA</option>
-      <option>SPANISH</option>
-      <option>SPORTS</option>
-      <option>TAMIL</option>
-      <option>TELUGU</option>
-    </select>
+    <label for="tvChannel">Select TV Channels:</label>
+<select id="tvChannel" multiple required>
+  <option>ENGLISH</option>
+  <option>PUNJABI</option>
+  <option>HINDI</option>
+  <option>URDU</option>
+  <option>FRENCH</option>
+  <option>AFGHAN</option>
+  <option>ARABIC</option>
+  <option>ASSAM</option>
+  <option>BENGALI</option>
+  <option>CARIBBEAN</option>
+  <option>FILIPINO</option>
+  <option>GUJARATI</option>
+  <option>KANNADA</option>
+  <option>KIDS</option>
+  <option>MALAYALAM</option>
+  <option>MARATHI</option>
+  <option>NEPALI</option>
+  <option>NEWS</option>
+  <option>ODIA</option>
+  <option>PAKISTAN</option>
+  <option>PERSIAN</option>
+  <option>POLISH</option>
+  <option>PORTUGUESE</option>
+  <option>PREMIUM</option>
+  <option>SINHALA</option>
+  <option>SPANISH</option>
+  <option>SPORTS</option>
+  <option>TAMIL</option>
+  <option>TELUGU</option>
+</select>
 
-    <label for="vod">Select VOD:</label>
-    <select id="vod" required>
-      <option disabled selected>Select VOD</option>
-      <option>ENGLISH</option>
-      <option>PUNJABI</option>
-      <option>HINDI</option>
-      <option>URDU</option>
-      <option>FRENCH</option>
-      <option>ANIME</option>
-      <option>BANGLA</option>
-      <option>DOCUMENTARIES</option>
-      <option>GUJARATI</option>
-      <option>KANNADA</option>
-      <option>KIDS</option>
-      <option>MALAYALAM</option>
-      <option>MARATHI</option>
-      <option>SINHALA</option>
-      <option>SPORTING</option>
-      <option>TAMIL</option>
-      <option>TELUGU</option>
-      <option>ADULT</option>
-    </select>
+<label for="vod">Select VOD Categories:</label>
+<select id="vod" multiple required>
+  <option>ENGLISH</option>
+  <option>PUNJABI</option>
+  <option>HINDI</option>
+  <option>URDU</option>
+  <option>FRENCH</option>
+  <option>ANIME</option>
+  <option>BANGLA</option>
+  <option>DOCUMENTARIES</option>
+  <option>GUJARATI</option>
+  <option>KANNADA</option>
+  <option>KIDS</option>
+  <option>MALAYALAM</option>
+  <option>MARATHI</option>
+  <option>SINHALA</option>
+  <option>SPORTING</option>
+  <option>TAMIL</option>
+  <option>TELUGU</option>
+  <option>ADULT</option>
+</select>
 
     <textarea id="subNote" placeholder="Note (optional)"></textarea>
     <button class="whatsapp-button" type="submit">Send via WhatsApp</button>
@@ -436,7 +434,39 @@
   function openFAQ() { alert("FAQ section coming soon!"); }
   function openAbout() { alert("About us section coming soon!"); }
   function openParentalPIN() { toggleSection('parentalpin'); }
+function sendToWhatsApp(type) {
+  let message = "Hello,\n";
 
+  if (type === 'subscribe') {
+    const name = document.getElementById('subName').value;
+    const phone = document.getElementById('subPhone').value;
+    const email = document.getElementById('subEmail').value;
+    const tvChannels = Array.from(document.getElementById('tvChannel').selectedOptions).map(opt => opt.value).join(', ');
+    const vods = Array.from(document.getElementById('vod').selectedOptions).map(opt => opt.value).join(', ');
+    const note = document.getElementById('subNote').value;
+
+    message += `New Subscription Request\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nTV Channels: ${tvChannels}\nVOD Categories: ${vods}\nNote: ${note}`;
+
+  } else if (type === 'recharge') {
+    const name = document.getElementById("rechargeName").value;
+    const userId = document.getElementById("rechargeUserId").value;
+    const email = document.getElementById("rechargeEmail").value;
+    const plan = document.getElementById("rechargePlan").value;
+    const note = document.getElementById("rechargeNote").value;
+
+    message += `Recharge Request\nName: ${name}\nUser ID: ${userId}\nEmail: ${email}\nPlan: ${plan}\nNote: ${note}`;
+
+  } else if (type === 'pin') {
+    const name = document.getElementById("pinName").value;
+    const phone = document.getElementById("pinPhone").value;
+    const note = document.getElementById("pinNote").value;
+
+    message += `Parental PIN Request\nName: ${name}\nPhone: ${phone}\nNote: ${note}`;
+  }
+
+  const url = "https://wa.me/917888528055?text=" + encodeURIComponent(message);
+  window.open(url, "_blank");
+}
   function openSubscribeForm() {
     toggleSection('own');
   }
