@@ -422,7 +422,15 @@
 
       message += `New Subscription Request\nPlan: ${plan}\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nTV Channels: ${tvChannels}\nVOD Categories: ${vods}\nNote: ${note}`;
     }
+} else if (type === 'recharge') {
+  const name = document.getElementById("rechargeName").value;
+  const userId = document.getElementById("rechargeUserId").value;
+  const email = document.getElementById("rechargeEmail").value;
+  const plan = document.getElementById("rechargePlan").value;
+  const note = document.getElementById("rechargeNote").value;
 
+  message += `Recharge Request\nName: ${name}\nUser ID: ${userId}\nEmail: ${email}\nPlan: ${plan}\nNote: ${note}`;
+}
     const url = "https://wa.me/917888528055?text=" + encodeURIComponent(message);
     window.open(url, "_blank");
   }
