@@ -445,11 +445,16 @@
   }
 
   function toggleSection(id) {
-    document.querySelectorAll('.section-content').forEach(el => el.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-    window.scrollTo({ top: document.getElementById(id).offsetTop - 60, behavior: 'smooth' });
-    toggleMenu();
+  document.querySelectorAll('.section-content').forEach(el => el.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+  window.scrollTo({ top: document.getElementById(id).offsetTop - 60, behavior: 'smooth' });
+
+  // Only close the dropdown if it's currently open
+  const menu = document.getElementById("dropdownMenu");
+  if (menu.style.display === "block") {
+    menu.style.display = "none";
   }
+}
 
   function openSubscribeForm(planName) {
     document.getElementById('selectedPlan').value = planName;
