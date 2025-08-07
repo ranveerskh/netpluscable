@@ -201,7 +201,6 @@
   <a href="#" onclick="toggleSection('support')">Contact Support</a>
   <a href="#" onclick="openFAQ()">FAQ</a>
   <a href="#" onclick="openAbout()">About Us</a>
-  <a href="#" onclick="ParentalPIN()">Know Your Parental PIN</a>
 </div>
 
 <!-- Hero Section -->
@@ -394,19 +393,6 @@
       💬 Chat on WhatsApp
     </a>
   </div>
-  <!-- Know Your Parental PIN -->
-<div class="section-content" id="parentalpin">
-  <form onsubmit="sendToWhatsApp('pin'); return false;" style="max-width:400px;margin:auto">
-    <h2>Know Your Parental PIN</h2>
-
-    <input type="text" id="pinName" placeholder="Full Name" required>
-    <input type="text" id="pinUserId" placeholder="User ID" required>
-    <input type="email" id="pinEmail" placeholder="Email" required>
-    <textarea id="pinNote" placeholder="Additional Note (optional)"></textarea>
-
-    <button class="whatsapp-button" type="submit">Submit via WhatsApp</button>
-  </form>
-</div>
 </div>
 <!-- JavaScript -->
 <script>
