@@ -408,7 +408,6 @@
   function openAbout() { alert("About us section coming soon!"); }
   function openParentalPIN() { toggleSection('parentalpin'); }
 
-  <script>
   function sendToWhatsApp(type) {
     let message = "Hello,\n";
 
@@ -430,11 +429,22 @@
       const note = document.getElementById("rechargeNote").value;
 
       message += `Recharge Request\nName: ${name}\nUser ID: ${userId}\nEmail: ${email}\nPlan: ${plan}\nNote: ${note}`;
+    } else if (type === 'pin') {
+      const name = document.getElementById("pinName").value;
+      const phone = document.getElementById("pinPhone").value;
+      const note = document.getElementById("pinNote").value;
+
+      message += `Parental PIN Request\nName: ${name}\nPhone: ${phone}\nNote: ${note}`;
     }
 
     const url = "https://wa.me/917888528055?text=" + encodeURIComponent(message);
     window.open(url, "_blank");
   }
+
+  window.addEventListener("scroll", () => {
+    const buttons = document.getElementById("menuButtons");
+    if (window.scrollY > 100) buttons.style.display = "block";
+  });
 </script>
 
 </body>
