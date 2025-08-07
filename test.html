@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Net + Cable Plans</title>
+  <title>Net + Cable</title>
   <style>
     :root {
       --gradient-bg: linear-gradient(135deg, #6a11cb, #2575fc);
@@ -22,7 +22,6 @@
       font-family: "Segoe UI", sans-serif;
       background: #f4f6fb;
       color: var(--text-main);
-      padding: 0;
     }
 
     .top-bar {
@@ -34,7 +33,7 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
     }
 
     .logo-text {
@@ -47,6 +46,33 @@
       background: none;
       border: none;
       cursor: pointer;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      right: 20px;
+      top: 60px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 999;
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 12px 20px;
+      text-decoration: none;
+      color: #333;
+      border-bottom: 1px solid #eee;
+    }
+
+    .dropdown a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown a:hover {
+      background: #f2f2f2;
     }
 
     .hero {
@@ -68,11 +94,6 @@
       margin-bottom: 10px;
     }
 
-    .hero-card p {
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-
     .hero-card ul {
       list-style: none;
       padding-left: 0;
@@ -85,30 +106,34 @@
       margin: 10px 0;
     }
 
-    .button-section {
-      display: none;
-      padding: 30px 20px;
+    .scroll-arrow {
+      font-size: 30px;
       text-align: center;
+      animation: bounce 1s infinite;
+      margin-top: 10px;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
 
     .menu-buttons {
-      display: grid;
+      display: none;
+      padding: 30px 20px;
+      text-align: center;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
     }
 
     .menu-buttons button {
       background: var(--gradient-bg);
       color: white;
-      font-size: 18px;
-      padding: 18px;
+      font-size: 16px;
+      padding: 16px;
       border: none;
       border-radius: 16px;
       cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .menu-buttons button:hover {
-      opacity: 0.9;
     }
 
     .section-content {
@@ -117,74 +142,17 @@
       background: #fff;
     }
 
-    .plan {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      padding: 20px;
-      margin: 20px auto;
+    .section-content.active {
+      display: block;
+    }
+
+    .form-container {
       max-width: 400px;
-      text-align: center;
+      margin: auto;
     }
 
-    .plan h2 {
-      margin-bottom: 8px;
-    }
-
-    .price {
-      font-weight: bold;
-      font-size: 16px;
-      margin-bottom: 12px;
-    }
-
-    .old-price {
-      text-decoration: line-through;
-      color: #888;
-      margin-right: 6px;
-    }
-
-    .new-price {
-      color: red;
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .plan ul {
-      list-style: none;
-      padding: 0;
-      margin: 10px 0;
-      text-align: left;
-    }
-
-    .plan ul li {
-      padding-left: 20px;
-      margin: 6px 0;
-      position: relative;
-    }
-
-    .plan ul li::before {
-      content: "✔️";
-      position: absolute;
-      left: 0;
-    }
-
-    .whatsapp-button {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 16px;
-      background-color: var(--whatsapp);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      text-decoration: none;
-    }
-
-    input, select, textarea {
+    .form-container input,
+    .form-container button {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
@@ -192,10 +160,20 @@
       border: 1px solid #ccc;
     }
 
-    /* Responsive */
+    .form-container button {
+      background: var(--whatsapp);
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .form-container button:hover {
+      background: #1ebe57;
+    }
+
     @media (min-width: 600px) {
       .menu-buttons {
-        grid-template-columns: repeat(2, 1fr);
+        display: grid;
       }
     }
   </style>
@@ -204,107 +182,132 @@
 
   <div class="top-bar">
     <div class="logo-text">Net<span style="color:#6a11cb">+</span>Cable</div>
-    <button class="menu-button" onclick="window.location.href='https://wa.me/917888528055'">☰</button>
+    <button class="menu-button" onclick="toggleDropdown()">☰</button>
   </div>
 
-  <div class="hero" id="top">
+  <div class="dropdown" id="dropdownMenu">
+    <a href="#" onclick="showSection('newPlans')">New Set-Top Box Plans</a>
+    <a href="#" onclick="showSection('yourPlan')">Your Own Plan</a>
+    <a href="#" onclick="showSection('recharge')">Recharge</a>
+    <a href="#" onclick="showSection('support')">Contact Support</a>
+    <a href="#" onclick="showSection('faq')">FAQ</a>
+    <a href="#" onclick="showSection('about')">About Us</a>
+    <a href="#" onclick="showSection('pin')">Know Your Parental PIN</a>
+  </div>
+
+  <div class="hero">
     <div class="hero-card">
-      <h1>🎬 Unlimited Entertainment in Stunning 4K Quality</h1>
-      <p><strong>One platform. Every channel. Every language. Endless possibilities.</strong></p>
+      <h1>🎬 Unlimited Entertainment in Stunning 4K</h1>
       <ul>
-        <li>✅ 10,000+ Live TV Channels</li>
-        <li>✅ All Latest Movies & Web Series</li>
-        <li>✅ 4K & Full HD Streaming Experience</li>
-        <li>✅ OTT Content in English, Hindi, Punjabi, Urdu, Gujarati, French</li>
-        <li>✅ Live Sports, Local Channels & Global Access</li>
-        <li>✅ Same-Day Releases of New Movies & Shows</li>
+        <li>10,000+ Live TV Channels</li>
+        <li>Unlimited Movies & Web Series</li>
+        <li>All Premium Sports Channels</li>
+        <li>Multilingual Content: English, Hindi, Punjabi, Urdu, Gujarati, French</li>
+        <li>Full HD & 4K Streaming Quality</li>
+        <li>Priority Support via WhatsApp</li>
       </ul>
     </div>
+    <div class="scroll-arrow">⬆️</div>
   </div>
 
-  <div class="button-section" id="menuButtons">
-    <div class="menu-buttons">
-      <button onclick="toggleSection('new')">📦 New Set-Top Box Plans</button>
-      <button onclick="toggleSection('own')">🖥️ Your Own Set-Top Box Plan</button>
-      <button onclick="toggleSection('recharge')">🔁 Recharge</button>
-      <button onclick="toggleSection('support')">💬 Contact Support</button>
-    </div>
+  <div class="menu-buttons" id="menuButtons">
+    <button onclick="showSection('newPlans')">New Set-Top Box Plans</button>
+    <button onclick="showSection('yourPlan')">Your Own Plan</button>
+    <button onclick="showSection('recharge')">Recharge</button>
+    <button onclick="showSection('support')">Contact Support</button>
+  </div>
+
+  <div class="section-content" id="newPlans">
+    <h2>New Set-Top Box Plans</h2>
+    <ul>
+      <li>Set-Top Box Only — $120 CAD</li>
+      <li>3 Month + Box — $155 CAD</li>
+      <li>6 Month + Box — $180 CAD</li>
+      <li>1 Year + Box — $200 CAD</li>
+    </ul>
+  </div>
+
+  <div class="section-content" id="yourPlan">
+    <h2>Your Own Set-Top Box Plan</h2>
+    <ul>
+      <li>Free Trial — 2 Days — $0</li>
+      <li>1 Month — $15 CAD</li>
+      <li>3 Month — $35 CAD</li>
+      <li>6 Month — $65 CAD</li>
+      <li>1 Year — $99 CAD</li>
+    </ul>
   </div>
 
   <div class="section-content" id="recharge">
-    <form id="rechargeForm" onsubmit="sendToWhatsApp(); return false;" style="max-width: 400px; margin: auto;">
-      <h2 style="text-align: center;">Recharge Your Account</h2>
-
-      <label for="name">Your Full Name:</label>
-      <input type="text" id="name" required placeholder="Enter your full name">
-
-      <label for="userId">User ID:</label>
-      <input type="text" id="userId" required placeholder="Enter your user ID">
-
-      <label for="email">Email ID:</label>
-      <input type="email" id="email" required placeholder="Enter your email">
-
-      <label for="plan">Select Recharge Plan:</label>
-      <select id="plan" required>
-        <option value="" disabled selected>Select your plan</option>
-        <option>1 Month - $15 CAD</option>
-        <option>3 Months - $35 CAD</option>
-        <option>6 Months - $65 CAD</option>
-        <option>1 Year - $99 CAD</option>
-      </select>
-
-      <label for="note">Additional Message (optional):</label>
-      <textarea id="note" rows="3" placeholder="Type any extra message here..."></textarea>
-
-      <button type="submit" class="whatsapp-button">Recharge via WhatsApp</button>
-    </form>
-  </div>
-
-  <div class="section-content" id="own">
-    <!-- Your subscriptions go here -->
-    <p style="text-align:center;">Your Own Set-Top Box Plans will appear here.</p>
-  </div>
-
-  <div class="section-content" id="new">
-    <!-- Your new set-top box combos go here -->
-    <p style="text-align:center;">Set-Top Box Combos will appear here.</p>
+    <div class="form-container">
+      <h3>Recharge Your Account</h3>
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="text" id="userId" placeholder="User ID" required />
+      <input type="email" id="email" placeholder="Email ID" required />
+      <button onclick="sendRecharge()">Recharge via WhatsApp</button>
+    </div>
   </div>
 
   <div class="section-content" id="support">
-    <p style="text-align:center;">Contact us on WhatsApp for support: <a href="https://wa.me/917888528055">Click here</a></p>
+    <p style="text-align:center;">Need help? <a href="https://wa.me/917888528055" target="_blank">Contact Support on WhatsApp</a></p>
+  </div>
+
+  <div class="section-content" id="faq">
+    <h2>FAQ</h2>
+    <p>Coming soon...</p>
+  </div>
+
+  <div class="section-content" id="about">
+    <h2>About Us</h2>
+    <p>Net+Cable provides global TV and OTT access in one place.</p>
+  </div>
+
+  <div class="section-content" id="pin">
+    <div class="form-container">
+      <h3>Request Your Parental PIN</h3>
+      <input type="text" id="pinName" placeholder="Full Name" required />
+      <input type="text" id="pinUserId" placeholder="User ID" required />
+      <input type="email" id="pinEmail" placeholder="Email ID" required />
+      <button onclick="sendPIN()">Request via WhatsApp</button>
+    </div>
   </div>
 
   <script>
-    // Show buttons after scroll
+    function toggleDropdown() {
+      const menu = document.getElementById("dropdownMenu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    function showSection(id) {
+      document.querySelectorAll(".section-content").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      document.getElementById("menuButtons").style.display = "grid";
+      document.getElementById("dropdownMenu").style.display = "none";
+      window.scrollTo({ top: document.getElementById(id).offsetTop - 60, behavior: "smooth" });
+    }
+
     window.addEventListener("scroll", function () {
-      const buttons = document.getElementById("menuButtons");
       if (window.scrollY > 100) {
-        buttons.style.display = "block";
+        document.getElementById("menuButtons").style.display = "grid";
       }
     });
 
-    // Show selected section
-    function toggleSection(id) {
-      const sections = document.querySelectorAll(".section-content");
-      sections.forEach(sec => sec.style.display = "none");
-      document.getElementById(id).style.display = "block";
-      window.scrollTo({ top: document.getElementById(id).offsetTop - 80, behavior: 'smooth' });
-    }
-
-    function sendToWhatsApp() {
+    function sendRecharge() {
       const name = document.getElementById("name").value.trim();
       const userId = document.getElementById("userId").value.trim();
       const email = document.getElementById("email").value.trim();
-      const plan = document.getElementById("plan").value;
-      const note = document.getElementById("note").value.trim();
+      const msg = `Hi, I want to recharge:\n\nName: ${name}\nUser ID: ${userId}\nEmail: ${email}`;
+      const encoded = encodeURIComponent(msg);
+      window.open(`https://wa.me/917888528055?text=${encoded}`, "_blank");
+    }
 
-      const message = `Hi, I want to recharge my account.\n\nName: ${name}\nUser ID: ${userId}\nEmail: ${email}\nPlan: ${plan}${note ? `\nNote: ${note}` : ''}`;
-
-      if (confirm("Do you want to send this recharge request via WhatsApp?")) {
-        const encoded = encodeURIComponent(message);
-        const link = `https://wa.me/917888528055?text=${encoded}`;
-        window.open(link, "_blank");
-      }
+    function sendPIN() {
+      const name = document.getElementById("pinName").value.trim();
+      const userId = document.getElementById("pinUserId").value.trim();
+      const email = document.getElementById("pinEmail").value.trim();
+      const msg = `Hi, I need my parental PIN:\n\nName: ${name}\nUser ID: ${userId}\nEmail: ${email}`;
+      const encoded = encodeURIComponent(msg);
+      window.open(`https://wa.me/917888528055?text=${encoded}`, "_blank");
     }
   </script>
 </body>
