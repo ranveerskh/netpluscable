@@ -335,7 +335,7 @@
   </div>
 </div>
 <!-- Subscription Form -->
-<div class="section-content" id="own">
+<div class="section-content" id="subscribeform">
   <form onsubmit="sendToWhatsApp('subscribe'); return false;" style="max-width:400px;margin:auto">
     <h2>Subscribe to a Plan</h2>
     <input type="text" id="subName" placeholder="Full Name" required>
@@ -457,9 +457,9 @@
 }
 
   function openSubscribeForm(planName) {
-    document.getElementById('selectedPlan').value = planName;
-    toggleSection('own');
-  }
+  document.getElementById('selectedPlan').value = planName;
+  toggleSection('subscribeForm');
+}
 
   function openFAQ() {
   toggleSection('faq');
