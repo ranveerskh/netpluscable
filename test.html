@@ -359,7 +359,17 @@
         buttons.style.display = "block";
       }
     });
+function sendToWhatsApp() {
+  const name = document.getElementById("name").value.trim();
+  const userId = document.getElementById("userId").value.trim();
+  const email = document.getElementById("email").value.trim();
 
+  const message = `Hi, I want to recharge my account.\n\nName: ${name}\nUser ID: ${userId}\nEmail: ${email}`;
+  const encodedMsg = encodeURIComponent(message);
+  const whatsappUrl = `https://wa.me/917888528055?text=${encodedMsg}`;
+
+  window.open(whatsappUrl, '_blank');
+}
     // Expand/Collapse menu sections
     function toggleSection(id) {
       const sections = document.querySelectorAll(".section-content");
