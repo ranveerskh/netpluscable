@@ -362,7 +362,29 @@
     <button class="whatsapp-button" type="submit">Send via WhatsApp</button>
   </form>
 </div>
+<!-- Recharge Section -->
+<div class="section-content" id="recharge">
+  <form onsubmit="sendToWhatsApp('recharge'); return false;" style="max-width:400px;margin:auto">
+    <h2>Recharge Your Account</h2>
 
+    <input type="text" id="rechargeName" placeholder="Full Name" required>
+    <input type="text" id="rechargeUserId" placeholder="User ID" required>
+    <input type="email" id="rechargeEmail" placeholder="Email" required>
+
+    <label for="rechargePlan">Select Plan:</label>
+    <select id="rechargePlan" required>
+      <option disabled selected value="">-- Choose Recharge Plan --</option>
+      <option>1 Month - $15</option>
+      <option>3 Months - $35</option>
+      <option>6 Months - $65</option>
+      <option>1 Year - $99</option>
+    </select>
+
+    <textarea id="rechargeNote" placeholder="Note (optional)"></textarea>
+
+    <button class="whatsapp-button" type="submit">Recharge via WhatsApp</button>
+  </form>
+</div>
 <!-- JavaScript -->
 <script>
   function toggleMenu() {
