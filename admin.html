@@ -513,7 +513,7 @@ async function loadApp(user){
     renderAll();
   });
 
-  $("#btnAddCustomer").onclick = openCustomerModal;
+  $("#btnAddCustomer").onclick = () => openCustomerModal(null);
   $("#btnSeedPlans").onclick = seedPlans;
   $("#btnAddPlan").onclick = ()=>openPlanModal();
   $("#btnRunReport").onclick = runReport;
