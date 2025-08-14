@@ -54,9 +54,34 @@
   .warn-text{color:#ffd479}
 
   /* Modal */
-  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.55);z-index:200}
-  .modal.open{display:flex}
-  .modal .body{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;max-width:720px;width:96%}
+  ./* Modal */
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:flex-start;      /* don't vertically center a tall form */
+  justify-content:center;
+  background:rgba(0,0,0,.55);
+  z-index:200;
+  padding:16px;                /* breathing room so you can scroll to edges */
+  overflow:auto;               /* allow page-level scroll if content still taller */
+}
+.modal.open{ display:flex; }
+
+.modal .body{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  width:96%;
+  max-width:720px;
+
+  /* ✨ critical lines for scrolling */
+  max-height:90vh;             /* keep inside viewport */
+  overflow:auto;               /* scroll inside the modal */
+  -webkit-overflow-scrolling:touch; /* smooth scroll on iOS */
+}
+
   .modal .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
   .modal .foot{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 
