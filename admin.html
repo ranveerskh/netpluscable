@@ -772,11 +772,85 @@ $("#c_start").addEventListener('change', ()=>{
   const pid = $("#c_plan").value;
   const dur = plans[pid]?.duration_months ?? 0;
   $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
-});document.getElementById('btnSaveCustomer').addEventListener('click', function (e) {
-    e.preventDefault();  // Stop form submission
-    e.stopPropagation(); // Stop bubbling
-    saveCustomerFromModal();
-});
+async function saveCustomerFromModal() {
+  // required: name
+  const name = document.getElementById('c_name').value.trim();
+  if (!name) throw new Error('Name is required');
+
+  // safe plan reads
+  const planId = document.getElementById('c_plan').value;
+  const p = (plans && plans[planId]) || {};
+  const durationMonths = Number(p.duration_months || 0);
+  const planName = p.name || 'Custom';
+
+  // dates: keep as 'YYYY-MM-DD' strings (no toISOString)
+  const start = document.getElementById('c_start').value || '';
+  const expiry = document.getElementById('c_expiry').value || '';
+  if (!start || !expiry) throw new Error('Start and Expiry dates are required');
+
+  const currentPlan = {
+    planId, planName, durationMonths,
+    cost: Number(document.getElementById('c_cost').value || 0),
+    wholesale: Number(document.getElementById('c_wholesale').value || 0),
+    stbIncluded: document.getElementById('c_stb').value,  // 'yes' | 'no'
+    stbCost: Number(document.getElementById('c_stbCost').value || 0),
+    stbWholesale: Number(document.getElementById('c_stbWholesale').value || 0),
+    startDate: start,
+    expiryDate: expiry,
+    paymentReceived: document.getElementById('c_paid').value
+  };
+
+  const payload = {
+    name,
+    phone: document.getElementById('c_phone').value.trim(),
+    email: document.getElementById('c_email').value.trim(),
+    userId: document.getElementById('c_userId').value.trim(),
+    mac: document.getElementById('c_mac').value.trim(),
+    currentPlan
+  };
+
+  // ensure global edit id is a string or null
+  const editingId = (typeof window.editCustomerId === 'string' && window.editCustomerId) ? window.editCustomerId : null;
+
+  if (!editingId) {
+    // NEW
+    const ref = await addDoc(collection(db, 'customers'), {
+      ...payload,
+      originalStartDate: start,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+
+    const cid = ref.id;
+
+    // create activation/renewal record (used by KPIs/reports)
+    await addDoc(collection(db, 'customers', cid, 'renewals'), {
+      customerId: cid,
+      customerName: name,
+      planId, planName, durationMonths,
+      cost: currentPlan.cost, wholesale: currentPlan.wholesale,
+      stbIncluded: currentPlan.stbIncluded,
+      stbCost: currentPlan.stbCost, stbWholesale: currentPlan.stbWholesale,
+      startDate: start, expiryDate: expiry,
+      paymentReceived: currentPlan.paymentReceived,
+      createdAt: serverTimestamp()
+    });
+
+  } else {
+    // EDIT
+    const cid = String(editingId); // 🔒 must be string for doc()
+    await updateDoc(doc(db, 'customers', cid), {
+      ...payload,
+      updatedAt: serverTimestamp()
+    });
+  }
+
+  // refresh UI
+  await loadCustomers();
+  await loadRenewals();
+  renderAll();
+}
+
 
 let editCustomerId = null;
 
