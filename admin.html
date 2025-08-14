@@ -247,8 +247,18 @@
         </div>
       </div>
       <div class="flex" style="margin-top:12px">
-        <button id="btnRunReport" class="btn" type="button">Run Report</button>
-        <button id="btnCsv" class="btn ghost" type="button">Export CSV</button>
+        // Reports buttons — use addEventListener so they always fire on mobile
+$("#btnRunReport")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  runReport();
+});
+
+$("#btnCsv")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  exportCSV();
+});
       </div>
 
       <div class="row" style="margin-top:14px">
