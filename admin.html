@@ -269,7 +269,7 @@
     </section>
 
     <!-- SETTINGS -->
-<section id="tab-settings" class="card">
+<section id="tab-settings" class="card hidden">
   <h3>Settings</h3>
   <label>Near-expiry threshold (days)</label>
   <input id="settingNearDays" type="number">
@@ -525,6 +525,7 @@ async function loadApp(user){
   $("#btnAddPlan").onclick = ()=>openPlanModal();
   $("#btnRunReport").onclick = runReport;
   $("#btnCsv").onclick = exportCSV;
+  $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
   $("#searchCustomers").addEventListener('input', renderCustomers);
 
   await Promise.all([loadPlans(), loadCustomers(), loadRenewals()]);
