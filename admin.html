@@ -54,19 +54,21 @@
   .warn-text{color:#ffd479}
 
   /* Modal */
-  ./* Modal */
+ /* keep this exactly */
 .modal{
   position:fixed;
   inset:0;
-  display:none;
-  align-items:flex-start;      /* don't vertically center a tall form */
+  display:none;              /* 🔴 must be here */
+  align-items:flex-start;
   justify-content:center;
   background:rgba(0,0,0,.55);
   z-index:200;
-  padding:16px;                /* breathing room so you can scroll to edges */
-  overflow:auto;               /* allow page-level scroll if content still taller */
+  padding:16px;
+  overflow:auto;
 }
-.modal.open{ display:flex; }
+.modal.open{                 /* only visible when .open is present */
+  display:flex;
+}
 
 .modal .body{
   background:var(--card);
@@ -75,12 +77,11 @@
   padding:16px;
   width:96%;
   max-width:720px;
-
-  /* ✨ critical lines for scrolling */
-  max-height:90vh;             /* keep inside viewport */
-  overflow:auto;               /* scroll inside the modal */
-  -webkit-overflow-scrolling:touch; /* smooth scroll on iOS */
+  max-height:90vh;           /* scroll inside the modal */
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
 }
+
 
   .modal .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
   .modal .foot{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
