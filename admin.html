@@ -385,7 +385,7 @@
    ========================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, doc, setDoc, addDoc, getDoc, getDocs, updateDoc, deleteDoc, query, orderBy, serverTimestamp, collectionGroup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, addDoc, getDoc, getDocs, updateDoc, deleteDoc, query, orderBy, serverTimestamp, collectionGroup, writeBatch} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 /* ---- Firebase Config ---- */
 const firebaseConfig = {
@@ -545,6 +545,23 @@ async function savePlan(p){
   plans[p.id] = p;
   renderPlans();
   refreshPlanSelects();
+}
+async function deleteCustomerAndRenewals(customerId) {
+  const idStr = String(customerId);
+  // 1) collect all renewals under this customer
+  const renSnap = await getDocs(collection(db, "customers", idStr, "renewals"));
+  // 2) batch delete renewals + customer doc
+  const batch = writeBatch(db);
+  renSnap.forEach(d => {
+    batch.delete(doc(db, "customers", idStr, "renewals", d.id));
+  });
+  batch.delete(doc(db, "customers", idStr));
+  await batch.commit();
+
+  // 3) refresh UI data
+  await loadCustomers();
+  await loadRenewals();
+  renderAll();
 }
 async function deletePlan(id){
   await deleteDoc(doc(db, "plans", String(id)));
