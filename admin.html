@@ -772,8 +772,11 @@ $("#c_start").addEventListener('change', ()=>{
   const pid = $("#c_plan").value;
   const dur = plans[pid]?.duration_months ?? 0;
   $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
+});document.getElementById('btnSaveCustomer').addEventListener('click', function (e) {
+    e.preventDefault();  // Stop form submission
+    e.stopPropagation(); // Stop bubbling
+    saveCustomerFromModal();
 });
-$("#btnSaveCustomer").onclick = saveCustomerFromModal;
 
 let editCustomerId = null;
 
