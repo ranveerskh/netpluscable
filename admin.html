@@ -524,6 +524,7 @@ async function loadApp(user){
   const now = new Date();
   $("#repMonth").value = now.toISOString().slice(0,7);
   $("#repYear").value  = String(now.getFullYear());
+  runReport();
   $("#repType").addEventListener('change', onRepTypeChange);
   onRepTypeChange();
 
@@ -1018,6 +1019,7 @@ $("#btnDoRenew").onclick = async ()=>{
   await loadCustomers();
   await loadRenewals();
   renderAll();
+  runReport();
 };
 
 /* =========================
@@ -1078,6 +1080,13 @@ function filterRenewalsByPeriod(){
   const t = $("#repType").value;
   let from, to;
   if(t==="monthly"){
+  let ym = $("#repMonth").value; // yyyy-mm
+  if(!ym){
+    ym = new Date().toISOString().slice(0,7);   // default to current month
+    $("#repMonth").value = ym;
+  }
+  // ... rest unchanged
+}
     const ym = $("#repMonth").value; // yyyy-mm
     if(!ym) return [];
     from = ym+"-01";
