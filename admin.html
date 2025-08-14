@@ -247,9 +247,9 @@
         </div>
       </div>
       <div class="flex" style="margin-top:12px">
-  <button id="btnRunReport" class="btn" type="button">Run Report</button>
-  <button id="btnCsv" class="btn ghost" type="button">Export CSV</button>
-</div>
+        <button id="btnRunReport" class="btn" type="button">Run Report</button>
+        <button id="btnCsv" class="btn ghost" type="button">Export CSV</button>
+      </div>
 
       <div class="row" style="margin-top:14px">
         <div class="col kpi"><div class="muted">Turnover</div><div id="repTurnover" class="big">$0.00</div></div>
@@ -261,7 +261,7 @@
       <div class="card" style="padding:0">
         <table class="grid" id="repGrid">
           <thead><tr>
-            <th>Date</th><th>Customer</th><th>Plan</th><th>Turnover $</th><th>Expense $</th><th>Profit $</th><th>Paid</th>
+            <th>Date</th><th>Customer</th><th>Plan</th><th>Turnover $</th><th>Expense $</th><th>Profit $</th><th>Paid</th><th></th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -269,122 +269,133 @@
     </section>
 
     <!-- SETTINGS -->
-<section id="tab-settings" class="card hidden">
-  <h3>Settings</h3>
-  <label>Near-expiry threshold (days)</label>
-  <input id="settingNearDays" type="number">
-  <p class="muted" style="margin-top:6px"></p>
+    <section id="tab-settings" class="card hidden">
+      <h3>Settings</h3>
+      <label>Near-expiry threshold (days)</label>
+      <input id="settingNearDays" type="number">
+      <p class="muted" style="margin-top:6px"></p>
 
-  <hr style="border:none;border-top:1px solid var(--border);margin:14px 0">
+      <hr style="border:none;border-top:1px solid var(--border);margin:14px 0">
 
-  <div class="flex">
-    <button id="btnCleanupOrphans" class="btn danger" type="button">
-      🗑 Delete Orphan Renewals
-    </button>
-    <span id="cleanupMsg" class="muted"></span>
-  </div>
-</section>
-
-<!-- MODALS -->
-<div id="modalCustomer" class="modal">
-  <div class="body">
-    <div class="head">
-      <h3 id="custModalTitle">Add Customer</h3>
-      <button class="btn ghost" id="xCust" type="button">✕</button>
-    </div>
-    <div class="row">
-      <div class="col">
-        <label>Name</label><input id="c_name">
-        <label>Phone</label><input id="c_phone">
-        <label>Email</label><input id="c_email" type="email">
-        <label>User ID (internal)</label><input id="c_userId" placeholder="e.g., CUST-001">
-        <label>MAC Address</label><input id="c_mac" placeholder="AA:BB:CC:DD:EE:FF">
+      <div class="flex">
+        <button id="btnCleanupOrphans" class="btn danger" type="button">
+          🗑 Delete Orphan Renewals
+        </button>
+        <span id="cleanupMsg" class="muted"></span>
       </div>
-      <div class="col">
-        <label>Plan</label>
-        <select id="c_plan"></select>
-        <div class="muted" style="margin-top:6px">You can override price/wholesale below.</div>
-        <label>Plan Cost (retail)</label><input id="c_cost" type="number" step="0.01">
-        <label>Wholesale Rate</label><input id="c_wholesale" type="number" step="0.01">
-        <label>Includes STB?</label>
-        <select id="c_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
-        <div id="stbBox" class="hidden">
-          <label>STB Cost (retail)</label><input id="c_stbCost" type="number" step="0.01">
-          <label>STB Wholesale</label><input id="c_stbWholesale" type="number" step="0.01">
+    </section>
+
+    <!-- MODALS -->
+    <div id="modalCustomer" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="custModalTitle">Add Customer</h3>
+          <button class="btn ghost" id="xCust" type="button">✕</button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Name</label><input id="c_name">
+            <label>Phone</label><input id="c_phone">
+            <label>Email</label><input id="c_email" type="email">
+            <label>User ID (internal)</label><input id="c_userId" placeholder="e.g., CUST-001">
+            <label>MAC Address</label><input id="c_mac" placeholder="AA:BB:CC:DD:EE:FF">
+          </div>
+          <div class="col">
+            <label>Plan</label>
+            <select id="c_plan"></select>
+            <div class="muted" style="margin-top:6px">You can override price/wholesale below.</div>
+            <label>Plan Cost (retail)</label><input id="c_cost" type="number" step="0.01">
+            <label>Wholesale Rate</label><input id="c_wholesale" type="number" step="0.01">
+            <label>Includes STB?</label>
+            <select id="c_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
+            <div id="stbBox" class="hidden">
+              <label>STB Cost (retail)</label><input id="c_stbCost" type="number" step="0.01">
+              <label>STB Wholesale</label><input id="c_stbWholesale" type="number" step="0.01">
+            </div>
+          </div>
+          <div class="col">
+            <label>Plan Start Date</label><input id="c_start" type="date">
+            <label>Plan Expiry Date</label><input id="c_expiry" type="date">
+            <label>Payment Received?</label>
+            <select id="c_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+
+            <div class="card" style="margin-top:10px">
+              <div class="muted">Totals Preview</div>
+              <div id="c_preview" class="muted">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">
+          <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
+            <input id="c_invoice" type="checkbox" checked>
+            Open invoice after save
+          </label>
+          <button type="button" class="btn secondary" id="btnSaveCustomer">Save</button>
         </div>
       </div>
-      <div class="col">
-        <label>Plan Start Date</label><input id="c_start" type="date">
-        <label>Plan Expiry Date</label><input id="c_expiry" type="date">
-        <label>Payment Received?</label>
-        <select id="c_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+    </div>
 
-        <div class="card" style="margin-top:10px">
-          <div class="muted">Totals Preview</div>
-          <div id="c_preview" class="muted">—</div>
+    <div id="modalRenew" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="renewTitle">Renew Plan</h3>
+          <button class="btn ghost" id="xRenew" type="button">✕</button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Plan</label><select id="r_plan"></select>
+            <label>Plan Cost</label><input id="r_cost" type="number" step="0.01">
+            <label>Wholesale</label><input id="r_wholesale" type="number" step="0.01">
+          </div>
+          <div class="col">
+            <label>Includes STB?</label>
+            <select id="r_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
+            <div id="r_stbBox" class="hidden">
+              <label>STB Cost</label><input id="r_stbCost" type="number" step="0.01">
+              <label>STB Wholesale</label><input id="r_stbWholesale" type="number" step="0.01">
+            </div>
+            <label>Start Date</label><input id="r_start" type="date">
+            <label>Expiry Date</label><input id="r_expiry" type="date">
+            <label>Payment Received?</label>
+            <select id="r_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+          </div>
+        </div>
+        <div class="foot">
+          <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
+            <input id="r_invoice" type="checkbox" checked>
+            Open invoice after renewal
+          </label>
+          <button id="btnDoRenew" class="btn ok" type="button">Confirm Renewal</button>
         </div>
       </div>
     </div>
-    <div class="foot">
-      <button type="button" class="btn secondary" id="btnSaveCustomer">Save</button>
-    </div>
-  </div>
-</div>
 
-<div id="modalRenew" class="modal">
-  <div class="body">
-    <div class="head">
-      <h3 id="renewTitle">Renew Plan</h3>
-      <button class="btn ghost" id="xRenew" type="button">✕</button>
-    </div>
-    <div class="row">
-      <div class="col">
-        <label>Plan</label><select id="r_plan"></select>
-        <label>Plan Cost</label><input id="r_cost" type="number" step="0.01">
-        <label>Wholesale</label><input id="r_wholesale" type="number" step="0.01">
-      </div>
-      <div class="col">
-        <label>Includes STB?</label>
-        <select id="r_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
-        <div id="r_stbBox" class="hidden">
-          <label>STB Cost</label><input id="r_stbCost" type="number" step="0.01">
-          <label>STB Wholesale</label><input id="r_stbWholesale" type="number" step="0.01">
+    <div id="modalPlan" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="planTitle">Add Plan</h3>
+          <button class="btn ghost" id="xPlan" type="button">✕</button>
         </div>
-        <label>Start Date</label><input id="r_start" type="date">
-        <label>Expiry Date</label><input id="r_expiry" type="date">
-        <label>Payment Received?</label>
-        <select id="r_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+        <div class="row">
+          <div class="col">
+            <label>Plan ID</label><input id="p_id" placeholder="PLN-1MO">
+            <label>Name</label><input id="p_name" placeholder="1 month">
+            <label>Duration (months)</label><input id="p_months" type="number" min="0" step="1" value="1">
+          </div>
+          <div class="col">
+            <label>Retail Price</label><input id="p_retail" type="number" step="0.01">
+            <label>Wholesale Cost</label><input id="p_wholesale" type="number" step="0.01">
+            <label>Description</label><input id="p_desc" placeholder="Most popular">
+          </div>
+        </div>
+        <div class="foot">
+          <button id="btnSavePlan" class="btn secondary" type="button">Save Plan</button>
+        </div>
       </div>
     </div>
-    <div class="foot">
-      <button id="btnDoRenew" class="btn ok" type="button">Confirm Renewal</button>
-    </div>
-  </div>
-</div>
 
-<div id="modalPlan" class="modal">
-  <div class="body">
-    <div class="head">
-      <h3 id="planTitle">Add Plan</h3>
-      <button class="btn ghost" id="xPlan" type="button">✕</button>
-    </div>
-    <div class="row">
-      <div class="col">
-        <label>Plan ID</label><input id="p_id" placeholder="PLN-1MO">
-        <label>Name</label><input id="p_name" placeholder="1 month">
-        <label>Duration (months)</label><input id="p_months" type="number" min="0" step="1" value="1">
-      </div>
-      <div class="col">
-        <label>Retail Price</label><input id="p_retail" type="number" step="0.01">
-        <label>Wholesale Cost</label><input id="p_wholesale" type="number" step="0.01">
-        <label>Description</label><input id="p_desc" placeholder="Most popular">
-      </div>
-    </div>
-    <div class="foot">
-      <button id="btnSavePlan" class="btn secondary" type="button">Save Plan</button>
-    </div>
-  </div>
-</div>
+  </div> <!-- /wrap -->
+</div> <!-- /appView -->
 
 <script type="module">
 /* =========================
@@ -492,7 +503,7 @@ onAuthStateChanged(auth, (user)=>{
     appView.classList.add('hidden');
     authView.classList.remove('hidden');
   }
-  });
+});
 
 /* =========================
    Data caches
@@ -523,18 +534,15 @@ async function loadApp(user){
   $("#btnAddCustomer").onclick = () => openCustomerModal(null);
   $("#btnSeedPlans").onclick = seedPlans;
   $("#btnAddPlan").onclick = ()=>openPlanModal();
-  // Reports buttons — use addEventListener so they always fire on mobile
-$("#btnRunReport")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  runReport();
-});
 
-$("#btnCsv")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  exportCSV();
-});
+  // Reports buttons — addEventListener so they always fire on mobile
+  $("#btnRunReport")?.addEventListener("click", (e) => {
+    e.preventDefault(); e.stopPropagation(); runReport();
+  });
+  $("#btnCsv")?.addEventListener("click", (e) => {
+    e.preventDefault(); e.stopPropagation(); exportCSV();
+  });
+
   $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
   $("#searchCustomers").addEventListener('input', renderCustomers);
 
@@ -553,32 +561,19 @@ async function cleanupOrphanRenewals(){
   const btn = $("#btnCleanupOrphans");
   try{
     btn.disabled = true; msg.textContent = "Scanning…";
-
-    // Make sure we have fresh data
     await loadCustomers();
-
-    // Build a set of existing customer IDs
     const existing = new Set(customers.map(c => String(c.id)));
-
-    // Get all renewals across all customers
     const snap = await getDocs(collectionGroup(db, "renewals"));
-
-    // Collect orphan renewal docs (customerId missing from customers set)
     const orphans = [];
     snap.forEach(d => {
       const data = d.data() || {};
       const cid  = String(data.customerId || "");
       if (!existing.has(cid)) orphans.push(d.ref);
     });
-
     if (orphans.length === 0){
-      msg.textContent = "No orphan renewals found.";
-      return;
+      msg.textContent = "No orphan renewals found."; return;
     }
-
     msg.textContent = `Deleting ${orphans.length} orphan renewals…`;
-
-    // Delete in chunks to avoid large batches
     const CHUNK = 400;
     for (let i = 0; i < orphans.length; i += CHUNK){
       const batch = writeBatch(db);
@@ -587,8 +582,6 @@ async function cleanupOrphanRenewals(){
       }
       await batch.commit();
     }
-
-    // Refresh UI + totals
     await loadRenewals();
     renderKPIs();
     runReport();
@@ -619,17 +612,11 @@ async function savePlan(p){
 }
 async function deleteCustomerAndRenewals(customerId) {
   const idStr = String(customerId);
-  // 1) collect all renewals under this customer
   const renSnap = await getDocs(collection(db, "customers", idStr, "renewals"));
-  // 2) batch delete renewals + customer doc
   const batch = writeBatch(db);
-  renSnap.forEach(d => {
-    batch.delete(doc(db, "customers", idStr, "renewals", d.id));
-  });
+  renSnap.forEach(d => batch.delete(doc(db, "customers", idStr, "renewals", d.id)));
   batch.delete(doc(db, "customers", idStr));
   await batch.commit();
-
-  // 3) refresh UI data
   await loadCustomers();
   await loadRenewals();
   renderAll();
@@ -749,10 +736,11 @@ function renderCustomers(){
       <td>${plan.startDate||''}</td>
       <td>${plan.expiryDate||''} ${daysLeftBadge(plan.expiryDate)}</td>
       <td>${paid}</td>
-      <td class="flex">
+      <td class="flex" style="gap:6px;flex-wrap:wrap">
         <button class="btn ghost" data-view="${c.id}">View</button>
         <button class="btn secondary" data-edit="${c.id}">Edit</button>
         <button class="btn ok" data-renew="${c.id}">Renew</button>
+        <button class="btn" data-invoice="${c.id}">Invoice</button>
         <button class="btn danger" data-del="${c.id}">Delete</button>
       </td>
     `;
@@ -776,6 +764,9 @@ function renderCustomers(){
   });
   tbody.querySelectorAll("[data-view]").forEach(btn=>{
     btn.onclick = ()=> viewCustomer(btn.getAttribute('data-view'));
+  });
+  tbody.querySelectorAll("[data-invoice]").forEach(btn=>{
+    btn.onclick = ()=> printInvoice(btn.getAttribute('data-invoice'));
   });
 }
 
@@ -897,7 +888,6 @@ function previewTotals(){
 }
 
 function openCustomerModal(id=null){
-  // If this was called by a click handler without args, 'id' might be a PointerEvent
   editCustomerId = (typeof id === 'string') ? id : null;
   custTitle.textContent = id ? "Edit Customer" : "Add Customer";
   refreshPlanSelects();
@@ -980,7 +970,6 @@ async function saveCustomerFromModal(){
 
   const cid = await saveCustomer(payload, editCustomerId ? String(editCustomerId) : null);
 
-  // Ensure first renewal record exists when creating
   if(!editCustomerId){
     await addRenewal(cid, {
       customerId: cid, customerName: name,
@@ -995,6 +984,11 @@ async function saveCustomerFromModal(){
   await loadCustomers();
   await loadRenewals();
   renderAll();
+
+  // Auto open invoice if checked
+  if (document.querySelector("#c_invoice")?.checked) {
+    setTimeout(()=> printInvoice(cid), 200);
+  }
 }
 
 function viewCustomer(id){
@@ -1090,6 +1084,10 @@ $("#btnDoRenew").onclick = async ()=>{
   await loadRenewals();
   renderAll();
   runReport();
+
+  if (document.querySelector("#r_invoice")?.checked) {
+    setTimeout(()=> printInvoice(renewCustomerId), 200);
+  }
 };
 
 /* =========================
@@ -1151,7 +1149,6 @@ function filterRenewalsByPeriod(){
   let from, to;
 
   if (t === "monthly") {
-    // yyyy-mm (default to current month if empty)
     let ym = $("#repMonth").value;
     if (!ym) {
       ym = new Date().toISOString().slice(0,7);
@@ -1159,7 +1156,7 @@ function filterRenewalsByPeriod(){
     }
     from = ym + "-01";
     const [y, m] = ym.split("-").map(Number);
-    const last = new Date(y, m, 0).getDate(); // last day of month
+    const last = new Date(y, m, 0).getDate();
     to = ym + "-" + String(last).padStart(2, "0");
   } else if (t === "yearly") {
     const y = +$("#repYear").value;
@@ -1188,6 +1185,18 @@ function runReport(){
       stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale
     });
     T+=f.turnover; E+=f.expense; P+=f.profit;
+
+    // Encode minimal renewal for later invoice printing
+    const payload = {
+      customerId: r.customerId, customerName: r.customerName,
+      planId: r.planId, planName: r.planName, durationMonths: r.durationMonths,
+      cost: r.cost, wholesale: r.wholesale,
+      stbIncluded: r.stbIncluded, stbCost: r.stbCost, stbWholesale: r.stbWholesale,
+      startDate: r.startDate, expiryDate: r.expiryDate,
+      paymentReceived: r.paymentReceived
+    };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${r.startDate}</td>
@@ -1197,18 +1206,29 @@ function runReport(){
       <td>${f.expense.toFixed(2)}</td>
       <td>${f.profit.toFixed(2)}</td>
       <td>${r.paymentReceived==='yes'?'Yes':'No'}</td>
+      <td><button class="btn" data-inv-ren="${encoded}">Invoice</button></td>
     `;
     tbody.appendChild(tr);
   });
+
+  // Bind invoice buttons for each renewal row
+  tbody.querySelectorAll("[data-inv-ren]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const encoded = btn.getAttribute("data-inv-ren");
+      printInvoiceFromRenewalData(encoded);
+    };
+  });
+
   $("#repTurnover").textContent = fmt(T);
   $("#repExpense").textContent  = fmt(E);
   $("#repProfit").textContent   = fmt(P);
 }
+
 function exportCSV(){
   // Build rows
   const rows = [["Date","Customer","Plan","Turnover","Expense","Profit","Paid"]];
   document.querySelectorAll("#repGrid tbody tr").forEach(tr=>{
-    const cols = [...tr.children].map(td => td.textContent);
+    const cols = [...tr.children].slice(0,7).map(td => td.textContent);
     rows.push(cols);
   });
 
@@ -1217,10 +1237,8 @@ function exportCSV(){
     .map(r => r.map(x => `"${String(x).replaceAll('"','""')}"`).join(","))
     .join("\n");
 
-  // Prefer Blob + object URL when supported
   const blob = new Blob([csvStr], { type: "text/csv;charset=utf-8;" });
 
-  // iOS Safari often ignores download on object URLs — use data URL fallback
   const canDownloadAttr = "download" in HTMLAnchorElement.prototype;
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
@@ -1234,9 +1252,155 @@ function exportCSV(){
     a.remove();
     URL.revokeObjectURL(url);
   } else {
-    // Fallback: open CSV in a new tab so user can "Share/Save"
     const dataUrl = "data:text/csv;charset=utf-8," + encodeURIComponent(csvStr);
     window.open(dataUrl, "_blank");
+  }
+}
+
+/* =========================
+   INVOICE GENERATION
+   ========================= */
+// Inline SVG logo (so it prints offline)
+const LOGO_SVG = `
+<svg xmlns='http://www.w3.org/2000/svg' width='180' height='36' viewBox='0 0 430 86'>
+  <defs>
+    <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0' stop-color='#6a8cff'/><stop offset='1' stop-color='#8a5fff'/>
+    </linearGradient>
+  </defs>
+  <rect rx='12' ry='12' width='86' height='86' fill='url(#g)'/>
+  <circle cx='43' cy='43' r='24' fill='none' stroke='white' stroke-width='8'/>
+  <path d='M108 62 h34 v-38 h-34 v38 M149 24 h14 v38 h-14 z' fill='url(#g)'/>
+  <text x='170' y='60' font-family='Segoe UI, Roboto, Arial' font-size='44' font-weight='800'
+        fill='white' letter-spacing='.5'>Net + TV</text>
+</svg>`;
+const LOGO_URL = "data:image/svg+xml;utf8," + encodeURIComponent(LOGO_SVG);
+
+function buildInvoiceHTML({invNo, today, billTo, contactLine, metaLine, lines, total, paidBadge}){
+  return `
+<!doctype html>
+<html><head><meta charset="utf-8"><title>${invNo}</title>
+<style>
+  :root{ --ink:#111; --muted:#666; --line:#e5e7eb; --bg:#fff; --pill:#f3f4f6; }
+  *{ box-sizing:border-box }
+  body{ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial; color:var(--ink); background:#fff; margin:24px }
+  .hdr{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px }
+  .brand{ display:flex; gap:12px; align-items:center }
+  .brand img{ height:42px }
+  .brand h2{ margin:0; font-size:22px }
+  .muted{ color:var(--muted) }
+  .box{ border:1px solid var(--line); border-radius:10px; padding:14px; margin-top:14px }
+  table{ width:100%; border-collapse:collapse; margin-top:12px }
+  th,td{ padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:14px }
+  th{ background:#fafafa }
+  .right{ text-align:right }
+  .totals td{ font-weight:700 }
+  .badge{ display:inline-block; background:var(--pill); padding:4px 8px; border-radius:999px; font-size:12px }
+  @media print{ button{ display:none } body{ margin:0; } }
+</style></head>
+<body>
+  <div class="hdr">
+    <div class="brand">
+      <img src="${LOGO_URL}" alt="Net + TV">
+      <div>
+        <h2 style="margin:0">Invoice</h2>
+        <div class="muted">Net + TV</div>
+      </div>
+    </div>
+    <div class="right">
+      <div><strong>${invNo}</strong></div>
+      <div>Date: ${today}</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <strong>Bill To</strong><br>
+    ${billTo}<br>
+    ${contactLine}
+    ${metaLine ? `<div class="muted">${metaLine}</div>` : ""}
+  </div>
+
+  <table>
+    <thead><tr><th>Description</th><th class="right">Amount (USD)</th></tr></thead>
+    <tbody>
+      ${lines.map(l=>`<tr><td>${l[0]}</td><td class="right">${(+l[1]||0).toFixed(2)}</td></tr>`).join("")}
+      <tr class="totals"><td>Total</td><td class="right">${(+total||0).toFixed(2)}</td></tr>
+    </tbody>
+  </table>
+
+  <div class="badge" style="margin-top:8px">${paidBadge}</div>
+  <p class="muted">Thanks for your business.</p>
+
+  <button onclick="window.print()">Print / Save as PDF</button>
+</body></html>`;
+}
+
+function openPrintWindow(html){
+  const w = window.open("", "_blank");
+  if(!w){ alert("Pop‑up blocked. Please allow pop‑ups for this site."); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+  w.onload = ()=> w.print();
+}
+
+function printInvoice(customerId){
+  const c = customers.find(x=> String(x.id) === String(customerId));
+  if(!c){ alert("Customer not found"); return; }
+  const p = c.currentPlan || {};
+  const f = calcFigures({
+    cost:p.cost, wholesale:p.wholesale,
+    stbIncluded:p.stbIncluded, stbCost:p.stbCost, stbWholesale:p.stbWholesale
+  });
+
+  const today = new Date().toISOString().slice(0,10);
+  const invNo = `INV-${String(customerId).slice(-6).toUpperCase()}-${today.replaceAll('-','')}`;
+
+  const html = buildInvoiceHTML({
+    invNo,
+    today,
+    billTo: c.name || "-",
+    contactLine: [c.phone, c.email].filter(Boolean).join(" • ") || "",
+    metaLine: [c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • "),
+    lines: [
+      ["Plan fee", +p.cost||0],
+      ...(p.stbIncluded==='yes' ? [["STB fee", +p.stbCost||0]] : [])
+    ],
+    total: f.turnover,
+    paidBadge: (p.paymentReceived==='yes' ? 'Paid' : 'Unpaid')
+  });
+
+  openPrintWindow(html);
+}
+
+// Print from a specific renewal row (for historical invoices)
+function printInvoiceFromRenewalData(encoded){
+  try{
+    const ren = JSON.parse(decodeURIComponent(escape(atob(encoded))));
+    const c = customers.find(x=> String(x.id) === String(ren.customerId)) || {};
+    const f = calcFigures({
+      cost:ren.cost, wholesale:ren.wholesale,
+      stbIncluded:ren.stbIncluded, stbCost:ren.stbCost, stbWholesale:ren.stbWholesale
+    });
+    const today = new Date().toISOString().slice(0,10);
+    const invNo = `INV-${String(ren.customerId).slice(-6).toUpperCase()}-${ren.startDate?.replaceAll('-','')||today.replaceAll('-','')}`;
+
+    const html = buildInvoiceHTML({
+      invNo,
+      today,
+      billTo: ren.customerName || c.name || "-",
+      contactLine: [c.phone, c.email].filter(Boolean).join(" • "),
+      metaLine: [c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • "),
+      lines: [
+        [`${ren.planName||ren.planId||'Plan'} (${ren.durationMonths||0} mo)`, +ren.cost||0],
+        ...(ren.stbIncluded==='yes' ? [["STB fee", +ren.stbCost||0]] : [])
+      ],
+      total: f.turnover,
+      paidBadge: (ren.paymentReceived==='yes' ? 'Paid' : 'Unpaid')
+    });
+
+    openPrintWindow(html);
+  }catch(e){
+    console.error(e);
+    alert("Could not open invoice for this row.");
   }
 }
 
