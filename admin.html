@@ -1079,29 +1079,30 @@ function onRepTypeChange(){
 function filterRenewalsByPeriod(){
   const t = $("#repType").value;
   let from, to;
-  if(t==="monthly"){
-  let ym = $("#repMonth").value; // yyyy-mm
-  if(!ym){
-    ym = new Date().toISOString().slice(0,7);   // default to current month
-    $("#repMonth").value = ym;
-  }
-  // ... rest unchanged
-}
-    const ym = $("#repMonth").value; // yyyy-mm
-    if(!ym) return [];
-    from = ym+"-01";
-    const [y,m] = ym.split("-").map(Number);
-    const last = new Date(y, m, 0).getDate();
-    to = ym+"-"+String(last).padStart(2,'0');
-  }else if(t==="yearly"){
+
+  if (t === "monthly") {
+    // yyyy-mm (default to current month if empty)
+    let ym = $("#repMonth").value;
+    if (!ym) {
+      ym = new Date().toISOString().slice(0,7);
+      $("#repMonth").value = ym;
+    }
+    from = ym + "-01";
+    const [y, m] = ym.split("-").map(Number);
+    const last = new Date(y, m, 0).getDate(); // last day of month
+    to = ym + "-" + String(last).padStart(2, "0");
+  } else if (t === "yearly") {
     const y = +$("#repYear").value;
-    if(!y) return [];
-    from = y+"-01-01"; to = y+"-12-31";
-  }else{
-    from = $("#repFrom").value; to = $("#repTo").value;
-    if(!from || !to) return [];
+    if (!y) return {arr: [], from: undefined, to: undefined};
+    from = y + "-01-01";
+    to   = y + "-12-31";
+  } else { // custom
+    from = $("#repFrom").value;
+    to   = $("#repTo").value;
+    if (!from || !to) return {arr: [], from: undefined, to: undefined};
   }
-  const arr = renewals.filter(r => r.startDate>=from && r.startDate<=to);
+
+  const arr = renewals.filter(r => r.startDate >= from && r.startDate <= to);
   return {arr, from, to};
 }
 
