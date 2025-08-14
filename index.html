@@ -8,7 +8,7 @@
 <style>
   :root{
     --bg:#0b1020;--ink:#e9edff;--muted:#9aa7d9;--card:#121831;--line:#23305b;
-    --accent1:#6a11cb;--accent2:#2575fc;--ok:#32d296;--whats:#25D366;
+    --accent1:#6a11cb;--accent2:#2575fc;--ok:#32d296;--whats:#25D366;--warn:#f8b84a;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -19,6 +19,8 @@
       radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 55%),
       linear-gradient(180deg,#0b1020,#0b1020);
     color:var(--ink);
+    /* keep content clear of sticky dock */
+    padding-bottom: calc(88px + env(safe-area-inset-bottom));
   }
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1100px;margin:0 auto;padding:14px}
@@ -48,20 +50,20 @@
     background:rgba(11,16,32,.6);border-bottom:1px solid rgba(255,255,255,.06);
     display:flex;align-items:center;justify-content:space-between;padding:12px 14px;
   }
-  .logo{display:flex;align-items:center;gap:4px;color:var(--ink);font-weight:800} /* tighter gap */
+  .logo{display:flex;align-items:center;gap:4px;color:var(--ink);font-weight:800}
   .logo svg{height:26px;width:auto}
   .menu-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--ink);
     padding:6px 10px;border-radius:10px}
 
   /* Hero */
   .hero{padding:20px 14px 8px;text-align:center}
-  .hero h1{font-size:22px;margin:6px 0 8px}
+  .hero h1{font-size:24px;letter-spacing:.5px;margin:6px 0 10px}
   .badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
   .badge{font-size:12px;color:#cbd5ff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:6px 8px;border-radius:999px}
 
   /* Tabs */
   .tabs{display:flex;gap:8px;margin:14px 0 8px}
-  .tab{flex:1;text-align:center;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:10px;border-radius:12px;font-weight:800}
+  .tab{flex:1;text-align:center;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:12px;border-radius:12px;font-weight:800}
   .tab.active{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
 
   /* Panels */
@@ -73,50 +75,52 @@
   @media(min-width:680px){.grid{grid-template-columns: repeat(2,1fr)}}
   @media(min-width:1024px){.grid{grid-template-columns: repeat(3,1fr)}}
   .card{
-    background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;
+    background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;
     box-shadow:0 10px 30px rgba(0,0,0,.25);
   }
   .mark{display:inline-block;font-size:11px;margin-bottom:6px;padding:4px 8px;border-radius:999px;background:#0e1a3d;border:1px solid rgba(255,255,255,.12);color:#bcd0ff;font-weight:800}
   .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .title{font-weight:900}
-  .price{font-weight:900}
-  ul.features{list-style:none;padding:0;margin:8px 0 0}
+  .title{font-weight:900;font-size:18px}
+  .price{font-weight:900;font-size:18px;background:rgba(255,255,255,.06);padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12)}
+  ul.features{list-style:none;padding:0;margin:10px 0 0}
   ul.features li{margin:6px 0;font-size:13px;color:#cfdbff}
   .btns{display:flex;gap:8px;margin-top:12px}
-  .btn{flex:1;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);color:var(--ink);background:transparent;font-weight:800;cursor:pointer}
+  .btn{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);color:var(--ink);background:transparent;font-weight:800;cursor:pointer}
   .btn.primary{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
   .btn.whats{background:var(--whats);border-color:transparent;color:#fff}
-  .note{font-size:12px;color:#b2c3ff;margin-top:6px}
+  .note{font-size:12px;color:#ffdca1;margin-top:6px}
 
   /* Combo chip */
   .combo{
-    display:inline-block;margin-top:6px;padding:6px 10px;border-radius:10px;font-weight:900;font-size:13px;color:#fff;
+    display:inline-block;margin-top:8px;padding:7px 12px;border-radius:10px;font-weight:900;font-size:13px;color:#fff;
     background:linear-gradient(135deg,#6a11cb,#2575fc);box-shadow:0 6px 16px rgba(37,117,252,.25)
   }
 
   /* Table */
-  .table{margin-top:10px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+  .table{margin-top:12px;overflow:auto;border:1px solid var(--line);border-radius:12px}
   table{width:100%;border-collapse:collapse}
-  th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+  th,td{padding:12px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
   thead th{background:#0e1836;color:#cfe0ff;text-align:left}
 
-  /* Bottom Dock (only one, at very bottom) */
+  /* Bottom Dock (single) */
   .dock{
-    position:sticky;bottom:0;z-index:40;background:rgba(11,16,32,.85);backdrop-filter: blur(10px);
-    border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px;
+    position:sticky;bottom:0;z-index:40;background:rgba(11,16,32,.92);backdrop-filter: blur(10px);
+    border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom));
   }
   .dbtn{color:var(--ink);text-align:center;padding:10px 6px;border:1px solid rgba(255,255,255,.12);border-radius:12px}
   .dactive{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
 
   /* Modals / Sheets */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;z-index:9999}
   .sheet{
     background:#0d142d;border-top:1px solid var(--line);width:100%;
     max-height:90vh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
-    border-radius:16px 16px 0 0;padding:14px;color:#e9edff
+    border-radius:16px 16px 0 0;padding:16px 14px calc(24px + env(safe-area-inset-bottom));
+    color:#e9edff
   }
-  .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
-  .input,select,textarea{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:10px;color:#e9edff}
+  .field{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+  .input,select,textarea{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:12px;color:#e9edff}
   .chips{display:flex;gap:6px;flex-wrap:wrap}
   .chip{background:#0b122a;border:1px solid #22305a;color:#cfe0ff;padding:6px 10px;border-radius:999px;font-size:12px}
   .x{float:right;background:transparent;border:1px solid rgba(255,255,255,.15);color:#cfe0ff;border-radius:10px;padding:6px 10px}
@@ -350,7 +354,7 @@
   <div class="panel" id="panel-recharge">
     <div class="card">
       <div class="title">Recharge</div>
-      <div class="sub">Fast renewal via WhatsApp</div>
+      <div class="sub" style="color:var(--muted)">Fast renewal via WhatsApp</div>
 
       <div class="field"><label>Name</label><input class="input" id="rcName" placeholder="Full Name"></div>
       <div class="field"><label>User ID</label><input class="input" id="rcUser" placeholder="e.g., STB MAC / ID"></div>
@@ -376,7 +380,7 @@
   <div class="panel" id="panel-support">
     <div class="card">
       <div class="title">We’re here 24/7</div>
-      <div class="sub">Install • Issues • Upgrades</div>
+      <div class="sub" style="color:var(--muted)">Install • Issues • Upgrades</div>
       <div class="btns">
         <a class="btn whats" href="https://wa.me/16476961656?text=Hi%2C+I+need+help+with+net%2BTV." target="_blank" rel="noopener">Chat on WhatsApp</a>
       </div>
@@ -390,7 +394,7 @@
     <!-- General Request -->
     <div class="card" style="margin-top:12px">
       <div class="title">General Request</div>
-      <div class="sub">Tell us what you need — we’ll reply on WhatsApp</div>
+      <div class="sub" style="color:var(--muted)">Tell us what you need — we’ll reply on WhatsApp</div>
 
       <div class="field"><label>Name</label><input class="input" id="reqName" placeholder="Full Name"></div>
       <div class="field"><label>Phone (WhatsApp)</label><input class="input" id="reqPhone" placeholder="+1 ..."></div>
@@ -404,7 +408,7 @@
     <!-- Parental PIN -->
     <div class="card" style="margin-top:12px">
       <div class="title">Parental PIN Request</div>
-      <div class="sub">Enter your device MAC and email</div>
+      <div class="sub" style="color:var(--muted)">Enter your device MAC and email</div>
 
       <div class="field"><label>Device MAC Address</label><input class="input" id="pinMac" placeholder="e.g., 00:1A:79:xx:xx:xx"></div>
       <div class="field"><label>Email</label><input class="input" id="pinEmail" placeholder="email@example.com" type="email"></div>
@@ -554,6 +558,8 @@
   let _scrollY = 0;
   function openSheet(key){
     _scrollY = window.scrollY || window.pageYOffset;
+
+    // lock background scroll (iOS-friendly)
     document.body.classList.add('modal-open');
     document.body.style.top = `-${_scrollY}px`;
 
@@ -562,6 +568,10 @@
 
     // backdrop click closes
     el.addEventListener('click', backdropCloser);
+
+    // prevent sheet clicks from closing
+    const sheetEl = el.querySelector('.sheet');
+    if (sheetEl) sheetEl.addEventListener('click', e => e.stopPropagation());
   }
   function backdropCloser(e){
     if(e.target.classList.contains('modal')){
@@ -575,6 +585,7 @@
     el.style.display = 'none';
     el.removeEventListener('click', backdropCloser);
 
+    // restore background scroll
     document.body.classList.remove('modal-open');
     document.body.style.top = '';
     window.scrollTo(0, _scrollY);
@@ -587,7 +598,6 @@
   }
 
   /* ===== CTAs ===== */
-  function planInfo(name){openSheet('info');}
   function subscribePlan(label,price){
     document.getElementById('sPlan').value = label + " - $" + price;
     openSheet('subscribe');
