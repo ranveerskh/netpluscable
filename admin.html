@@ -6,7 +6,7 @@
 <title>Net + Cable • Admin</title>
 <style>
   :root{
-    --bg:#0b1020;--card:#121831;--ink:#e7ecff;--muted:#9aa7d9;--accent:#6a8cff;--accent2:#8a5bff;--danger:#ff647c;--ok:#35d0a7;--border:#23305b;
+    --bg:#0b1020;--card:#121831;--ink:#e7ecff;--muted:#9aa7d9;--accent:#6a8cff;--accent2:#8a5ff;--danger:#ff647c;--ok:#35d0a7;--border:#23305b;
     --warn:#ffc857;
   }
   *{box-sizing:border-box}
@@ -53,36 +53,30 @@
   .ok-text{color:#5ee0c1}
   .warn-text{color:#ffd479}
 
-  /* Modal */
- /* keep this exactly */
-.modal{
-  position:fixed;
-  inset:0;
-  display:none;              /* 🔴 must be here */
-  align-items:flex-start;
-  justify-content:center;
-  background:rgba(0,0,0,.55);
-  z-index:200;
-  padding:16px;
-  overflow:auto;
-}
-.modal.open{                 /* only visible when .open is present */
-  display:flex;
-}
-
-.modal .body{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:16px;
-  width:96%;
-  max-width:720px;
-  max-height:90vh;           /* scroll inside the modal */
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
-}
-
-
+  /* Modal (scrollable + hidden by default) */
+  .modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:flex-start;
+    justify-content:center;
+    background:rgba(0,0,0,.55);
+    z-index:200;
+    padding:16px;
+    overflow:auto;
+  }
+  .modal.open{ display:flex; }
+  .modal .body{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:16px;
+    width:96%;
+    max-width:720px;
+    max-height:90vh;
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+  }
   .modal .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
   .modal .foot{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
 
@@ -109,8 +103,8 @@
     <label>Password</label>
     <input id="authPass" type="password" placeholder="********" />
     <div class="flex" style="margin-top:12px">
-      <button class="btn ok" id="btnLogin">Sign In</button>
-      <button class="btn ghost" id="btnDemo">Use Demo (read-only)</button>
+      <button class="btn ok" id="btnLogin" type="button">Sign In</button>
+      <button class="btn ghost" id="btnDemo" type="button">Use Demo (read-only)</button>
     </div>
     <p id="authMsg" class="muted" style="margin-top:10px"></p>
     <hr style="border:none;border-top:1px solid var(--border);margin:16px 0">
@@ -128,7 +122,7 @@
       </div>
       <div class="flex">
         <div id="nearExpCount" class="pill muted">Near expiry: 0</div>
-        <button id="signOutBtn" class="btn secondary">Sign Out</button>
+        <button id="signOutBtn" class="btn secondary" type="button">Sign Out</button>
       </div>
     </div>
   </div>
@@ -190,7 +184,7 @@
           <input id="searchCustomers" placeholder="Search by name, phone, email, MAC, user ID..." />
         </div>
         <div class="flex">
-          <button id="btnAddCustomer" class="btn ok">+ Add Customer</button>
+          <button id="btnAddCustomer" class="btn ok" type="button">+ Add Customer</button>
         </div>
       </div>
       <div class="card" style="padding:0">
@@ -209,8 +203,8 @@
       <div class="flex" style="justify-content:space-between;margin-bottom:8px">
         <h3>Plans</h3>
         <div class="flex">
-          <button id="btnSeedPlans" class="btn ghost">Seed sample plans</button>
-          <button id="btnAddPlan" class="btn ok">+ Add Plan</button>
+          <button id="btnSeedPlans" class="btn ghost" type="button">Seed sample plans</button>
+          <button id="btnAddPlan" class="btn ok" type="button">+ Add Plan</button>
         </div>
       </div>
       <div class="card" style="padding:0">
@@ -253,8 +247,8 @@
         </div>
       </div>
       <div class="flex" style="margin-top:12px">
-        <button id="btnRunReport" class="btn">Run Report</button>
-        <button id="btnCsv" class="btn ghost">Export CSV</button>
+        <button id="btnRunReport" class="btn" type="button">Run Report</button>
+        <button id="btnCsv" class="btn ghost" type="button">Export CSV</button>
       </div>
 
       <div class="row" style="margin-top:14px">
@@ -289,7 +283,7 @@
   <div class="body">
     <div class="head">
       <h3 id="custModalTitle">Add Customer</h3>
-      <button class="btn ghost" id="xCust">✕</button>
+      <button class="btn ghost" id="xCust" type="button">✕</button>
     </div>
     <div class="row">
       <div class="col">
@@ -325,7 +319,7 @@
       </div>
     </div>
     <div class="foot">
-     <button type="button" class="btn secondary" id="btnSaveCustomer">Save</button>
+      <button type="button" class="btn secondary" id="btnSaveCustomer">Save</button>
     </div>
   </div>
 </div>
@@ -334,7 +328,7 @@
   <div class="body">
     <div class="head">
       <h3 id="renewTitle">Renew Plan</h3>
-      <button class="btn ghost" id="xRenew">✕</button>
+      <button class="btn ghost" id="xRenew" type="button">✕</button>
     </div>
     <div class="row">
       <div class="col">
@@ -356,7 +350,7 @@
       </div>
     </div>
     <div class="foot">
-      <button id="btnDoRenew" class="btn ok">Confirm Renewal</button>
+      <button id="btnDoRenew" class="btn ok" type="button">Confirm Renewal</button>
     </div>
   </div>
 </div>
@@ -365,7 +359,7 @@
   <div class="body">
     <div class="head">
       <h3 id="planTitle">Add Plan</h3>
-      <button class="btn ghost" id="xPlan">✕</button>
+      <button class="btn ghost" id="xPlan" type="button">✕</button>
     </div>
     <div class="row">
       <div class="col">
@@ -380,7 +374,7 @@
       </div>
     </div>
     <div class="foot">
-      <button id="btnSavePlan" class="btn secondary">Save Plan</button>
+      <button id="btnSavePlan" class="btn secondary" type="button">Save Plan</button>
     </div>
   </div>
 </div>
@@ -393,7 +387,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, doc, setDoc, addDoc, getDoc, getDocs, updateDoc, deleteDoc, query, orderBy, serverTimestamp, collectionGroup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* ---- Your Firebase Config (provided) ---- */
+/* ---- Firebase Config ---- */
 const firebaseConfig = {
   apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
   authDomain: "netplustv-90b29.firebaseapp.com",
@@ -414,15 +408,16 @@ const $$ = sel => document.querySelectorAll(sel);
 const fmt = n => (isNaN(+n)? '$0.00' : '$' + (+n).toFixed(2));
 const todayISO = () => new Date().toISOString().slice(0,10);
 function addMonthsISO(startISO, months){
-  const d = new Date(startISO + "T00:00:00"); // avoid TZ shift
+  if (!startISO) return "";
+  const d = new Date(startISO + "T00:00:00");
+  if (isNaN(d.getTime())) return "";
   const day = d.getDate();
-  d.setMonth(d.getMonth()+Number(months));
-  // keep same day when possible
+  d.setMonth(d.getMonth()+Number(months||0));
   if (d.getDate() !== day) d.setDate(0);
   return d.toISOString().slice(0,10);
 }
 function daysLeft(expISO){
-  const end = new Date(expISO+"T23:59:59");
+  const end = new Date((expISO||'')+"T23:59:59");
   const now = new Date();
   return Math.ceil((end - now) / (1000*60*60*24));
 }
@@ -469,19 +464,19 @@ $("#btnLogin").onclick = async ()=>{
     await signInWithEmailAndPassword(auth, authEmail.value.trim(), authPass.value.trim());
     authMsg.textContent = "Signed in.";
   }catch(e){
-    authMsg.textContent = "Sign-in failed: " + e.message;
+    console.error(e);
+    authMsg.textContent = (e.code||'auth/error') + " — " + e.message;
   }
 };
-// Demo mode (no sign-in). You can control read access via rules.
 $("#btnDemo").onclick = ()=>{
   authView.classList.add('hidden');
   appView.classList.remove('hidden');
   loadApp();
 };
-
 $("#signOutBtn").onclick = ()=> signOut(auth);
 
 onAuthStateChanged(auth, (user)=>{
+  console.log('[auth]', user ? 'in as '+user.email : 'out');
   if(user){
     authView.classList.add('hidden');
     appView.classList.remove('hidden');
@@ -505,7 +500,6 @@ let settingNear = 30;    // days
    ========================= */
 async function loadApp(user){
   $("#envInfo").textContent = "Connected";
-  // Settings
   $("#settingNearDays").value = settingNear;
   $("#settingNearDays").addEventListener('change', ()=>{
     settingNear = Math.max(1, +$("#settingNearDays").value||30);
@@ -519,18 +513,14 @@ async function loadApp(user){
     renderAll();
   });
 
-  // Wire buttons
   $("#btnAddCustomer").onclick = openCustomerModal;
   $("#btnSeedPlans").onclick = seedPlans;
   $("#btnAddPlan").onclick = ()=>openPlanModal();
   $("#btnRunReport").onclick = runReport;
   $("#btnCsv").onclick = exportCSV;
-
   $("#searchCustomers").addEventListener('input', renderCustomers);
 
-  // Load all data
   await Promise.all([loadPlans(), loadCustomers(), loadRenewals()]);
-  // Default report time init
   const now = new Date();
   $("#repMonth").value = now.toISOString().slice(0,7);
   $("#repYear").value  = String(now.getFullYear());
@@ -546,21 +536,18 @@ async function loadApp(user){
 async function loadPlans(){
   plans = {};
   const snap = await getDocs(query(collection(db, "plans"), orderBy("id")));
-  snap.forEach(d=>{
-    plans[d.id] = d.data();
-  });
+  snap.forEach(d=>{ plans[d.id] = d.data(); });
   renderPlans();
 }
 async function savePlan(p){
-  // doc id == plan.id
-  const ref = doc(db, "plans", p.id);
+  const ref = doc(db, "plans", String(p.id));
   await setDoc(ref, p, {merge:true});
   plans[p.id] = p;
   renderPlans();
   refreshPlanSelects();
 }
 async function deletePlan(id){
-  await deleteDoc(doc(db, "plans", id));
+  await deleteDoc(doc(db, "plans", String(id)));
   delete plans[id];
   renderPlans();
   refreshPlanSelects();
@@ -574,33 +561,37 @@ async function loadCustomers(){
 }
 
 async function saveCustomer(payload, existingId=null){
-  if(existingId){
-    const ref = doc(db,"customers", existingId);
+  if (existingId) {
+    const idStr = String(existingId);
+    const ref = doc(db,"customers", idStr);
     payload.updatedAt = serverTimestamp();
     await updateDoc(ref, payload);
-  }else{
-    const ref = await addDoc(collection(db,"customers"), { ...payload, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
-    existingId = ref.id;
+    await loadCustomers();
+    return idStr;
+  } else {
+    const ref = await addDoc(collection(db,"customers"), {
+      ...payload,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+    await loadCustomers();
+    return String(ref.id);
   }
-  await loadCustomers();
-  return existingId;
 }
 
 async function addRenewal(customerId, ren){
-  // Add renewal record under subcollection
-  const ref = await addDoc(collection(db, "customers", customerId, "renewals"), { ...ren, createdAt: serverTimestamp() });
+  const ref = await addDoc(collection(db, "customers", String(customerId), "renewals"), { ...ren, createdAt: serverTimestamp() });
   await loadRenewals();
-  return ref.id;
+  return String(ref.id);
 }
 async function loadRenewals(){
-  // Load all renewals across all customers (for reports/dashboard)
   renewals = [];
   const snap = await getDocs(collectionGroup(db, "renewals"));
   snap.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
 }
 
 async function setCustomerCurrentPlan(customerId, planFields){
-  const ref = doc(db, "customers", customerId);
+  const ref = doc(db, "customers", String(customerId));
   await updateDoc(ref, { currentPlan: planFields, updatedAt: serverTimestamp() });
 }
 
@@ -654,11 +645,9 @@ function renderCustomers(){
   const q = ($("#searchCustomers").value||"").toLowerCase().trim();
   const tbody = $("#custGrid tbody");
   tbody.innerHTML = "";
-  let count = 0;
   customers.forEach(c=>{
     const inText = `${c.name||''} ${c.phone||''} ${c.email||''} ${c.userId||''} ${c.mac||''}`.toLowerCase();
     if(q && !inText.includes(q)) return;
-    count++;
     const plan = c.currentPlan || {};
     const paid = (plan.paymentReceived==='yes') ? '<span class="badge-ok pill">Yes</span>' : '<span class="badge-warn pill">No</span>';
     const tr = document.createElement('tr');
@@ -682,7 +671,7 @@ function renderCustomers(){
     tbody.appendChild(tr);
   });
   $("#kpiCustomers").textContent = String(customers.length);
-  // Wire actions
+
   tbody.querySelectorAll("[data-edit]").forEach(btn=>{
     btn.onclick = ()=> openCustomerModal(btn.getAttribute('data-edit'));
   });
@@ -690,7 +679,7 @@ function renderCustomers(){
     btn.onclick = async()=>{
       const id = btn.getAttribute('data-del');
       if(confirm("Delete this customer? This removes their renewals too.")){
-        await deleteDoc(doc(db,"customers", id));
+        await deleteDoc(doc(db,"customers", String(id)));
         await loadCustomers();
         await loadRenewals();
         renderAll();
@@ -741,7 +730,6 @@ function renderNearExpiry(){
 }
 
 function renderKPIs(){
-  // Aggregate from all renewals
   let turnover=0, expense=0, profit=0;
   renewals.forEach(r=>{
     const f = calcFigures({
@@ -772,10 +760,20 @@ $("#c_start").addEventListener('change', ()=>{
   const pid = $("#c_plan").value;
   const dur = plans[pid]?.duration_months ?? 0;
   $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
-});document.getElementById('btnSaveCustomer').addEventListener('click', function (e) {
-    e.preventDefault();  // Stop form submission
-    e.stopPropagation(); // Stop bubbling
-    saveCustomerFromModal();
+});
+
+// robust Save button handler (feedback + error surfacing)
+const saveBtn = document.getElementById('btnSaveCustomer');
+saveBtn.addEventListener('click', async (e) => {
+  e.preventDefault(); e.stopPropagation();
+  if (saveBtn.dataset.busy === '1') return;
+  saveBtn.dataset.busy = '1';
+  const old = saveBtn.textContent;
+  saveBtn.textContent = 'Saving…';
+  saveBtn.disabled = true;
+  try { await saveCustomerFromModal(); }
+  catch (err) { console.error('[save] error:', err); alert(err?.code ? `${err.code} — ${err.message}` : (err?.message||'Failed to save')); }
+  finally { saveBtn.disabled = false; saveBtn.textContent = old; saveBtn.dataset.busy = '0'; }
 });
 
 let editCustomerId = null;
@@ -813,12 +811,10 @@ function previewTotals(){
 function openCustomerModal(id=null){
   editCustomerId = id;
   custTitle.textContent = id ? "Edit Customer" : "Add Customer";
-  // Populate plan select and defaults
   refreshPlanSelects();
   const firstPlanId = Object.keys(plans)[0];
   const defaults = firstPlanId ? plans[firstPlanId] : null;
 
-  // Reset fields
   $("#c_name").value = "";
   $("#c_phone").value= "";
   $("#c_email").value= "";
@@ -862,15 +858,15 @@ function openCustomerModal(id=null){
 
 async function saveCustomerFromModal(){
   const name=$("#c_name").value.trim();
-  if(!name){ alert("Name is required"); return; }
+  if(!name){ throw new Error("Name is required"); }
   const planId=$("#c_plan").value;
   const p=plans[planId]||{};
   const planName=p.name||"Custom";
   const durationMonths = +p.duration_months||0;
 
   const start=$("#c_start").value;
-  let expiry=$("#c_expiry").value;
-  if(!expiry) expiry = addMonthsISO(start, durationMonths);
+  let expiry=$("#c_expiry").value || addMonthsISO(start, durationMonths);
+  if (!start || !expiry) throw new Error('Start and expiry dates are required');
 
   const currentPlan = {
     planId, planName, durationMonths,
@@ -893,8 +889,9 @@ async function saveCustomerFromModal(){
     currentPlan
   };
 
-  const cid = await saveCustomer(payload, editCustomerId);
-  // Ensure there's a renewal record for this current plan if it's a new customer or first plan
+  const cid = await saveCustomer(payload, editCustomerId ? String(editCustomerId) : null);
+
+  // Ensure first renewal record exists when creating
   if(!editCustomerId){
     await addRenewal(cid, {
       customerId: cid, customerName: name,
@@ -950,7 +947,6 @@ function openRenewModal(id){
   refreshPlanSelects();
   const c = customers.find(x=>x.id===id);
   $("#renewTitle").textContent = `Renew: ${c?.name||id}`;
-  // defaults from last plan
   const cp = c?.currentPlan||{};
   $("#r_plan").value = cp.planId||Object.keys(plans)[0]||"";
   const p = plans[$("#r_plan").value]||{};
@@ -987,7 +983,7 @@ $("#btnDoRenew").onclick = async ()=>{
   const expiry= $("#r_expiry").value || addMonthsISO(start, durationMonths);
 
   const ren = {
-    customerId: renewCustomerId,
+    customerId: String(renewCustomerId),
     customerName: c.name||'',
     planId, planName, durationMonths,
     cost:+$("#r_cost").value||0,
@@ -998,8 +994,8 @@ $("#btnDoRenew").onclick = async ()=>{
     startDate:start, expiryDate:expiry,
     paymentReceived:$("#r_paid").value
   };
-  await addRenewal(renewCustomerId, ren);
-  await setCustomerCurrentPlan(renewCustomerId, ren);
+  await addRenewal(String(renewCustomerId), ren);
+  await setCustomerCurrentPlan(String(renewCustomerId), ren);
   renewModal.classList.remove('open');
   await loadCustomers();
   await loadRenewals();
@@ -1057,9 +1053,7 @@ function onRepTypeChange(){
   $("#repYearCol").classList.toggle('hidden', t==="monthly" ? true : (t!=="yearly"));
   $("#repFromCol").classList.toggle('hidden', t!=="custom");
   $("#repToCol").classList.toggle('hidden', t!=="custom");
-  if(t==="monthly"){
-    $("#repYearCol").classList.add('hidden');
-  }
+  if(t==="monthly"){ $("#repYearCol").classList.add('hidden'); }
 }
 
 function filterRenewalsByPeriod(){
@@ -1113,7 +1107,6 @@ function runReport(){
   $("#repProfit").textContent   = fmt(P);
 }
 function exportCSV(){
-  // Export current report table
   const rows = [["Date","Customer","Plan","Turnover","Expense","Profit","Paid"]];
   $("#repGrid tbody tr").forEach(tr=>{
     const cols = [...tr.children].map(td=>td.textContent);
