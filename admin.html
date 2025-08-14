@@ -748,7 +748,10 @@ function renderKPIs(){
    ========================= */
 const custModal = $("#modalCustomer");
 const custTitle = $("#custModalTitle");
-$("#xCust").onclick = ()=> custModal.classList.remove('open');
+$("#xCust").onclick = ()=>{
+  editCustomerId = null;
+  custModal.classList.remove('open');
+};
 $("#c_stb").addEventListener('change', ()=>{
   $("#stbBox").classList.toggle('hidden', $("#c_stb").value!=='yes');
   previewTotals();
