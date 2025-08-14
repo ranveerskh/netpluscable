@@ -1,534 +1,571 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Net + Cable</title>
-  <style>
-    :root {
-      --gradient-bg: linear-gradient(135deg, #6a11cb, #2575fc);
-      --card-bg: #ffffff;
-      --text-main: #333;
-      --whatsapp: #25D366;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>net+TV</title>
+<meta name="theme-color" content="#6a11cb" />
+<style>
+  :root{
+    --bg:#0b1020;--ink:#e9edff;--muted:#9aa7d9;--card:#121831;--line:#23305b;
+    --accent1:#6a11cb;--accent2:#2575fc;--ok:#32d296;--whats:#25D366;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:
+    radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.14),transparent 60%),
+    radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 55%),
+    linear-gradient(180deg,#0b1020,#0b1020);}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1100px;margin:0 auto;padding:14px}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Promo Banner */
+  .promo{position:sticky;top:0;z-index:1000;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;
+    text-align:center;font-weight:800;padding:12px 50px 12px 16px;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.25);
+    display:flex;align-items:center;justify-content:center;gap:10px;animation:bannerSlide .5s ease-out}
+  .promo a{font-weight:900;text-decoration:underline}
+  .promo .close{position:absolute;right:10px;top:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);
+    color:#fff;border-radius:10px;padding:6px 10px;font-weight:800;cursor:pointer}
+  @keyframes bannerSlide{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
+  @media(min-width:600px){.promo{font-size:16px;padding:14px 60px 14px 20px}}
 
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: #f4f6fb;
-      color: var(--text-main);
-    }
+  /* Header */
+  .top{position:sticky;top:0;z-index:900;backdrop-filter: blur(8px);background:rgba(11,16,32,.6);
+    border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;padding:12px 14px}
+  .logo{display:flex;align-items:center;gap:4px;color:var(--ink);font-weight:800}
+  .logo svg{height:26px;width:auto}
+  .menu-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--ink);padding:6px 10px;border-radius:10px}
 
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 20px;
-      background: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+  /* Hero */
+  .hero{padding:20px 14px 8px;color:var(--ink);text-align:center}
+  .hero h1{font-size:22px;margin:6px 0 8px}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .badge{font-size:12px;color:#cbd5ff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:6px 8px;border-radius:999px}
 
-    .logo-text {
-      font-size: 22px;
-      font-weight: bold;
-    }
+  /* Tabs */
+  .tabs{display:flex;gap:8px;margin:14px 0 8px}
+  .tab{flex:1;text-align:center;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:10px;border-radius:12px;font-weight:800}
+  .tab.active{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
 
-    .menu-button {
-      font-size: 26px;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
+  /* Panels */
+  .panel{display:none}
+  .panel.active{display:block}
 
-    .dropdown-menu {
-  position: fixed; /* changed from absolute to fixed */
-  right: 20px;
-  top: 60px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  padding: 10px;
-  display: none;
-  z-index: 9999;
-}
+  /* Cards grid */
+  .grid{display:grid;gap:12px}
+  @media(min-width:680px){.grid{grid-template-columns: repeat(2,1fr)}}
+  @media(min-width:1024px){.grid{grid-template-columns: repeat(3,1fr)}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .mark{display:inline-block;font-size:11px;margin-bottom:6px;padding:4px 8px;border-radius:999px;background:#0e1a3d;border:1px solid rgba(255,255,255,.12);color:#bcd0ff;font-weight:800}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .title{font-weight:900}
+  .price{font-weight:900}
+  ul.features{list-style:none;padding:0;margin:8px 0 0}
+  ul.features li{margin:6px 0;font-size:13px;color:#cfdbff}
+  .btns{display:flex;gap:8px;margin-top:12px}
+  .btn{flex:1;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);color:var(--ink);background:transparent;font-weight:800;cursor:pointer}
+  .btn.primary{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
+  .btn.whats{background:var(--whats);border-color:transparent;color:#fff}
+  .note{font-size:12px;color:#b2c3ff;margin-top:6px}
 
-    .dropdown-menu a {
-      display: block;
-      padding: 8px 12px;
-      color: #333;
-      text-decoration: none;
-      border-radius: 6px;
-    }
+  /* Combo chip */
+  .combo{display:inline-block;margin-top:6px;padding:6px 10px;border-radius:10px;font-weight:900;font-size:13px;color:#fff;background:linear-gradient(135deg,#6a11cb,#2575fc);box-shadow:0 6px 16px rgba(37,117,252,.25)}
 
-    .dropdown-menu a:hover {
-      background-color: #f0f0f0;
-    }
+  /* Table */
+  .table{margin-top:10px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+  table{width:100%;border-collapse:collapse;color:var(--ink)}
+  th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+  thead th{background:#0e1836;color:#cfe0ff;text-align:left}
 
-    .hero {
-      padding: 40px 20px;
-      text-align: center;
-    }
+  /* Bottom Dock */
+  .dock{position:sticky;bottom:0;z-index:40;background:rgba(11,16,32,.85);backdrop-filter: blur(10px);
+    border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px}
+  .dbtn{color:var(--ink);text-align:center;padding:10px 6px;border:1px solid rgba(255,255,255,.12);border-radius:12px}
+  .dactive{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
 
-    .hero-card {
-      background: var(--gradient-bg);
-      color: white;
-      border-radius: 20px;
-      padding: 30px 20px;
-      margin: 20px auto;
-      max-width: 600px;
-    }
-
-    .hero-card h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-
-    .hero-card p {
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-
-    .hero-card ul {
-      list-style: none;
-      padding-left: 0;
-      text-align: left;
-      margin: 0 auto;
-      max-width: 400px;
-    }
-
-    .hero-card ul li {
-      margin: 10px 0;
-    }
-
-    .button-section {
-      display: none;
-      padding: 30px 20px;
-      text-align: center;
-    }
-
-    .menu-buttons {
-      display: grid;
-      gap: 20px;
-    }
-
-    .menu-buttons button {
-      background: var(--gradient-bg);
-      color: white;
-      font-size: 18px;
-      padding: 18px;
-      border: none;
-      border-radius: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .menu-buttons button:hover {
-      opacity: 0.9;
-    }
-
-    .section-content {
-      display: none;
-      padding: 30px 20px;
-      background: #fff;
-    }
-
-    .plan {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 400px;
-      text-align: center;
-    }
-
-    .plan h2 {
-      margin-bottom: 8px;
-    }
-
-    .price {
-      font-weight: bold;
-      font-size: 16px;
-      margin-bottom: 12px;
-    }
-
-    .whatsapp-button {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 16px;
-      background-color: var(--whatsapp);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    @media (min-width: 600px) {
-      .menu-buttons {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-  </style>
+  /* Modals */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end}
+  .sheet{background:#0d142d;border-top:1px solid var(--line);width:100%;max-height:92vh;border-radius:16px 16px 0 0;padding:14px;overflow:auto;color:#e9edff}
+  .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+  .input,select,textarea{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:10px;color:#e9edff}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{background:#0b122a;border:1px solid #22305a;color:#cfe0ff;padding:6px 10px;border-radius:999px;font-size:12px}
+  .x{float:right;background:transparent;border:1px solid rgba(255,255,255,.15);color:#cfe0ff;border-radius:10px;padding:6px 10px}
+  .help{font-size:12px;color:#b6c7ff}
+  .cols{display:grid;gap:12px;margin-top:8px}
+  @media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
+  .h{font-weight:900;margin-top:8px}
+  .catlist{margin:6px 0 0;padding-left:18px}
+  .catlist li{margin:6px 0}
+</style>
 </head>
 <body>
 
-<!-- Top Bar -->
-<div class="top-bar">
-  <div class="logo-text">Net<span style="color:#6a11cb">+</span>Cable</div>
-  <button class="menu-button" onclick="toggleMenu()">☰</button>
+<!-- Promo Banner -->
+<div id="promo" class="promo" role="region" aria-label="Offer">
+  <span id="offer-text">
+    🎉 <strong>Canada Day Offer</strong> — Get <strong>1 Month EXTRA</strong> with 1‑Year Plan + <strong>Free delivery</strong> anywhere in Canada 🇨🇦
+    <a href="#!" onclick="subscribePlan('12 Months (+1 free)',100)">Get 13 months</a>
+  </span>
+  <button class="close" aria-label="Close offer" onclick="closePromo()">×</button>
 </div>
 
-<!-- Dropdown Menu -->
-<div class="dropdown-menu" id="dropdownMenu">
-  <a href="#" onclick="toggleSection('new')">New Set-Top Box Plans</a>
-  <a href="#" onclick="toggleSection('own')">Your Own Set-Top Box Plan</a>
-  <a href="#" onclick="toggleSection('recharge')">Recharge</a>
-  <a href="#" onclick="toggleSection('support')">Contact Support</a>
-</div>
+<!-- Header -->
+<header class="top">
+  <div class="logo" aria-label="net+TV">
+    <!-- Inline net+TV logo with tighter spacing and white "net" -->
+    <svg viewBox="0 0 180 36" role="img" aria-label="net+TV logo">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6a11cb"/><stop offset="1" stop-color="#2575fc"/></linearGradient></defs>
+      <text x="0" y="25" font-size="24" font-weight="800" fill="#ffffff">net</text>
+      <rect x="52" y="6" width="24" height="24" rx="6" fill="url(#g)"/>
+      <rect x="62" y="10" width="4" height="16" fill="#fff"/><rect x="56" y="16" width="16" height="4" fill="#fff"/>
+      <text x="90" y="25" font-size="24" font-weight="900" fill="#e9edff">TV</text>
+    </svg>
+  </div>
+  <button class="menu-btn" onclick="openSheet('menu')">Menu</button>
+</header>
 
-<!-- Hero Section -->
-<div class="hero">
-  <div class="hero-card">
-    <h1>🎬 Unlimited Entertainment in Stunning 4K Quality</h1>
-    <p><strong>One platform. Every channel. Every language. Endless possibilities.</strong></p>
-    <ul>
-      <li>✅ 10,000+ Live TV Channels</li>
-      <li>✅ All Latest Movies & Web Series</li>
-      <li>✅ 4K & Full HD Streaming Experience</li>
-      <li>✅ OTT Content in English, Hindi, Punjabi, Urdu, Gujarati, French and More</li>
-      <li>✅ Live Sports, Local Channels & Global Access</li>
-      <li>✅ Same-Day Releases of New Movies & Shows</li>
-    </ul>
+<!-- Hero -->
+<section class="hero wrap">
+  <h1>All TV. All VOD. 4K.</h1>
+  <div class="badges">
+    <span class="badge">10,000+ Channels</span>
+    <span class="badge">Movies • Sports • Series</span>
+    <span class="badge">4K & Full HD</span>
+    <span class="badge">24/7 Support</span>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Primary sections">
+    <button class="tab active" id="tab-plans" onclick="showPanel('plans')">Plans</button>
+    <button class="tab" id="tab-boxes" onclick="showPanel('boxes')">Boxes</button>
+    <button class="tab" id="tab-recharge" onclick="showPanel('recharge')">Recharge</button>
+    <button class="tab" id="tab-support" onclick="showPanel('support')">Support</button>
+  </div>
+</section>
+
+<!-- Main -->
+<main class="wrap">
+
+  <!-- Plans -->
+  <div class="panel active" id="panel-plans">
+    <div class="grid">
+      <!-- 1M -->
+      <div class="card">
+        <span class="mark">Starter</span>
+        <div class="row"><div class="title">1 Month</div><div class="price">$15</div></div>
+        <ul class="features">
+          <li>⚡ Quick Activation</li>
+          <li>📡 20,000+ Live Channels</li>
+          <li>🎬 All Shows, Movies & PPV</li>
+          <li>📚 Latest & Classic Series/Movies</li>
+          <li>🖥️ Full HD & SD Channels</li>
+          <li>❄️ AntiFreeze Technology</li>
+          <li>💬 24/7 WhatsApp Support</li>
+        </ul>
+        <div class="btns">
+          <button class="btn primary whats" onclick="subscribePlan('1 Month',15)">Subscribe</button>
+          <button class="btn" onclick="openSheet('info')">Info</button>
+        </div>
+      </div>
+
+      <!-- 3M -->
+      <div class="card">
+        <span class="mark">Popular</span>
+        <div class="row"><div class="title">3 Months</div><div class="price">$40</div></div>
+        <ul class="features">
+          <li>⚡ Quick Activation</li>
+          <li>📡 20,000+ Live Channels</li>
+          <li>🎬 All Shows, Movies & PPV</li>
+          <li>📚 Latest & Classic Series/Movies</li>
+          <li>🖥️ Full HD & SD Channels</li>
+          <li>❄️ AntiFreeze Technology</li>
+          <li>💬 24/7 WhatsApp Support</li>
+        </ul>
+        <div class="btns">
+          <button class="btn primary whats" onclick="subscribePlan('3 Months',40)">Subscribe</button>
+          <button class="btn" onclick="openSheet('info')">Info</button>
+        </div>
+      </div>
+
+      <!-- 6M -->
+      <div class="card">
+        <span class="mark">Most Picked</span>
+        <div class="row"><div class="title">6 Months</div><div class="price">$65</div></div>
+        <ul class="features">
+          <li>⚡ Quick Activation</li>
+          <li>📡 20,000+ Live Channels</li>
+          <li>🎬 All Shows, Movies & PPV</li>
+          <li>📚 Latest & Classic Series/Movies</li>
+          <li>🖥️ Full HD & SD Channels</li>
+          <li>❄️ AntiFreeze Technology</li>
+          <li>💬 24/7 WhatsApp Support</li>
+        </ul>
+        <div class="btns">
+          <button class="btn primary whats" onclick="subscribePlan('6 Months',65)">Subscribe</button>
+          <button class="btn" onclick="openSheet('info')">Info</button>
+        </div>
+      </div>
+
+      <!-- 12M -->
+      <div class="card">
+        <span class="mark">Best Value</span>
+        <div class="row"><div class="title">12 Months</div><div class="price">$100</div></div>
+        <div class="note">+ 1 extra month free (13 total)</div>
+        <ul class="features">
+          <li>⚡ Quick Activation</li>
+          <li>📡 20,000+ Live Channels</li>
+          <li>🎬 All Shows, Movies & PPV</li>
+          <li>📚 Latest & Classic Series/Movies</li>
+          <li>🖥️ Full HD & SD Channels</li>
+          <li>❄️ AntiFreeze Technology</li>
+          <li>💬 24/7 WhatsApp Support</li>
+        </ul>
+        <div class="btns">
+          <button class="btn primary whats" onclick="subscribePlan('12 Months (+1 free)',100)">Subscribe</button>
+          <button class="btn" onclick="openSheet('info')">Info</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table">
+      <table aria-label="Plan comparison">
+        <thead><tr><th>Plan</th><th>Duration</th><th>Price</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>1 Month</td><td>30 days</td><td>$15</td><td>Full features</td></tr>
+          <tr><td>3 Months</td><td>90 days</td><td>$40</td><td>Save vs monthly</td></tr>
+          <tr><td>6 Months</td><td>180 days</td><td>$65</td><td>Most picked</td></tr>
+          <tr><td>12 Months</td><td>365 + 30 days</td><td>$100</td><td><strong>+1 month free</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Boxes -->
+  <div class="panel" id="panel-boxes">
+    <div class="grid">
+      <div class="card">
+        <div class="row"><div class="title">Android 4K Box</div><div class="price">$50</div></div>
+        <div class="combo">Box + 1‑Year: $140</div>
+        <ul class="features">
+          <li>ARM Cortex Quad‑Core • Mali‑G31</li>
+          <li>2GB DDR3 • 8GB eMMC</li>
+          <li>Wi‑Fi 2.4/5.8 • BT 5.2</li>
+          <li>Assistant • Netflix • YouTube • Disney+ • Play</li>
+          <li>Bluetooth voice remote</li>
+        </ul>
+        <div class="btns">
+          <button class="btn" onclick="buyBox('Android 4K Box',50)">Box Only</button>
+          <button class="btn whats" onclick="buyBoxBundle('Android 4K Box',140)">Box + 1‑Year</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row"><div class="title">Sword+ 4K Box</div><div class="price">$90</div></div>
+        <div class="combo">Box + 1‑Year: $180</div>
+        <ul class="features">
+          <li>Android 11 • TV ONAIR • 4K 60FPS</li>
+          <li>2GB DDR3 • 16GB eMMC</li>
+          <li>Wi‑Fi 2.4/5.8</li>
+        </ul>
+        <div class="btns">
+          <button class="btn" onclick="buyBox('Sword+ 4K Box',90)">Box Only</button>
+          <button class="btn whats" onclick="buyBoxBundle('Sword+ 4K Box',180)">Box + 1‑Year</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row"><div class="title">Sheild 4K Box</div><div class="price">$110</div></div>
+        <div class="combo">Box + 1‑Year: $200</div>
+        <ul class="features">
+          <li>Android 9 • TV ONAIR • 4K 60FPS • HDR10+</li>
+          <li>4GB DDR3 • 32GB eMMC • Wi‑Fi 2.4/5.8</li>
+        </ul>
+        <div class="btns">
+          <button class="btn" onclick="buyBox('Sheild 4K Box',110)">Box Only</button>
+          <button class="btn whats" onclick="buyBoxBundle('Sheild 4K Box',200)">Box + 1‑Year</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row"><div class="title">Formular Z10 Box</div><div class="price">$120</div></div>
+        <div class="combo">Box + 1‑Year: $210</div>
+        <ul class="features">
+          <li>Android 10 • TV ONAIR • 4K 60FPS • HDR10*</li>
+          <li>2GB DDR3 • 8GB eMMC • Wi‑Fi 2.4/5.8</li>
+        </ul>
+        <div class="btns">
+          <button class="btn" onclick="buyBox('Formular Z10 Box',120)">Box Only</button>
+          <button class="btn whats" onclick="buyBoxBundle('Formular Z10 Box',210)">Box + 1‑Year</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row"><div class="title">Mag544 4K Linux Box</div><div class="price">$125</div></div>
+        <div class="combo">Box + 1‑Year: $220</div>
+        <ul class="features">
+          <li>Linux OS • 4K • Durable</li>
+          <li>1GB RAM • 4GB Flash</li>
+        </ul>
+        <div class="btns">
+          <button class="btn" onclick="buyBox('Mag544 4K Linux Box',125)">Box Only</button>
+          <button class="btn whats" onclick="buyBoxBundle('Mag544 4K Linux Box',220)">Box + 1‑Year</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recharge -->
+  <div class="panel" id="panel-recharge">
+    <div class="card">
+      <div class="title">Recharge</div>
+      <div class="sub">Fast renewal via WhatsApp</div>
+
+      <div class="field"><label>Name</label><input class="input" id="rcName" placeholder="Full Name"></div>
+      <div class="field"><label>User ID</label><input class="input" id="rcUser" placeholder="e.g., STB MAC / ID"></div>
+      <div class="field"><label>Email</label><input class="input" id="rcEmail" placeholder="email@example.com" type="email"></div>
+
+      <div class="field">
+        <label>Plan</label>
+        <select id="rcPlan" class="input">
+          <option value="">Choose a plan</option>
+          <option>1 Month - $15</option>
+          <option>3 Months - $40</option>
+          <option>6 Months - $65</option>
+          <option>12 Months - $100 (+1 month free)</option>
+        </select>
+      </div>
+
+      <button class="btn whats" onclick="sendRecharge()">Recharge via WhatsApp</button>
+      <div class="help">We reply quickly.</div>
+    </div>
+  </div>
+
+  <!-- Support -->
+  <div class="panel" id="panel-support">
+    <div class="card">
+      <div class="title">We’re here 24/7</div>
+      <div class="sub">Install • Issues • Upgrades</div>
+      <div class="btns">
+        <a class="btn whats" href="https://wa.me/16476961656?text=Hi%2C+I+need+help+with+net%2BTV." target="_blank" rel="noopener">Chat on WhatsApp</a>
+      </div>
+      <ul class="features" style="margin-top:8px">
+        <li>📦 Quick activation after payment</li>
+        <li>🛠 Remote setup help</li>
+        <li>🔒 No hidden charges</li>
+      </ul>
+    </div>
+
+    <!-- General Request -->
+    <div class="card" style="margin-top:12px">
+      <div class="title">General Request</div>
+      <div class="sub">Tell us what you need — we’ll reply on WhatsApp</div>
+
+      <div class="field"><label>Name</label><input class="input" id="reqName" placeholder="Full Name"></div>
+      <div class="field"><label>Phone (WhatsApp)</label><input class="input" id="reqPhone" placeholder="+1 ..."></div>
+      <div class="field"><label>Email</label><input class="input" id="reqEmail" placeholder="email@example.com" type="email"></div>
+      <div class="field"><label>Details</label><textarea class="input" id="reqNote" placeholder="Write your request..." rows="3"></textarea></div>
+
+      <button class="btn whats" onclick="sendRequest()">Send Request via WhatsApp</button>
+      <div class="help">We usually respond within minutes.</div>
+    </div>
+
+    <!-- Parental PIN -->
+    <div class="card" style="margin-top:12px">
+      <div class="title">Parental PIN Request</div>
+      <div class="sub">Enter your device MAC and email</div>
+
+      <div class="field"><label>Device MAC Address</label><input class="input" id="pinMac" placeholder="e.g., 00:1A:79:xx:xx:xx"></div>
+      <div class="field"><label>Email</label><input class="input" id="pinEmail" placeholder="email@example.com" type="email"></div>
+      <div class="field"><label>Note (optional)</label><input class="input" id="pinNote" placeholder="Any extra info..."></div>
+
+      <button class="btn whats" onclick="sendPin()">Request PIN via WhatsApp</button>
+      <div class="help">We’ll verify the device and send your PIN.</div>
+    </div>
+  </div>
+</main>
+
+<!-- Bottom Dock -->
+<nav class="dock wrap" aria-label="Quick navigation">
+  <a class="dbtn dactive" href="#plans" onclick="showPanel('plans')">Plans</a>
+  <a class="dbtn" href="#boxes" onclick="showPanel('boxes')">Boxes</a>
+  <a class="dbtn" href="#recharge" onclick="showPanel('recharge')">Recharge</a>
+  <a class="dbtn" href="#support" onclick="showPanel('support')">Support</a>
+</nav>
+
+<!-- Sheets / Modals -->
+<div class="modal" id="sheet-menu" aria-hidden="true">
+  <div class="sheet">
+    <button class="x" onclick="closeSheet('menu')">Close</button>
+    <h3>Menu</h3>
+    <div class="chips" style="margin:8px 0 12px">
+      <span class="chip" onclick="showPanel('plans');closeSheet('menu')">Plans</span>
+      <span class="chip" onclick="showPanel('boxes');closeSheet('menu')">Boxes</span>
+      <span class="chip" onclick="showPanel('recharge');closeSheet('menu')">Recharge</span>
+      <span class="chip" onclick="showPanel('support');closeSheet('menu')">Support</span>
+    </div>
+    <p class="help">All TV. All VOD. One app. 4K where available.</p>
+    <div class="btns">
+      <a class="btn whats" href="https://wa.me/16476961656?text=Hi%2C+I+want+to+subscribe+to+net%2BTV." target="_blank" rel="noopener">Subscribe on WhatsApp</a>
+    </div>
   </div>
 </div>
 
-<!-- Auto-Reveal Button Section -->
-<div class="button-section" id="menuButtons">
-  <div class="menu-buttons">
-    <button onclick="toggleSection('new')">📦 New Set-Top Box Plans</button>
-    <button onclick="toggleSection('own')">🖥️ Your Own Set-Top Box Plan</button>
-    <button onclick="toggleSection('recharge')">🔁 Recharge</button>
-    <button onclick="toggleSection('support')">💬 Contact Support</button>
+<!-- What's Included / Categories -->
+<div class="modal" id="sheet-info" aria-hidden="true">
+  <div class="sheet">
+    <button class="x" onclick="closeSheet('info')">Close</button>
+    <h3>What you get with every plan</h3>
+    <div class="chips">
+      <span class="chip">20,000+ Live Channels</span>
+      <span class="chip">All Movies & Series</span>
+      <span class="chip">PPV & Major Sports</span>
+      <span class="chip">Full HD & SD</span>
+      <span class="chip">AntiFreeze Technology</span>
+      <span class="chip">Quick Activation</span>
+      <span class="chip">24/7 Support</span>
+    </div>
+
+    <div class="cols">
+      <div>
+        <div class="h">Live TV Categories</div>
+        <ul class="catlist">
+          <li>AFGHAN | PERSIAN</li>
+          <li>AFRICAN | AFRICA</li>
+          <li>ARABIC | MID-EAST</li>
+          <li>ASSAM | INDIA</li>
+          <li>BANGLA | INDIA</li>
+          <li>BEIN / DAZN / FUBO</li>
+          <li>BHOJPURI | INDIA</li>
+          <li>DUTCH | BELGIUM / NETHERLAND</li>
+          <li>ENGLISH 24/7 • UK • USA • CANADA • AUSTRALIA • CARIBBEAN</li>
+          <li>ENGLISH | KIDS • MOVIES • MUSIC • NEWS • SPORTS</li>
+          <li>EX‑YUGO | ALBANIAN</li>
+          <li>FILIPINO | PHILIPPINES</li>
+          <li>FRENCH | CANADA • FRANCE</li>
+          <li>GERMAN | GREEK | ITALIAN</li>
+          <li>GUJARATI | HINDI 24/7 | HINDI | KANNADA | MALAYALAM | MARATHI | ODIA | TAMIL | TELUGU</li>
+          <li>HUNGARY | KOREAN | MANDARIN | NEPALI | POLISH | PORTUGUESE | BRAZIL</li>
+          <li>PPV | ESPN+ | NFL | NBA | NHL | MLB | SOCCER | MLS</li>
+          <li>PUNJABI | INDIA • URDU | PAKISTAN</li>
+          <li>ROMANIAN | RUSSIAN | TURKISH | UKRAINE | VIETNAMESE</li>
+          <li>SINHALA | SRI LANKA</li>
+          <li>SOUTH AMERICA • SPANISH (Mexico/Spain) • LATINO USA</li>
+          <li>SPORTS | CRICKET</li>
+          <li>SWEDEN | NORWAY | FINLAND</li>
+          <li>LOCAL USA | RADIO</li>
+          <li><strong>LIVE‑ADULT</strong></li>
+        </ul>
+      </div>
+      <div>
+        <div class="h">VOD Categories</div>
+        <ul class="catlist">
+          <li>VOD - English</li>
+          <li>VOD - Punjabi/Urdu</li>
+          <li>VOD - Hindi</li>
+          <li>VOD - Middle East</li>
+          <li>VOD - Italian</li>
+          <li>VOD - Polish</li>
+          <li>VOD - Portuguese/Brazalian</li>
+          <li>VOD - Spanish</li>
+          <li>VOD - Tamil/Telugu/Kannada/Sinhala/Malayalam</li>
+          <li>VOD - Gujarati/Marathi/Bengali</li>
+          <li>VOD - VOD ALL • with & without 18+</li>
+          <li><strong>VOD - ADULT</strong></li>
+          <!-- Extra helpful labels -->
+          <li>Kids 24/7 • Animated Movies</li>
+          <li>Documentaries • Reality TV</li>
+          <li>Classic Movies & Series</li>
+          <li>New Releases (daily updates)</li>
+          <li>Music Videos • Concerts</li>
+          <li>Stand‑up Comedy</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="help">Availability varies by region/device. 4K/Full HD where available.</p>
   </div>
 </div>
 
-<!-- New Set-Top Box Plans -->
-<div class="section-content" id="new">
-  <div class="plan">
-    <h2>Only Set-Top Box</h2>
-    <div class="price">$120</div>
-    <ul>
-      <li>📺 4K Quality Streaming</li>
-      <li>⚙️ Linux-Based Operating System</li>
-      <li>🎮 Remote Control Included</li>
-      <li>🚀 Responsive & Fast User Interface</li>
-    </ul>
-    <button class="whatsapp-button" onclick="openSubscribeForm('Only Set-Top Box')">Subscribe</button>
-  </div>
-
-  <div class="plan">
-    <h2>3 Months + Box</h2>
-    <div class="price">$155</div>
-    <ul>
-      <li>✅ 10,000+ Live TV Channels</li>
-      <li>🎞️ Unlimited Movies & Web Series</li>
-      <li>🏆 All Premium Sports Channels</li>
-      <li>🌍 Multilingual Content</li>
-      <li>📡 Full HD & 4K Streaming</li>
-      <li>💬 24/7 WhatsApp Support</li>
-    </ul>
-    <button class="whatsapp-button" onclick="openSubscribeForm('3 Months + Box')">Subscribe</button>
-  </div>
-
-  <div class="plan">
-    <h2>6 Months + Box</h2>
-    <div class="price">$180</div>
-    <ul>
-      <li>✅ 10,000+ Live TV Channels</li>
-      <li>🎞️ Unlimited Movies & Web Series</li>
-      <li>🏆 All Premium Sports Channels</li>
-      <li>🌍 Multilingual Content</li>
-      <li>📡 Full HD & 4K Streaming</li>
-      <li>💬 24/7 WhatsApp Support</li>
-    </ul>
-    <button class="whatsapp-button" onclick="openSubscribeForm('6 Months + Box')">Subscribe</button>
-  </div>
-
-  <div class="plan">
-    <h2>1 Year + Box</h2>
-    <div class="price">$200</div>
-    <ul>
-      <li>✅ 10,000+ Live TV Channels</li>
-      <li>🎞️ Unlimited Movies & Web Series</li>
-      <li>🏆 All Premium Sports Channels</li>
-      <li>🌍 Multilingual Content</li>
-      <li>📡 Full HD & 4K Streaming</li>
-      <li>💬 24/7 WhatsApp Support</li>
-    </ul>
-    <button class="whatsapp-button" onclick="openSubscribeForm('1 Year + Box')">Subscribe</button>
+<!-- Subscribe sheet -->
+<div class="modal" id="sheet-subscribe" aria-hidden="true">
+  <div class="sheet">
+    <button class="x" onclick="closeSheet('subscribe')">Close</button>
+    <h3>Subscribe</h3>
+    <div class="field"><label>Name</label><input class="input" id="sName" placeholder="Full Name"></div>
+    <div class="field"><label>Phone</label><input class="input" id="sPhone" placeholder="+1 ..."></div>
+    <div class="field"><label>Email</label><input class="input" id="sEmail" placeholder="email@example.com" type="email"></div>
+    <div class="field"><label>Plan</label><input class="input" id="sPlan" placeholder="Selected plan" readonly></div>
+    <button class="btn whats" onclick="sendSubscribe()">Send via WhatsApp</button>
+    <div class="help">Minimal info, quick activation.</div>
   </div>
 </div>
-<!-- Your Own Set-Top Box Plans -->
-<div class="section-content" id="own">
-  <div class="plan">
-    <h2>1 Month Plan</h2>
-    <div class="price">$15</div>
-    <ul>
-      <li>✅ 10,000+ Live TV Channels</li>
-      <li>🎞️ Unlimited Movies & Web Series</li>
-      <li>🌍 Multilingual VOD</li>
-      <li>📡 Full HD + 4K Streaming</li>
-      <li>💬 24/7 WhatsApp Support</li>
-      <li>⚙️ Works on any Android/Linux Box</li>
-    </ul>
-    <button class="whatsapp-button" onclick="openSubscribeForm('1 Month Plan (Own Box)')">Subscribe</button>
-  </div>
 
-  <div class="plan">
-    <h2>3 Months Plan</h2>
-    <div class="price">$35</div>
-    <ul>
-      <li>🕒 Everything in 1 Month Plan</li>
-      <li>💰 Better Value</li>
-      <li>🔐 Fast Activation</li>
-    </ul>
-    <button class="whatsapp-button" onclick="openSubscribeForm('3 Months Plan (Own Box)')">Subscribe</button>
-  </div>
-
-  <div class="plan">
-    <h2>6 Months Plan</h2>
-    <div class="price">$65</div>
-    <ul>
-      <li>📺 180 Days Full Access</li>
-      <li>🌎 Global Channel Coverage</li>
-      <li>🛠️ Supports Most Devices</li>
-      <li>🧑‍💻 VIP WhatsApp Support</li>
-    </ul>
-    <button class="whatsapp-button" onclick="openSubscribeForm('6 Months Plan (Own Box)')">Subscribe</button>
-  </div>
-
-  <div class="plan">
-    <h2>1 Year Plan</h2>
-    <div class="price">$99</div>
-    <ul>
-      <li>🚀 Best Value</li>
-      <li>🏆 All TV, Movies & Sports</li>
-      <li>🔄 Tech Support Included</li>
-      <li>🎯 No Hidden Fees</li>
-    </ul>
-    <button class="whatsapp-button" onclick="openSubscribeForm('1 Year Plan (Own Box)')">Subscribe</button>
-  </div>
-</div>
-<!-- Subscription Form -->
-<div class="section-content" id="subscribeForm">
-  <form onsubmit="sendToWhatsApp('subscribe'); return false;" style="max-width:400px;margin:auto">
-    <h2>Subscribe to a Plan</h2>
-    <input type="text" id="subName" placeholder="Full Name" required>
-    <input type="tel" id="subPhone" placeholder="Phone Number" required>
-    <input type="email" id="subEmail" placeholder="Email" required>
-    <input type="hidden" id="selectedPlan">
-
-    <label for="tvChannel">Select TV Channels:</label>
-    <select id="tvChannel" multiple required>
-      <option>ENGLISH</option><option>PUNJABI</option><option>HINDI</option><option>URDU</option><option>FRENCH</option>
-      <option>AFGHAN</option><option>ARABIC</option><option>ASSAM</option><option>BENGALI</option><option>SPORTS</option><option>GUJARATI</option>
-  <option>BENGALI</option>
-  <option>CARIBBEAN</option>
-  <option>FILIPINO</option>
-  <option>FRENCH</option>
-  <option>KANNADA</option>
-  <option>MALAYALAM</option>
-  <option>NEPALI</option>
-  <option>PAKISTAN</option>
-  <option>PORTUGUESE</option>
-  <option>TAMIL</option>
-  <option>MARATHI</option>
-  <option>PERSIAN</option>
-  <option>SINHALA</option>
-  <option>TELUGU</option>
-  <option>ODIA</option>
-  <option>POLISH</option>
-  <option>SPANISH</option><option>ADULT</option>
-    </select>
-
-    <label for="vod">Select VOD Categories:</label>
-    <select id="vod" multiple required>
-      <option>ENGLISH</option><option>PUNJABI</option><option>HINDI</option><option>URDU</option><option>FRENCH</option>
-      <option>ANIME</option><option>KIDS</option><option>SPORTS</option><option>BANGLA</option>
-<option>GUJARATI</option>
-<option>KANNADA</option>
-<option>MALAYALAM</option>
-<option>MARATHI</option>
-<option>SINHALA</option>
-<option>TAMIL</option>
-<option>TELUGU</option><option>ADULT</option>
-    </select>
-
-    <textarea id="subNote" placeholder="Note (optional)"></textarea>
-    <button class="whatsapp-button" type="submit">Send via WhatsApp</button>
-  </form>
-</div>
-<!-- Recharge Section -->
-<div class="section-content" id="recharge">
-  <form onsubmit="sendToWhatsApp('recharge'); return false;" style="max-width:400px;margin:auto">
-    <h2>Recharge Your Account</h2>
-
-    <input type="text" id="rechargeName" placeholder="Full Name" required>
-    <input type="text" id="rechargeUserId" placeholder="User ID" required>
-    <input type="email" id="rechargeEmail" placeholder="Email" required>
-
-    <label for="rechargePlan">Select Plan:</label>
-    <select id="rechargePlan" required>
-      <option disabled selected value="">-- Choose Recharge Plan --</option>
-      <option>1 Month - $15</option>
-      <option>3 Months - $35</option>
-      <option>6 Months - $65</option>
-      <option>1 Year - $99</option>
-    </select>
-
-    <textarea id="rechargeNote" placeholder="Note (optional)"></textarea>
-
-    <button class="whatsapp-button" type="submit">Recharge via WhatsApp</button>
-  </form>
-</div>
-<!-- Contact Support Section -->
-<!-- Contact Support Section -->
-<div class="section-content" id="support">
-  <div style="max-width: 700px; margin: auto;">
-    <h2>Need Help?</h2>
-    <p>We're here 24/7 to assist you with setup, issues, or questions.</p>
-
-    <a class="whatsapp-button" href="https://wa.me/16476961656?text=Hi%2C+I+need+help+with+Net+%2B+Cable+services." target="_blank">
-      💬 Chat on WhatsApp
-    </a>
-
-    <h3 style="margin-top: 30px;">📖 Frequently Asked Questions</h3>
-
-    <details>
-      <summary>📦 What is included with the Set-Top Box?</summary>
-      <p>Your set-top box comes with 4K quality, a Linux-based OS, remote control, and a super responsive user interface.</p>
-    </details>
-
-    <details>
-      <summary>📺 How many channels do I get?</summary>
-      <p>You get access to over 10,000+ live TV channels including international, local, and premium categories.</p>
-    </details>
-
-    <details>
-      <summary>🎬 Do you offer movies and web series?</summary>
-      <p>Yes! You get unlimited movies, latest web series, and daily updated VOD content in multiple languages.</p>
-    </details>
-
-    <details>
-      <summary>💻 Can I use it on my own device?</summary>
-      <p>Yes, our plans work on Android TV, Android Boxes, and Linux-based set-top boxes.</p>
-    </details>
-
-    <details>
-      <summary>🛠️ How do I get support?</summary>
-      <p>We offer 24/7 WhatsApp support. Just click the "Contact Support" button to get instant help.</p>
-    </details>
-
-    <details>
-      <summary>🔁 How can I recharge my plan?</summary>
-      <p>Go to the "Recharge" section, fill the form with your details, and we'll assist you via WhatsApp right away.</p>
-    </details>
-
-    <details>
-      <summary>🚫 Are there any hidden charges?</summary>
-      <p>No hidden fees. All our pricing is transparent, one-time, and inclusive of all services.</p>
-    </details>
-
-    <details>
-      <summary>📦 How fast will I get activated after subscribing?</summary>
-      <p>Most accounts are activated within a few hours. You'll receive instructions on WhatsApp after you subscribe.</p>
-    </details>
-  </div>
-</div>
-</div>
-<!-- JavaScript -->
 <script>
-  function toggleMenu() {
-    const menu = document.getElementById("dropdownMenu");
-    menu.style.display = (menu.style.display === "block") ? "none" : "block";
+  /* Promo */
+  function closePromo(){document.getElementById('promo').style.display='none';try{localStorage.setItem('promoClosed','1')}catch(e){}}
+  (function(){try{if(localStorage.getItem('promoClosed')==='1'){document.getElementById('promo').style.display='none';}}catch(e){}})();
+
+  /* Tabs */
+  function showPanel(name){
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.querySelector('#panel-'+name).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelector('#tab-'+name).classList.add('active');
+    document.querySelectorAll('.dbtn').forEach(b=>b.classList.remove('dactive'));
+    const idx={plans:0,boxes:1,recharge:2,support:3}[name];document.querySelectorAll('.dbtn')[idx].classList.add('dactive');
+    window.scrollTo({top:0,behavior:'smooth'});
   }
 
-  function toggleSection(id) {
-  document.querySelectorAll('.section-content').forEach(el => el.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
-  window.scrollTo({ top: document.getElementById(id).offsetTop - 60, behavior: 'smooth' });
+  /* Sheets */
+  function openSheet(key){document.getElementById('sheet-'+key).style.display='flex';}
+  function closeSheet(key){document.getElementById('sheet-'+key).style.display='none';}
 
-  // Only close the dropdown if it's currently open
-  const menu = document.getElementById("dropdownMenu");
-  if (menu.style.display === "block") {
-    menu.style.display = "none";
+  /* WhatsApp helper */
+  function waSend(msg){const url="https://wa.me/16476961656?text="+encodeURIComponent(msg.trim());window.open(url,'_blank');}
+
+  /* CTAs */
+  function subscribePlan(label,price){document.getElementById('sPlan').value=label+" - $"+price;openSheet('subscribe');}
+  function sendSubscribe(){
+    const n=(document.getElementById('sName').value||'').trim();
+    const ph=(document.getElementById('sPhone').value||'').trim();
+    const e=(document.getElementById('sEmail').value||'').trim();
+    const plan=document.getElementById('sPlan').value||'';
+    waSend(`New Subscription\nPlan: ${plan}\nName: ${n}\nPhone: ${ph}\nEmail: ${e}`);
   }
-}
+  function buyBox(name,price){waSend(`I'm interested in: Box Only\nModel: ${name}\nPrice: $${price}\nPlease guide me with purchase & setup.`);}
+  function buyBoxBundle(name,price){waSend(`I'm interested in: ${name} + 12‑Month Plan\nBundle Price: $${price}\nPlease guide me with activation & setup.`);}
 
-  function openSubscribeForm(planName) {
-  document.getElementById('selectedPlan').value = planName;
-  toggleSection('subscribeForm');
-}
-
-  function openFAQ() {
-  toggleSection('faq');
-}
-  function openAbout() { alert("About us section coming soon!"); }
-  function openParentalPIN() { toggleSection('parentalpin'); }
-
-  function sendToWhatsApp(type) {
-    let message = "Hello,\n";
-
-    if (type === 'subscribe') {
-      const name = document.getElementById('subName').value;
-      const phone = document.getElementById('subPhone').value;
-      const email = document.getElementById('subEmail').value;
-      const plan = document.getElementById('selectedPlan').value;
-      const tvChannels = Array.from(document.getElementById('tvChannel').selectedOptions).map(opt => opt.value).join(', ');
-      const vods = Array.from(document.getElementById('vod').selectedOptions).map(opt => opt.value).join(', ');
-      const note = document.getElementById('subNote').value;
-
-      message += `New Subscription Request\nPlan: ${plan}\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nTV Channels: ${tvChannels}\nVOD Categories: ${vods}\nNote: ${note}`;
-    } else if (type === 'recharge') {
-      const name = document.getElementById("rechargeName").value;
-      const userId = document.getElementById("rechargeUserId").value;
-      const email = document.getElementById("rechargeEmail").value;
-      const plan = document.getElementById("rechargePlan").value;
-      const note = document.getElementById("rechargeNote").value;
-
-      message += `Recharge Request\nName: ${name}\nUser ID: ${userId}\nEmail: ${email}\nPlan: ${plan}\nNote: ${note}`;
-    } else if (type === 'pin') {
-      const name = document.getElementById("pinName").value;
-      const phone = document.getElementById("pinPhone").value;
-      const note = document.getElementById("pinNote").value;
-
-      message += `Parental PIN Request\nName: ${name}\nPhone: ${phone}\nNote: ${note}`;
-    }
-
-    const url = "https://wa.me/16476961656?text=" + encodeURIComponent(message);
-    window.open(url, "_blank");
+  /* Recharge */
+  function sendRecharge(){
+    const n=(document.getElementById('rcName').value||'').trim();
+    const u=(document.getElementById('rcUser').value||'').trim();
+    const e=(document.getElementById('rcEmail').value||'').trim();
+    const p=document.getElementById('rcPlan').value||'';
+    waSend(`Recharge Request\nName: ${n}\nUser ID: ${u}\nEmail: ${e}\nPlan: ${p}`);
   }
 
-  window.addEventListener("scroll", () => {
-    const buttons = document.getElementById("menuButtons");
-    if (window.scrollY > 100) buttons.style.display = "block";
-  });
+  /* Support forms */
+  function sendRequest(){
+    const n=(document.getElementById('reqName').value||'').trim();
+    const ph=(document.getElementById('reqPhone').value||'').trim();
+    const e=(document.getElementById('reqEmail').value||'').trim();
+    const note=(document.getElementById('reqNote').value||'').trim();
+    waSend(`General Request\nName: ${n}\nPhone: ${ph}\nEmail: ${e}\nDetails: ${note}`);
+  }
+  function sendPin(){
+    const mac=(document.getElementById('pinMac').value||'').trim();
+    const e=(document.getElementById('pinEmail').value||'').trim();
+    const note=(document.getElementById('pinNote').value||'').trim();
+    waSend(`Parental PIN Request\nMAC: ${mac}\nEmail: ${e}\nNote: ${note}`);
+  }
 </script>
 
+<!-- Bottom Dock (kept here so JS above can call) -->
+<nav class="dock wrap" aria-label="Quick navigation">
+  <a class="dbtn dactive" href="#plans" onclick="showPanel('plans')">Plans</a>
+  <a class="dbtn" href="#boxes" onclick="showPanel('boxes')">Boxes</a>
+  <a class="dbtn" href="#recharge" onclick="showPanel('recharge')">Recharge</a>
+  <a class="dbtn" href="#support" onclick="showPanel('support')">Support</a>
+</nav>
 </body>
 </html>
