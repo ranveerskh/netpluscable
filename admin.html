@@ -837,13 +837,28 @@ async function saveCustomerFromModal() {
     });
 
   } else {
-    // EDIT
-    const cid = String(editingId); // 🔒 must be string for doc()
-    await updateDoc(doc(db, 'customers', cid), {
-      ...payload,
-      updatedAt: serverTimestamp()
-    });
-  }
+   // EDIT
+const cid =
+  (typeof editingId === 'string' && editingId) ? editingId :
+  (typeof window.editCustomerId === 'string' && window.editCustomerId) ? window.editCustomerId :
+  null;
+
+if (!cid) {
+  // If we somehow got here without an id, fall back to CREATE (prevents doc() crash)
+  const ref = await addDoc(collection(db, 'customers'), {
+    ...payload,
+    originalStartDate: start,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  });
+  window.editCustomerId = ref.id;
+} else {
+  // 🔒 doc() MUST receive strings
+  await updateDoc(doc(db, 'customers', String(cid)), {
+    ...payload,
+    updatedAt: serverTimestamp()
+  });
+}
 
   // refresh UI
   await loadCustomers();
