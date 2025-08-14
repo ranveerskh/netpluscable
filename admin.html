@@ -277,6 +277,11 @@
     </section>
   </div>
 </div>
+<hr style="border:none;border-top:1px solid var(--border);margin:14px 0">
+<div class="flex">
+  <button id="btnCleanupOrphans" class="btn danger" type="button">🗑 Delete Orphan Renewals</button>
+  <span id="cleanupMsg" class="muted"></span>
+</div>
 
 <!-- MODALS -->
 <div id="modalCustomer" class="modal">
@@ -485,6 +490,7 @@ onAuthStateChanged(auth, (user)=>{
     appView.classList.add('hidden');
     authView.classList.remove('hidden');
   }
+  $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
 });
 
 /* =========================
@@ -530,7 +536,59 @@ async function loadApp(user){
 
   renderAll();
 }
+async function cleanupOrphanRenewals(){
+  const msg = $("#cleanupMsg");
+  const btn = $("#btnCleanupOrphans");
+  try{
+    btn.disabled = true; msg.textContent = "Scanning…";
 
+    // Make sure we have fresh data
+    await loadCustomers();
+
+    // Build a set of existing customer IDs
+    const existing = new Set(customers.map(c => String(c.id)));
+
+    // Get all renewals across all customers
+    const snap = await getDocs(collectionGroup(db, "renewals"));
+
+    // Collect orphan renewal docs (customerId missing from customers set)
+    const orphans = [];
+    snap.forEach(d => {
+      const data = d.data() || {};
+      const cid  = String(data.customerId || "");
+      if (!existing.has(cid)) orphans.push(d.ref);
+    });
+
+    if (orphans.length === 0){
+      msg.textContent = "No orphan renewals found.";
+      return;
+    }
+
+    msg.textContent = `Deleting ${orphans.length} orphan renewals…`;
+
+    // Delete in chunks to avoid large batches
+    const CHUNK = 400;
+    for (let i = 0; i < orphans.length; i += CHUNK){
+      const batch = writeBatch(db);
+      for (let j = i; j < Math.min(i+CHUNK, orphans.length); j++){
+        batch.delete(orphans[j]);
+      }
+      await batch.commit();
+    }
+
+    // Refresh UI + totals
+    await loadRenewals();
+    renderKPIs();
+    runReport();
+    msg.textContent = `Deleted ${orphans.length} orphan renewals.`;
+  }catch(err){
+    console.error("[cleanupOrphanRenewals]", err);
+    alert(err?.message || "Failed to clean up orphan renewals");
+    msg.textContent = "Error during cleanup.";
+  }finally{
+    btn.disabled = false;
+  }
+}
 /* =========================
    Firestore load/save
    ========================= */
