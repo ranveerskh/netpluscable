@@ -1205,17 +1205,39 @@ function runReport(){
   $("#repProfit").textContent   = fmt(P);
 }
 function exportCSV(){
+  // Build rows
   const rows = [["Date","Customer","Plan","Turnover","Expense","Profit","Paid"]];
-  $("#repGrid tbody tr").forEach(tr=>{
-    const cols = [...tr.children].map(td=>td.textContent);
+  document.querySelectorAll("#repGrid tbody tr").forEach(tr=>{
+    const cols = [...tr.children].map(td => td.textContent);
     rows.push(cols);
   });
-  const csv = rows.map(r=> r.map(x=> `"${String(x).replaceAll('"','""')}"`).join(",")).join("\n");
-  const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = "report.csv"; a.click();
-  URL.revokeObjectURL(url);
+
+  // CSV string (+ BOM for Excel)
+  const csvStr = "\uFEFF" + rows
+    .map(r => r.map(x => `"${String(x).replaceAll('"','""')}"`).join(","))
+    .join("\n");
+
+  // Prefer Blob + object URL when supported
+  const blob = new Blob([csvStr], { type: "text/csv;charset=utf-8;" });
+
+  // iOS Safari often ignores download on object URLs — use data URL fallback
+  const canDownloadAttr = "download" in HTMLAnchorElement.prototype;
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  if (canDownloadAttr && !isIOS) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "report.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } else {
+    // Fallback: open CSV in a new tab so user can "Share/Save"
+    const dataUrl = "data:text/csv;charset=utf-8," + encodeURIComponent(csvStr);
+    window.open(dataUrl, "_blank");
+  }
 }
 
 /* =========================
