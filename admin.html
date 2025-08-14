@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Admin • Customers (Sheets)</title>
+<style>
+  :root { --bg:#0b1020; --card:#121831; --ink:#e7ecff; --muted:#9aa7d9; --accent:#6a8cff; --accent2:#8a5bff; --danger:#ff647c; --ok:#35d0a7; --input:#0f1530; --border:#23305b }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:
+    radial-gradient(1200px 800px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
+    radial-gradient(900px 700px at 0% 0%,rgba(106,140,255,.18),transparent 55%),var(--bg);color:var(--ink)}
+  header{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px;position:sticky;top:0;background:linear-gradient(180deg,rgba(10,14,30,.9),rgba(10,14,30,.4));backdrop-filter:blur(6px);border-bottom:1px solid var(--border);z-index:10}
+  .brand{font-weight:700}
+  .btn{padding:9px 12px;border:1px solid var(--border);border-radius:10px;cursor:pointer;font-weight:600;color:white;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 6px 20px rgba(76,102,255,.25)}
+  .btn.ghost{background:transparent;color:var(--ink)}
+  .btn.bad{background:linear-gradient(135deg,#ff5a7a,#ff8aa0)}
+  .btn.ok{background:linear-gradient(135deg,#39d0a7,#6ae6c7)}
+  .btn:disabled{opacity:.6;cursor:not-allowed}
+  main{padding:18px;max-width:1200px;margin:0 auto}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .tab{padding:8px 12px;border:1px solid var(--border);border-radius:999px;background:#0f1530;color:var(--ink);cursor:pointer}
+  .tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:14px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  label{font-size:12px;color:var(--muted)}
+  input,select,textarea{padding:9px 11px;border:1px solid var(--border);border-radius:10px;background:var(--input);color:var(--ink);outline:none}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:10px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{color:var(--muted);text-align:left}
+  .pill{padding:3px 8px;border-radius:999px;font-size:12px;display:inline-block;border:1px solid var(--border)}
+  .pill.active{background:rgba(53,208,167,.2);color:#9df2dc;border-color:rgba(53,208,167,.4)}
+  .pill.overdue{background:rgba(255,100,124,.18);color:#ffc0ca;border-color:rgba(255,100,124,.4)}
+  .devices{font-size:13px;color:#cbd3ff}
+  .muted{color:var(--muted)}
+  .nowrap{white-space:nowrap}
+  .right{margin-left:auto}
+  .hide{display:none !important}
+  .section{display:none}
+  .section.active{display:block}
+  .small{font-size:12px}
+  .w-200{min-width:200px}
+  .hr{height:1px;background:var(--border);margin:8px 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">🗂️ Admin • Customers (Sheets)</div>
+  <div class="row">
+    <button id="refreshBtn" class="btn ghost">Refresh</button>
+    <button id="newCustomerBtn" class="btn">+ New Customer</button>
+    <button id="exportCsvBtn" class="btn ghost">Export CSV</button>
+  </div>
+</header>
+
+<main>
+  <div class="tabs">
+    <div class="tab active" data-tab="customers">Customers</div>
+    <div class="tab" data-tab="payments">Payments</div>
+    <div class="tab" data-tab="plans">Plans</div>
+    <div class="tab" data-tab="reports">Reports</div>
+    <div class="right muted small" id="statusText">Ready</div>
+  </div>
+
+  <!-- Customers -->
+  <section id="customers" class="section active">
+    <div class="card">
+      <div class="row">
+        <input id="q" class="w-200" placeholder="Search name / phone / email / MAC" />
+        <select id="fStatus">
+          <option value="">All Status</option>
+          <option>active</option><option>trial</option><option>overdue</option><option>inactive</option>
+        </select>
+        <select id="fPlan"><option value="">All Plans/Products</option></select>
+        <select id="fExp">
+          <option value="">Expiry: any</option>
+          <option value="7">Expiring ≤ 7 days</option>
+          <option value="14">Expiring ≤ 14 days</option>
+          <option value="30">Expiring ≤ 30 days</option>
+          <option value="-1">Expired</option>
+        </select>
+        <button id="clearFilters" class="btn ghost">Clear</button>
+      </div>
+    </div>
+    <div id="custList" class="card" style="padding:0">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Phone</th><th>Email</th><th>Plan</th><th>Status</th><th>Expiry</th><th>Devices (MAC)</th><th class="nowrap">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Payments -->
+  <section id="payments" class="section">
+    <div class="card">
+      <div class="row">
+        <input id="payQ" placeholder="Search by customer_id / reference / note" class="w-200" />
+        <button id="reloadPayments" class="btn ghost">Reload</button>
+      </div>
+    </div>
+    <div class="card" style="padding:0">
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Customer</th><th>Type</th><th>Item</th><th>Months/QTY</th><th>Amount</th><th>Expense</th><th>Profit</th><th>Note</th></tr>
+        </thead>
+        <tbody id="payBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Plans -->
+  <section id="plans" class="section">
+    <div class="card"><div class="muted">Loaded from your <b>plans</b> sheet (duration 0 = one‑time product).</div></div>
+    <div class="card" style="padding:0">
+      <table>
+        <thead><tr><th>ID</th><th>Name</th><th>Duration (mo)</th><th>Retail</th><th>Wholesale</th><th>Description</th></tr></thead>
+        <tbody id="plansBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Reports -->
+  <section id="reports" class="section">
+    <div class="card">
+      <div class="row">
+        <label>From (YYYY‑MM)</label><input id="fromM" placeholder="2025-01" />
+        <label>To</label><input id="toM" placeholder="2025-12" />
+        <button id="runRpt" class="btn">Run</button>
+      </div>
+    </div>
+    <div class="card">
+      <div id="lifetime" class="row">
+        <div><b>Lifetime Income:</b> <span id="ltIncome">0</span></div>
+        <div><b>Lifetime Expense:</b> <span id="ltExpense">0</span></div>
+        <div><b>Lifetime Profit:</b> <span id="ltProfit">0</span></div>
+      </div>
+      <div class="hr"></div>
+      <div style="overflow:auto">
+        <table>
+          <thead><tr><th>Month</th><th>Income</th><th>Expense</th><th>Profit</th></tr></thead>
+          <tbody id="rptBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Modal -->
+<div id="modal" class="hide" style="position:fixed;inset:0;background:rgba(6,8,16,.55);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:50">
+  <div class="card" style="width:min(720px,92vw)">
+    <div id="modalTitle" style="font-weight:700;margin-bottom:8px">Modal</div>
+    <div id="modalBody"></div>
+    <div class="row" style="justify-content:flex-end;margin-top:10px">
+      <button id="modalCancel" class="btn ghost">Cancel</button>
+      <button id="modalOk" class="btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =================== CONFIG =================== */
+const BASE_URL   = "PUT_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"; // e.g. https://script.google.com/macros/s/XXXXX/exec
+const AUTH_TOKEN = "REPLACE_WITH_YOUR_SECRET";              // same as in Apps Script
+
+/* =================== UTIL =================== */
+const $ = q => document.querySelector(q);
+const statusText = $("#statusText");
+function setStatus(t){ statusText.textContent = t; }
+function esc(s=""){ return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m])); }
+function daysLeft(iso){
+  if(!iso) return null;
+  const d = new Date(iso + "T00:00:00");
+  const diff = Math.ceil((d - new Date())/(1000*60*60*24));
+  return diff;
+}
+async function apiGet(params){
+  const url = new URL(BASE_URL);
+  Object.entries(params).forEach(([k,v])=> url.searchParams.set(k,v));
+  url.searchParams.set("token", AUTH_TOKEN);
+  const r = await fetch(url, { method:"GET" });
+  return r.json();
+}
+async function apiPost(action, body){
+  const r = await fetch(BASE_URL, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ token: AUTH_TOKEN, action, ...body })
+  });
+  return r.json();
+}
+
+/* =================== STATE =================== */
+let plans = [];         // duration>0 = plan, ==0 = product
+let customers = [];
+let devicesByCustomer = {};
+let payments = [];
+
+/* =================== TABS =================== */
+document.querySelectorAll(".tab").forEach(el=>{
+  el.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+    el.classList.add("active");
+    $("#"+el.dataset.tab).classList.add("active");
+  });
+});
+
+/* =================== LOADERS =================== */
+async function loadPlans(){
+  setStatus("Loading plans…");
+  const res = await apiGet({ action:"listPlans" });
+  if(!res.ok){ alert(res.error||"Failed to load plans"); return; }
+  plans = res.data || [];
+  const sel = $("#fPlan");
+  sel.innerHTML = `<option value="">All Plans/Products</option>` + plans.map(p=>`<option value="${esc(p.id)}">${esc(p.name)} (${Number(p.duration_months||0)} mo)</option>`).join("");
+  $("#plansBody").innerHTML = plans.map(p=>`
+    <tr>
+      <td>${esc(p.id)}</td>
+      <td>${esc(p.name)}</td>
+      <td>${esc(p.duration_months)}</td>
+      <td>${esc(p.retail_price)}</td>
+      <td>${esc(p.wholesale_cost)}</td>
+      <td>${esc(p.description||"")}</td>
+    </tr>
+  `).join("");
+  setStatus("Plans loaded");
+}
+
+async function loadCustomers(){
+  setStatus("Loading customers…");
+  const res = await apiGet({ action:"listCustomers" });
+  if(!res.ok){ alert(res.error||"Failed to load customers"); return; }
+  customers = res.data || [];
+  devicesByCustomer = {};
+  await Promise.all(customers.map(async c=>{
+    const r = await apiGet({ action:"listDevices", customer_id: c.id });
+    devicesByCustomer[c.id] = (r.ok ? r.data : []) || [];
+  }));
+  renderCustomers();
+  setStatus("Customers loaded");
+}
+
+async function loadPayments(){
+  setStatus("Loading payments…");
+  const res = await apiGet({ action:"listPayments" });
+  if(!res.ok){ alert(res.error||"Failed to load payments"); return; }
+  payments = res.data || [];
+  renderPayments();
+  setStatus("Payments loaded");
+}
+
+/* =================== RENDERERS =================== */
+function renderCustomers(){
+  const q = $("#q").value.trim().toLowerCase();
+  const fStatus = $("#fStatus").value;
+  const fPlan = $("#fPlan").value;
+  const fExp = $("#fExp").value;
+
+  let data = customers.slice();
+  data = data.filter(c=>{
+    const devs = devicesByCustomer[c.id] || [];
+    const macs = devs.map(d=>d.mac).join(" ").toLowerCase();
+    const text = `${c.name||""} ${c.phone||""} ${c.email||""} ${macs}`.toLowerCase();
+    const matchQ = q ? text.includes(q) : true;
+    const matchStatus = fStatus ? c.status === fStatus : true;
+    const matchPlan = fPlan ? c.plan_id === fPlan : true;
+
+    let matchExp = true;
+    if (fExp){
+      const dl = daysLeft(c.expiryDate);
+      if (fExp === "-1") matchExp = (dl!==null && dl<0);
+      else {
+        const lim = Number(fExp);
+        matchExp = (dl!==null && dl>=0 && dl<=lim);
+      }
+    }
+    return matchQ && matchStatus && matchPlan && matchExp;
+  });
+
+  $("#tbody").innerHTML = data.map(c=>{
+    const devs = devicesByCustomer[c.id] || [];
+    const plan = plans.find(p=>p.id===c.plan_id);
+    const dl = daysLeft(c.expiryDate);
+    let pill = `<span class="pill">${esc(c.status||"")}</span>`;
+    if (c.status==="active") pill = `<span class="pill active">active</span>`;
+    if (c.status==="overdue") pill = `<span class="pill overdue">overdue</span>`;
+
+    return `
+      <tr>
+        <td>${esc(c.name||"")} <div class="small muted">${esc(c.id||"")}</div></td>
+        <td class="nowrap">${esc(c.phone||"")}</td>
+        <td>${esc(c.email||"")}</td>
+        <td>${esc(plan ? plan.name : (c.plan_id||"—"))}</td>
+        <td>${pill}</td>
+        <td>${c.expiryDate ? `${esc(c.expiryDate)} ${dl!==null?`<span class="muted small">(${dl}d)</span>`:""}` : "—"}</td>
+        <td class="devices">
+          ${devs.map(d=>`<div class="row" style="gap:6px"><span class="small">${esc(d.mac)}</span> <button class="btn ghost small" onclick="removeDevice('${d.id}')">x</button></div>`).join("")}
+          <div class="row" style="margin-top:6px">
+            <input id="mac-${c.id}" placeholder="AA:BB:CC:DD:EE:FF" style="width:170px" />
+            <button class="btn ghost small" onclick="addDevice('${c.id}')">+ Add MAC</button>
+          </div>
+        </td>
+        <td class="nowrap">
+          <button class="btn ghost" onclick="editCustomer('${c.id}')">Edit</button>
+          <button class="btn bad" onclick="delCustomer('${c.id}')">Delete</button>
+          <div class="hr"></div>
+          <button class="btn ok" onclick="renewPrompt('${c.id}')">Renew</button>
+          <button class="btn ghost" onclick="sellProductPrompt('${c.id}')">Sell Product</button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+}
+
+function renderPayments(){
+  const q = $("#payQ").value.trim().toLowerCase();
+  let data = payments.slice();
+  data = data.filter(p=>{
+    const text = `${p.customer_id||""} ${p.reference||""} ${p.note||""}`.toLowerCase();
+    return q ? text.includes(q) : true;
+  });
+  $("#payBody").innerHTML = data.map(p=>`
+    <tr>
+      <td>${esc(p.date||"")}</td>
+      <td>${esc(p.customer_id||"")}</td>
+      <td>${esc(p.item_type||"")}</td>
+      <td>${esc(p.item_id||"")}</td>
+      <td>${p.months>0 ? `${p.months} mo` : (p.quantity||1)}</td>
+      <td>${Number(p.amount||0).toFixed(2)}</td>
+      <td>${Number(p.expense||0).toFixed(2)}</td>
+      <td>${Number(p.profit||0).toFixed(2)}</td>
+      <td>${esc(p.note||"")}</td>
+    </tr>
+  `).join("");
+}
+
+/* =================== CRUD: Customers & Devices =================== */
+async function editCustomer(id){
+  const c = customers.find(x=>x.id===id) || { id:"", name:"", phone:"", email:"", plan_id:"", status:"active", startDate:"", expiryDate:"", notes:"" };
+  const planOptions = plans.map(p=>`<option value="${esc(p.id)}" ${p.id===c.plan_id?'selected':''}>${esc(p.name)} (${p.duration_months||0} mo)</option>`).join("");
+  openModal(`Edit Customer`,
+  `<div class="row">
+    <div><label>Name</label><br/><input id="m_name" value="${esc(c.name||"")}" /></div>
+    <div><label>Phone</label><br/><input id="m_phone" value="${esc(c.phone||"")}" /></div>
+    <div><label>Email</label><br/><input id="m_email" value="${esc(c.email||"")}" /></div>
+    <div><label>Plan</label><br/><select id="m_plan">${planOptions}</select></div>
+    <div><label>Status</label><br/>
+      <select id="m_status">
+        ${["active","trial","overdue","inactive"].map(s=>`<option ${s===(c.status||"")?"selected":""}>${s}</option>`).join("")}
+      </select>
+    </div>
+    <div><label>Start</label><br/><input id="m_start" type="date" value="${esc(c.startDate||"")}" /></div>
+    <div><label>Expiry</label><br/><input id="m_expiry" type="date" value="${esc(c.expiryDate||"")}" /></div>
+    <div style="flex:1;min-width:100%"><label>Notes</label><br/><textarea id="m_notes" rows="3">${esc(c.notes||"")}</textarea></div>
+  </div>`,
+  async ()=>{
+    const payload = {
+      id: c.id || undefined,
+      name: $("#m_name").value.trim(),
+      phone: $("#m_phone").value.trim(),
+      email: $("#m_email").value.trim(),
+      plan_id: $("#m_plan").value,
+      status: $("#m_status").value,
+      startDate: $("#m_start").value || "",
+      expiryDate: $("#m_expiry").value || "",
+      notes: $("#m_notes").value.trim()
+    };
+    const res = await apiPost("upsertCustomer", { row: payload });
+    if(!res.ok){ alert(res.error||"Save failed"); return; }
+    await loadCustomers();
+    closeModal();
+  });
+}
+
+async function delCustomer(id){
+  if(!confirm("Delete this customer?")) return;
+  const res = await apiPost("deleteCustomer", { id });
+  if(!res.ok){ alert(res.error||"Delete failed"); return; }
+  await loadCustomers();
+}
+
+async function addDevice(customer_id){
+  const mac = $(`#mac-${CSS.escape(customer_id)}`).value.trim();
+  if(!mac){ alert("Enter MAC"); return; }
+  const res = await apiPost("upsertDevice", { row:{ customer_id, mac, status:"active" }});
+  if(!res.ok){ alert(res.error||"Add failed"); return; }
+  await loadCustomers();
+}
+async function removeDevice(id){
+  if(!confirm("Remove this device?")) return;
+  const res = await apiPost("deleteDevice", { id });
+  if(!res.ok){ alert(res.error||"Remove failed"); return; }
+  await loadCustomers();
+}
+
+/* =================== RENEW & SELL =================== */
+function renewPrompt(customer_id){
+  const c = customers.find(x=>x.id===customer_id);
+  const plan = plans.find(p=>p.id===c.plan_id);
+  openModal("Renew Plan",
+  `<div class="row">
+     <div><label>Plan</label><br/><div>${esc(plan ? plan.name : c.plan_id)}</div></div>
+     <div><label>Months</label><br/><input id="r_months" type="number" value="${Number(plan?.duration_months||1)}" min="1" /></div>
+     <div><label>Amount (paid)</label><br/><input id="r_amount" type="number" step="0.01" value="${Number(plan?.retail_price||0)}" /></div>
+     <div><label>Override Retail</label><br/><input id="r_retail" type="number" step="0.01" value="${Number(plan?.retail_price||0)}" /></div>
+     <div><label>Override Cost</label><br/><input id="r_cost" type="number" step="0.01" value="${Number(plan?.wholesale_cost||0)}" /></div>
+     <div><label>Method</label><br/>
+       <select id="r_method"><option>cash</option><option>e-transfer</option><option>credit</option><option>other</option></select>
+     </div>
+     <div style="flex:1;min-width:100%"><label>Reference / Note</label><br/><input id="r_ref" placeholder="Txn ID or note" /></div>
+   </div>`,
+  async ()=>{
+    const res = await apiPost("renew", {
+      customer_id,
+      plan_id: c.plan_id,
+      months: Number($("#r_months").value || 1),
+      amount: Number($("#r_amount").value||0),
+      unit_retail_at_txn: Number($("#r_retail").value||0),
+      unit_cost_at_txn: Number($("#r_cost").value||0),
+      method: $("#r_method").value,
+      reference: $("#r_ref").value.trim()
+    });
+    if(!res.ok){ alert(res.error||"Renew failed"); return; }
+    await Promise.all([loadCustomers(), loadPayments()]);
+    closeModal();
+    alert(`Renewed.\nIncome $${res.payment.amount} • Expense $${res.payment.expense} • Profit $${res.payment.profit}`);
+  });
+}
+
+function sellProductPrompt(customer_id){
+  const products = plans.filter(p=>Number(p.duration_months||0)===0);
+  const opt = products.map(p=>`<option value="${esc(p.id)}" data-retail="${p.retail_price}" data-cost="${p.wholesale_cost}">${esc(p.name)} ($${p.retail_price})</option>`).join("");
+  openModal("Sell Product",
+  `<div class="row">
+     <div><label>Product</label><br/><select id="s_prod">${opt}</select></div>
+     <div><label>Qty</label><br/><input id="s_qty" type="number" value="1" min="1" /></div>
+     <div><label>Amount (paid)</label><br/><input id="s_amount" type="number" step="0.01" /></div>
+     <div><label>Override Retail</label><br/><input id="s_retail" type="number" step="0.01" /></div>
+     <div><label>Override Cost</label><br/><input id="s_cost" type="number" step="0.01" /></div>
+     <div><label>Method</label><br/><select id="s_method"><option>cash</option><option>e-transfer</option><option>credit</option><option>other</option></select></div>
+     <div style="flex:1;min-width:100%"><label>Reference / Note</label><br/><input id="s_ref" placeholder="Txn ID or note" /></div>
+   </div>`,
+  async ()=>{
+    const prod = $("#s_prod").value;
+    const qty = Number($("#s_qty").value||1);
+    const amount = $("#s_amount").value ? Number($("#s_amount").value) : undefined;
+    const res = await apiPost("sellProduct", {
+      customer_id,
+      product_id: prod,
+      quantity: qty,
+      amount,
+      unit_retail_at_txn: $("#s_retail").value ? Number($("#s_retail").value) : undefined,
+      unit_cost_at_txn:   $("#s_cost").value ? Number($("#s_cost").value)   : undefined,
+      method: $("#s_method").value,
+      reference: $("#s_ref").value.trim()
+    });
+    if(!res.ok){ alert(res.error||"Sale failed"); return; }
+    await loadPayments();
+    closeModal();
+    alert(`Sold.\nIncome $${res.payment.amount} • Expense $${res.payment.expense} • Profit $${res.payment.profit}`);
+  });
+}
+
+/* =================== REPORTS =================== */
+async function runReport(){
+  const from = $("#fromM").value || "1900-01";
+  const to   = $("#toM").value   || "9999-12";
+  const res = await apiPost("reportMonthly", { from, to });
+  if(!res.ok){ alert(res.error||"Report failed"); return; }
+  $("#ltIncome").textContent = res.lifetime.income.toFixed(2);
+  $("#ltExpense").textContent = res.lifetime.expense.toFixed(2);
+  $("#ltProfit").textContent  = res.lifetime.profit.toFixed(2);
+  $("#rptBody").innerHTML = res.rows.map(r=>`
+    <tr><td>${r.month}</td><td>${r.income.toFixed(2)}</td><td>${r.expense.toFixed(2)}</td><td>${r.profit.toFixed(2)}</td></tr>
+  `).join("");
+}
+
+/* =================== MODAL =================== */
+const modal = $("#modal"), mBody=$("#modalBody"), mTitle=$("#modalTitle");
+$("#modalCancel").onclick = closeModal;
+function openModal(title, html, onOk){
+  mTitle.textContent = title;
+  mBody.innerHTML = html;
+  $("#modalOk").onclick = onOk;
+  modal.classList.remove("hide");
+}
+function closeModal(){ modal.classList.add("hide"); }
+
+/* =================== EXPORT (visible rows) =================== */
+$("#exportCsvBtn").addEventListener("click", ()=>{
+  const rows = [...$("#tbody").querySelectorAll("tr")];
+  const head = ["Name","Phone","Email","Plan","Status","Expiry","MACs"];
+  const data = rows.map(tr=>[...tr.children].slice(0,7).map(td=>td.innerText.replace(/\n/g," ").trim()));
+  const csv = [head, ...data].map(r=>r.map(s=>{
+    s = s ?? ""; if (s.includes(",") || s.includes("\"")) return `"${s.replaceAll('"','""')}"`; return s;
+  }).join(",")).join("\n");
+  const blob = new Blob([csv], { type:"text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob); const a = document.createElement("a");
+  a.href = url; a.download = `customers_${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+});
+
+/* =================== FILTER EVENTS =================== */
+$("#q").oninput = renderCustomers;
+$("#fStatus").onchange = renderCustomers;
+$("#fPlan").onchange = renderCustomers;
+$("#fExp").onchange = renderCustomers;
+$("#clearFilters").onclick = ()=>{ $("#q").value=""; $("#fStatus").value=""; $("#fPlan").value=""; $("#fExp").value=""; renderCustomers(); }
+$("#reloadPayments").onclick = loadPayments;
+$("#payQ").oninput = renderPayments;
+$("#runRpt").onclick = runReport;
+$("#refreshBtn").onclick = async()=>{ await Promise.all([loadPlans(), loadCustomers(), loadPayments()]); }
+
+/* =================== NEW CUSTOMER =================== */
+$("#newCustomerBtn").onclick = ()=>{
+  const planOptions = plans.map(p=>`<option value="${esc(p.id)}">${esc(p.name)} (${p.duration_months||0} mo)</option>`).join("");
+  openModal("New Customer",
+  `<div class="row">
+    <div><label>Name</label><br/><input id="n_name" /></div>
+    <div><label>Phone</label><br/><input id="n_phone" /></div>
+    <div><label>Email</label><br/><input id="n_email" /></div>
+    <div><label>Plan</label><br/><select id="n_plan">${planOptions}</select></div>
+    <div><label>Status</label><br/><select id="n_status"><option>active</option><option>trial</option><option>overdue</option><option>inactive</option></select></div>
+    <div><label>Start</label><br/><input id="n_start" type="date" /></div>
+    <div><label>Expiry</label><br/><input id="n_expiry" type="date" /></div>
+    <div style="flex:1;min-width:100%"><label>Notes</label><br/><textarea id="n_notes" rows="3"></textarea></div>
+  </div>`,
+  async ()=>{
+    const row = {
+      name: $("#n_name").value.trim(),
+      phone: $("#n_phone").value.trim(),
+      email: $("#n_email").value.trim(),
+      plan_id: $("#n_plan").value,
+      status: $("#n_status").value,
+      startDate: $("#n_start").value || "",
+      expiryDate: $("#n_expiry").value || "",
+      notes: $("#n_notes").value.trim()
+    };
+    if(!row.name){ alert("Name required"); return; }
+    const res = await apiPost("upsertCustomer", { row });
+    if(!res.ok){ alert(res.error||"Create failed"); return; }
+    await loadCustomers();
+    closeModal();
+  });
+};
+
+/* =================== INIT =================== */
+(async function init(){
+  await loadPlans();
+  await loadCustomers();
+  await loadPayments();
+})();
+</script>
+</body>
+</html>
