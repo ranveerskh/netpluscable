@@ -1336,7 +1336,7 @@ function buildInvoiceHTML({invNo, today, billTo, contactLine, metaLine, plan, li
   </div>
 
   <table>
-    <thead><tr><th>Description</th><th class="right">Amount (USD)</th></tr></thead>
+    <thead><tr><th>Description</th><th class="right">Amount (CAD)</th></tr></thead>
     <tbody>
       ${lines.map(l=>`<tr><td>${l[0]}</td><td class="right">${(+l[1]||0).toFixed(2)}</td></tr>`).join("")}
       <tr class="totals"><td>Total</td><td class="right">${(+total||0).toFixed(2)}</td></tr>
