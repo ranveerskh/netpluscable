@@ -814,27 +814,25 @@ async function saveCustomerFromModal() {
 
   if (!editingId) {
     // NEW
-    const ref = await addDoc(collection(db, 'customers'), {
-      ...payload,
-      originalStartDate: start,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
-    });
+   const ref = await addDoc(collection(db, 'customers'), {
+  ...payload,
+  originalStartDate: start,
+  createdAt: serverTimestamp(),
+  updatedAt: serverTimestamp()
+});
+const cid = String(ref.id);  // ✅ force string
 
-    const cid = ref.id;
-
-    // create activation/renewal record (used by KPIs/reports)
-    await addDoc(collection(db, 'customers', cid, 'renewals'), {
-      customerId: cid,
-      customerName: name,
-      planId, planName, durationMonths,
-      cost: currentPlan.cost, wholesale: currentPlan.wholesale,
-      stbIncluded: currentPlan.stbIncluded,
-      stbCost: currentPlan.stbCost, stbWholesale: currentPlan.stbWholesale,
-      startDate: start, expiryDate: expiry,
-      paymentReceived: currentPlan.paymentReceived,
-      createdAt: serverTimestamp()
-    });
+await addDoc(collection(db, 'customers', cid, 'renewals'), {
+  customerId: cid,
+  customerName: name,
+  planId, planName, durationMonths,
+  cost: currentPlan.cost, wholesale: currentPlan.wholesale,
+  stbIncluded: currentPlan.stbIncluded,
+  stbCost: currentPlan.stbCost, stbWholesale: currentPlan.stbWholesale,
+  startDate: start, expiryDate: expiry,
+  paymentReceived: currentPlan.paymentReceived,
+  createdAt: serverTimestamp()
+});
 
   } else {
    // EDIT
