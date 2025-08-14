@@ -269,19 +269,21 @@
     </section>
 
     <!-- SETTINGS -->
-    <section id="tab-settings" class="card hidden">
-      <h3>Settings</h3>
-      <label>Near‑expiry threshold (days)</label>
-      <input id="settingNearDays" type="number" min="1" value="30" />
-      <p class="muted" style="margin-top:8px">This controls both Dashboard and Customers tab expiry highlighting.</p>
-    </section>
+<section id="tab-settings" class="card">
+  <h3>Settings</h3>
+  <label>Near-expiry threshold (days)</label>
+  <input id="settingNearDays" type="number">
+  <p class="muted" style="margin-top:6px"></p>
+
+  <hr style="border:none;border-top:1px solid var(--border);margin:14px 0">
+
+  <div class="flex">
+    <button id="btnCleanupOrphans" class="btn danger" type="button">
+      🗑 Delete Orphan Renewals
+    </button>
+    <span id="cleanupMsg" class="muted"></span>
   </div>
-</div>
-<hr style="border:none;border-top:1px solid var(--border);margin:14px 0">
-<div class="flex">
-  <button id="btnCleanupOrphans" class="btn danger" type="button">🗑 Delete Orphan Renewals</button>
-  <span id="cleanupMsg" class="muted"></span>
-</div>
+</section>
 
 <!-- MODALS -->
 <div id="modalCustomer" class="modal">
