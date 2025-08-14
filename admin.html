@@ -1276,7 +1276,9 @@ const LOGO_SVG = `
 </svg>`;
 const LOGO_URL = "data:image/svg+xml;utf8," + encodeURIComponent(LOGO_SVG);
 
-function buildInvoiceHTML({invNo, today, billTo, contactLine, metaLine, lines, total, paidBadge}){
+/* ====== UPDATED: Invoice with plan details ====== */
+function buildInvoiceHTML({invNo, today, billTo, contactLine, metaLine, plan, lines, total, paidBadge}){
+  // plan = { name, months, start, expiry, paidText }
   return `
 <!doctype html>
 <html><head><meta charset="utf-8"><title>${invNo}</title>
@@ -1290,6 +1292,8 @@ function buildInvoiceHTML({invNo, today, billTo, contactLine, metaLine, lines, t
   .brand h2{ margin:0; font-size:22px }
   .muted{ color:var(--muted) }
   .box{ border:1px solid var(--line); border-radius:10px; padding:14px; margin-top:14px }
+  .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px 16px; }
+  .grid .lbl{ color:var(--muted) }
   table{ width:100%; border-collapse:collapse; margin-top:12px }
   th,td{ padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:14px }
   th{ background:#fafafa }
@@ -1318,6 +1322,17 @@ function buildInvoiceHTML({invNo, today, billTo, contactLine, metaLine, lines, t
     ${billTo}<br>
     ${contactLine}
     ${metaLine ? `<div class="muted">${metaLine}</div>` : ""}
+  </div>
+
+  <div class="box">
+    <strong>Plan Details</strong>
+    <div class="grid" style="margin-top:8px">
+      <div class="lbl">Plan</div><div>${plan?.name || '-'}</div>
+      <div class="lbl">Duration</div><div>${(plan?.months ?? 0)} months</div>
+      <div class="lbl">Start Date</div><div>${plan?.start || '-'}</div>
+      <div class="lbl">Expiry Date</div><div>${plan?.expiry || '-'}</div>
+      <div class="lbl">Payment</div><div>${plan?.paidText || '-'}</div>
+    </div>
   </div>
 
   <table>
@@ -1354,14 +1369,23 @@ function printInvoice(customerId){
   const today = new Date().toISOString().slice(0,10);
   const invNo = `INV-${String(customerId).slice(-6).toUpperCase()}-${today.replaceAll('-','')}`;
 
+  const planBlock = {
+    name: `${p.planName || 'Plan'}`,
+    months: +p.durationMonths || 0,
+    start: p.startDate || '-',
+    expiry: p.expiryDate || '-',
+    paidText: (p.paymentReceived==='yes' ? 'Paid' : 'Unpaid')
+  };
+
   const html = buildInvoiceHTML({
     invNo,
     today,
     billTo: c.name || "-",
     contactLine: [c.phone, c.email].filter(Boolean).join(" • ") || "",
     metaLine: [c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • "),
+    plan: planBlock,
     lines: [
-      ["Plan fee", +p.cost||0],
+      [`Plan fee — ${p.planName||'Plan'} (${p.durationMonths||0} mo)`, +p.cost||0],
       ...(p.stbIncluded==='yes' ? [["STB fee", +p.stbCost||0]] : [])
     ],
     total: f.turnover,
@@ -1383,14 +1407,23 @@ function printInvoiceFromRenewalData(encoded){
     const today = new Date().toISOString().slice(0,10);
     const invNo = `INV-${String(ren.customerId).slice(-6).toUpperCase()}-${ren.startDate?.replaceAll('-','')||today.replaceAll('-','')}`;
 
+    const planBlock = {
+      name: `${ren.planName || 'Plan'}`,
+      months: +ren.durationMonths || 0,
+      start: ren.startDate || '-',
+      expiry: ren.expiryDate || '-',
+      paidText: (ren.paymentReceived==='yes' ? 'Paid' : 'Unpaid')
+    };
+
     const html = buildInvoiceHTML({
       invNo,
       today,
       billTo: ren.customerName || c.name || "-",
       contactLine: [c.phone, c.email].filter(Boolean).join(" • "),
       metaLine: [c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • "),
+      plan: planBlock,
       lines: [
-        [`${ren.planName||ren.planId||'Plan'} (${ren.durationMonths||0} mo)`, +ren.cost||0],
+        [`Plan fee — ${ren.planName||ren.planId||'Plan'} (${ren.durationMonths||0} mo)`, +ren.cost||0],
         ...(ren.stbIncluded==='yes' ? [["STB fee", +ren.stbCost||0]] : [])
       ],
       total: f.turnover,
