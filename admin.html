@@ -247,19 +247,9 @@
         </div>
       </div>
       <div class="flex" style="margin-top:12px">
-        // Reports buttons — use addEventListener so they always fire on mobile
-$("#btnRunReport")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  runReport();
-});
-
-$("#btnCsv")?.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  exportCSV();
-});
-      </div>
+  <button id="btnRunReport" class="btn" type="button">Run Report</button>
+  <button id="btnCsv" class="btn ghost" type="button">Export CSV</button>
+</div>
 
       <div class="row" style="margin-top:14px">
         <div class="col kpi"><div class="muted">Turnover</div><div id="repTurnover" class="big">$0.00</div></div>
@@ -533,8 +523,18 @@ async function loadApp(user){
   $("#btnAddCustomer").onclick = () => openCustomerModal(null);
   $("#btnSeedPlans").onclick = seedPlans;
   $("#btnAddPlan").onclick = ()=>openPlanModal();
-  $("#btnRunReport").onclick = runReport;
-  $("#btnCsv").onclick = exportCSV;
+  // Reports buttons — use addEventListener so they always fire on mobile
+$("#btnRunReport")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  runReport();
+});
+
+$("#btnCsv")?.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  exportCSV();
+});
   $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
   $("#searchCustomers").addEventListener('input', renderCustomers);
 
