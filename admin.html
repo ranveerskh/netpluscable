@@ -261,7 +261,7 @@
       <div class="card" style="padding:0">
         <table class="grid" id="repGrid">
           <thead><tr>
-            <th>Date</th><th>Customer</th><th>Plan</th><th>Turnover $</th><th>Expense $</th><th>Profit $</th><th>Paid</th><th></th>
+            <th>Date</th><th>Customer</th><th>Plan</th><th>Turnover $</th><th>Expense $</th><th>Profit $</th><th>Paid</th><th>Invoice</th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -284,118 +284,112 @@
         <span id="cleanupMsg" class="muted"></span>
       </div>
     </section>
+  </div>
+</div>
 
-    <!-- MODALS -->
-    <div id="modalCustomer" class="modal">
-      <div class="body">
-        <div class="head">
-          <h3 id="custModalTitle">Add Customer</h3>
-          <button class="btn ghost" id="xCust" type="button">✕</button>
+<!-- MODALS -->
+<div id="modalCustomer" class="modal">
+  <div class="body">
+    <div class="head">
+      <h3 id="custModalTitle">Add Customer</h3>
+      <button class="btn ghost" id="xCust" type="button">✕</button>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>Name</label><input id="c_name">
+        <label>Phone</label><input id="c_phone">
+        <label>Email</label><input id="c_email" type="email">
+        <label>User ID (internal)</label><input id="c_userId" placeholder="e.g., CUST-001">
+        <label>MAC Address</label><input id="c_mac" placeholder="AA:BB:CC:DD:EE:FF">
+      </div>
+      <div class="col">
+        <label>Plan</label>
+        <select id="c_plan"></select>
+        <div class="muted" style="margin-top:6px">You can override price/wholesale below.</div>
+        <label>Plan Cost (retail)</label><input id="c_cost" type="number" step="0.01">
+        <label>Wholesale Rate</label><input id="c_wholesale" type="number" step="0.01">
+        <label>Includes STB?</label>
+        <select id="c_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
+        <div id="stbBox" class="hidden">
+          <label>STB Cost (retail)</label><input id="c_stbCost" type="number" step="0.01">
+          <label>STB Wholesale</label><input id="c_stbWholesale" type="number" step="0.01">
         </div>
-        <div class="row">
-          <div class="col">
-            <label>Name</label><input id="c_name">
-            <label>Phone</label><input id="c_phone">
-            <label>Email</label><input id="c_email" type="email">
-            <label>User ID (internal)</label><input id="c_userId" placeholder="e.g., CUST-001">
-            <label>MAC Address</label><input id="c_mac" placeholder="AA:BB:CC:DD:EE:FF">
-          </div>
-          <div class="col">
-            <label>Plan</label>
-            <select id="c_plan"></select>
-            <div class="muted" style="margin-top:6px">You can override price/wholesale below.</div>
-            <label>Plan Cost (retail)</label><input id="c_cost" type="number" step="0.01">
-            <label>Wholesale Rate</label><input id="c_wholesale" type="number" step="0.01">
-            <label>Includes STB?</label>
-            <select id="c_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
-            <div id="stbBox" class="hidden">
-              <label>STB Cost (retail)</label><input id="c_stbCost" type="number" step="0.01">
-              <label>STB Wholesale</label><input id="c_stbWholesale" type="number" step="0.01">
-            </div>
-          </div>
-          <div class="col">
-            <label>Plan Start Date</label><input id="c_start" type="date">
-            <label>Plan Expiry Date</label><input id="c_expiry" type="date">
-            <label>Payment Received?</label>
-            <select id="c_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+      </div>
+      <div class="col">
+        <label>Plan Start Date</label><input id="c_start" type="date">
+        <label>Plan Expiry Date</label><input id="c_expiry" type="date">
+        <label>Payment Received?</label>
+        <select id="c_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
 
-            <div class="card" style="margin-top:10px">
-              <div class="muted">Totals Preview</div>
-              <div id="c_preview" class="muted">—</div>
-            </div>
-          </div>
-        </div>
-        <div class="foot">
-          <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
-            <input id="c_invoice" type="checkbox" checked>
-            Open invoice after save
-          </label>
-          <button type="button" class="btn secondary" id="btnSaveCustomer">Save</button>
+        <div class="card" style="margin-top:10px">
+          <div class="muted">Totals Preview</div>
+          <div id="c_preview" class="muted">—</div>
         </div>
       </div>
     </div>
+    <div class="foot">
+      <button type="button" class="btn secondary" id="btnSaveCustomer">Save</button>
+    </div>
+  </div>
+</div>
 
-    <div id="modalRenew" class="modal">
-      <div class="body">
-        <div class="head">
-          <h3 id="renewTitle">Renew Plan</h3>
-          <button class="btn ghost" id="xRenew" type="button">✕</button>
+<div id="modalRenew" class="modal">
+  <div class="body">
+    <div class="head">
+      <h3 id="renewTitle">Renew Plan</h3>
+      <button class="btn ghost" id="xRenew" type="button">✕</button>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>Plan</label><select id="r_plan"></select>
+        <label>Plan Cost</label><input id="r_cost" type="number" step="0.01">
+        <label>Wholesale</label><input id="r_wholesale" type="number" step="0.01">
+      </div>
+      <div class="col">
+        <label>Includes STB?</label>
+        <select id="r_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
+        <div id="r_stbBox" class="hidden">
+          <label>STB Cost</label><input id="r_stbCost" type="number" step="0.01">
+          <label>STB Wholesale</label><input id="r_stbWholesale" type="number" step="0.01">
         </div>
-        <div class="row">
-          <div class="col">
-            <label>Plan</label><select id="r_plan"></select>
-            <label>Plan Cost</label><input id="r_cost" type="number" step="0.01">
-            <label>Wholesale</label><input id="r_wholesale" type="number" step="0.01">
-          </div>
-          <div class="col">
-            <label>Includes STB?</label>
-            <select id="r_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
-            <div id="r_stbBox" class="hidden">
-              <label>STB Cost</label><input id="r_stbCost" type="number" step="0.01">
-              <label>STB Wholesale</label><input id="r_stbWholesale" type="number" step="0.01">
-            </div>
-            <label>Start Date</label><input id="r_start" type="date">
-            <label>Expiry Date</label><input id="r_expiry" type="date">
-            <label>Payment Received?</label>
-            <select id="r_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
-          </div>
-        </div>
-        <div class="foot">
-          <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
-            <input id="r_invoice" type="checkbox" checked>
-            Open invoice after renewal
-          </label>
-          <button id="btnDoRenew" class="btn ok" type="button">Confirm Renewal</button>
-        </div>
+        <label>Start Date</label><input id="r_start" type="date">
+        <label>Expiry Date</label><input id="r_expiry" type="date">
+        <label>Payment Received?</label>
+        <select id="r_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
       </div>
     </div>
+    <div class="foot">
+      <button id="btnDoRenew" class="btn ok" type="button">Confirm Renewal</button>
+    </div>
+  </div>
+</div>
 
-    <div id="modalPlan" class="modal">
-      <div class="body">
-        <div class="head">
-          <h3 id="planTitle">Add Plan</h3>
-          <button class="btn ghost" id="xPlan" type="button">✕</button>
-        </div>
-        <div class="row">
-          <div class="col">
-            <label>Plan ID</label><input id="p_id" placeholder="PLN-1MO">
-            <label>Name</label><input id="p_name" placeholder="1 month">
-            <label>Duration (months)</label><input id="p_months" type="number" min="0" step="1" value="1">
-          </div>
-          <div class="col">
-            <label>Retail Price</label><input id="p_retail" type="number" step="0.01">
-            <label>Wholesale Cost</label><input id="p_wholesale" type="number" step="0.01">
-            <label>Description</label><input id="p_desc" placeholder="Most popular">
-          </div>
-        </div>
-        <div class="foot">
-          <button id="btnSavePlan" class="btn secondary" type="button">Save Plan</button>
-        </div>
+<div id="modalPlan" class="modal">
+  <div class="body">
+    <div class="head">
+      <h3 id="planTitle">Add Plan</h3>
+      <button class="btn ghost" id="xPlan" type="button">✕</button>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>Plan ID</label><input id="p_id" placeholder="PLN-1MO">
+        <label>Name</label><input id="p_name" placeholder="1 month">
+        <label>Duration (months)</label><input id="p_months" type="number" min="0" step="1" value="1">
+      </div>
+      <div class="col">
+        <label>Retail Price</label><input id="p_retail" type="number" step="0.01">
+        <label>Wholesale Cost</label><input id="p_wholesale" type="number" step="0.01">
+        <label>Description</label><input id="p_desc" placeholder="Most popular">
       </div>
     </div>
+    <div class="foot">
+      <button id="btnSavePlan" class="btn secondary" type="button">Save Plan</button>
+    </div>
+  </div>
+</div>
 
-  </div> <!-- /wrap -->
-</div> <!-- /appView -->
+<!-- libs for PDF -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <script type="module">
 /* =========================
@@ -449,6 +443,94 @@ function calcFigures({cost, wholesale, stbIncluded, stbCost, stbWholesale}){
 }
 
 /* =========================
+   Invoice (PDF)
+   ========================= */
+const LOGO_DATA_URL = ""; // put your base64 logo here: data:image/png;base64,AAAA...
+
+function makeInvoiceNumber(prefix="INV"){
+  const d = new Date();
+  const pad = n => String(n).padStart(2,"0");
+  return `${prefix}-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+}
+function safe(v){ return v==null?"":String(v); }
+
+function generateInvoice({customer, record, type="Current Plan"}){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:"pt", format:"a4" });
+  const margin = 40;
+  let y = margin;
+
+  // Header with logo + title
+  if (LOGO_DATA_URL) {
+    try{ doc.addImage(LOGO_DATA_URL, "PNG", margin, y, 120, 40); }catch(e){}
+  }
+  doc.setFont("helvetica","bold"); doc.setFontSize(18);
+  doc.text("Net + TV — Invoice", LOGO_DATA_URL? (margin+130) : margin, y+24);
+  y += 60;
+
+  // Invoice meta
+  const invNo = makeInvoiceNumber();
+  doc.setFontSize(12); doc.setFont("helvetica","normal");
+  doc.text(`Invoice #: ${invNo}`, margin, y);
+  doc.text(`Date: ${todayISO()}`, margin+250, y);
+  y += 22;
+
+  // Customer section
+  doc.setFont("helvetica","bold");
+  doc.text("Bill To:", margin, y);
+  y += 16;
+  doc.setFont("helvetica","normal");
+  doc.text(`Name: ${safe(customer.name)}`, margin, y); y+=16;
+  doc.text(`Phone: ${safe(customer.phone)}`, margin, y); y+=16;
+  doc.text(`Email: ${safe(customer.email)}`, margin, y); y+=16;
+  doc.text(`User ID: ${safe(customer.userId)}   MAC: ${safe(customer.mac)}`, margin, y); y+=28;
+
+  // Plan section (record contains the exact plan snapshot)
+  doc.setFont("helvetica","bold");
+  doc.text(`${type} Details`, margin, y);
+  y += 16; doc.setFont("helvetica","normal");
+
+  const rows = [
+    ["Plan", `${safe(record.planName)} (${record.durationMonths||0} months)`],
+    ["Start Date", safe(record.startDate)],
+    ["Expiry Date", safe(record.expiryDate)],
+    ["Retail (Plan)", fmt(record.cost)],
+    ["Wholesale (Plan)", fmt(record.wholesale)],
+    ["STB Included", record.stbIncluded === "yes" ? "Yes" : "No"],
+    ...(record.stbIncluded === "yes" ? [
+      ["STB Retail", fmt(record.stbCost||0)],
+      ["STB Wholesale", fmt(record.stbWholesale||0)],
+    ] : []),
+    ["Payment Received", record.paymentReceived === "yes" ? "Yes" : "No"],
+  ];
+  rows.forEach(([k,v])=>{
+    doc.text(`${k}:`, margin, y); doc.text(String(v), margin+160, y); y += 16;
+  });
+  y += 10;
+
+  // Totals
+  const figs = calcFigures({
+    cost:record.cost, wholesale:record.wholesale,
+    stbIncluded:record.stbIncluded, stbCost:record.stbCost, stbWholesale:record.stbWholesale
+  });
+  doc.setFont("helvetica","bold");
+  doc.text("Summary", margin, y); y += 16;
+  doc.setFont("helvetica","normal");
+  doc.text(`Turnover: ${fmt(figs.turnover)}`, margin, y); y += 16;
+  doc.text(`Expense:  ${fmt(figs.expense)}`, margin, y); y += 16;
+  doc.text(`Profit:   ${fmt(figs.profit)}`, margin, y); y += 24;
+
+  // Footer
+  doc.setFontSize(10);
+  doc.text("Thank you for your business!", margin, y);
+  y += 14;
+  doc.text("Net + TV • This invoice includes plan details (start & expiry)", margin, y);
+
+  const filename = `Invoice-${safe(customer.name||record.customerName||"Customer")}-${record.startDate||todayISO()}.pdf`;
+  doc.save(filename);
+}
+
+/* =========================
    UI state / tabs
    ========================= */
 const authView = $("#authView");
@@ -494,7 +576,6 @@ $("#btnDemo").onclick = ()=>{
 $("#signOutBtn").onclick = ()=> signOut(auth);
 
 onAuthStateChanged(auth, (user)=>{
-  console.log('[auth]', user ? 'in as '+user.email : 'out');
   if(user){
     authView.classList.add('hidden');
     appView.classList.remove('hidden');
@@ -535,13 +616,9 @@ async function loadApp(user){
   $("#btnSeedPlans").onclick = seedPlans;
   $("#btnAddPlan").onclick = ()=>openPlanModal();
 
-  // Reports buttons — addEventListener so they always fire on mobile
-  $("#btnRunReport")?.addEventListener("click", (e) => {
-    e.preventDefault(); e.stopPropagation(); runReport();
-  });
-  $("#btnCsv")?.addEventListener("click", (e) => {
-    e.preventDefault(); e.stopPropagation(); exportCSV();
-  });
+  // Reports buttons (robust on mobile)
+  $("#btnRunReport")?.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); runReport(); });
+  $("#btnCsv")?.addEventListener("click",  (e) => { e.preventDefault(); e.stopPropagation(); exportCSV(); });
 
   $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
   $("#searchCustomers").addEventListener('input', renderCustomers);
@@ -556,6 +633,7 @@ async function loadApp(user){
 
   renderAll();
 }
+
 async function cleanupOrphanRenewals(){
   const msg = $("#cleanupMsg");
   const btn = $("#btnCleanupOrphans");
@@ -570,10 +648,14 @@ async function cleanupOrphanRenewals(){
       const cid  = String(data.customerId || "");
       if (!existing.has(cid)) orphans.push(d.ref);
     });
+
     if (orphans.length === 0){
-      msg.textContent = "No orphan renewals found."; return;
+      msg.textContent = "No orphan renewals found.";
+      return;
     }
+
     msg.textContent = `Deleting ${orphans.length} orphan renewals…`;
+
     const CHUNK = 400;
     for (let i = 0; i < orphans.length; i += CHUNK){
       const batch = writeBatch(db);
@@ -582,6 +664,7 @@ async function cleanupOrphanRenewals(){
       }
       await batch.commit();
     }
+
     await loadRenewals();
     renderKPIs();
     runReport();
@@ -594,6 +677,7 @@ async function cleanupOrphanRenewals(){
     btn.disabled = false;
   }
 }
+
 /* =========================
    Firestore load/save
    ========================= */
@@ -614,7 +698,7 @@ async function deleteCustomerAndRenewals(customerId) {
   const idStr = String(customerId);
   const renSnap = await getDocs(collection(db, "customers", idStr, "renewals"));
   const batch = writeBatch(db);
-  renSnap.forEach(d => batch.delete(doc(db, "customers", idStr, "renewals", d.id)));
+  renSnap.forEach(d => { batch.delete(doc(db, "customers", idStr, "renewals", d.id)); });
   batch.delete(doc(db, "customers", idStr));
   await batch.commit();
   await loadCustomers();
@@ -627,14 +711,12 @@ async function deletePlan(id){
   renderPlans();
   refreshPlanSelects();
 }
-
 async function loadCustomers(){
   customers = [];
   const snap = await getDocs(query(collection(db,"customers"), orderBy("name")));
   snap.forEach(d=> customers.push({id:d.id, ...d.data()}) );
   renderCustomers();
 }
-
 async function saveCustomer(payload, existingId=null){
   if (existingId) {
     const idStr = String(existingId);
@@ -653,7 +735,6 @@ async function saveCustomer(payload, existingId=null){
     return String(ref.id);
   }
 }
-
 async function addRenewal(customerId, ren){
   const ref = await addDoc(collection(db, "customers", String(customerId), "renewals"), { ...ren, createdAt: serverTimestamp() });
   await loadRenewals();
@@ -664,7 +745,6 @@ async function loadRenewals(){
   const snap = await getDocs(collectionGroup(db, "renewals"));
   snap.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
 }
-
 async function setCustomerCurrentPlan(customerId, planFields){
   const ref = doc(db, "customers", String(customerId));
   await updateDoc(ref, { currentPlan: planFields, updatedAt: serverTimestamp() });
@@ -740,8 +820,8 @@ function renderCustomers(){
         <button class="btn ghost" data-view="${c.id}">View</button>
         <button class="btn secondary" data-edit="${c.id}">Edit</button>
         <button class="btn ok" data-renew="${c.id}">Renew</button>
-        <button class="btn" data-invoice="${c.id}">Invoice</button>
         <button class="btn danger" data-del="${c.id}">Delete</button>
+        <button class="btn" data-invoice="${c.id}">Invoice</button>
       </td>
     `;
     tbody.appendChild(tr);
@@ -765,8 +845,14 @@ function renderCustomers(){
   tbody.querySelectorAll("[data-view]").forEach(btn=>{
     btn.onclick = ()=> viewCustomer(btn.getAttribute('data-view'));
   });
+  // NEW: invoice button for current plan
   tbody.querySelectorAll("[data-invoice]").forEach(btn=>{
-    btn.onclick = ()=> printInvoice(btn.getAttribute('data-invoice'));
+    btn.onclick = ()=>{
+      const id = btn.getAttribute('data-invoice');
+      const c = customers.find(x=>x.id===id);
+      if(!c || !c.currentPlan){ alert("No current plan found for this customer."); return; }
+      generateInvoice({ customer: c, record: c.currentPlan, type: "Current Plan" });
+    };
   });
 }
 
@@ -841,7 +927,7 @@ $("#c_start").addEventListener('change', ()=>{
   $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
 });
 
-// robust Save button handler (feedback + error surfacing)
+// robust Save button handler
 const saveBtn = document.getElementById('btnSaveCustomer');
 saveBtn.addEventListener('click', async (e) => {
   e.preventDefault(); e.stopPropagation();
@@ -877,57 +963,53 @@ function refreshPlanSelects(){
 function previewTotals(){
   const stbIncluded = $("#c_stb").value;
   const f = calcFigures({
-    cost:$("#c_cost").value, wholesale:$("#c_wholesale").value,
-    stbIncluded, stbCost:$("#c_stbCost").value, stbWholesale:$("#c_stbWholesale").value
+    cost: $("#c_cost").value,
+    wholesale: $("#c_wholesale").value,
+    stbIncluded,
+    stbCost: $("#c_stbCost").value,
+    stbWholesale: $("#c_stbWholesale").value
   });
-  $("#c_preview").innerHTML = `
-    Turnover: <strong>${fmt(f.turnover)}</strong><br>
-    Expense: <strong>${fmt(f.expense)}</strong><br>
-    Profit: <strong>${fmt(f.profit)}</strong>
-  `;
+  $("#c_preview").textContent = `Turnover: ${fmt(f.turnover)}, Expense: ${fmt(f.expense)}, Profit: ${fmt(f.profit)}`;
 }
 
-function openCustomerModal(id=null){
-  editCustomerId = (typeof id === 'string') ? id : null;
+// Open modal for new or edit
+function openCustomerModal(id){
+  editCustomerId = id || null;
   custTitle.textContent = id ? "Edit Customer" : "Add Customer";
-  refreshPlanSelects();
-  const firstPlanId = Object.keys(plans)[0];
-  const defaults = firstPlanId ? plans[firstPlanId] : null;
-
   $("#c_name").value = "";
-  $("#c_phone").value= "";
-  $("#c_email").value= "";
-  $("#c_userId").value= "";
-  $("#c_mac").value= "";
-  $("#c_plan").value = firstPlanId||"";
-  $("#c_cost").value = defaults? (defaults.retail_price||"") : "";
-  $("#c_wholesale").value = defaults? (defaults.wholesale_cost||"") : "";
-  $("#c_stb").value="no"; $("#stbBox").classList.add('hidden');
-  $("#c_stbCost").value=""; $("#c_stbWholesale").value="";
+  $("#c_phone").value = "";
+  $("#c_email").value = "";
+  $("#c_userId").value = "";
+  $("#c_mac").value = "";
+  $("#c_cost").value = "";
+  $("#c_wholesale").value = "";
+  $("#c_stb").value = "no";
+  $("#c_stbCost").value = "";
+  $("#c_stbWholesale").value = "";
   $("#c_start").value = todayISO();
-  $("#c_expiry").value = defaults ? addMonthsISO($("#c_start").value, defaults.duration_months||0) : $("#c_start").value;
-  $("#c_paid").value="yes";
-  $("#c_preview").textContent="—";
-
+  $("#c_expiry").value = "";
+  $("#c_paid").value = "yes";
+  $("#stbBox").classList.add('hidden');
+  refreshPlanSelects();
   if(id){
     const c = customers.find(x=>x.id===id);
     if(c){
-      $("#c_name").value=c.name||"";
-      $("#c_phone").value=c.phone||"";
-      $("#c_email").value=c.email||"";
-      $("#c_userId").value=c.userId||"";
-      $("#c_mac").value=c.mac||"";
+      $("#c_name").value = c.name||"";
+      $("#c_phone").value = c.phone||"";
+      $("#c_email").value = c.email||"";
+      $("#c_userId").value = c.userId||"";
+      $("#c_mac").value = c.mac||"";
       if(c.currentPlan){
-        $("#c_plan").value=c.currentPlan.planId||firstPlanId||"";
-        $("#c_cost").value=c.currentPlan.cost||"";
-        $("#c_wholesale").value=c.currentPlan.wholesale||"";
-        $("#c_stb").value=c.currentPlan.stbIncluded||"no";
-        $("#stbBox").classList.toggle('hidden', $("#c_stb").value!=='yes');
-        $("#c_stbCost").value=c.currentPlan.stbCost||"";
-        $("#c_stbWholesale").value=c.currentPlan.stbWholesale||"";
-        $("#c_start").value=c.currentPlan.startDate||todayISO();
-        $("#c_expiry").value=c.currentPlan.expiryDate||addMonthsISO($("#c_start").value, plans[$("#c_plan").value]?.duration_months||0);
-        $("#c_paid").value=c.currentPlan.paymentReceived||"yes";
+        $("#c_plan").value = c.currentPlan.planId||"";
+        $("#c_cost").value = c.currentPlan.cost||"";
+        $("#c_wholesale").value = c.currentPlan.wholesale||"";
+        $("#c_stb").value = c.currentPlan.stbIncluded||"no";
+        $("#c_stbCost").value = c.currentPlan.stbCost||"";
+        $("#c_stbWholesale").value = c.currentPlan.stbWholesale||"";
+        $("#c_start").value = c.currentPlan.startDate||todayISO();
+        $("#c_expiry").value = c.currentPlan.expiryDate||"";
+        $("#c_paid").value = c.currentPlan.paymentReceived||"yes";
+        $("#stbBox").classList.toggle('hidden', c.currentPlan.stbIncluded!=='yes');
       }
     }
   }
@@ -936,67 +1018,43 @@ function openCustomerModal(id=null){
 }
 
 async function saveCustomerFromModal(){
-  const name=$("#c_name").value.trim();
-  if(!name){ throw new Error("Name is required"); }
-  const planId=$("#c_plan").value;
-  const p=plans[planId]||{};
-  const planName=p.name||"Custom";
-  const durationMonths = +p.duration_months||0;
-
-  const start=$("#c_start").value;
-  let expiry=$("#c_expiry").value || addMonthsISO(start, durationMonths);
-  if (!start || !expiry) throw new Error('Start and expiry dates are required');
-
-  const currentPlan = {
-    planId, planName, durationMonths,
-    cost:+$("#c_cost").value||0,
-    wholesale:+$("#c_wholesale").value||0,
-    stbIncluded:$("#c_stb").value,
-    stbCost:+$("#c_stbCost").value||0,
-    stbWholesale:+$("#c_stbWholesale").value||0,
-    startDate:start, expiryDate:expiry,
-    paymentReceived:$("#c_paid").value
-  };
-
   const payload = {
-    name,
-    phone:$("#c_phone").value.trim(),
-    email:$("#c_email").value.trim(),
-    userId:$("#c_userId").value.trim(),
-    mac:$("#c_mac").value.trim(),
-    originalStartDate: (editCustomerId? (customers.find(x=>x.id===editCustomerId)?.originalStartDate || start) : start),
-    currentPlan
+    name: $("#c_name").value.trim(),
+    phone: $("#c_phone").value.trim(),
+    email: $("#c_email").value.trim(),
+    userId: $("#c_userId").value.trim(),
+    mac: $("#c_mac").value.trim(),
+    currentPlan: {
+      planId: $("#c_plan").value,
+      planName: plans[$("#c_plan").value]?.name || "",
+      durationMonths: plans[$("#c_plan").value]?.duration_months || 0,
+      cost: parseFloat($("#c_cost").value)||0,
+      wholesale: parseFloat($("#c_wholesale").value)||0,
+      stbIncluded: $("#c_stb").value,
+      stbCost: parseFloat($("#c_stbCost").value)||0,
+      stbWholesale: parseFloat($("#c_stbWholesale").value)||0,
+      startDate: $("#c_start").value,
+      expiryDate: $("#c_expiry").value,
+      paymentReceived: $("#c_paid").value
+    }
   };
-
-  const cid = await saveCustomer(payload, editCustomerId ? String(editCustomerId) : null);
-
-  if(!editCustomerId){
-    await addRenewal(cid, {
-      customerId: cid, customerName: name,
-      planId, planName, durationMonths,
-      cost: currentPlan.cost, wholesale: currentPlan.wholesale,
-      stbIncluded: currentPlan.stbIncluded, stbCost: currentPlan.stbCost, stbWholesale: currentPlan.stbWholesale,
-      startDate: start, expiryDate: expiry,
-      paymentReceived: currentPlan.paymentReceived
-    });
-  }
+  const cid = await saveCustomer(payload, editCustomerId);
   custModal.classList.remove('open');
-  await loadCustomers();
-  await loadRenewals();
-  renderAll();
-
-  // Auto open invoice if checked
-  if (document.querySelector("#c_invoice")?.checked) {
-    setTimeout(()=> printInvoice(cid), 200);
-  }
+  // Auto-generate invoice with plan details
+  const customer = customers.find(x=>x.id===cid) || payload;
+  generateInvoice({ customer, record: payload.currentPlan, type: "Current Plan" });
 }
+<script type="module">
+/* ===== continue: add the missing pieces after saveCustomerFromModal() ===== */
 
+/* View helper used by Customers table */
 function viewCustomer(id){
   const c = customers.find(x=>x.id===id);
   if(!c){ alert("Customer not found"); return; }
   const cp = c.currentPlan||{};
   const figs = calcFigures({
-    cost:cp.cost, wholesale:cp.wholesale, stbIncluded:cp.stbIncluded, stbCost:cp.stbCost, stbWholesale:cp.stbWholesale
+    cost:cp.cost, wholesale:cp.wholesale,
+    stbIncluded:cp.stbIncluded, stbCost:cp.stbCost, stbWholesale:cp.stbWholesale
   });
   alert(
 `Customer: ${c.name}
@@ -1015,9 +1073,7 @@ This Plan:
 Tip: Use "Reports" tab for totals across all renewals.`)
 }
 
-/* =========================
-   Renewals
-   ========================= */
+/* ===== Renewals: open modal + confirm + invoice ===== */
 const renewModal = $("#modalRenew");
 $("#xRenew").onclick = ()=> renewModal.classList.remove('open');
 $("#r_stb").addEventListener('change', ()=>{
@@ -1027,9 +1083,10 @@ let renewCustomerId = null;
 
 function openRenewModal(id){
   renewCustomerId = id;
-  refreshPlanSelects();
   const c = customers.find(x=>x.id===id);
   $("#renewTitle").textContent = `Renew: ${c?.name||id}`;
+  refreshPlanSelects();
+
   const cp = c?.currentPlan||{};
   $("#r_plan").value = cp.planId||Object.keys(plans)[0]||"";
   const p = plans[$("#r_plan").value]||{};
@@ -1055,6 +1112,7 @@ function openRenewModal(id){
 
   renewModal.classList.add('open');
 }
+
 $("#btnDoRenew").onclick = async ()=>{
   const c = customers.find(x=>x.id===renewCustomerId);
   if(!c){ alert("Missing customer"); return; }
@@ -1077,64 +1135,22 @@ $("#btnDoRenew").onclick = async ()=>{
     startDate:start, expiryDate:expiry,
     paymentReceived:$("#r_paid").value
   };
+
+  // Save renewal + update current plan
   await addRenewal(String(renewCustomerId), ren);
   await setCustomerCurrentPlan(String(renewCustomerId), ren);
+
+  // Generate a PDF invoice for this renewal
+  generateInvoice({ customer: c, record: ren, type: "Renewal" });
+
   renewModal.classList.remove('open');
   await loadCustomers();
   await loadRenewals();
   renderAll();
   runReport();
-
-  if (document.querySelector("#r_invoice")?.checked) {
-    setTimeout(()=> printInvoice(renewCustomerId), 200);
-  }
 };
 
-/* =========================
-   Plans modal
-   ========================= */
-const planModal = $("#modalPlan");
-$("#xPlan").onclick = ()=> planModal.classList.remove('open');
-function openPlanModal(p=null){
-  $("#planTitle").textContent = p? "Edit Plan":"Add Plan";
-  $("#p_id").value = p?.id||"";
-  $("#p_name").value = p?.name||"";
-  $("#p_months").value = p?.duration_months||1;
-  $("#p_retail").value = p?.retail_price||"";
-  $("#p_wholesale").value = p?.wholesale_cost||"";
-  $("#p_desc").value = p?.description||"";
-  planModal.classList.add('open');
-}
-$("#btnSavePlan").onclick = async ()=>{
-  const pid = $("#p_id").value.trim();
-  if(!pid){ alert("Plan ID required"); return; }
-  await savePlan({
-    id: pid,
-    name: $("#p_name").value.trim(),
-    duration_months: +$("#p_months").value||0,
-    retail_price: +$("#p_retail").value||0,
-    wholesale_cost: +$("#p_wholesale").value||0,
-    description: $("#p_desc").value.trim()
-  });
-  planModal.classList.remove('open');
-};
-
-/* =========================
-   Seed sample plans
-   ========================= */
-async function seedPlans(){
-  const samples = [
-    {id:"PLN-1MO", name:"1 month", duration_months:1, retail_price:15, wholesale_cost:4.5, description:"Entry plan"},
-    {id:"PLN-3MO", name:"3 months", duration_months:3, retail_price:35, wholesale_cost:13.5, description:"Most popular"},
-    {id:"PLN-6MO", name:"6 months", duration_months:6, retail_price:60, wholesale_cost:25, description:"Value saver"}
-  ];
-  for(const p of samples){ await savePlan(p); }
-  alert("Sample plans added.");
-}
-
-/* =========================
-   Reports
-   ========================= */
+/* ===== Reports (type switch + filter + render + CSV + invoice per row) ===== */
 function onRepTypeChange(){
   const t = $("#repType").value;
   $("#repMonthCol").classList.toggle('hidden', t!=="monthly");
@@ -1177,46 +1193,41 @@ function runReport(){
   const out = filterRenewalsByPeriod();
   if(!out || !out.arr){ alert("Select a valid period."); return; }
   const rows = out.arr.sort((a,b)=> a.startDate.localeCompare(b.startDate));
-  const tbody = $("#repGrid tbody"); tbody.innerHTML="";
+
+  const tbody = $("#repGrid tbody");
+  tbody.innerHTML="";
   let T=0,E=0,P=0;
-  rows.forEach(r=>{
+
+  rows.forEach((r)=>{
     const f = calcFigures({
       cost:r.cost, wholesale:r.wholesale,
       stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale
     });
     T+=f.turnover; E+=f.expense; P+=f.profit;
 
-    // Encode minimal renewal for later invoice printing
-    const payload = {
-      customerId: r.customerId, customerName: r.customerName,
-      planId: r.planId, planName: r.planName, durationMonths: r.durationMonths,
-      cost: r.cost, wholesale: r.wholesale,
-      stbIncluded: r.stbIncluded, stbCost: r.stbCost, stbWholesale: r.stbWholesale,
-      startDate: r.startDate, expiryDate: r.expiryDate,
-      paymentReceived: r.paymentReceived
-    };
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-
     const tr = document.createElement('tr');
+    const customer = customers.find(c => String(c.id) === String(r.customerId)) || { name: r.customerName||r.customerId };
+
     tr.innerHTML = `
       <td>${r.startDate}</td>
-      <td>${r.customerName||r.customerId}</td>
+      <td>${customer.name}</td>
       <td>${r.planName||r.planId} (${r.durationMonths||0}mo)</td>
       <td>${f.turnover.toFixed(2)}</td>
       <td>${f.expense.toFixed(2)}</td>
       <td>${f.profit.toFixed(2)}</td>
       <td>${r.paymentReceived==='yes'?'Yes':'No'}</td>
-      <td><button class="btn" data-inv-ren="${encoded}">Invoice</button></td>
+      <td></td>
     `;
-    tbody.appendChild(tr);
-  });
 
-  // Bind invoice buttons for each renewal row
-  tbody.querySelectorAll("[data-inv-ren]").forEach(btn=>{
-    btn.onclick = ()=>{
-      const encoded = btn.getAttribute("data-inv-ren");
-      printInvoiceFromRenewalData(encoded);
-    };
+    // Add invoice button with closure so it downloads this row's PDF
+    const btn = document.createElement('button');
+    btn.className = 'btn';
+    btn.type = 'button';
+    btn.textContent = 'Invoice';
+    btn.onclick = () => generateInvoice({ customer, record: r, type: "Renewal" });
+    tr.lastElementChild.appendChild(btn);
+
+    tbody.appendChild(tr);
   });
 
   $("#repTurnover").textContent = fmt(T);
@@ -1225,7 +1236,7 @@ function runReport(){
 }
 
 function exportCSV(){
-  // Build rows
+  // Build rows from the rendered table
   const rows = [["Date","Customer","Plan","Turnover","Expense","Profit","Paid"]];
   document.querySelectorAll("#repGrid tbody tr").forEach(tr=>{
     const cols = [...tr.children].slice(0,7).map(td => td.textContent);
@@ -1257,157 +1268,5 @@ function exportCSV(){
   }
 }
 
-/* =========================
-   INVOICE GENERATION
-   ========================= */
-// Inline SVG logo (so it prints offline)
-const LOGO_SVG = `
-<svg xmlns='http://www.w3.org/2000/svg' width='180' height='36' viewBox='0 0 430 86'>
-  <defs>
-    <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
-      <stop offset='0' stop-color='#6a8cff'/><stop offset='1' stop-color='#8a5fff'/>
-    </linearGradient>
-  </defs>
-  <rect rx='12' ry='12' width='86' height='86' fill='url(#g)'/>
-  <circle cx='43' cy='43' r='24' fill='none' stroke='white' stroke-width='8'/>
-  <path d='M108 62 h34 v-38 h-34 v38 M149 24 h14 v38 h-14 z' fill='url(#g)'/>
-  <text x='170' y='60' font-family='Segoe UI, Roboto, Arial' font-size='44' font-weight='800'
-        fill='white' letter-spacing='.5'>Net + TV</text>
-</svg>`;
-const LOGO_URL = "data:image/svg+xml;utf8," + encodeURIComponent(LOGO_SVG);
-
-function buildInvoiceHTML({invNo, today, billTo, contactLine, metaLine, lines, total, paidBadge}){
-  return `
-<!doctype html>
-<html><head><meta charset="utf-8"><title>${invNo}</title>
-<style>
-  :root{ --ink:#111; --muted:#666; --line:#e5e7eb; --bg:#fff; --pill:#f3f4f6; }
-  *{ box-sizing:border-box }
-  body{ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial; color:var(--ink); background:#fff; margin:24px }
-  .hdr{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px }
-  .brand{ display:flex; gap:12px; align-items:center }
-  .brand img{ height:42px }
-  .brand h2{ margin:0; font-size:22px }
-  .muted{ color:var(--muted) }
-  .box{ border:1px solid var(--line); border-radius:10px; padding:14px; margin-top:14px }
-  table{ width:100%; border-collapse:collapse; margin-top:12px }
-  th,td{ padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:14px }
-  th{ background:#fafafa }
-  .right{ text-align:right }
-  .totals td{ font-weight:700 }
-  .badge{ display:inline-block; background:var(--pill); padding:4px 8px; border-radius:999px; font-size:12px }
-  @media print{ button{ display:none } body{ margin:0; } }
-</style></head>
-<body>
-  <div class="hdr">
-    <div class="brand">
-      <img src="${LOGO_URL}" alt="Net + TV">
-      <div>
-        <h2 style="margin:0">Invoice</h2>
-        <div class="muted">Net + TV</div>
-      </div>
-    </div>
-    <div class="right">
-      <div><strong>${invNo}</strong></div>
-      <div>Date: ${today}</div>
-    </div>
-  </div>
-
-  <div class="box">
-    <strong>Bill To</strong><br>
-    ${billTo}<br>
-    ${contactLine}
-    ${metaLine ? `<div class="muted">${metaLine}</div>` : ""}
-  </div>
-
-  <table>
-    <thead><tr><th>Description</th><th class="right">Amount (USD)</th></tr></thead>
-    <tbody>
-      ${lines.map(l=>`<tr><td>${l[0]}</td><td class="right">${(+l[1]||0).toFixed(2)}</td></tr>`).join("")}
-      <tr class="totals"><td>Total</td><td class="right">${(+total||0).toFixed(2)}</td></tr>
-    </tbody>
-  </table>
-
-  <div class="badge" style="margin-top:8px">${paidBadge}</div>
-  <p class="muted">Thanks for your business.</p>
-
-  <button onclick="window.print()">Print / Save as PDF</button>
-</body></html>`;
-}
-
-function openPrintWindow(html){
-  const w = window.open("", "_blank");
-  if(!w){ alert("Pop‑up blocked. Please allow pop‑ups for this site."); return; }
-  w.document.open(); w.document.write(html); w.document.close();
-  w.onload = ()=> w.print();
-}
-
-function printInvoice(customerId){
-  const c = customers.find(x=> String(x.id) === String(customerId));
-  if(!c){ alert("Customer not found"); return; }
-  const p = c.currentPlan || {};
-  const f = calcFigures({
-    cost:p.cost, wholesale:p.wholesale,
-    stbIncluded:p.stbIncluded, stbCost:p.stbCost, stbWholesale:p.stbWholesale
-  });
-
-  const today = new Date().toISOString().slice(0,10);
-  const invNo = `INV-${String(customerId).slice(-6).toUpperCase()}-${today.replaceAll('-','')}`;
-
-  const html = buildInvoiceHTML({
-    invNo,
-    today,
-    billTo: c.name || "-",
-    contactLine: [c.phone, c.email].filter(Boolean).join(" • ") || "",
-    metaLine: [c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • "),
-    lines: [
-      ["Plan fee", +p.cost||0],
-      ...(p.stbIncluded==='yes' ? [["STB fee", +p.stbCost||0]] : [])
-    ],
-    total: f.turnover,
-    paidBadge: (p.paymentReceived==='yes' ? 'Paid' : 'Unpaid')
-  });
-
-  openPrintWindow(html);
-}
-
-// Print from a specific renewal row (for historical invoices)
-function printInvoiceFromRenewalData(encoded){
-  try{
-    const ren = JSON.parse(decodeURIComponent(escape(atob(encoded))));
-    const c = customers.find(x=> String(x.id) === String(ren.customerId)) || {};
-    const f = calcFigures({
-      cost:ren.cost, wholesale:ren.wholesale,
-      stbIncluded:ren.stbIncluded, stbCost:ren.stbCost, stbWholesale:ren.stbWholesale
-    });
-    const today = new Date().toISOString().slice(0,10);
-    const invNo = `INV-${String(ren.customerId).slice(-6).toUpperCase()}-${ren.startDate?.replaceAll('-','')||today.replaceAll('-','')}`;
-
-    const html = buildInvoiceHTML({
-      invNo,
-      today,
-      billTo: ren.customerName || c.name || "-",
-      contactLine: [c.phone, c.email].filter(Boolean).join(" • "),
-      metaLine: [c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • "),
-      lines: [
-        [`${ren.planName||ren.planId||'Plan'} (${ren.durationMonths||0} mo)`, +ren.cost||0],
-        ...(ren.stbIncluded==='yes' ? [["STB fee", +ren.stbCost||0]] : [])
-      ],
-      total: f.turnover,
-      paidBadge: (ren.paymentReceived==='yes' ? 'Paid' : 'Unpaid')
-    });
-
-    openPrintWindow(html);
-  }catch(e){
-    console.error(e);
-    alert("Could not open invoice for this row.");
-  }
-}
-
-/* =========================
-   END
-   ========================= */
+/* ===== end of additions ===== */
 </script>
-
-</body>
-</html>
