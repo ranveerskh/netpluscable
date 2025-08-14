@@ -809,7 +809,8 @@ function previewTotals(){
 }
 
 function openCustomerModal(id=null){
-  editCustomerId = id;
+  // If this was called by a click handler without args, 'id' might be a PointerEvent
+  editCustomerId = (typeof id === 'string') ? id : null;
   custTitle.textContent = id ? "Edit Customer" : "Add Customer";
   refreshPlanSelects();
   const firstPlanId = Object.keys(plans)[0];
