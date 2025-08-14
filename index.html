@@ -12,32 +12,49 @@
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:
-    radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.14),transparent 60%),
-    radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 55%),
-    linear-gradient(180deg,#0b1020,#0b1020);}
+  body{
+    margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    background:
+      radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.14),transparent 60%),
+      radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 55%),
+      linear-gradient(180deg,#0b1020,#0b1020);
+    color:var(--ink);
+  }
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1100px;margin:0 auto;padding:14px}
 
-  /* Promo Banner */
-  .promo{position:sticky;top:0;z-index:1000;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;
-    text-align:center;font-weight:800;padding:12px 50px 12px 16px;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.25);
-    display:flex;align-items:center;justify-content:center;gap:10px;animation:bannerSlide .5s ease-out}
+  /* Promo Banner (sticky + closable) */
+  .promo{
+    position:sticky;top:0;z-index:1000;
+    background:linear-gradient(135deg,var(--accent1),var(--accent2));
+    color:#fff;text-align:center;font-weight:800;
+    padding:12px 50px 12px 16px;font-size:14px;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    animation:bannerSlide .5s ease-out;
+  }
   .promo a{font-weight:900;text-decoration:underline}
-  .promo .close{position:absolute;right:10px;top:8px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);
-    color:#fff;border-radius:10px;padding:6px 10px;font-weight:800;cursor:pointer}
+  .promo .close{
+    position:absolute;right:10px;top:8px;
+    background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);
+    color:#fff;border-radius:10px;padding:6px 10px;font-weight:800;cursor:pointer
+  }
   @keyframes bannerSlide{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
   @media(min-width:600px){.promo{font-size:16px;padding:14px 60px 14px 20px}}
 
   /* Header */
-  .top{position:sticky;top:0;z-index:900;backdrop-filter: blur(8px);background:rgba(11,16,32,.6);
-    border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;padding:12px 14px}
-  .logo{display:flex;align-items:center;gap:4px;color:var(--ink);font-weight:800}
+  .top{
+    position:sticky;top:0;z-index:900;backdrop-filter: blur(8px);
+    background:rgba(11,16,32,.6);border-bottom:1px solid rgba(255,255,255,.06);
+    display:flex;align-items:center;justify-content:space-between;padding:12px 14px;
+  }
+  .logo{display:flex;align-items:center;gap:4px;color:var(--ink);font-weight:800} /* tighter gap */
   .logo svg{height:26px;width:auto}
-  .menu-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--ink);padding:6px 10px;border-radius:10px}
+  .menu-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--ink);
+    padding:6px 10px;border-radius:10px}
 
   /* Hero */
-  .hero{padding:20px 14px 8px;color:var(--ink);text-align:center}
+  .hero{padding:20px 14px 8px;text-align:center}
   .hero h1{font-size:22px;margin:6px 0 8px}
   .badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
   .badge{font-size:12px;color:#cbd5ff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:6px 8px;border-radius:999px}
@@ -55,7 +72,10 @@
   .grid{display:grid;gap:12px}
   @media(min-width:680px){.grid{grid-template-columns: repeat(2,1fr)}}
   @media(min-width:1024px){.grid{grid-template-columns: repeat(3,1fr)}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
   .mark{display:inline-block;font-size:11px;margin-bottom:6px;padding:4px 8px;border-radius:999px;background:#0e1a3d;border:1px solid rgba(255,255,255,.12);color:#bcd0ff;font-weight:800}
   .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
   .title{font-weight:900}
@@ -69,23 +89,32 @@
   .note{font-size:12px;color:#b2c3ff;margin-top:6px}
 
   /* Combo chip */
-  .combo{display:inline-block;margin-top:6px;padding:6px 10px;border-radius:10px;font-weight:900;font-size:13px;color:#fff;background:linear-gradient(135deg,#6a11cb,#2575fc);box-shadow:0 6px 16px rgba(37,117,252,.25)}
+  .combo{
+    display:inline-block;margin-top:6px;padding:6px 10px;border-radius:10px;font-weight:900;font-size:13px;color:#fff;
+    background:linear-gradient(135deg,#6a11cb,#2575fc);box-shadow:0 6px 16px rgba(37,117,252,.25)
+  }
 
   /* Table */
   .table{margin-top:10px;overflow:auto;border:1px solid var(--line);border-radius:12px}
-  table{width:100%;border-collapse:collapse;color:var(--ink)}
+  table{width:100%;border-collapse:collapse}
   th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
   thead th{background:#0e1836;color:#cfe0ff;text-align:left}
 
-  /* Bottom Dock */
-  .dock{position:sticky;bottom:0;z-index:40;background:rgba(11,16,32,.85);backdrop-filter: blur(10px);
-    border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px}
+  /* Bottom Dock (only one, at very bottom) */
+  .dock{
+    position:sticky;bottom:0;z-index:40;background:rgba(11,16,32,.85);backdrop-filter: blur(10px);
+    border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px;
+  }
   .dbtn{color:var(--ink);text-align:center;padding:10px 6px;border:1px solid rgba(255,255,255,.12);border-radius:12px}
   .dactive{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
 
-  /* Modals */
+  /* Modals / Sheets */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end}
-  .sheet{background:#0d142d;border-top:1px solid var(--line);width:100%;max-height:92vh;border-radius:16px 16px 0 0;padding:14px;overflow:auto;color:#e9edff}
+  .sheet{
+    background:#0d142d;border-top:1px solid var(--line);width:100%;
+    max-height:90vh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+    border-radius:16px 16px 0 0;padding:14px;color:#e9edff
+  }
   .field{display:flex;flex-direction:column;gap:6px;margin:8px 0}
   .input,select,textarea{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:10px;color:#e9edff}
   .chips{display:flex;gap:6px;flex-wrap:wrap}
@@ -97,6 +126,9 @@
   .h{font-weight:900;margin-top:8px}
   .catlist{margin:6px 0 0;padding-left:18px}
   .catlist li{margin:6px 0}
+
+  /* Lock page scroll when a modal is open (iOS friendly) */
+  body.modal-open{overflow:hidden;position:fixed;width:100%}
 </style>
 </head>
 <body>
@@ -384,7 +416,7 @@
   </div>
 </main>
 
-<!-- Bottom Dock -->
+<!-- ===== Bottom Dock (single instance) ===== -->
 <nav class="dock wrap" aria-label="Quick navigation">
   <a class="dbtn dactive" href="#plans" onclick="showPanel('plans')">Plans</a>
   <a class="dbtn" href="#boxes" onclick="showPanel('boxes')">Boxes</a>
@@ -392,7 +424,9 @@
   <a class="dbtn" href="#support" onclick="showPanel('support')">Support</a>
 </nav>
 
-<!-- Sheets / Modals -->
+<!-- ===== Sheets / Modals ===== -->
+
+<!-- Menu -->
 <div class="modal" id="sheet-menu" aria-hidden="true">
   <div class="sheet">
     <button class="x" onclick="closeSheet('menu')">Close</button>
@@ -471,7 +505,7 @@
           <li>VOD - Gujarati/Marathi/Bengali</li>
           <li>VOD - VOD ALL • with & without 18+</li>
           <li><strong>VOD - ADULT</strong></li>
-          <!-- Extra helpful labels -->
+          <!-- Extras -->
           <li>Kids 24/7 • Animated Movies</li>
           <li>Documentaries • Reality TV</li>
           <li>Classic Movies & Series</li>
@@ -501,11 +535,11 @@
 </div>
 
 <script>
-  /* Promo */
+  /* ===== Promo controls (persist close state) ===== */
   function closePromo(){document.getElementById('promo').style.display='none';try{localStorage.setItem('promoClosed','1')}catch(e){}}
   (function(){try{if(localStorage.getItem('promoClosed')==='1'){document.getElementById('promo').style.display='none';}}catch(e){}})();
 
-  /* Tabs */
+  /* ===== Tabs / Panels ===== */
   function showPanel(name){
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     document.querySelector('#panel-'+name).classList.add('active');
@@ -516,15 +550,48 @@
     window.scrollTo({top:0,behavior:'smooth'});
   }
 
-  /* Sheets */
-  function openSheet(key){document.getElementById('sheet-'+key).style.display='flex';}
-  function closeSheet(key){document.getElementById('sheet-'+key).style.display='none';}
+  /* ===== Modal open/close with background scroll lock ===== */
+  let _scrollY = 0;
+  function openSheet(key){
+    _scrollY = window.scrollY || window.pageYOffset;
+    document.body.classList.add('modal-open');
+    document.body.style.top = `-${_scrollY}px`;
 
-  /* WhatsApp helper */
-  function waSend(msg){const url="https://wa.me/16476961656?text="+encodeURIComponent(msg.trim());window.open(url,'_blank');}
+    const el = document.getElementById('sheet-'+key);
+    el.style.display = 'flex';
 
-  /* CTAs */
-  function subscribePlan(label,price){document.getElementById('sPlan').value=label+" - $"+price;openSheet('subscribe');}
+    // backdrop click closes
+    el.addEventListener('click', backdropCloser);
+  }
+  function backdropCloser(e){
+    if(e.target.classList.contains('modal')){
+      const id = e.currentTarget.id.replace('sheet-','');
+      closeSheet(id);
+    }
+  }
+  function closeSheet(key){
+    const el = document.getElementById('sheet-'+key);
+    if(!el) return;
+    el.style.display = 'none';
+    el.removeEventListener('click', backdropCloser);
+
+    document.body.classList.remove('modal-open');
+    document.body.style.top = '';
+    window.scrollTo(0, _scrollY);
+  }
+
+  /* ===== WhatsApp helper ===== */
+  function waSend(msg){
+    const url = "https://wa.me/16476961656?text=" + encodeURIComponent(msg.trim());
+    window.open(url,'_blank');
+  }
+
+  /* ===== CTAs ===== */
+  function planInfo(name){openSheet('info');}
+  function subscribePlan(label,price){
+    document.getElementById('sPlan').value = label + " - $" + price;
+    openSheet('subscribe');
+  }
   function sendSubscribe(){
     const n=(document.getElementById('sName').value||'').trim();
     const ph=(document.getElementById('sPhone').value||'').trim();
@@ -532,10 +599,14 @@
     const plan=document.getElementById('sPlan').value||'';
     waSend(`New Subscription\nPlan: ${plan}\nName: ${n}\nPhone: ${ph}\nEmail: ${e}`);
   }
-  function buyBox(name,price){waSend(`I'm interested in: Box Only\nModel: ${name}\nPrice: $${price}\nPlease guide me with purchase & setup.`);}
-  function buyBoxBundle(name,price){waSend(`I'm interested in: ${name} + 12‑Month Plan\nBundle Price: $${price}\nPlease guide me with activation & setup.`);}
+  function buyBox(name,price){
+    waSend(`I'm interested in: Box Only\nModel: ${name}\nPrice: $${price}\nPlease guide me with purchase & setup.`);
+  }
+  function buyBoxBundle(name,price){
+    waSend(`I'm interested in: ${name} + 12‑Month Plan\nBundle Price: $${price}\nPlease guide me with activation & setup.`);
+  }
 
-  /* Recharge */
+  /* ===== Recharge ===== */
   function sendRecharge(){
     const n=(document.getElementById('rcName').value||'').trim();
     const u=(document.getElementById('rcUser').value||'').trim();
@@ -544,7 +615,7 @@
     waSend(`Recharge Request\nName: ${n}\nUser ID: ${u}\nEmail: ${e}\nPlan: ${p}`);
   }
 
-  /* Support forms */
+  /* ===== Support forms ===== */
   function sendRequest(){
     const n=(document.getElementById('reqName').value||'').trim();
     const ph=(document.getElementById('reqPhone').value||'').trim();
@@ -559,13 +630,5 @@
     waSend(`Parental PIN Request\nMAC: ${mac}\nEmail: ${e}\nNote: ${note}`);
   }
 </script>
-
-<!-- Bottom Dock (kept here so JS above can call) -->
-<nav class="dock wrap" aria-label="Quick navigation">
-  <a class="dbtn dactive" href="#plans" onclick="showPanel('plans')">Plans</a>
-  <a class="dbtn" href="#boxes" onclick="showPanel('boxes')">Boxes</a>
-  <a class="dbtn" href="#recharge" onclick="showPanel('recharge')">Recharge</a>
-  <a class="dbtn" href="#support" onclick="showPanel('support')">Support</a>
-</nav>
 </body>
 </html>
