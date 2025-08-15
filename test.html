@@ -236,6 +236,23 @@
           <button id="btnAddCustomer" class="btn ok" type="button">+ Add Customer</button>
         </div>
       </div>
+        <!-- Filters row (place right under the toolbar above the table) -->
+  <div class="flex" style="gap:10px;flex-wrap:wrap;margin-bottom:10px">
+    <!-- Filter 1: time window -->
+    <select id="timeFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
+      <option value="7" selected>Last 7 Days</option>
+      <option value="30">Monthly</option>
+      <option value="365">Yearly</option>
+      <option value="lifetime">Lifetime</option>
+    </select>
+
+    <!-- Filter 2: payment status -->
+    <select id="statusFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
+      <option value="all" selected>All</option>
+      <option value="paid">Paid</option>
+      <option value="unpaid">Unpaid</option>
+    </select>
+  </div>
       <div class="card table-scroll" style="padding:0">
         <table class="grid" id="custGrid">
           <thead><tr>
@@ -625,7 +642,8 @@ async function loadApp(user){
 
   $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
   $("#searchCustomers").addEventListener('input', renderCustomers);
-
+    $("#timeFilter").addEventListener('change', renderCustomers);
+  $("#statusFilter").addEventListener('change', renderCustomers);
   await Promise.all([loadPlans(), loadCustomers(), loadRenewals()]);
   const now = new Date();
   $("#repMonth").value = now.toISOString().slice(0,7);
@@ -798,24 +816,54 @@ function renderPlans(){
 
 function renderCustomers(){
   const q = ($("#searchCustomers").value||"").toLowerCase().trim();
+
+  // Read filters
+  const tVal = ($("#timeFilter")?.value)||"7";       // '7' | '30' | '365' | 'lifetime'
+  const sVal = ($("#statusFilter")?.value)||"all";   // 'all' | 'paid' | 'unpaid'
+
+  // Map time filter to a day limit
+  const now = new Date();
+  const dayLimit = (tVal === 'lifetime') ? Infinity : parseInt(tVal, 10);
+
   const tbody = $("#custGrid tbody");
   tbody.innerHTML = "";
+
   customers.forEach(c=>{
-    const inText = `${c.name||''} ${c.phone||''} ${c.email||''} ${c.userId||''} ${c.mac||''}`.toLowerCase();
-    if(q && !inText.includes(q)) return;
     const plan = c.currentPlan || {};
-    const paid = (plan.paymentReceived==='yes') ? '<span class="badge-ok pill">Yes</span>' : '<span class="badge-warn pill">No</span>';
+    const inText = `${c.name||''} ${c.phone||''} ${c.email||''} ${c.userId||''} ${c.mac||''}`.toLowerCase();
+
+    // Search filter
+    if(q && !inText.includes(q)) return;
+
+    // Time filter: use this plan's start date (falls back to originalStartDate if missing)
+    const startISO = plan.startDate || c.originalStartDate || "";
+    let withinTime = true;
+    if (dayLimit !== Infinity && startISO){
+      const start = new Date(startISO + "T00:00:00");
+      const diffDays = Math.floor((now - start) / (1000*60*60*24));
+      withinTime = diffDays <= dayLimit;
+    } else if (dayLimit !== Infinity && !startISO){
+      withinTime = false;
+    }
+    if(!withinTime) return;
+
+    // Status filter
+    const paidStr = (plan.paymentReceived==='yes') ? 'paid' : 'unpaid';
+    if (sVal !== 'all' && paidStr !== sVal) return;
+
+    const paidBadge = (plan.paymentReceived==='yes')
+      ? '<span class="badge-ok pill">Yes</span>'
+      : '<span class="badge-warn pill">No</span>';
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${c.name||''}</td>
       <td>${c.phone||''}</td>
       <td>${c.email||''}</td>
-      <td>${c.userId||''}</td>
-      <td>${c.mac||''}</td>
       <td>${plan.planName||''}</td>
+      <td>${paidBadge}</td>
       <td>${plan.startDate||''}</td>
       <td>${plan.expiryDate||''} ${daysLeftBadge(plan.expiryDate)}</td>
-      <td>${paid}</td>
       <td class="flex" style="gap:6px;flex-wrap:wrap">
         <button class="btn ghost" data-view="${c.id}">View</button>
         <button class="btn secondary" data-edit="${c.id}">Edit</button>
@@ -826,8 +874,10 @@ function renderCustomers(){
     `;
     tbody.appendChild(tr);
   });
+
   $("#kpiCustomers").textContent = String(customers.length);
 
+  // Rebind row actions (unchanged)
   tbody.querySelectorAll("[data-edit]").forEach(btn=>{
     btn.onclick = ()=> openCustomerModal(btn.getAttribute('data-edit'));
   });
