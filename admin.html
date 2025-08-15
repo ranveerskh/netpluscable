@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+l<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -93,7 +93,7 @@
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="sub">Unique Visitors</div><div class="val" id="kpiVisitors">—</div></div>
+    <div class="kpi"><div class="sub">Unique Viewer‑Days</div><div class="val" id="kpiVisitors">—</div></div>
     <div class="kpi"><div class="sub">Pings in Range</div><div class="val" id="kpiPings">—</div></div>
     <div class="kpi"><div class="sub">Avg Steps (today)</div><div class="val" id="kpiAvgStepsToday">—</div></div>
     <div class="kpi"><div class="sub">Avg Steps (session)</div><div class="val" id="kpiAvgStepsSession">—</div></div>
@@ -110,7 +110,10 @@
   <section id="panel-visitors" class="cards">
     <div class="card" style="grid-column:1/-1">
       <div class="row" style="justify-content:space-between">
-        <div><div class="h">Visitors (latest 500 in range)</div><div class="sub">Steps only — no location stored</div></div>
+        <div>
+          <div class="h">Visitors (latest 10 in range)</div>
+          <div class="sub">Steps only — no location stored</div>
+        </div>
         <div class="tools">
           <input id="visSearch" class="input" placeholder="Filter by VID/page…">
           <button class="btn" id="visRefresh">Refresh</button>
@@ -178,7 +181,7 @@
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-  getFirestore, collection, query, orderBy, limit, getDocs, where,
+  getFirestore, collection, query, orderBy, limit, getDocs,
   doc, addDoc, setDoc, getDoc, deleteDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -239,36 +242,50 @@ let visCache = [];
 async function loadVisitors(){
   const rg = $('#range').value;
   const start = rangeToStart(rg);
-  // Fetch recent first (client-side filter by date for simplicity)
-  const snap = await getDocs(query(collection(db,'analytics_visitors'), orderBy('createdAt','desc'), limit(500)));
+
+  // Fetch recent pings first; keep the request cheap. (We still filter by range client-side.)
+  const snap = await getDocs(query(collection(db,'analytics_visitors'), orderBy('createdAt','desc'), limit(150)));
   visCache = snap.docs.map(d=>({id:d.id, ...d.data()}))
     .filter(r=>{
       const t = r.createdAt?.toDate?.() || (r.ts? new Date(r.ts) : null);
       return !start || (t && t>=start);
     });
 }
+
+// KPIs: Unique viewer‑days (count each vid once per calendar day in the selected range)
 function renderKPIs(){
-  const vids = new Set();
+  const uniqueDayPairs = new Set(); // yyyy-mm-dd|vid
   let pings=0, sumToday=0, sumSess=0, nToday=0, nSess=0;
+
   visCache.forEach(r=>{
-    if(r.vid) vids.add(r.vid);
+    const t = r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
+    if(t && r.vid){
+      const day = t.toISOString().slice(0,10);
+      uniqueDayPairs.add(`${day}|${r.vid}`);
+    }
     pings++;
     if(typeof r.steps_today==='number'){ sumToday+=r.steps_today; nToday++; }
     if(typeof r.steps_session==='number'){ sumSess+=r.steps_session; nSess++; }
   });
-  $('#kpiVisitors').textContent = vids.size.toString();
-  $('#kpiPings').textContent = pings.toString();
+
+  $('#kpiVisitors').textContent = String(uniqueDayPairs.size);
+  $('#kpiPings').textContent = String(pings);
   $('#kpiAvgStepsToday').textContent = nToday? (sumToday/nToday).toFixed(1) : '0.0';
   $('#kpiAvgStepsSession').textContent = nSess? (sumSess/nSess).toFixed(1) : '0.0';
 }
+
 function renderVisitors(){
   const term = ($('#visSearch').value||'').toLowerCase();
   const rows = visCache.filter(r=>{
     const text = [r.vid,r.page].map(v=>String(v||'').toLowerCase()).join(' ');
     return !term || text.includes(term);
   });
+
+  // Only show the latest 10 rows
+  const latest10 = rows.slice(0, 10);
+
   const tb = $('#visitorsTable tbody'); tb.innerHTML='';
-  rows.forEach(r=>{
+  latest10.forEach(r=>{
     const ts = r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -286,7 +303,7 @@ function renderVisitors(){
 $('#visRefresh').addEventListener('click', async ()=>{ await loadVisitors(); renderKPIs(); renderVisitors(); });
 $('#visSearch').addEventListener('input', renderVisitors);
 
-/* CSV */
+/* CSV: export what's visible (10 rows) */
 function toCSV(rows){
   return rows.map(r=>r.map(v=>{
     const s=String(v??''); return /[",\n]/.test(s)? `"${s.replace(/"/g,'""')}"` : s;
