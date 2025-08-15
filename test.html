@@ -24,11 +24,9 @@
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1100px;margin:0 auto;padding:14px}
 
-  /* Swipe Promo Carousel (sticky + closable) */
+  /* Swipe Promo Carousel (sticky) */
   .promo{
-    position:sticky;top:0;z-index:1000;
-    background:transparent;
-    padding:8px 0 4px;
+    position:sticky;top:0;z-index:1000;background:transparent;padding:8px 0 4px;
     animation:bannerSlide .5s ease-out;
   }
   #promoTrack{display:flex;gap:10px;overflow:auto;scroll-snap-type:x mandatory;padding:0 14px}
@@ -275,7 +273,32 @@
       <div class="field"><label>Email</label><input class="input" id="waEmail" placeholder="email@example.com" type="email"></div>
 
       <button class="btn whats" onclick="waRegisterOffer()">Register on WhatsApp</button>
-      <div class="help">We’ll confirm your offer and help you subscribe. Refer a friend who buys a 1‑Year plan and get +2 months free.</div>
+      <div class="help">Refer a friend who buys a 1‑Year plan and get +2 months free (details below).</div>
+    </div>
+
+    <!-- NEW: Referral Form -->
+    <div class="card" style="margin-top:12px">
+      <div class="title">Referral — Get +2 Months Free</div>
+      <div class="sub" style="color:var(--muted)">If your friend buys a 1‑Year plan, you get 2 months free.</div>
+
+      <div class="cols">
+        <div>
+          <div class="h">Your Details</div>
+          <div class="field"><label>Your Name</label><input class="input" id="refYourName" placeholder="Full Name"></div>
+          <div class="field"><label>Your Email</label><input class="input" id="refYourEmail" placeholder="email@example.com" type="email"></div>
+          <div class="field"><label>Your Phone (WhatsApp)</label><input class="input" id="refYourPhone" placeholder="+1 ..."></div>
+          <div class="field"><label>Your Device MAC</label><input class="input" id="refYourMac" placeholder="e.g., 00:1A:79:xx:xx:xx"></div>
+        </div>
+        <div>
+          <div class="h">Friend’s Details</div>
+          <div class="field"><label>Friend’s Name</label><input class="input" id="refFriendName" placeholder="Full Name"></div>
+          <div class="field"><label>Friend’s Email</label><input class="input" id="refFriendEmail" placeholder="email@example.com" type="email"></div>
+          <div class="field"><label>Friend’s Phone (WhatsApp)</label><input class="input" id="refFriendPhone" placeholder="+1 ..."></div>
+        </div>
+      </div>
+
+      <button class="btn whats" onclick="waReferral()">Submit Referral on WhatsApp</button>
+      <div class="help">We’ll verify when your friend subscribes for 1‑Year and add +2 months to your account.</div>
     </div>
 
     <div class="table">
@@ -295,14 +318,14 @@
   <div class="panel" id="panel-boxes">
     <div class="grid">
       <div class="card">
-        <span class="mark">Updated</span>
+        <span class="mark">Not Recommended</span>
         <div class="row"><div class="title">Android FULL HD Box</div><div class="price">$50</div></div>
         <div class="combo">Box + 1‑Year: $140</div>
         <ul class="features">
           <li>ARM Cortex Quad‑Core • Mali‑G31</li>
           <li>2GB DDR3 • 8GB eMMC</li>
           <li>Wi‑Fi 2.4/5.8 • BT 5.2</li>
-          <li>Assistant • Netflix • YouTube • Disney+ • Play</li>
+          <li>Lemon TV App• Netflix • YouTube • Disney+ • Play</li>
           <li>Bluetooth voice remote</li>
           <li>Full HD output</li>
         </ul>
@@ -313,7 +336,7 @@
       </div>
 
       <div class="card">
-        <span class="mark">4K</span>
+        <span class="mark">Good</span>
         <div class="row"><div class="title">Sword+ 4K Box</div><div class="price">$90</div></div>
         <div class="combo">Box + 1‑Year: $180</div>
         <ul class="features">
@@ -557,7 +580,7 @@
 </div>
 
 <script type="module">
-  /* ===== Firebase (CDN, same project) ===== */
+  /* ===== Firebase (CDN) ===== */
   import { getApps, initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, query, orderBy, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -577,7 +600,6 @@
     const wrap = document.getElementById('promoCarousel');
     const track = document.getElementById('promoTrack');
     track.innerHTML='';
-    // Order by 'order' asc
     const snap = await getDocs(query(collection(db,'site_settings','banners','items'), orderBy('order','asc')));
     const nowStr = new Date().toISOString().slice(0,10);
     const items = [];
@@ -607,6 +629,7 @@
   /* ===== Gallery from Firestore ===== */
   async function loadGallery(){
     const grid = document.getElementById('galleryGrid');
+    if(!grid) return;
     grid.innerHTML = '';
     const snap = await getDocs(query(collection(db,'site_settings','gallery','items'), orderBy('order','asc')));
     snap.forEach(d=>{
@@ -621,9 +644,10 @@
       grid.appendChild(item);
     });
   }
+  // expose for non-module caller
+  window.loadGallery = loadGallery;
 
   /* ===== Step counter (no location) ===== */
-  // simple uuid
   function uuid(){ return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16)); }
   const vid = localStorage.getItem('vid') || (localStorage.setItem('vid', uuid()), localStorage.getItem('vid'));
   const sessionId = sessionStorage.getItem('sid') || (sessionStorage.setItem('sid', uuid()), sessionStorage.getItem('sid'));
@@ -666,19 +690,9 @@
     }catch(_){}
   }
   setInterval(ping,15000);
-  window.addEventListener('beforeunload', ()=>{ try{navigator.sendBeacon&&navigator.sendBeacon('#','');}catch(_){}});
 
-  // init dynamic content
+  // init
   loadBanners();
-
-  /* ===== UI helpers & WhatsApp flows ===== */
-  window.waRegisterOffer = function(){
-    const name=(document.getElementById('waName').value||'').trim();
-    const email=(document.getElementById('waEmail').value||'').trim();
-    const msg = `Offer Registration (+2 months)\nPlan: 1-Year\nName: ${name}\nEmail: ${email}\nSource: website`;
-    const url = "https://wa.me/16476961656?text=" + encodeURIComponent(msg);
-    window.open(url,'_blank');
-  }
 </script>
 
 <script>
@@ -705,12 +719,7 @@
     const sheetEl = el.querySelector('.sheet');
     if (sheetEl) sheetEl.addEventListener('click', e => e.stopPropagation());
 
-    // If opening gallery, refresh it
-    if(key==='gallery'){ try{ import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js')
-      .then(()=>window.loadGallery?window.loadGallery():null); }catch(_){}
-      // Fallback: call loadGallery attached earlier if present
-      if(typeof loadGallery==='function') loadGallery();
-    }
+    if(key==='gallery'){ if(window.loadGallery) window.loadGallery(); }
   }
   function backdropCloser(e){
     if(e.target.classList.contains('modal')){
@@ -733,6 +742,30 @@
     const url = "https://wa.me/16476961656?text=" + encodeURIComponent(msg.trim());
     window.open(url,'_blank');
   }
+
+  // Offer registration
+  function waRegisterOffer(){
+    const name=(document.getElementById('waName').value||'').trim();
+    const email=(document.getElementById('waEmail').value||'').trim();
+    const msg = `Offer Registration (+2 months)\nPlan: 1-Year\nName: ${name}\nEmail: ${email}\nSource: website`;
+    waSend(msg);
+  }
+
+  // Referral form
+  function waReferral(){
+    const yn  =(document.getElementById('refYourName').value||'').trim();
+    const ye  =(document.getElementById('refYourEmail').value||'').trim();
+    const yp  =(document.getElementById('refYourPhone').value||'').trim();
+    const ymac=(document.getElementById('refYourMac').value||'').trim();
+
+    const fn  =(document.getElementById('refFriendName').value||'').trim();
+    const fe  =(document.getElementById('refFriendEmail').value||'').trim();
+    const fp  =(document.getElementById('refFriendPhone').value||'').trim();
+
+    const msg = `Referral: +2 Months Request\nYour Name: ${yn}\nYour Email: ${ye}\nYour Phone: ${yp}\nYour Device MAC: ${ymac}\nFriend Name: ${fn}\nFriend Email: ${fe}\nFriend Phone: ${fp}\nNote: Friend will purchase 1-Year plan.`;
+    waSend(msg);
+  }
+
   function subscribePlan(label,price){
     document.getElementById('sPlan').value = label + " - $" + price;
     openSheet('subscribe');
@@ -779,7 +812,7 @@
   window.openSheet=openSheet; window.closeSheet=closeSheet;
   window.showPanel=showPanel; window.sendRecharge=sendRecharge;
   window.sendRequest=sendRequest; window.sendPin=sendPin;
-  window.subscribePlan=subscribePlan;
+  window.subscribePlan=subscribePlan; window.waRegisterOffer=waRegisterOffer; window.waReferral=waReferral;
 </script>
 </body>
 </html>
