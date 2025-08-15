@@ -74,6 +74,8 @@
   position:sticky; top:calc(var(--safe-top) + var(--sticky-offset,56px));
   z-index:2;
 }
+/* When the table is in its own scroll container, stick to that container's top */
+.table-scroll .grid th { top: 0; }
   .muted{color:var(--muted)}
   .hidden{display:none!important}
   input,select,textarea{
