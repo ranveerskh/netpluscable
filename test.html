@@ -39,12 +39,15 @@
   .tab{padding:10px 12px;border-radius:10px;border:1px solid var(--border);cursor:pointer;background:#121831;min-height:44px;display:flex;align-items:center}
   .tab.active{background:linear-gradient(135deg,#1b2350,#1a244f)}
 
-  /* Data tables: make horizontally scrollable on iOS */
-  .card:has(> .grid){overflow:auto;-webkit-overflow-scrolling:touch}
-  .grid{width:100%;border-collapse:collapse;min-width:720px}
-  .grid th,.grid td{padding:10px;border-bottom:1px solid #1d274e;font-size:14px}
-  .grid th{text-align:left;color:#c7d3ff;background:#121a3a;position:sticky;top:0;z-index:1}
-
+  /* Tables: keep sticky headers + make horizontal scrollable on iPhone (no :has) */
+.table-scroll{ overflow:auto; -webkit-overflow-scrolling:touch; }
+.grid{width:100%;border-collapse:collapse; min-width:720px}
+.grid th,.grid td{padding:10px;border-bottom:1px solid #1d274e;font-size:14px}
+.grid th{
+  text-align:left;color:#c7d3ff;background:#121a3a;
+  position:sticky; top:calc(var(--safe-top) + var(--sticky-offset,56px));
+  z-index:2;
+}
   .muted{color:var(--muted)}
   .hidden{display:none!important}
   input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);background:#0f1530;color:var(--ink);font-size:16px;min-height:44px}
@@ -153,7 +156,7 @@
           <option value="60">60 days</option>
         </select>
       </div>
-      <div class="card" style="padding:0">
+      <div class="card table-scroll" style="padding:0">
         <table class="grid" id="nearGrid">
           <thead><tr>
             <th>Name</th><th>Phone</th><th>Plan</th><th>Expiry</th><th>Days Left</th><th></th>
@@ -204,7 +207,7 @@
         </div>
       </div>
 
-      <div class="card" style="padding:0">
+      <div class="card table-scroll" style="padding:0">
         <table class="grid" id="custGrid">
           <thead><tr>
             <th>Name</th><th>Phone</th><th>Email</th><th>User ID</th><th>MAC</th>
@@ -224,7 +227,7 @@
           <button id="btnAddPlan" class="btn ok" type="button">+ Add Plan</button>
         </div>
       </div>
-      <div class="card" style="padding:0">
+      <div class="card table-scroll" style="padding:0">
         <table class="grid" id="plansGrid">
           <thead><tr>
             <th>ID</th><th>Name</th><th>Duration (months)</th>
@@ -275,7 +278,7 @@
       </div>
 
       <h3 style="margin-top:18px">Included Plans in Period</h3>
-      <div class="card" style="padding:0">
+      <div class="card table-scroll" style="padding:0">
         <table class="grid" id="repGrid">
           <thead><tr>
             <th>Date</th><th>Customer</th><th>Plan</th><th>Turnover $</th><th>Expense $</th><th>Profit $</th><th>Paid</th><th></th>
