@@ -1,5 +1,3 @@
-I will give you code, just give me step by step things to replace 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,15 +65,15 @@ I will give you code, just give me step by step things to replace
   .tabs{display:flex;gap:8px;flex-wrap:wrap}
   .tab{padding:10px 12px;border-radius:10px;border:1px solid var(--border);cursor:pointer;background:#121831; min-height:var(--tap); display:flex; align-items:center}
   .tab.active{background:linear-gradient(135deg,#1b2350,#1a244f)}
-  /* Tables: keep sticky headers + make horizontal scrollable on iPhone */
-  .card:has(> .grid){ overflow:auto; -webkit-overflow-scrolling:touch; }
-  .grid{width:100%;border-collapse:collapse; min-width:720px} /* allow side-scroll on narrow screens */
-  .grid th,.grid td{padding:10px;border-bottom:1px solid #1d274e;font-size:14px}
-  .grid th{
-    text-align:left;color:#c7d3ff;background:#121a3a;
-    position:sticky; top:calc(var(--safe-top) + 56px); /* stay below topbar */
-    z-index:1;
-  }
+  /* Tables: keep sticky headers + make horizontal scrollable on iPhone (no :has) */
+.table-scroll{ overflow:auto; -webkit-overflow-scrolling:touch; }
+.grid{width:100%;border-collapse:collapse; min-width:720px}
+.grid th,.grid td{padding:10px;border-bottom:1px solid #1d274e;font-size:14px}
+.grid th{
+  text-align:left;color:#c7d3ff;background:#121a3a;
+  position:sticky; top:calc(var(--safe-top) + var(--sticky-offset,56px));
+  z-index:2;
+}
   .muted{color:var(--muted)}
   .hidden{display:none!important}
   input,select,textarea{
