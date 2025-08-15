@@ -2,86 +2,120 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+/>
 <title>Net + Cable • Admin</title>
 <style>
   :root{
-    --bg:#0b1020;--card:#121831;--ink:#e7ecff;--muted:#9aa7d9;--accent:#6a8cff;--accent2:#8a5ff;--danger:#ff647c;--ok:#35d0a7;--border:#23305b;
-    --warn:#ffc857;
+    --bg:#0b1020;--card:#121831;--ink:#e7ecff;--muted:#9aa7d9;--accent:#6a8cff;--accent2:#8a5ff;--danger:#ff647c;--ok:#35d0a7;--border:#23305b;--warn:#ffc857;
+    /* iOS safe areas */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    /* compact sizes for iPhone */
+    --space:14px;
+    --radius:14px;
+    --tap:44px; /* min tap target */
   }
-  *{box-sizing:border-box}
+  *{box-sizing:border-box; -webkit-tap-highlight-color: rgba(255,255,255,0); }
   html,body{height:100%}
-  body{margin:0;font-family: ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:
-    radial-gradient(1300px 800px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
-    radial-gradient(900px 700px at 0% 0%,rgba(106,140,255,.18),transparent 55%),
-    linear-gradient(180deg,#0b1020,#0b1020 30%,#0b1020);
-    color:var(--ink)
+  body{
+    margin:0;
+    font-family: ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    background:
+      radial-gradient(1300px 800px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
+      radial-gradient(900px 700px at 0% 0%,rgba(106,140,255,.18),transparent 55%),
+      linear-gradient(180deg,#0b1020,#0b1020 30%,#0b1020);
+    color:var(--ink);
+    padding-bottom: calc(var(--safe-bottom) + 6px); /* keep content above home bar */
+    /* iOS rubber band sanity */
+    overscroll-behavior-y: none;
   }
   a{color:var(--accent)}
   .wrap{max-width:1200px;margin:0 auto;padding:24px}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
-  .row{display:flex;gap:14px;flex-wrap:wrap}
-  .col{flex:1 1 280px}
-  .btn{appearance:none;border:1px solid var(--border);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
-       padding:10px 14px;border-radius:10px;font-weight:600;cursor:pointer}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+  .row{display:flex;gap:var(--space);flex-wrap:wrap}
+  .col{flex:1 1 280px; min-width:260px}
+  .btn{
+    appearance:none;border:1px solid var(--border);
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;padding:12px 16px;border-radius:10px;font-weight:600;cursor:pointer;
+    min-height:var(--tap); /* easier tap on iPhone */
+    touch-action: manipulation;
+  }
   .btn.secondary{background:#182041}
   .btn.ghost{background:transparent;border-color:var(--border);color:var(--ink)}
   .btn.warn{background:linear-gradient(135deg,#ff9d00,#ff6800)}
   .btn.danger{background:linear-gradient(135deg,#ff5b73,#ff1f49)}
   .btn.ok{background:linear-gradient(135deg,#3cd6b5,#15a37f)}
+  .btn:active{transform:translateY(1px); opacity:.95}
   .chip{display:inline-block;padding:4px 8px;border-radius:999px;background:#1a2244;border:1px solid #2a3670;color:#cfe2ff;font-size:12px}
-  .topbar{position:sticky;top:0;z-index:50;background:rgba(11,16,32,.8);backdrop-filter: blur(8px);border-bottom:1px solid var(--border)}
-  .topbar .wrap{display:flex;align-items:center;gap:14px;justify-content:space-between}
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(11,16,32,.86);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--border);
+    padding-top: calc(var(--safe-top) * 1); /* avoid Dynamic Island */
+  }
+  .topbar .wrap{display:flex;align-items:center;gap:14px;justify-content:space-between;padding-top:8px;padding-bottom:6px}
   .tabs{display:flex;gap:8px;flex-wrap:wrap}
-  .tab{padding:8px 12px;border-radius:10px;border:1px solid var(--border);cursor:pointer;background:#121831}
+  .tab{padding:10px 12px;border-radius:10px;border:1px solid var(--border);cursor:pointer;background:#121831; min-height:var(--tap); display:flex; align-items:center}
   .tab.active{background:linear-gradient(135deg,#1b2350,#1a244f)}
-  .grid{width:100%;border-collapse:collapse}
-  .grid th,.grid td{padding:10px;border-bottom:1px solid #1d274e;font-size:14px}
-  .grid th{text-align:left;color:#c7d3ff;background:#121a3a;position:sticky;top:0}
+  /* Tables: keep sticky headers + make horizontal scrollable on iPhone (no :has) */
+.table-scroll{ overflow:auto; -webkit-overflow-scrolling:touch; }
+.grid{width:100%;border-collapse:collapse; min-width:720px}
+.grid th,.grid td{padding:10px;border-bottom:1px solid #1d274e;font-size:14px}
+.grid th{
+  text-align:left;color:#c7d3ff;background:#121a3a;
+  position:sticky; top:calc(var(--safe-top) + var(--sticky-offset,56px));
+  z-index:2;
+}
+/* When the table is in its own scroll container, stick to that container's top */
+.table-scroll .grid th { top: 0; }
   .muted{color:var(--muted)}
   .hidden{display:none!important}
-  input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:#0f1530;color:var(--ink)}
+  input,select,textarea{
+    width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);
+    background:#0f1530;color:var(--ink); font-size:16px; /* stops iOS zoom */
+    min-height:44px; /* comfy tap size */
+  }
   label{display:block;margin-top:10px;margin-bottom:6px;color:#ccd6ff;font-size:13px}
   .kpi{padding:12px;border-radius:12px;border:1px solid var(--border);background:#121a3a}
   .kpi .big{font-size:24px;font-weight:800}
-  .pill{border:1px solid var(--border);padding:6px 10px;border-radius:999px}
+  .pill{border:1px solid var(--border);padding:8px 10px;border-radius:999px; min-height:var(--tap)}
   .right{float:right}
   .center{text-align:center}
-  .flex{display:flex;gap:10px;align-items:center}
+  .flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .grow{flex:1}
   .danger-text{color:#ff8ca0}
   .ok-text{color:#5ee0c1}
   .warn-text{color:#ffd479}
 
-  /* Modal (scrollable + hidden by default) */
+  /* Modal (scrollable) */
   .modal{
-    position:fixed;
-    inset:0;
-    display:none;
-    align-items:flex-start;
-    justify-content:center;
-    background:rgba(0,0,0,.55);
-    z-index:200;
-    padding:16px;
-    overflow:auto;
+    position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center;
+    background:rgba(0,0,0,.55); z-index:200; padding:16px; overflow:auto;
+    padding-top: calc(16px + var(--safe-top));
+    padding-bottom: calc(16px + var(--safe-bottom));
   }
   .modal.open{ display:flex; }
   .modal .body{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:16px;
-    width:96%;
-    max-width:720px;
-    max-height:90vh;
-    overflow:auto;
-    -webkit-overflow-scrolling:touch;
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px; width:96%; max-width:720px; max-height:90vh; overflow:auto; -webkit-overflow-scrolling:touch;
   }
-  .modal .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-  .modal .foot{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+  .modal .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px; position:sticky; top:0; background:var(--card); z-index:5; padding-bottom:6px}
+  .modal .foot{
+    display:flex;gap:10px;justify-content:flex-end;margin-top:12px;
+    position:sticky; bottom:0; background:linear-gradient(180deg, transparent, rgba(18,24,49,.9) 24px, rgba(18,24,49,1) 48px);
+    padding-top:12px; padding-bottom:6px;
+  }
 
   /* Auth */
-  .auth{max-width:420px;margin:60px auto}
+  .auth{max-width:420px;margin:60px auto; padding-left: max(16px, var(--safe-left)); padding-right: max(16px, var(--safe-right));}
   .logo{font-weight:900;letter-spacing:.5px}
   .subtle{opacity:.66}
 
@@ -89,6 +123,21 @@
   .badge-exp{background:#2a1a1a;color:#ffb3c0;border:1px solid #624}
   .badge-ok{background:#14231b;color:#b9ffe9;border:1px solid #264}
   .badge-warn{background:#2a2416;color:#ffe7a8;border:1px solid #684}
+
+  /* Small iPhone tweaks */
+  @media (max-width: 420px){
+    .wrap{padding:16px}
+    .col{min-width:100%}
+    .kpi .big{font-size:22px}
+    .tabs .tab{padding:10px 10px}
+    .topbar .wrap{padding-left: max(14px, var(--safe-left)); padding-right: max(14px, var(--safe-right));}
+    .card{padding:14px}
+  }
+
+  /* Reduce motion respect */
+  @media (prefers-reduced-motion: reduce){
+    *{scroll-behavior:auto}
+  }
 </style>
 </head>
 <body>
@@ -167,7 +216,7 @@
           <option value="60">60 days</option>
         </select>
       </div>
-      <div class="card" style="padding:0">
+     <div class="card table-scroll" style="padding:0">
         <table class="grid" id="nearGrid">
           <thead><tr>
             <th>Name</th><th>Phone</th><th>Plan</th><th>Expiry</th><th>Days Left</th><th></th>
@@ -187,7 +236,24 @@
           <button id="btnAddCustomer" class="btn ok" type="button">+ Add Customer</button>
         </div>
       </div>
-      <div class="card" style="padding:0">
+        <!-- Filters row (place right under the toolbar above the table) -->
+  <div class="flex" style="gap:10px;flex-wrap:wrap;margin-bottom:10px">
+    <!-- Filter 1: time window -->
+    <select id="timeFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
+      <option value="7" selected>Last 7 Days</option>
+      <option value="30">Monthly</option>
+      <option value="365">Yearly</option>
+      <option value="lifetime">Lifetime</option>
+    </select>
+
+    <!-- Filter 2: payment status -->
+    <select id="statusFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
+      <option value="all" selected>All</option>
+      <option value="paid">Paid</option>
+      <option value="unpaid">Unpaid</option>
+    </select>
+  </div>
+      <div class="card table-scroll" style="padding:0">
         <table class="grid" id="custGrid">
           <thead><tr>
             <th>Name</th><th>Phone</th><th>Email</th><th>User ID</th><th>MAC</th>
@@ -207,7 +273,7 @@
           <button id="btnAddPlan" class="btn ok" type="button">+ Add Plan</button>
         </div>
       </div>
-      <div class="card" style="padding:0">
+     <div class="card table-scroll" style="padding:0">
         <table class="grid" id="plansGrid">
           <thead><tr>
             <th>ID</th><th>Name</th><th>Duration (months)</th>
@@ -258,7 +324,7 @@
       </div>
 
       <h3 style="margin-top:18px">Included Plans in Period</h3>
-      <div class="card" style="padding:0">
+      <div class="card table-scroll" style="padding:0">
         <table class="grid" id="repGrid">
           <thead><tr>
             <th>Date</th><th>Customer</th><th>Plan</th><th>Turnover $</th><th>Expense $</th><th>Profit $</th><th>Paid</th><th></th>
@@ -449,6 +515,37 @@ function calcFigures({cost, wholesale, stbIncluded, stbCost, stbWholesale}){
 }
 
 /* =========================
+   iOS niceties (no feature changes)
+   ========================= */
+(function iosTweaks(){
+  // Keep sticky table headers correctly below topbar height
+  const topbar = document.querySelector('.topbar');
+  function setStickyOffset(){
+    const topH = topbar ? topbar.getBoundingClientRect().height : 0;
+    document.documentElement.style.setProperty('--sticky-offset', topH + 'px');
+    // We already used a fixed value in CSS; this keeps future-proof if topbar grows
+  }
+  setStickyOffset();
+  window.addEventListener('resize', setStickyOffset);
+
+  // Ensure focused inputs in modals scroll into view on iOS when keyboard opens
+  const useVV = window.visualViewport;
+  if (useVV) {
+    const onVVChange = () => {
+      document.body.style.paddingBottom = `calc(${useVV.height < window.innerHeight ? '20vh' : '0px'} + var(--safe-bottom))`;
+    };
+    useVV.addEventListener('resize', onVVChange);
+    useVV.addEventListener('scroll', onVVChange);
+  }
+  document.addEventListener('focusin', (e)=>{
+    const el = e.target;
+    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT')) {
+      setTimeout(()=> el.scrollIntoView({ block:'center', behavior:'smooth' }), 100);
+    }
+  }, {passive:true});
+})();
+
+/* =========================
    UI state / tabs
    ========================= */
 const authView = $("#authView");
@@ -467,7 +564,7 @@ tabs.forEach(t=>{
     t.classList.add('active');
     Object.values(sections).forEach(s=>s.classList.add('hidden'));
     sections[t.dataset.tab].classList.remove('hidden');
-  });
+  }, {passive:true});
 });
 
 /* =========================
@@ -523,13 +620,13 @@ async function loadApp(user){
     settingNear = Math.max(1, +$("#settingNearDays").value||30);
     $("#nearDays").value = String(settingNear);
     renderAll();
-  });
+  }, {passive:true});
   $("#nearDays").value = String(settingNear);
   $("#nearDays").addEventListener('change', ()=>{
     settingNear = +$("#nearDays").value;
     $("#settingNearDays").value = settingNear;
     renderAll();
-  });
+  }, {passive:true});
 
   $("#btnAddCustomer").onclick = () => openCustomerModal(null);
   $("#btnSeedPlans").onclick = seedPlans;
@@ -545,13 +642,14 @@ async function loadApp(user){
 
   $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
   $("#searchCustomers").addEventListener('input', renderCustomers);
-
+    $("#timeFilter").addEventListener('change', renderCustomers);
+  $("#statusFilter").addEventListener('change', renderCustomers);
   await Promise.all([loadPlans(), loadCustomers(), loadRenewals()]);
   const now = new Date();
   $("#repMonth").value = now.toISOString().slice(0,7);
   $("#repYear").value  = String(now.getFullYear());
   runReport();
-  $("#repType").addEventListener('change', onRepTypeChange);
+  $("#repType").addEventListener('change', onRepTypeChange, {passive:true});
   onRepTypeChange();
 
   renderAll();
@@ -718,24 +816,54 @@ function renderPlans(){
 
 function renderCustomers(){
   const q = ($("#searchCustomers").value||"").toLowerCase().trim();
+
+  // Read filters
+  const tVal = ($("#timeFilter")?.value)||"7";       // '7' | '30' | '365' | 'lifetime'
+  const sVal = ($("#statusFilter")?.value)||"all";   // 'all' | 'paid' | 'unpaid'
+
+  // Map time filter to a day limit
+  const now = new Date();
+  const dayLimit = (tVal === 'lifetime') ? Infinity : parseInt(tVal, 10);
+
   const tbody = $("#custGrid tbody");
   tbody.innerHTML = "";
+
   customers.forEach(c=>{
-    const inText = `${c.name||''} ${c.phone||''} ${c.email||''} ${c.userId||''} ${c.mac||''}`.toLowerCase();
-    if(q && !inText.includes(q)) return;
     const plan = c.currentPlan || {};
-    const paid = (plan.paymentReceived==='yes') ? '<span class="badge-ok pill">Yes</span>' : '<span class="badge-warn pill">No</span>';
+    const inText = `${c.name||''} ${c.phone||''} ${c.email||''} ${c.userId||''} ${c.mac||''}`.toLowerCase();
+
+    // Search filter
+    if(q && !inText.includes(q)) return;
+
+    // Time filter: use this plan's start date (falls back to originalStartDate if missing)
+    const startISO = plan.startDate || c.originalStartDate || "";
+    let withinTime = true;
+    if (dayLimit !== Infinity && startISO){
+      const start = new Date(startISO + "T00:00:00");
+      const diffDays = Math.floor((now - start) / (1000*60*60*24));
+      withinTime = diffDays <= dayLimit;
+    } else if (dayLimit !== Infinity && !startISO){
+      withinTime = false;
+    }
+    if(!withinTime) return;
+
+    // Status filter
+    const paidStr = (plan.paymentReceived==='yes') ? 'paid' : 'unpaid';
+    if (sVal !== 'all' && paidStr !== sVal) return;
+
+    const paidBadge = (plan.paymentReceived==='yes')
+      ? '<span class="badge-ok pill">Yes</span>'
+      : '<span class="badge-warn pill">No</span>';
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${c.name||''}</td>
       <td>${c.phone||''}</td>
       <td>${c.email||''}</td>
-      <td>${c.userId||''}</td>
-      <td>${c.mac||''}</td>
       <td>${plan.planName||''}</td>
+      <td>${paidBadge}</td>
       <td>${plan.startDate||''}</td>
       <td>${plan.expiryDate||''} ${daysLeftBadge(plan.expiryDate)}</td>
-      <td>${paid}</td>
       <td class="flex" style="gap:6px;flex-wrap:wrap">
         <button class="btn ghost" data-view="${c.id}">View</button>
         <button class="btn secondary" data-edit="${c.id}">Edit</button>
@@ -746,8 +874,10 @@ function renderCustomers(){
     `;
     tbody.appendChild(tr);
   });
+
   $("#kpiCustomers").textContent = String(customers.length);
 
+  // Rebind row actions (unchanged)
   tbody.querySelectorAll("[data-edit]").forEach(btn=>{
     btn.onclick = ()=> openCustomerModal(btn.getAttribute('data-edit'));
   });
@@ -985,7 +1115,6 @@ async function saveCustomerFromModal(){
   await loadRenewals();
   renderAll();
 
-  // Auto open invoice if checked
   if (document.querySelector("#c_invoice")?.checked) {
     setTimeout(()=> printInvoice(cid), 200);
   }
@@ -1075,7 +1204,7 @@ $("#btnDoRenew").onclick = async ()=>{
     stbCost:+$("#r_stbCost").value||0,
     stbWholesale:+$("#r_stbWholesale").value||0,
     startDate:start, expiryDate:expiry,
-    paymentReceived:$("#r_paid").value
+    paymentReceived: $("#r_paid").value
   };
   await addRenewal(String(renewCustomerId), ren);
   await setCustomerCurrentPlan(String(renewCustomerId), ren);
@@ -1186,7 +1315,6 @@ function runReport(){
     });
     T+=f.turnover; E+=f.expense; P+=f.profit;
 
-    // Encode minimal renewal for later invoice printing
     const payload = {
       customerId: r.customerId, customerName: r.customerName,
       planId: r.planId, planName: r.planName, durationMonths: r.durationMonths,
@@ -1211,7 +1339,6 @@ function runReport(){
     tbody.appendChild(tr);
   });
 
-  // Bind invoice buttons for each renewal row
   tbody.querySelectorAll("[data-inv-ren]").forEach(btn=>{
     btn.onclick = ()=>{
       const encoded = btn.getAttribute("data-inv-ren");
@@ -1225,20 +1352,16 @@ function runReport(){
 }
 
 function exportCSV(){
-  // Build rows
   const rows = [["Date","Customer","Plan","Turnover","Expense","Profit","Paid"]];
   document.querySelectorAll("#repGrid tbody tr").forEach(tr=>{
     const cols = [...tr.children].slice(0,7).map(td => td.textContent);
     rows.push(cols);
   });
-
-  // CSV string (+ BOM for Excel)
   const csvStr = "\uFEFF" + rows
     .map(r => r.map(x => `"${String(x).replaceAll('"','""')}"`).join(","))
     .join("\n");
 
   const blob = new Blob([csvStr], { type: "text/csv;charset=utf-8;" });
-
   const canDownloadAttr = "download" in HTMLAnchorElement.prototype;
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
@@ -1260,14 +1383,11 @@ function exportCSV(){
 /* =========================
    INVOICE GENERATION
    ========================= */
-// Inline SVG logo (so it prints offline)
 const LOGO_SVG = `
 <svg xmlns='http://www.w3.org/2000/svg' width='180' height='36' viewBox='0 0 430 86'>
-  <defs>
-    <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
-      <stop offset='0' stop-color='#6a8cff'/><stop offset='1' stop-color='#8a5fff'/>
-    </linearGradient>
-  </defs>
+  <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+    <stop offset='0' stop-color='#6a8cff'/><stop offset='1' stop-color='#8a5fff'/>
+  </linearGradient></defs>
   <rect rx='12' ry='12' width='86' height='86' fill='url(#g)'/>
   <circle cx='43' cy='43' r='24' fill='none' stroke='white' stroke-width='8'/>
   <path d='M108 62 h34 v-38 h-34 v38 M149 24 h14 v38 h-14 z' fill='url(#g)'/>
@@ -1276,17 +1396,16 @@ const LOGO_SVG = `
 </svg>`;
 const LOGO_URL = "data:image/svg+xml;utf8," + encodeURIComponent(LOGO_SVG);
 
-/* ====== UPDATED: Invoice with plan details ====== */
 function buildInvoiceHTML({invNo, today, billTo, contactLine, metaLine, plan, lines, total, paidBadge}){
-  // plan = { name, months, start, expiry, paidText }
   return `
 <!doctype html>
 <html><head><meta charset="utf-8"><title>${invNo}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
-  :root{ --ink:#111; --muted:#666; --line:#e5e7eb; --bg:#fff; --pill:#f3f4f6; }
+  :root{ --ink:#111; --muted:#666; --line:#e5e7eb; --bg:#fff; --pill:#f3f4f6; --safe-bottom: env(safe-area-inset-bottom,0px); }
   *{ box-sizing:border-box }
-  body{ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial; color:var(--ink); background:#fff; margin:24px }
-  .hdr{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px }
+  body{ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial; color:var(--ink); background:#fff; margin:24px; padding-bottom: calc(24px + var(--safe-bottom)); }
+  .hdr{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap }
   .brand{ display:flex; gap:12px; align-items:center }
   .brand img{ height:42px }
   .brand h2{ margin:0; font-size:22px }
@@ -1395,7 +1514,6 @@ function printInvoice(customerId){
   openPrintWindow(html);
 }
 
-// Print from a specific renewal row (for historical invoices)
 function printInvoiceFromRenewalData(encoded){
   try{
     const ren = JSON.parse(decodeURIComponent(escape(atob(encoded))));
