@@ -49,9 +49,9 @@
   th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;vertical-align:top}
   thead th{background:#0e1836;color:#cfe0ff;text-align:left;position:sticky;top:0;z-index:1}
 
-  /* Banner list items */
-  .banner-item{display:grid;grid-template-columns:1fr 1fr;gap:8px;background:#0f1732;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px;margin-top:8px}
-  .banner-actions{display:flex;gap:8px;align-items:center}
+  /* List items (banners/gallery) */
+  .item{display:grid;grid-template-columns:1fr auto;gap:8px;background:#0f1732;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px;margin-top:8px}
+  .actions{display:flex;gap:8px;align-items:center}
   .toggle{display:flex;align-items:center;gap:6px}
 </style>
 </head>
@@ -89,7 +89,7 @@
       </select>
       <button class="btn" id="refreshAll">Refresh</button>
     </div>
-    <div class="sub">All metrics exclude location (steps only)</div>
+    <div class="sub">Analytics track steps only (no location)</div>
   </div>
 
   <div class="kpis">
@@ -103,6 +103,7 @@
   <div class="tabs" role="tablist">
     <button class="tab active" id="tab-visitors" onclick="showPanel('visitors')">Visitors</button>
     <button class="tab" id="tab-banners" onclick="showPanel('banners')">Banners</button>
+    <button class="tab" id="tab-gallery" onclick="showPanel('gallery')">Gallery</button>
   </div>
 
   <!-- Visitors Panel -->
@@ -131,7 +132,7 @@
   <section id="panel-banners" class="cards" style="display:none">
     <div class="card" style="grid-column:1/-1">
       <div class="h">Swipe Banners</div>
-      <div class="sub">These appear on your index page. Only enabled banners within date window are shown.</div>
+      <div class="sub">Shown on your index page. Only enabled banners within date window are displayed.</div>
 
       <!-- Create/Edit form -->
       <div class="row" style="margin-top:12px;gap:8px;align-items:flex-start;flex-wrap:wrap">
@@ -145,9 +146,29 @@
         <input class="input" id="bnValidTo" type="date" placeholder="Valid to">
         <input class="input" id="bnOrder" type="number" placeholder="Order (0..N)" style="width:120px">
         <button class="btn primary" id="bnSave">Save New Banner</button>
+        <span class="sub" id="bnStatus"></span>
       </div>
 
       <div id="bannerList"></div>
+    </div>
+  </section>
+
+  <!-- Gallery Panel -->
+  <section id="panel-gallery" class="cards" style="display:none">
+    <div class="card" style="grid-column:1/-1">
+      <div class="h">Gallery</div>
+      <div class="sub">These appear in the site Menu → Gallery modal.</div>
+
+      <!-- Create/Edit form -->
+      <div class="row" style="margin-top:12px;gap:8px;align-items:flex-start;flex-wrap:wrap">
+        <input class="input" id="glName" placeholder="Name / caption">
+        <input class="input" id="glImageUrl" placeholder="Image URL (https://...)">
+        <input class="input" id="glOrder" type="number" placeholder="Order (0..N)" style="width:120px">
+        <button class="btn primary" id="glSave">Add Item</button>
+        <span class="sub" id="glStatus"></span>
+      </div>
+
+      <div id="galleryList"></div>
     </div>
   </section>
 </div>
@@ -176,7 +197,7 @@ const db   = getFirestore(app);
 /* UI helpers */
 const $ = s => document.querySelector(s);
 function showPanel(name){
-  ['visitors','banners'].forEach(n=>{
+  ['visitors','banners','gallery'].forEach(n=>{
     $('#panel-'+n).style.display = (n===name)?'grid':'none';
     $('#tab-'+n).classList.toggle('active', n===name);
   });
@@ -199,6 +220,7 @@ onAuthStateChanged(auth, async (user)=>{
     $('#authArea').style.display='flex'; $('#whoami').style.display='none';
     $('#visitorsTable tbody').innerHTML='';
     $('#bannerList').innerHTML='';
+    $('#galleryList').innerHTML='';
     ['kpiVisitors','kpiPings','kpiAvgStepsToday','kpiAvgStepsSession'].forEach(id=>$('#'+id).textContent='—');
   }
 });
@@ -288,15 +310,15 @@ async function loadBanners(){
   const list = $('#bannerList'); list.innerHTML='';
   snap.forEach(docSnap=>{
     const b = { id: docSnap.id, ...docSnap.data() };
-    const row = document.createElement('div'); row.className='banner-item'; row.innerHTML = `
+    const row = document.createElement('div'); row.className='item'; row.innerHTML = `
       <div>
         <div class="h">${b.title||'(no title)'} ${b.enabled? '' : '<span class="sub">[disabled]</span>'}</div>
         <div class="sub">${b.text||''}</div>
-        <div class="sub">CTA: ${b.ctaLabel||''} → ${(b.ctaHref||'').slice(0,60)}</div>
+        <div class="sub">CTA: ${b.ctaLabel||''} → ${(b.ctaHref||'').slice(0,80)}</div>
         <div class="sub">Order: ${b.order??0} | Valid: ${(b.validFrom||'')||'—'} → ${(b.validTo||'')||'—'}</div>
         <div class="sub">${b.imageUrl? 'Image: '+b.imageUrl : ''}</div>
       </div>
-      <div class="banner-actions">
+      <div class="actions">
         <button class="btn" data-act="toggle" data-id="${b.id}">${b.enabled? 'Disable' : 'Enable'}</button>
         <button class="btn" data-act="edit" data-id="${b.id}">Edit</button>
         <button class="btn" data-act="del" data-id="${b.id}">Delete</button>
@@ -313,14 +335,15 @@ async function loadBanners(){
         const snap = await getDoc(ref); const cur = snap.data(); await setDoc(ref,{enabled:!cur.enabled, updatedAt:serverTimestamp()},{merge:true});
       }else if(act==='edit'){
         const snap = await getDoc(ref); const b = snap.data();
-        // load into form for quick editing
+        // load into form
         $('#bnEnabled').checked = !!b.enabled;
         $('#bnTitle').value = b.title||''; $('#bnText').value=b.text||'';
         $('#bnCtaLabel').value=b.ctaLabel||''; $('#bnCtaHref').value=b.ctaHref||'';
         $('#bnImageUrl').value=b.imageUrl||''; $('#bnValidFrom').value=b.validFrom||''; $('#bnValidTo').value=b.validTo||'';
         $('#bnOrder').value=b.order??0;
-        // save will overwrite as new doc unless we handle id:
         $('#bnSave').dataset.editId = id; $('#bnSave').textContent='Save Changes';
+        $('#bnStatus').textContent='Loaded for editing';
+        setTimeout(()=>$('#bnStatus').textContent='',1500);
         window.scrollTo({top:0,behavior:'smooth'});
       }else if(act==='del'){
         if(confirm('Delete this banner?')){ await deleteDoc(ref); }
@@ -347,17 +370,83 @@ $('#bnSave').addEventListener('click', async ()=>{
     await setDoc(doc(db,'site_settings','banners','items',editId), payload, {merge:true});
     $('#bnSave').textContent='Save New Banner';
     delete $('#bnSave').dataset.editId;
+    $('#bnStatus').textContent='Saved ✔';
   }else{
     payload.createdAt = serverTimestamp();
     await addDoc(collection(db,'site_settings','banners','items'), payload);
+    $('#bnStatus').textContent='Created ✔';
   }
-  // reset minimal
+  setTimeout(()=>$('#bnStatus').textContent='',1500);
+  // reset some fields
   $('#bnTitle').value=''; $('#bnText').value=''; $('#bnCtaLabel').value=''; $('#bnCtaHref').value=''; $('#bnImageUrl').value=''; $('#bnOrder').value='';
   await loadBanners();
 });
 
+/* ====== Gallery CRUD ====== */
+async function loadGallery(){
+  const snap = await getDocs(query(collection(db,'site_settings','gallery','items'), orderBy('order','asc')));
+  const list = $('#galleryList'); list.innerHTML='';
+  snap.forEach(docSnap=>{
+    const g = { id: docSnap.id, ...docSnap.data() };
+    const row = document.createElement('div'); row.className='item'; row.innerHTML = `
+      <div>
+        <div class="h">${g.name||'(no name)'}</div>
+        <div class="sub">${g.imageUrl||''}</div>
+        <div class="sub">Order: ${g.order??0}</div>
+      </div>
+      <div class="actions">
+        <button class="btn" data-gact="edit" data-id="${g.id}">Edit</button>
+        <button class="btn" data-gact="del" data-id="${g.id}">Delete</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+  // bind actions
+  list.querySelectorAll('button[data-gact]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.dataset.id, act = btn.dataset.gact;
+      const ref = doc(db,'site_settings','gallery','items',id);
+      if(act==='edit'){
+        const snap = await getDoc(ref); const g = snap.data();
+        $('#glName').value = g.name||'';
+        $('#glImageUrl').value = g.imageUrl||'';
+        $('#glOrder').value = g.order??0;
+        $('#glSave').dataset.editId = id; $('#glSave').textContent='Save Changes';
+        $('#glStatus').textContent='Loaded for editing';
+        setTimeout(()=>$('#glStatus').textContent='',1500);
+        window.scrollTo({top:0,behavior:'smooth'});
+      }else if(act==='del'){
+        if(confirm('Delete this gallery item?')){ await deleteDoc(ref); await loadGallery(); }
+      }
+    });
+  });
+}
+$('#glSave').addEventListener('click', async ()=>{
+  const payload = {
+    name: $('#glName').value.trim(),
+    imageUrl: $('#glImageUrl').value.trim(),
+    order: Number($('#glOrder').value||0),
+    updatedAt: serverTimestamp()
+  };
+  if(!payload.imageUrl){ $('#glStatus').textContent='Image URL required'; setTimeout(()=>$('#glStatus').textContent='',1500); return; }
+  const editId = $('#glSave').dataset.editId;
+  if(editId){
+    await setDoc(doc(db,'site_settings','gallery','items',editId), payload, {merge:true});
+    $('#glSave').textContent='Add Item';
+    delete $('#glSave').dataset.editId;
+    $('#glStatus').textContent='Saved ✔';
+  }else{
+    payload.createdAt = serverTimestamp();
+    await addDoc(collection(db,'site_settings','gallery','items'), payload);
+    $('#glStatus').textContent='Created ✔';
+  }
+  setTimeout(()=>$('#glStatus').textContent='',1500);
+  $('#glName').value=''; $('#glImageUrl').value=''; $('#glOrder').value='';
+  await loadGallery();
+});
+
 /* ====== Orchestration ====== */
-async function refreshAll(){ await Promise.all([loadVisitors(), loadBanners()]); renderKPIs(); renderVisitors(); }
+async function refreshAll(){ await Promise.all([loadVisitors(), loadBanners(), loadGallery()]); renderKPIs(); renderVisitors(); }
 $('#range').addEventListener('change', async ()=>{ await loadVisitors(); renderKPIs(); renderVisitors(); });
 $('#refreshAll').addEventListener('click', refreshAll);
 </script>
