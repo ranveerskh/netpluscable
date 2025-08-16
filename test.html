@@ -1,226 +1,467 @@
-<!DOCTYPE html>
+l<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Net + Cable • Admin</title>
-  <style>
-    :root{
-      --bg:#0b1020;--card:#121831;--ink:#e7ecff;
-      --muted:#9aa7d9;--accent:#6a8cff;--accent2:#8a5bff;
-      --danger:#ff647c;--ok:#35d0a7;--border:#23305b;--warn:#ffc857;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink);}
-    h2{margin:20px 0 10px}
-    .topbar{display:flex;gap:10px;padding:10px;flex-wrap:wrap;background:#121831;position:sticky;top:0;z-index:1000}
-    .topbar a{padding:8px 14px;border-radius:6px;text-decoration:none;font-weight:600;color:#fff;background:var(--accent);}
-    .container{padding:20px;max-width:1100px;margin:auto}
-    .section{background:var(--card);padding:15px 20px;border-radius:8px;margin-bottom:20px}
-    .section h2{margin-top:0}
-    .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
-    .kpi{background:#0f1530;padding:15px;border-radius:8px}
-    .kpi .val{font-size:22px;font-weight:600}
-    .kpi .sub{color:var(--muted);font-size:13px}
-    table{width:100%;border-collapse:collapse;margin-top:10px}
-    th,td{padding:8px;border-bottom:1px solid var(--border);font-size:13px;text-align:left}
-    thead{background:#0f1530}
-    input,select,textarea,button{background:#0f1530;color:#fff;border:1px solid var(--border);border-radius:6px;padding:8px}
-    button{cursor:pointer;background:var(--accent);border:none}
-    button.danger{background:var(--danger)}
-    .form-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-    .form-row input{flex:1}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1">
+<title>net+TV Admin</title>
+<meta name="theme-color" content="#0b1020">
+<style>
+  :root{--bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;--g1:#6a11cb;--g2:#2575fc;}
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#0b1020;color:var(--ink);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1200px;margin:0 auto;padding:16px}
+
+  /* Topbar */
+  .topbar{position:sticky;top:0;z-index:100;background:rgba(11,16,32,.9);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .brand{font-weight:900;display:flex;gap:10px;align-items:center}
+  .badge{background:linear-gradient(135deg,var(--g1),var(--g2));padding:6px 10px;border-radius:10px;font-weight:900}
+
+  /* Auth */
+  .auth input{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:10px 12px;color:#e9edff;min-width:200px}
+  .btn{border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:10px 12px;font-weight:800;background:#0f1732;color:var(--ink);cursor:pointer}
+  .btn.primary{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff}
+
+  /* Quick links */
+  .quicklinks{display:flex;gap:8px;overflow:auto;padding:10px 16px;border-top:1px solid rgba(255,255,255,.08)}
+  .qbtn{flex:0 0 auto;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#0f1732;font-weight:900;white-space:nowrap}
+  .qbtn.primary{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent}
+
+  /* KPIs */
+  .kpis{display:grid;gap:10px;margin:12px 0}
+  @media(min-width:900px){.kpis{grid-template-columns:repeat(4,1fr)}}
+  .kpi{background:#0f1732;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px}
+  .kpi .val{font-size:22px;font-weight:900;margin-top:4px}
+  .filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+  /* Tabs / Panels */
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+  .tab{padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:#0f1732;font-weight:800}
+  .tab.active{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent}
+  .cards{display:grid;gap:12px} @media(min-width:900px){.cards{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .h{font-weight:900;font-size:18px}.sub{color:#a9b5e6;font-size:13px}
+  .tools{display:flex;gap:8px;flex-wrap:wrap}
+  .input{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:10px 12px;color:#e9edff}
+  .tablewrap{margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:auto}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;vertical-align:top}
+  thead th{background:#0e1836;color:#cfe0ff;text-align:left;position:sticky;top:0;z-index:1}
+
+  /* List items (banners/gallery) */
+  .item{display:grid;grid-template-columns:1fr auto;gap:8px;background:#0f1732;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px;margin-top:8px}
+  .actions{display:flex;gap:8px;align-items:center}
+  .toggle{display:flex;align-items:center;gap:6px}
+</style>
 </head>
 <body>
-  <!-- Quick Links -->
-  <div class="topbar">
-    <a href="https://beta.gpanel.me/login" target="_blank">Glow TV</a>
-    <a href="https://fast4k.cc/login" target="_blank">Smart4k TV</a>
-    <a href="data.html" target="_blank">User Data</a>
+<div class="topbar">
+  <div class="wrap row" style="justify-content:space-between;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top))">
+    <div class="brand"><span class="badge">net+TV</span> <span>Admin</span></div>
+    <div class="auth row" id="authArea">
+      <input id="email" placeholder="Admin email">
+      <input id="password" placeholder="Password" type="password">
+      <button class="btn primary" id="btnSignIn">Sign In</button>
+    </div>
+    <div class="auth row" id="whoami" style="display:none">
+      <span id="whoamiText"></span>
+      <button class="btn" id="btnSignOut">Sign Out</button>
+    </div>
+  </div>
+  <div class="quicklinks wrap" role="navigation" aria-label="Quick admin links">
+    <a class="qbtn primary" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glow TV</a>
+    <a class="qbtn" href="https://fast4k.cc/login" target="_blank" rel="noopener">Smart4K TV</a>
+    <a class="qbtn" href="data.html" target="_blank" rel="noopener">data.html</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- Live Stats + Range -->
+  <div class="row" style="justify-content:space-between">
+    <div class="filters">
+      <label class="sub">Range</label>
+      <select id="range" class="input">
+        <option value="7d">Last 7 days</option>
+        <option value="30d">Last 30 days</option>
+        <option value="1y">Last 1 year</option>
+        <option value="all">Lifetime</option>
+      </select>
+      <button class="btn" id="refreshAll">Refresh</button>
+    </div>
+    <div class="sub">Analytics track steps only (no location)</div>
   </div>
 
-  <div class="container">
-
-    <!-- KPI + Visitors -->
-    <div class="section">
-      <h2>Visitors</h2>
-      <div class="form-row">
-        <select id="range">
-          <option value="7d">Last 7 Days</option>
-          <option value="30d">Last 30 Days</option>
-          <option value="1y">Last 1 Year</option>
-          <option value="all">Lifetime</option>
-        </select>
-        <input id="visSearch" placeholder="Search visitors…"/>
-        <button id="visRefresh">Refresh</button>
-      </div>
-      <div class="kpis">
-        <div class="kpi"><div class="sub">Unique Viewer-Days</div><div class="val" id="kpiVisitors">—</div></div>
-        <div class="kpi"><div class="sub">New Visitors (latest 10)</div><div class="val" id="kpiLatest">—</div></div>
-        <div class="kpi"><div class="sub">Top Interest</div><div class="val" id="kpiInterest">—</div></div>
-        <div class="kpi"><div class="sub">Timezone Mix</div><div class="val" id="kpiTZ">—</div></div>
-      </div>
-      <table id="visitorsTable">
-        <thead><tr>
-          <th>Time</th><th>VID</th><th>Date</th><th>First Path</th><th>Referrer</th><th>UA</th>
-        </tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <!-- Banners -->
-    <div class="section">
-      <h2>Banners</h2>
-      <div class="form-row">
-        <input id="bannerImg" placeholder="Image URL"/>
-        <input id="bannerLink" placeholder="Click Link"/>
-        <button id="bannerAdd">Add Banner</button>
-      </div>
-      <table id="bannerTable"><thead><tr><th>Image</th><th>Link</th><th></th></tr></thead><tbody></tbody></table>
-    </div>
-
-    <!-- Gallery -->
-    <div class="section">
-      <h2>Gallery</h2>
-      <div class="form-row">
-        <input id="galImg" placeholder="Image URL"/>
-        <input id="galName" placeholder="Name"/>
-        <button id="galAdd">Add</button>
-      </div>
-      <table id="galTable"><thead><tr><th>Image</th><th>Name</th><th></th></tr></thead><tbody></tbody></table>
-    </div>
-
+  <div class="kpis">
+    <div class="kpi"><div class="sub">Unique Viewer‑Days</div><div class="val" id="kpiVisitors">—</div></div>
+    <div class="kpi"><div class="sub">Avg Steps (today)</div><div class="val" id="kpiAvgStepsToday">—</div></div>
+    <div class="kpi"><div class="sub">Avg Steps (session)</div><div class="val" id="kpiAvgStepsSession">—</div></div>
   </div>
 
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  <!-- Tabs -->
+  <div class="tabs" role="tablist">
+    <button class="tab active" id="tab-visitors" onclick="showPanel('visitors')">Visitors</button>
+    <button class="tab" id="tab-banners" onclick="showPanel('banners')">Banners</button>
+    <button class="tab" id="tab-gallery" onclick="showPanel('gallery')">Gallery</button>
+  </div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
-      authDomain: "netplustv-90b29.firebaseapp.com",
-      projectId: "netplustv-90b29",
-      storageBucket: "netplustv-90b29.firebasestorage.app",
-      messagingSenderId: "639722274355",
-      appId: "1:639722274355:web:ebe34fdf093f8191da2d46"
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  <!-- Visitors Panel -->
+  <section id="panel-visitors" class="cards">
+    <div class="card" style="grid-column:1/-1">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <div class="h">Visitors (latest 10 in range)</div>
+          <div class="sub">Steps only — no location stored</div>
+        </div>
+        <div class="tools">
+          <input id="visSearch" class="input" placeholder="Filter by VID/page…">
+          <button class="btn" id="visRefresh">Refresh</button>
+          <button class="btn" id="visCSV">Export CSV</button>
+        </div>
+      </div>
+      <div class="tablewrap">
+        <table id="visitorsTable">
+          <thead><tr>
+            <th>Time</th><th>VID</th><th>Session</th><th>Steps (today)</th><th>Steps (session)</th><th>Page</th><th>UA</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 
-    const $ = s=>document.querySelector(s);
+  <!-- Banners Panel -->
+  <section id="panel-banners" class="cards" style="display:none">
+    <div class="card" style="grid-column:1/-1">
+      <div class="h">Swipe Banners</div>
+      <div class="sub">Shown on your index page. Only enabled banners within date window are displayed.</div>
 
-    /* ===== Visitors ===== */
-    let visCache = [];
+      <!-- Create/Edit form -->
+      <div class="row" style="margin-top:12px;gap:8px;align-items:flex-start;flex-wrap:wrap">
+        <label class="toggle"><input type="checkbox" id="bnEnabled" checked> <span class="sub">Enabled</span></label>
+        <input class="input" id="bnTitle" placeholder="Title (e.g., Canada Day Offer)">
+        <input class="input" id="bnText" placeholder="Text (e.g., Get 1 month extra with 1-year)">
+        <input class="input" id="bnCtaLabel" placeholder="CTA label (e.g., Get 13 months)">
+        <input class="input" id="bnCtaHref" placeholder="CTA href (e.g., # or https://)">
+        <input class="input" id="bnImageUrl" placeholder="Image URL (optional)">
+        <input class="input" id="bnValidFrom" type="date" placeholder="Valid from">
+        <input class="input" id="bnValidTo" type="date" placeholder="Valid to">
+        <input class="input" id="bnOrder" type="number" placeholder="Order (0..N)" style="width:120px">
+        <button class="btn primary" id="bnSave">Save New Banner</button>
+        <span class="sub" id="bnStatus"></span>
+      </div>
 
-    function rangeToStart(range){
-      const now = new Date();
-      if(range==='7d') return new Date(now.getTime()-7*24*3600*1000);
-      if(range==='30d') return new Date(now.getTime()-30*24*3600*1000);
-      if(range==='1y') return new Date(now.getTime()-365*24*3600*1000);
-      return null;
+      <div id="bannerList"></div>
+    </div>
+  </section>
+
+  <!-- Gallery Panel -->
+  <section id="panel-gallery" class="cards" style="display:none">
+    <div class="card" style="grid-column:1/-1">
+      <div class="h">Gallery</div>
+      <div class="sub">These appear in the site Menu → Gallery modal.</div>
+
+      <!-- Create/Edit form -->
+      <div class="row" style="margin-top:12px;gap:8px;align-items:flex-start;flex-wrap:wrap">
+        <input class="input" id="glName" placeholder="Name / caption">
+        <input class="input" id="glImageUrl" placeholder="Image URL (https://...)">
+        <input class="input" id="glOrder" type="number" placeholder="Order (0..N)" style="width:120px">
+        <button class="btn primary" id="glSave">Add Item</button>
+        <span class="sub" id="glStatus"></span>
+      </div>
+
+      <div id="galleryList"></div>
+    </div>
+  </section>
+</div>
+
+<script type="module">
+/* Firebase */
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore, collection, query, orderBy, limit, getDocs,
+  doc, addDoc, setDoc, getDoc, deleteDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
+  authDomain: "netplustv-90b29.firebaseapp.com",
+  projectId: "netplustv-90b29",
+  storageBucket: "netplustv-90b29.firebasestorage.app",
+  messagingSenderId: "639722274355",
+  appId: "1:639722274355:web:ebe34fdf093f8191da2d46"
+};
+const app = getApps().length? getApps()[0] : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* UI helpers */
+const $ = s => document.querySelector(s);
+function showPanel(name){
+  ['visitors','banners','gallery'].forEach(n=>{
+    $('#panel-'+n).style.display = (n===name)?'grid':'none';
+    $('#tab-'+n).classList.toggle('active', n===name);
+  });
+}
+window.showPanel = showPanel;
+
+/* Auth */
+$('#btnSignIn').addEventListener('click', async ()=>{
+  const email=$('#email').value.trim(), pass=$('#password').value;
+  if(!email||!pass) return alert('Enter email and password');
+  try{ await signInWithEmailAndPassword(auth,email,pass); }catch(e){ alert('Sign in failed: '+(e?.message||e)); }
+});
+$('#btnSignOut').addEventListener('click',()=>signOut(auth));
+
+onAuthStateChanged(auth, async (user)=>{
+  if(user){
+    $('#authArea').style.display='none'; $('#whoami').style.display='flex'; $('#whoamiText').textContent=user.email||'';
+    await refreshAll();
+  }else{
+    $('#authArea').style.display='flex'; $('#whoami').style.display='none';
+    $('#visitorsTable tbody').innerHTML='';
+    $('#bannerList').innerHTML='';
+    $('#galleryList').innerHTML='';
+    ['kpiVisitors','kpiAvgStepsToday','kpiAvgStepsSession'].forEach(id=>$('#'+id).textContent='—');
+  }
+});
+
+/* Range helpers */
+function rangeToStart(range){
+  const now = new Date();
+  if(range==='7d'){ return new Date(now.getTime()-7*24*3600*1000); }
+  if(range==='30d'){ return new Date(now.getTime()-30*24*3600*1000); }
+  if(range==='1y'){ return new Date(now.getTime()-365*24*3600*1000); }
+  return null; // lifetime
+}
+
+/* ====== KPIs + Visitors ====== */
+let visCache = [];
+async function loadVisitors(){
+  const rg = $('#range').value;
+  const start = rangeToStart(rg);
+
+  // Fetch recent pings first; keep the request cheap. (We still filter by range client-side.)
+  const snap = await getDocs(query(collection(db,'analytics_visitors'), orderBy('createdAt','desc'), limit(150)));
+  visCache = snap.docs.map(d=>({id:d.id, ...d.data()}))
+    .filter(r=>{
+      const t = r.createdAt?.toDate?.() || (r.ts? new Date(r.ts) : null);
+      return !start || (t && t>=start);
+    });
+}
+
+// KPIs: Unique viewer‑days (count each vid once per calendar day in the selected range)
+function renderKPIs(){
+  const uniqueDayPairs = new Set(); // yyyy-mm-dd|vid
+
+  visCache.forEach(r=>{
+    const t = r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
+    if(t && r.vid){
+      const day = t.toISOString().slice(0,10);
+      uniqueDayPairs.add(`${day}|${r.vid}`);
     }
+    if(typeof r.steps_today==='number'){ sumToday+=r.steps_today; nToday++; }
+    if(typeof r.steps_session==='number'){ sumSess+=r.steps_session; nSess++; }
+  });
 
-    async function loadVisitors(){
-      const rg = $('#range').value;
-      const start = rangeToStart(rg);
-      const snap = await getDocs(query(collection(db,'visitors_daily'), orderBy('createdAt','desc'), limit(200)));
-      visCache = snap.docs.map(d=>({ id:d.id, ...d.data() }))
-        .filter(r=>{
-          const t = r.createdAt?.toDate?.() || null;
-          return !start || (t && t>=start);
-        });
-    }
+  $('#kpiVisitors').textContent = String(uniqueDayPairs.size);
+  $('#kpiAvgStepsToday').textContent = nToday? (sumToday/nToday).toFixed(1) : '0.0';
+  $('#kpiAvgStepsSession').textContent = nSess? (sumSess/nSess).toFixed(1) : '0.0';
+}
 
-    function renderKPIs(){
-      $('#kpiVisitors').textContent = String(visCache.length);
-      $('#kpiLatest').textContent = String(Math.min(10, visCache.length));
-      $('#kpiInterest').textContent = '—';
-      $('#kpiTZ').textContent = (() => {
-        const tzs = {};
-        visCache.forEach(v=>{ if(v.tz){ tzs[v.tz]=(tzs[v.tz]||0)+1; }});
-        const top = Object.entries(tzs).sort((a,b)=>b[1]-a[1])[0];
-        return top ? `${top[0]} (${top[1]})` : '—';
-      })();
-    }
+function renderVisitors(){
+  const term = ($('#visSearch').value||'').toLowerCase();
+  const rows = visCache.filter(r=>{
+    const text = [r.vid,r.page].map(v=>String(v||'').toLowerCase()).join(' ');
+    return !term || text.includes(term);
+  });
 
-    function renderVisitors(){
-      const term = ($('#visSearch').value||'').toLowerCase();
-      const rows = visCache.filter(r=>{
-        const text = [r.vid, r.firstPath, r.firstReferrer].map(v=>String(v||'').toLowerCase()).join(' ');
-        return !term || text.includes(term);
-      });
-      const latest10 = rows.slice(0,10);
-      const tb = $('#visitorsTable tbody'); tb.innerHTML='';
-      latest10.forEach(r=>{
-        const ts = r.createdAt?.toDate?.() || null;
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${ts?ts.toLocaleString():''}</td>
-          <td class="sub">${r.vid||''}</td>
-          <td>${r.date||''}</td>
-          <td class="sub">${(r.firstPath||'').slice(0,40)}${(r.firstPath||'').length>40?'…':''}</td>
-          <td class="sub">${(r.firstReferrer||'').slice(0,40)}${(r.firstReferrer||'').length>40?'…':''}</td>
-          <td class="sub">${(r.ua||'').slice(0,60)}${(r.ua||'').length>60?'…':''}</td>
-        `;
-        tb.appendChild(tr);
-      });
-    }
+  // Only show the latest 10 rows
+  const latest10 = rows.slice(0, 10);
 
-    $('#visRefresh').addEventListener('click', async ()=>{ await loadVisitors(); renderKPIs(); renderVisitors(); });
-    $('#visSearch').addEventListener('input', renderVisitors);
-    $('#range').addEventListener('change', async ()=>{ await loadVisitors(); renderKPIs(); renderVisitors(); });
+  const tb = $('#visitorsTable tbody'); tb.innerHTML='';
+  latest10.forEach(r=>{
+    const ts = r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${ts?ts.toLocaleString():''}</td>
+      <td class="sub">${r.vid||''}</td>
+      <td class="sub">${(r.sessionId||'').slice(0,10)}</td>
+      <td>${r.steps_today??''}</td>
+      <td>${r.steps_session??''}</td>
+      <td class="sub">${(r.page||'').slice(0,50)}${(r.page||'').length>50?'…':''}</td>
+      <td class="sub">${(r.ua||'').slice(0,50)}${(r.ua||'').length>50?'…':''}</td>
+    `;
+    tb.appendChild(tr);
+  });
+}
+$('#visRefresh').addEventListener('click', async ()=>{ await loadVisitors(); renderKPIs(); renderVisitors(); });
+$('#visSearch').addEventListener('input', renderVisitors);
 
-    /* ===== Banners ===== */
-    async function loadBanners(){
-      const snap = await getDocs(query(collection(db,'banners'), orderBy('createdAt','desc')));
-      const tb = $('#bannerTable tbody'); tb.innerHTML='';
-      snap.forEach(docSnap=>{
-        const r=docSnap.data();
-        const tr=document.createElement('tr');
-        tr.innerHTML=`<td><img src="${r.img}" style="max-height:40px"></td>
-                      <td class="sub">${r.link||''}</td>
-                      <td><button class="danger" data-id="${docSnap.id}">Delete</button></td>`;
-        tb.appendChild(tr);
-      });
-      tb.querySelectorAll('button').forEach(btn=>btn.onclick=async()=>{
-        await deleteDoc(doc(db,'banners',btn.dataset.id));
-        loadBanners();
-      });
-    }
-    $('#bannerAdd').onclick=async()=>{
-      await addDoc(collection(db,'banners'),{img:$('#bannerImg').value,link:$('#bannerLink').value,createdAt:serverTimestamp()});
-      $('#bannerImg').value='';$('#bannerLink').value='';
-      loadBanners();
-    };
+/* CSV: export what's visible (10 rows) */
+function toCSV(rows){
+  return rows.map(r=>r.map(v=>{
+    const s=String(v??''); return /[",\n]/.test(s)? `"${s.replace(/"/g,'""')}"` : s;
+  }).join(',')).join('\n');
+}
+function downloadCSV(name,text){
+  const blob=new Blob([text],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
+}
+$('#visCSV').addEventListener('click', ()=>{
+  const rows=[["Time","VID","Session","StepsToday","StepsSession","Page","UA"]];
+  document.querySelectorAll('#visitorsTable tbody tr').forEach(tr=>{
+    rows.push([...tr.children].map(td=>td.textContent.trim()));
+  });
+  downloadCSV(`visitors-${Date.now()}.csv`, toCSV(rows));
+});
 
-    /* ===== Gallery ===== */
-    async function loadGallery(){
-      const snap = await getDocs(query(collection(db,'gallery'), orderBy('createdAt','desc')));
-      const tb=$('#galTable tbody'); tb.innerHTML='';
-      snap.forEach(docSnap=>{
-        const r=docSnap.data();
-        const tr=document.createElement('tr');
-        tr.innerHTML=`<td><img src="${r.img}" style="max-height:40px"></td>
-                      <td class="sub">${r.name||''}</td>
-                      <td><button class="danger" data-id="${docSnap.id}">Delete</button></td>`;
-        tb.appendChild(tr);
-      });
-      tb.querySelectorAll('button').forEach(btn=>btn.onclick=async()=>{
-        await deleteDoc(doc(db,'gallery',btn.dataset.id));
-        loadGallery();
-      });
-    }
-    $('#galAdd').onclick=async()=>{
-      await addDoc(collection(db,'gallery'),{img:$('#galImg').value,name:$('#galName').value,createdAt:serverTimestamp()});
-      $('#galImg').value='';$('#galName').value='';
-      loadGallery();
-    };
+/* ====== Banners CRUD ====== */
+async function loadBanners(){
+  const snap = await getDocs(query(collection(db,'site_settings','banners','items'), orderBy('order','asc')));
+  const list = $('#bannerList'); list.innerHTML='';
+  snap.forEach(docSnap=>{
+    const b = { id: docSnap.id, ...docSnap.data() };
+    const row = document.createElement('div'); row.className='item'; row.innerHTML = `
+      <div>
+        <div class="h">${b.title||'(no title)'} ${b.enabled? '' : '<span class="sub">[disabled]</span>'}</div>
+        <div class="sub">${b.text||''}</div>
+        <div class="sub">CTA: ${b.ctaLabel||''} → ${(b.ctaHref||'').slice(0,80)}</div>
+        <div class="sub">Order: ${b.order??0} | Valid: ${(b.validFrom||'')||'—'} → ${(b.validTo||'')||'—'}</div>
+        <div class="sub">${b.imageUrl? 'Image: '+b.imageUrl : ''}</div>
+      </div>
+      <div class="actions">
+        <button class="btn" data-act="toggle" data-id="${b.id}">${b.enabled? 'Disable' : 'Enable'}</button>
+        <button class="btn" data-act="edit" data-id="${b.id}">Edit</button>
+        <button class="btn" data-act="del" data-id="${b.id}">Delete</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+  // wire actions
+  list.querySelectorAll('button[data-act]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.dataset.id, act = btn.dataset.act;
+      const ref = doc(db,'site_settings','banners','items',id);
+      if(act==='toggle'){
+        const snap = await getDoc(ref); const cur = snap.data(); await setDoc(ref,{enabled:!cur.enabled, updatedAt:serverTimestamp()},{merge:true});
+      }else if(act==='edit'){
+        const snap = await getDoc(ref); const b = snap.data();
+        // load into form
+        $('#bnEnabled').checked = !!b.enabled;
+        $('#bnTitle').value = b.title||''; $('#bnText').value=b.text||'';
+        $('#bnCtaLabel').value=b.ctaLabel||''; $('#bnCtaHref').value=b.ctaHref||'';
+        $('#bnImageUrl').value=b.imageUrl||''; $('#bnValidFrom').value=b.validFrom||''; $('#bnValidTo').value=b.validTo||'';
+        $('#bnOrder').value=b.order??0;
+        $('#bnSave').dataset.editId = id; $('#bnSave').textContent='Save Changes';
+        $('#bnStatus').textContent='Loaded for editing';
+        setTimeout(()=>$('#bnStatus').textContent='',1500);
+        window.scrollTo({top:0,behavior:'smooth'});
+      }else if(act==='del'){
+        if(confirm('Delete this banner?')){ await deleteDoc(ref); }
+      }
+      await loadBanners();
+    });
+  });
+}
+$('#bnSave').addEventListener('click', async ()=>{
+  const payload = {
+    enabled: $('#bnEnabled').checked,
+    title: $('#bnTitle').value.trim(),
+    text: $('#bnText').value.trim(),
+    ctaLabel: $('#bnCtaLabel').value.trim(),
+    ctaHref: $('#bnCtaHref').value.trim(),
+    imageUrl: $('#bnImageUrl').value.trim() || null,
+    validFrom: $('#bnValidFrom').value || null,
+    validTo: $('#bnValidTo').value || null,
+    order: Number($('#bnOrder').value||0),
+    updatedAt: serverTimestamp()
+  };
+  const editId = $('#bnSave').dataset.editId;
+  if(editId){
+    await setDoc(doc(db,'site_settings','banners','items',editId), payload, {merge:true});
+    $('#bnSave').textContent='Save New Banner';
+    delete $('#bnSave').dataset.editId;
+    $('#bnStatus').textContent='Saved ✔';
+  }else{
+    payload.createdAt = serverTimestamp();
+    await addDoc(collection(db,'site_settings','banners','items'), payload);
+    $('#bnStatus').textContent='Created ✔';
+  }
+  setTimeout(()=>$('#bnStatus').textContent='',1500);
+  // reset some fields
+  $('#bnTitle').value=''; $('#bnText').value=''; $('#bnCtaLabel').value=''; $('#bnCtaHref').value=''; $('#bnImageUrl').value=''; $('#bnOrder').value='';
+  await loadBanners();
+});
 
-    /* ===== Init ===== */
-    async function refreshAll(){ await Promise.all([loadVisitors(), loadBanners(), loadGallery()]); renderKPIs(); renderVisitors(); }
-    refreshAll();
-  </script>
+/* ====== Gallery CRUD ====== */
+async function loadGallery(){
+  const snap = await getDocs(query(collection(db,'site_settings','gallery','items'), orderBy('order','asc')));
+  const list = $('#galleryList'); list.innerHTML='';
+  snap.forEach(docSnap=>{
+    const g = { id: docSnap.id, ...docSnap.data() };
+    const row = document.createElement('div'); row.className='item'; row.innerHTML = `
+      <div>
+        <div class="h">${g.name||'(no name)'}</div>
+        <div class="sub">${g.imageUrl||''}</div>
+        <div class="sub">Order: ${g.order??0}</div>
+      </div>
+      <div class="actions">
+        <button class="btn" data-gact="edit" data-id="${g.id}">Edit</button>
+        <button class="btn" data-gact="del" data-id="${g.id}">Delete</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+  // bind actions
+  list.querySelectorAll('button[data-gact]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.dataset.id, act = btn.dataset.gact;
+      const ref = doc(db,'site_settings','gallery','items',id);
+      if(act==='edit'){
+        const snap = await getDoc(ref); const g = snap.data();
+        $('#glName').value = g.name||'';
+        $('#glImageUrl').value = g.imageUrl||'';
+        $('#glOrder').value = g.order??0;
+        $('#glSave').dataset.editId = id; $('#glSave').textContent='Save Changes';
+        $('#glStatus').textContent='Loaded for editing';
+        setTimeout(()=>$('#glStatus').textContent='',1500);
+        window.scrollTo({top:0,behavior:'smooth'});
+      }else if(act==='del'){
+        if(confirm('Delete this gallery item?')){ await deleteDoc(ref); await loadGallery(); }
+      }
+    });
+  });
+}
+$('#glSave').addEventListener('click', async ()=>{
+  const payload = {
+    name: $('#glName').value.trim(),
+    imageUrl: $('#glImageUrl').value.trim(),
+    order: Number($('#glOrder').value||0),
+    updatedAt: serverTimestamp()
+  };
+  if(!payload.imageUrl){ $('#glStatus').textContent='Image URL required'; setTimeout(()=>$('#glStatus').textContent='',1500); return; }
+  const editId = $('#glSave').dataset.editId;
+  if(editId){
+    await setDoc(doc(db,'site_settings','gallery','items',editId), payload, {merge:true});
+    $('#glSave').textContent='Add Item';
+    delete $('#glSave').dataset.editId;
+    $('#glStatus').textContent='Saved ✔';
+  }else{
+    payload.createdAt = serverTimestamp();
+    await addDoc(collection(db,'site_settings','gallery','items'), payload);
+    $('#glStatus').textContent='Created ✔';
+  }
+  setTimeout(()=>$('#glStatus').textContent='',1500);
+  $('#glName').value=''; $('#glImageUrl').value=''; $('#glOrder').value='';
+  await loadGallery();
+});
+
+/* ====== Orchestration ====== */
+async function refreshAll(){ await Promise.all([loadVisitors(), loadBanners(), loadGallery()]); renderKPIs(); renderVisitors(); }
+$('#range').addEventListener('change', async ()=>{ await loadVisitors(); renderKPIs(); renderVisitors(); });
+$('#refreshAll').addEventListener('click', refreshAll);
+</script>
 </body>
 </html>
