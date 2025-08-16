@@ -1,4 +1,4 @@
-l<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -93,9 +93,9 @@ l<!DOCTYPE html>
   </div>
 
   <div class="kpis">
-    <div class="kpi"><div class="sub">Unique Viewer‑Days</div><div class="val" id="kpiVisitors">—</div></div>
-    <div class="kpi"><div class="sub">Avg Steps (today)</div><div class="val" id="kpiAvgStepsToday">—</div></div>
-    <div class="kpi"><div class="sub">Avg Steps (session)</div><div class="val" id="kpiAvgStepsSession">—</div></div>
+    <div class="kpi"><div class="sub">Unique Viewer-Days</div><div class="val" id="kpiVisitors">0</div></div>
+    <div class="kpi"><div class="sub">Avg Steps (today)</div><div class="val" id="kpiAvgStepsToday">0.0</div></div>
+    <div class="kpi"><div class="sub">Avg Steps (session)</div><div class="val" id="kpiAvgStepsSession">0.0</div></div>
   </div>
 
   <!-- Tabs -->
@@ -223,7 +223,7 @@ onAuthStateChanged(auth, async (user)=>{
     $('#visitorsTable tbody').innerHTML='';
     $('#bannerList').innerHTML='';
     $('#galleryList').innerHTML='';
-    ['kpiVisitors','kpiAvgStepsToday','kpiAvgStepsSession'].forEach(id=>$('#'+id).textContent='—');
+    ['kpiVisitors','kpiAvgStepsToday','kpiAvgStepsSession'].forEach(id=>$('#'+id).textContent='0');
   }
 });
 
@@ -242,32 +242,32 @@ async function loadVisitors(){
   const rg = $('#range').value;
   const start = rangeToStart(rg);
 
-  // Fetch recent pings first; keep the request cheap. (We still filter by range client-side.)
-  const snap = await getDocs(query(collection(db,'analytics_visitors'), orderBy('createdAt','desc'), limit(150)));
+  // Pull recent daily visitor docs
+  const snap = await getDocs(query(collection(db,'visitors_daily'), orderBy('createdAt','desc'), limit(200)));
   visCache = snap.docs.map(d=>({id:d.id, ...d.data()}))
     .filter(r=>{
-      const t = r.createdAt?.toDate?.() || (r.ts? new Date(r.ts) : null);
+      // Robust timestamp: createdAt, ts, or derive from doc id YYYY-MM-DD_*
+      const t =
+        r.createdAt?.toDate?.()
+        || (r.ts ? new Date(r.ts) : null)
+        || (/^\d{4}-\d{2}-\d{2}_/.test(r.id) ? new Date(r.id.slice(0,10)) : null);
       return !start || (t && t>=start);
     });
 }
 
-// KPIs: Unique viewer‑days (count each vid once per calendar day in the selected range)
+// KPIs
 function renderKPIs(){
-  const uniqueDayPairs = new Set(); // yyyy-mm-dd|vid
+  // Unique viewer-days: visitors_daily already 1 row per vid per day
+  $('#kpiVisitors').textContent = String(visCache.length || 0);
 
+  // Step averages (only if fields exist)
+  let sumToday=0, sumSess=0, nToday=0, nSess=0;
   visCache.forEach(r=>{
-    const t = r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
-    if(t && r.vid){
-      const day = t.toISOString().slice(0,10);
-      uniqueDayPairs.add(`${day}|${r.vid}`);
-    }
-    if(typeof r.steps_today==='number'){ sumToday+=r.steps_today; nToday++; }
-    if(typeof r.steps_session==='number'){ sumSess+=r.steps_session; nSess++; }
+    if(typeof r.steps_today === 'number'){ sumToday += r.steps_today; nToday++; }
+    if(typeof r.steps_session === 'number'){ sumSess += r.steps_session; nSess++; }
   });
-
-  $('#kpiVisitors').textContent = String(uniqueDayPairs.size);
-  $('#kpiAvgStepsToday').textContent = nToday? (sumToday/nToday).toFixed(1) : '0.0';
-  $('#kpiAvgStepsSession').textContent = nSess? (sumSess/nSess).toFixed(1) : '0.0';
+  $('#kpiAvgStepsToday').textContent = nToday ? (sumToday/nToday).toFixed(1) : '0.0';
+  $('#kpiAvgStepsSession').textContent = nSess ? (sumSess/nSess).toFixed(1) : '0.0';
 }
 
 function renderVisitors(){
@@ -282,14 +282,17 @@ function renderVisitors(){
 
   const tb = $('#visitorsTable tbody'); tb.innerHTML='';
   latest10.forEach(r=>{
-    const ts = r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
+    const ts =
+      r.createdAt?.toDate?.()
+      || (r.ts ? new Date(r.ts) : null)
+      || (/^\d{4}-\d{2}-\d{2}_/.test(r.id) ? new Date(r.id.slice(0,10)) : null);
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${ts?ts.toLocaleString():''}</td>
       <td class="sub">${r.vid||''}</td>
       <td class="sub">${(r.sessionId||'').slice(0,10)}</td>
-      <td>${r.steps_today??''}</td>
-      <td>${r.steps_session??''}</td>
+      <td>${typeof r.steps_today==='number'? r.steps_today : ''}</td>
+      <td>${typeof r.steps_session==='number'? r.steps_session : ''}</td>
       <td class="sub">${(r.page||'').slice(0,50)}${(r.page||'').length>50?'…':''}</td>
       <td class="sub">${(r.ua||'').slice(0,50)}${(r.ua||'').length>50?'…':''}</td>
     `;
