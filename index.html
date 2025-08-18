@@ -720,50 +720,17 @@
   }
   // expose for non-module caller
   window.loadGallery = loadGallery;
-
-  /* ===== Step counter (no location) ===== */
-  function uuid(){ return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16)); }
-  const vid = localStorage.getItem('vid') || (localStorage.setItem('vid', uuid()), localStorage.getItem('vid'));
-  const sessionId = sessionStorage.getItem('sid') || (sessionStorage.setItem('sid', uuid()), sessionStorage.getItem('sid'));
-  function todayKey(){ return 'steps:'+new Date().toISOString().slice(0,10); }
-  function getStepsToday(){ return parseInt(localStorage.getItem(todayKey())||'0',10); }
-  function setStepsToday(v){ localStorage.setItem(todayKey(), String(v)); }
-
-  let stepsSession = 0;
-  let lastPeak = 0, lastMag = 0;
-  function handleMotion(ev){
-    const a = ev.accelerationIncludingGravity || ev.acceleration; if(!a) return;
-    const mag = Math.sqrt((a.x||0)**2+(a.y||0)**2+(a.z||0)**2);
-    const now = Date.now();
-    const crossedUp = mag>12 && lastMag<=12;
-    const gapOk = (now-lastPeak)>300;
-    if(crossedUp && gapOk){ lastPeak = now; stepsSession++; setStepsToday(getStepsToday()+1); }
-    lastMag = mag;
-  }
-  async function enableMotion(){
-    try{
-      if(typeof DeviceMotionEvent!=='undefined' && typeof DeviceMotionEvent.requestPermission==='function'){
-        const res = await DeviceMotionEvent.requestPermission(); if(res!=='granted') return;
-      }
-      window.addEventListener('devicemotion', handleMotion, {passive:true});
-    }catch(_){}
-  }
-  window.addEventListener('click', enableMotion, {once:true});
-  window.addEventListener('touchstart', enableMotion, {once:true});
-
   async function ping(){
     try{
       await addDoc(collection(db,'analytics_visitors'),{
         createdAt: serverTimestamp(),
-        vid, sessionId,
-        steps_today: getStepsToday(),
-        steps_session: stepsSession,
         page: location.pathname,
         ua: navigator.userAgent
       });
     }catch(_){}
   }
   setInterval(ping,15000);
+
 
   // init
   loadBanners();
