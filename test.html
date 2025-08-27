@@ -1,189 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1">
-<title>net+TV Admin</title>
-<meta name="theme-color" content="#0b1020">
+<meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+/>
+<title>Net + Cable • Admin</title>
 <style>
-  :root{--bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;--g1:#6a11cb;--g2:#2575fc;}
-  *{box-sizing:border-box} html,body{height:100%}
-  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#0b1020;color:var(--ink);-webkit-font-smoothing:antialiased}
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:1200px;margin:0 auto;padding:16px}
+  :root{
+    --bg:#0b1020;--card:#121831;--ink:#e7ecff;--muted:#9aa7d9;--accent:#6a8cff;--accent2:#8a5ff;--danger:#ff647c;--ok:#35d0a7;--border:#23305b;--warn:#ffc857;
+    /* iOS safe areas */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    /* compact sizes for iPhone */
+    --space:14px;
+    --radius:14px;
+    --tap:44px; /* min tap target */
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: rgba(255,255,255,0); }
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    background:
+      radial-gradient(1300px 800px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
+      radial-gradient(900px 700px at 0% 0%,rgba(106,140,255,.18),transparent 55%),
+      linear-gradient(180deg,#0b1020,#0b1020 30%,#0b1020);
+    color:var(--ink);
+    padding-bottom: calc(var(--safe-bottom) + 6px); /* keep content above home bar */
+    /* iOS rubber band sanity */
+    overscroll-behavior-y: none;
+  }
+  a{color:var(--accent)}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+  .row{display:flex;gap:var(--space);flex-wrap:wrap}
+  .col{flex:1 1 280px; min-width:260px}
+  .btn{
+    appearance:none;border:1px solid var(--border);
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;padding:12px 16px;border-radius:10px;font-weight:600;cursor:pointer;
+    min-height:var(--tap); /* easier tap on iPhone */
+    touch-action: manipulation;
+  }
+  .btn.secondary{background:#182041}
+  .btn.ghost{background:transparent;border-color:var(--border);color:var(--ink)}
+  .btn.warn{background:linear-gradient(135deg,#ff9d00,#ff6800)}
+  .btn.danger{background:linear-gradient(135deg,#ff5b73,#ff1f49)}
+  .btn.ok{background:linear-gradient(135deg,#3cd6b5,#15a37f)}
+  .btn:active{transform:translateY(1px); opacity:.95}
+  .chip{display:inline-block;padding:4px 8px;border-radius:999px;background:#1a2244;border:1px solid #2a3670;color:#cfe2ff;font-size:12px}
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    background:rgba(11,16,32,.86);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom:1px solid var(--border);
+    padding-top: calc(var(--safe-top) * 1); /* avoid Dynamic Island */
+  }
+  .topbar .wrap{display:flex;align-items:center;gap:14px;justify-content:space-between;padding-top:8px;padding-bottom:6px}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .tab{padding:10px 12px;border-radius:10px;border:1px solid var(--border);cursor:pointer;background:#121831; min-height:var(--tap); display:flex; align-items:center}
+  .tab.active{background:linear-gradient(135deg,#1b2350,#1a244f)}
+  /* Tables: keep sticky headers + make horizontal scrollable on iPhone (no :has) */
+.table-scroll{ overflow:auto; -webkit-overflow-scrolling:touch; }
+.grid{width:100%;border-collapse:collapse; min-width:720px}
+.grid th,.grid td{padding:10px;border-bottom:1px solid #1d274e;font-size:14px}
+.grid th{
+  text-align:left;color:#c7d3ff;background:#121a3a;
+  position:sticky; top:calc(var(--safe-top) + var(--sticky-offset,56px));
+  z-index:2;
+}
+/* When the table is in its own scroll container, stick to that container's top */
+.table-scroll .grid th { top: 0; }
+  .muted{color:var(--muted)}
+  .hidden{display:none!important}
+  input,select,textarea{
+    width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);
+    background:#0f1530;color:var(--ink); font-size:16px; /* stops iOS zoom */
+    min-height:44px; /* comfy tap size */
+  }
+  label{display:block;margin-top:10px;margin-bottom:6px;color:#ccd6ff;font-size:13px}
+  .kpi{padding:12px;border-radius:12px;border:1px solid var(--border);background:#121a3a}
+  .kpi .big{font-size:24px;font-weight:800}
+  .pill{border:1px solid var(--border);padding:8px 10px;border-radius:999px; min-height:var(--tap)}
+  .right{float:right}
+  .center{text-align:center}
+  .flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .grow{flex:1}
+  .danger-text{color:#ff8ca0}
+  .ok-text{color:#5ee0c1}
+  .warn-text{color:#ffd479}
 
-  /* Topbar */
-  .topbar{position:sticky;top:0;z-index:100;background:rgba(11,16,32,.9);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08)}
-  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .brand{font-weight:900;display:flex;gap:10px;align-items:center}
-  .badge{background:linear-gradient(135deg,var(--g1),var(--g2));padding:6px 10px;border-radius:10px;font-weight:900}
+  /* Modal (scrollable) */
+  .modal{
+    position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center;
+    background:rgba(0,0,0,.55); z-index:200; padding:16px; overflow:auto;
+    padding-top: calc(16px + var(--safe-top));
+    padding-bottom: calc(16px + var(--safe-bottom));
+  }
+  .modal.open{ display:flex; }
+  .modal .body{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px; width:96%; max-width:720px; max-height:90vh; overflow:auto; -webkit-overflow-scrolling:touch;
+  }
+  .modal .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px; position:sticky; top:0; background:var(--card); z-index:5; padding-bottom:6px}
+  .modal .foot{
+    display:flex;gap:10px;justify-content:flex-end;margin-top:12px;
+    position:sticky; bottom:0; background:linear-gradient(180deg, transparent, rgba(18,24,49,.9) 24px, rgba(18,24,49,1) 48px);
+    padding-top:12px; padding-bottom:6px;
+  }
 
   /* Auth */
-  .auth input{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:10px 12px;color:#e9edff;min-width:200px}
-  .btn{border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:10px 12px;font-weight:800;background:#0f1732;color:var(--ink);cursor:pointer}
-  .btn.primary{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff}
+  .auth{max-width:420px;margin:60px auto; padding-left: max(16px, var(--safe-left)); padding-right: max(16px, var(--safe-right));}
+  .logo{font-weight:900;letter-spacing:.5px}
+  .subtle{opacity:.66}
 
-  /* Quick links */
-  .quicklinks{display:flex;gap:8px;overflow:auto;padding:10px 16px;border-top:1px solid rgba(255,255,255,.08)}
-  .qbtn{flex:0 0 auto;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#0f1732;font-weight:900;white-space:nowrap}
-  .qbtn.primary{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent}
+  /* Badges */
+  .badge-exp{background:#2a1a1a;color:#ffb3c0;border:1px solid #624}
+  .badge-ok{background:#14231b;color:#b9ffe9;border:1px solid #264}
+  .badge-warn{background:#2a2416;color:#ffe7a8;border:1px solid #684}
 
-  /* KPIs */
-  .kpis{display:grid;gap:10px;margin:12px 0}
-  @media(min-width:900px){.kpis{grid-template-columns:repeat(4,1fr)}}
-  .kpi{background:#0f1732;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px}
-  .kpi .val{font-size:22px;font-weight:900;margin-top:4px}
-  .filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  /* Small iPhone tweaks */
+  @media (max-width: 420px){
+    .wrap{padding:16px}
+    .col{min-width:100%}
+    .kpi .big{font-size:22px}
+    .tabs .tab{padding:10px 10px}
+    .topbar .wrap{padding-left: max(14px, var(--safe-left)); padding-right: max(14px, var(--safe-right));}
+    .card{padding:14px}
+  }
 
-  /* Tabs / Panels */
-  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
-  .tab{padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:#0f1732;font-weight:800}
-  .tab.active{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent}
-  .cards{display:grid;gap:12px} @media(min-width:900px){.cards{grid-template-columns:1fr 1fr}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
-  .h{font-weight:900;font-size:18px}.sub{color:#a9b5e6;font-size:13px}
-  .tools{display:flex;gap:8px;flex-wrap:wrap}
-  .input{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:10px 12px;color:#e9edff}
-  .tablewrap{margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:auto}
-  table{width:100%;border-collapse:collapse}
-  th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;vertical-align:top}
-  thead th{background:#0e1836;color:#cfe0ff;text-align:left;position:sticky;top:0;z-index:1}
-
-  /* List items (banners/gallery) */
-  .item{display:grid;grid-template-columns:1fr auto;gap:8px;background:#0f1732;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px;margin-top:8px}
-  .actions{display:flex;gap:8px;align-items:center}
-  .toggle{display:flex;align-items:center;gap:6px}
+  /* Reduce motion respect */
+  @media (prefers-reduced-motion: reduce){
+    *{scroll-behavior:auto}
+  }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="wrap row" style="justify-content:space-between;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top))">
-    <div class="brand"><span class="badge">net+TV</span> <span>Admin</span></div>
-    <div class="auth row" id="authArea">
-      <input id="email" placeholder="Admin email">
-      <input id="password" placeholder="Password" type="password">
-      <button class="btn primary" id="btnSignIn">Sign In</button>
+
+<!-- AUTH VIEW -->
+<div id="authView" class="wrap auth">
+  <div class="card">
+    <h2 class="logo">Net + Cable <span class="subtle">• Admin Sign In</span></h2>
+    <p class="muted" style="margin-top:6px">Use your admin email & password from Firebase Auth.</p>
+    <label>Email</label>
+    <input id="authEmail" type="email" placeholder="you@company.com" />
+    <label>Password</label>
+    <input id="authPass" type="password" placeholder="********" />
+    <div class="flex" style="margin-top:12px">
+      <button class="btn ok" id="btnLogin" type="button">Sign In</button>
+      <button class="btn ghost" id="btnDemo" type="button">Use Demo (read-only)</button>
     </div>
-    <div class="auth row" id="whoami" style="display:none">
-      <span id="whoamiText"></span>
-      <button class="btn" id="btnSignOut">Sign Out</button>
-    </div>
-  </div>
-  <div class="quicklinks wrap" role="navigation" aria-label="Quick admin links">
-    <a class="qbtn primary" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glow TV</a>
-    <a class="qbtn" href="https://fast4k.cc/login" target="_blank" rel="noopener">Smart4K TV</a>
-    <a class="qbtn" href="data.html" target="_blank" rel="noopener">data.html</a>
+    <p id="authMsg" class="muted" style="margin-top:10px"></p>
+    <hr style="border:none;border-top:1px solid var(--border);margin:16px 0">
+    <p class="muted">Tip: Create your own admin user in <strong>Firebase Console → Authentication</strong>. You can disable the demo user in Firestore rules.</p>
   </div>
 </div>
 
-<div class="wrap">
-  <!-- Live Stats + Range -->
-  <div class="row" style="justify-content:space-between">
-    <div class="filters">
-      <label class="sub">Range</label>
-      <select id="range" class="input">
-        <option value="7d">Last 7 days</option>
-        <option value="30d">Last 30 days</option>
-        <option value="1y">Last 1 year</option>
-        <option value="all">Lifetime</option>
-      </select>
-      <button class="btn" id="refreshAll">Refresh</button>
+<!-- APP VIEW -->
+<div id="appView" class="hidden">
+  <div class="topbar">
+    <div class="wrap">
+      <div class="flex">
+        <div class="logo">Net + Cable <span class="muted">• Admin</span></div>
+        <div id="envInfo" class="chip">Connected</div>
+      </div>
+      <div class="flex">
+        <div id="nearExpCount" class="pill muted">Near expiry: 0</div>
+        <button id="signOutBtn" class="btn secondary" type="button">Sign Out</button>
+      </div>
     </div>
-    <div class="sub">Analytics track steps only (no location)</div>
   </div>
 
-  <div class="kpis">
-    <div class="kpi"><div class="sub">Unique Viewer-Days</div><div class="val" id="kpiVisitors">0</div></div>
-    <div class="kpi"><div class="sub">Avg Steps (today)</div><div class="val" id="kpiAvgStepsToday">0.0</div></div>
-    <div class="kpi"><div class="sub">Avg Steps (session)</div><div class="val" id="kpiAvgStepsSession">0.0</div></div>
-  </div>
+  <div class="wrap">
+    <div class="tabs" style="margin-bottom:12px">
+      <div class="tab active" data-tab="dashboard">Dashboard</div>
+      <div class="tab" data-tab="customers">Customers</div>
+      <div class="tab" data-tab="plans">Plans</div>
+      <div class="tab" data-tab="reports">Reports</div>
+      <div class="tab" data-tab="settings">Settings</div>
+    </div>
 
-  <!-- Tabs -->
-  <div class="tabs" role="tablist">
-    <button class="tab active" id="tab-visitors" onclick="showPanel('visitors')">Visitors</button>
-    <button class="tab" id="tab-banners" onclick="showPanel('banners')">Banners</button>
-    <button class="tab" id="tab-gallery" onclick="showPanel('gallery')">Gallery</button>
-  </div>
-
-  <!-- Visitors Panel -->
-  <section id="panel-visitors" class="cards">
-    <div class="card" style="grid-column:1/-1">
-      <div class="row" style="justify-content:space-between">
-        <div>
-          <div class="h">Visitors (latest 10 in range)</div>
-          <div class="sub">Steps only — no location stored</div>
+    <!-- DASHBOARD -->
+    <section id="tab-dashboard" class="card">
+      <div class="row">
+        <div class="col kpi">
+          <div class="muted">Total Customers</div>
+          <div id="kpiCustomers" class="big">0</div>
         </div>
-        <div class="tools">
-          <input id="visSearch" class="input" placeholder="Filter by VID/page…">
-          <button class="btn" id="visRefresh">Refresh</button>
-          <button class="btn" id="visCSV">Export CSV</button>
+        <div class="col kpi">
+          <div class="muted">Turnover (All-time)</div>
+          <div id="kpiTurnover" class="big">$0.00</div>
+        </div>
+        <div class="col kpi">
+          <div class="muted">Expense (All-time)</div>
+          <div id="kpiExpense" class="big">$0.00</div>
+        </div>
+        <div class="col kpi">
+          <div class="muted">Profit (All-time)</div>
+          <div id="kpiProfit" class="big">$0.00</div>
         </div>
       </div>
-      <div class="tablewrap">
-        <table id="visitorsTable">
+
+      <h3 style="margin-top:18px">Near Expiry</h3>
+      <div class="flex" style="margin-bottom:8px">
+        <div class="muted">Show customers expiring within</div>
+        <select id="nearDays" class="pill">
+          <option value="7">7 days</option>
+          <option value="14">14 days</option>
+          <option value="30" selected>30 days</option>
+          <option value="60">60 days</option>
+        </select>
+      </div>
+     <div class="card table-scroll" style="padding:0">
+        <table class="grid" id="nearGrid">
           <thead><tr>
-            <th>Time</th><th>VID</th><th>Session</th><th>Steps (today)</th><th>Steps (session)</th><th>Page</th><th>UA</th>
+            <th>Name</th><th>Phone</th><th>Plan</th><th>Expiry</th><th>Days Left</th><th></th>
           </tr></thead>
           <tbody></tbody>
         </table>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Banners Panel -->
-  <section id="panel-banners" class="cards" style="display:none">
-    <div class="card" style="grid-column:1/-1">
-      <div class="h">Swipe Banners</div>
-      <div class="sub">Shown on your index page. Only enabled banners within date window are displayed.</div>
+    <!-- CUSTOMERS -->
+    <section id="tab-customers" class="card hidden">
+      <div class="flex" style="justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div class="flex grow">
+          <input id="searchCustomers" placeholder="Search by name, phone, email, MAC, user ID..." />
+        </div>
+        <div class="flex">
+          <button id="btnAddCustomer" class="btn ok" type="button">+ Add Customer</button>
+        </div>
+      </div>
+        <!-- Filters row (place right under the toolbar above the table) -->
+  <div class="flex" style="gap:10px;flex-wrap:wrap;margin-bottom:10px">
+    <!-- Filter 1: time window -->
+    <select id="timeFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
+      <option value="7" selected>Last 7 Days</option>
+      <option value="30">Monthly</option>
+      <option value="365">Yearly</option>
+      <option value="lifetime">Lifetime</option>
+    </select>
 
-      <!-- Create/Edit form -->
-      <div class="row" style="margin-top:12px;gap:8px;align-items:flex-start;flex-wrap:wrap">
-        <label class="toggle"><input type="checkbox" id="bnEnabled" checked> <span class="sub">Enabled</span></label>
-        <input class="input" id="bnTitle" placeholder="Title (e.g., Canada Day Offer)">
-        <input class="input" id="bnText" placeholder="Text (e.g., Get 1 month extra with 1-year)">
-        <input class="input" id="bnCtaLabel" placeholder="CTA label (e.g., Get 13 months)">
-        <input class="input" id="bnCtaHref" placeholder="CTA href (e.g., # or https://)">
-        <input class="input" id="bnImageUrl" placeholder="Image URL (optional)">
-        <input class="input" id="bnValidFrom" type="date" placeholder="Valid from">
-        <input class="input" id="bnValidTo" type="date" placeholder="Valid to">
-        <input class="input" id="bnOrder" type="number" placeholder="Order (0..N)" style="width:120px">
-        <button class="btn primary" id="bnSave">Save New Banner</button>
-        <span class="sub" id="bnStatus"></span>
+    <!-- Filter 2: payment status -->
+    <select id="statusFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
+      <option value="all" selected>All</option>
+      <option value="paid">Paid</option>
+      <option value="unpaid">Unpaid</option>
+    </select>
+  </div>
+      <div class="card table-scroll" style="padding:0">
+        <table class="grid" id="custGrid">
+          <thead><tr>
+            <th>Name</th><th>Phone</th><th>Email</th><th>User ID</th><th>MAC</th>
+            <th>Plan</th><th>Start</th><th>Expiry</th><th>Paid</th><th>Actions</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PLANS -->
+    <section id="tab-plans" class="card hidden">
+      <div class="flex" style="justify-content:space-between;margin-bottom:8px">
+        <h3>Plans</h3>
+        <div class="flex">
+          <button id="btnSeedPlans" class="btn ghost" type="button">Seed sample plans</button>
+          <button id="btnAddPlan" class="btn ok" type="button">+ Add Plan</button>
+        </div>
+      </div>
+     <div class="card table-scroll" style="padding:0">
+        <table class="grid" id="plansGrid">
+          <thead><tr>
+            <th>ID</th><th>Name</th><th>Duration (months)</th>
+            <th>Retail $</th><th>Wholesale $</th><th>Description</th><th>Actions</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section id="tab-reports" class="card hidden">
+      <div class="row">
+        <div class="col">
+          <label>Report Type</label>
+          <select id="repType">
+            <option value="monthly" selected>Monthly</option>
+            <option value="yearly">Yearly</option>
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
+        <div class="col" id="repMonthCol">
+          <label>Month</label>
+          <input id="repMonth" type="month">
+        </div>
+        <div class="col" id="repYearCol">
+          <label>Year</label>
+          <input id="repYear" type="number" min="2000" max="2100" value="">
+        </div>
+        <div class="col hidden" id="repFromCol">
+          <label>From (start date)</label>
+          <input id="repFrom" type="date">
+        </div>
+        <div class="col hidden" id="repToCol">
+          <label>To (end date)</label>
+          <input id="repTo" type="date">
+        </div>
+      </div>
+      <div class="flex" style="margin-top:12px">
+        <button id="btnRunReport" class="btn" type="button">Run Report</button>
+        <button id="btnCsv" class="btn ghost" type="button">Export CSV</button>
       </div>
 
-      <div id="bannerList"></div>
-    </div>
-  </section>
-
-  <!-- Gallery Panel -->
-  <section id="panel-gallery" class="cards" style="display:none">
-    <div class="card" style="grid-column:1/-1">
-      <div class="h">Gallery</div>
-      <div class="sub">These appear in the site Menu → Gallery modal.</div>
-
-      <!-- Create/Edit form -->
-      <div class="row" style="margin-top:12px;gap:8px;align-items:flex-start;flex-wrap:wrap">
-        <input class="input" id="glName" placeholder="Name / caption">
-        <input class="input" id="glImageUrl" placeholder="Image URL (https://...)">
-        <input class="input" id="glOrder" type="number" placeholder="Order (0..N)" style="width:120px">
-        <button class="btn primary" id="glSave">Add Item</button>
-        <span class="sub" id="glStatus"></span>
+      <div class="row" style="margin-top:14px">
+        <div class="col kpi"><div class="muted">Turnover</div><div id="repTurnover" class="big">$0.00</div></div>
+        <div class="col kpi"><div class="muted">Expense</div><div id="repExpense" class="big">$0.00</div></div>
+        <div class="col kpi"><div class="muted">Profit</div><div id="repProfit" class="big">$0.00</div></div>
       </div>
 
-      <div id="galleryList"></div>
+      <h3 style="margin-top:18px">Included Plans in Period</h3>
+      <div class="card table-scroll" style="padding:0">
+        <table class="grid" id="repGrid">
+          <thead><tr>
+            <th>Date</th><th>Customer</th><th>Plan</th><th>Turnover $</th><th>Expense $</th><th>Profit $</th><th>Paid</th><th></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="tab-settings" class="card hidden">
+      <h3>Settings</h3>
+      <label>Near-expiry threshold (days)</label>
+      <input id="settingNearDays" type="number">
+      <p class="muted" style="margin-top:6px"></p>
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:14px 0">
+
+      <div class="flex">
+        <button id="btnCleanupOrphans" class="btn danger" type="button">
+          🗑 Delete Orphan Renewals
+        </button>
+        <span id="cleanupMsg" class="muted"></span>
+      </div>
+    </section>
+
+    <!-- MODALS -->
+    <div id="modalCustomer" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="custModalTitle">Add Customer</h3>
+          <button class="btn ghost" id="xCust" type="button">✕</button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Name</label><input id="c_name">
+            <label>Phone</label><input id="c_phone">
+            <label>Email</label><input id="c_email" type="email">
+            <label>User ID (internal)</label><input id="c_userId" placeholder="e.g., CUST-001">
+            <label>MAC Address</label><input id="c_mac" placeholder="AA:BB:CC:DD:EE:FF">
+          </div>
+          <div class="col">
+            <label>Plan</label>
+            <select id="c_plan"></select>
+            <div class="muted" style="margin-top:6px">You can override price/wholesale below.</div>
+
+            <label>Plan Actual Price</label><input id="c_actual" type="number" step="0.01" placeholder="e.g., 20.00">
+            <label>Selling Price (what customer pays)</label><input id="c_cost" type="number" step="0.01">
+            <label>Wholesale Rate (your cost)</label><input id="c_wholesale" type="number" step="0.01">
+
+            <label>Discount Name (optional)</label>
+            <input id="c_discName" placeholder="e.g., Diwali Offer, Combo Deal">
+
+            <label>Includes STB?</label>
+            <select id="c_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
+            <div id="stbBox" class="hidden">
+              <label>STB Actual Price</label><input id="c_stbActual" type="number" step="0.01" placeholder="e.g., 49.00">
+              <label>STB Selling Price</label><input id="c_stbCost" type="number" step="0.01">
+              <label>STB Wholesale</label><input id="c_stbWholesale" type="number" step="0.01">
+            </div>
+          </div>
+          <div class="col">
+            <label>Plan Start Date</label><input id="c_start" type="date">
+            <label>Plan Expiry Date</label><input id="c_expiry" type="date">
+            <label>Payment Received?</label>
+            <select id="c_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+
+            <div class="card" style="margin-top:10px">
+              <div class="muted">Totals Preview</div>
+              <div id="c_preview" class="muted">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">
+          <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
+            <input id="c_invoice" type="checkbox" checked>
+            Open slip after save
+          </label>
+          <button type="button" class="btn secondary" id="btnSaveCustomer">Save</button>
+        </div>
+      </div>
     </div>
-  </section>
-</div>
+
+    <div id="modalRenew" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="renewTitle">Renew Plan</h3>
+          <button class="btn ghost" id="xRenew" type="button">✕</button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Plan</label><select id="r_plan"></select>
+            <label>Plan Actual Price</label><input id="r_actual" type="number" step="0.01" placeholder="e.g., 20.00">
+            <label>Plan Selling Price</label><input id="r_cost" type="number" step="0.01">
+            <label>Wholesale</label><input id="r_wholesale" type="number" step="0.01">
+
+            <label>Discount Name (optional)</label>
+            <input id="r_discName" placeholder="e.g., Festival Promo, Renewal Saver">
+          </div>
+          <div class="col">
+            <label>Includes STB?</label>
+            <select id="r_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
+            <div id="r_stbBox" class="hidden">
+              <label>STB Actual Price</label><input id="r_stbActual" type="number" step="0.01" placeholder="e.g., 49.00">
+              <label>STB Selling Price</label><input id="r_stbCost" type="number" step="0.01">
+              <label>STB Wholesale</label><input id="r_stbWholesale" type="number" step="0.01">
+            </div>
+            <label>Start Date</label><input id="r_start" type="date">
+            <label>Expiry Date</label><input id="r_expiry" type="date">
+            <label>Payment Received?</label>
+            <select id="r_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+          </div>
+        </div>
+        <div class="foot">
+          <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
+            <input id="r_invoice" type="checkbox" checked>
+            Open slip after renewal
+          </label>
+          <button id="btnDoRenew" class="btn ok" type="button">Confirm Renewal</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalPlan" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="planTitle">Add Plan</h3>
+          <button class="btn ghost" id="xPlan" type="button">✕</button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Plan ID</label><input id="p_id" placeholder="PLN-1MO">
+            <label>Name</label><input id="p_name" placeholder="1 month">
+            <label>Duration (months)</label><input id="p_months" type="number" min="0" step="1" value="1">
+          </div>
+          <div class="col">
+            <label>Retail Price</label><input id="p_retail" type="number" step="0.01">
+            <label>Wholesale Cost</label><input id="p_wholesale" type="number" step="0.01">
+            <label>Description</label><input id="p_desc" placeholder="Most popular">
+          </div>
+        </div>
+        <div class="foot">
+          <button id="btnSavePlan" class="btn secondary" type="button">Save Plan</button>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- /wrap -->
+</div> <!-- /appView -->
 
 <script type="module">
-/* Firebase */
-import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+/* =========================
+   Firebase Setup (ESM CDN)
+   ========================= */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  getFirestore, collection, query, orderBy, limit, getDocs,
-  doc, addDoc, setDoc, getDoc, deleteDoc, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, addDoc, getDoc, getDocs, updateDoc, deleteDoc, query, orderBy, serverTimestamp, collectionGroup, writeBatch} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+/* ---- Firebase Config ---- */
 const firebaseConfig = {
   apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
   authDomain: "netplustv-90b29.firebaseapp.com",
@@ -192,279 +492,1168 @@ const firebaseConfig = {
   messagingSenderId: "639722274355",
   appId: "1:639722274355:web:ebe34fdf093f8191da2d46"
 };
-const app = getApps().length? getApps()[0] : initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db   = getFirestore(app);
+const db = getFirestore(app);
 
-/* UI helpers */
-const $ = s => document.querySelector(s);
-function showPanel(name){
-  ['visitors','banners','gallery'].forEach(n=>{
-    $('#panel-'+n).style.display = (n===name)?'grid':'none';
-    $('#tab-'+n).classList.toggle('active', n===name);
-  });
+/* =========================
+   Helpers (dates, money)
+   ========================= */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => document.querySelectorAll(sel);
+const fmt = n => (isNaN(+n)? '$0.00' : '$' + (+n).toFixed(2));
+const todayISO = () => new Date().toISOString().slice(0,10);
+function addMonthsISO(startISO, months){
+  if (!startISO) return "";
+  const d = new Date(startISO + "T00:00:00");
+  if (isNaN(d.getTime())) return "";
+  const day = d.getDate();
+  d.setMonth(d.getMonth()+Number(months||0));
+  if (d.getDate() !== day) d.setDate(0);
+  return d.toISOString().slice(0,10);
 }
-window.showPanel = showPanel;
+function daysLeft(expISO){
+  const end = new Date((expISO||'')+"T23:59:59");
+  const now = new Date();
+  return Math.ceil((end - now) / (1000*60*60*24));
+}
+/* Updated to include actual prices and discount math */
+function calcFigures({
+  cost,            // plan selling
+  wholesale,       // plan wholesale
+  actual,          // plan actual (MSRP)
+  stbIncluded,
+  stbCost,         // stb selling
+  stbWholesale,    // stb wholesale
+  stbActual        // stb actual (MSRP)
+}){
+  const sellPlan = +cost||0;
+  const whPlan   = +wholesale||0;
+  const msrpPlan = +actual||0;
 
-/* Auth */
-$('#btnSignIn').addEventListener('click', async ()=>{
-  const email=$('#email').value.trim(), pass=$('#password').value;
-  if(!email||!pass) return alert('Enter email and password');
-  try{ await signInWithEmailAndPassword(auth,email,pass); }catch(e){ alert('Sign in failed: '+(e?.message||e)); }
+  const sellSTB  = +stbCost||0;
+  const whSTB    = +stbWholesale||0;
+  const msrpSTB  = +stbActual||0;
+
+  const turnover = sellPlan + (stbIncluded==='yes' ? sellSTB : 0);
+  const expense  = whPlan   + (stbIncluded==='yes' ? whSTB   : 0);
+  const profit   = turnover - expense;
+
+  const savedPlan = Math.max(msrpPlan - sellPlan, 0);
+  const savedSTB  = (stbIncluded==='yes') ? Math.max(msrpSTB - sellSTB, 0) : 0;
+  const discountSaved = savedPlan + savedSTB;
+
+  return {turnover, expense, profit, discountSaved, savedPlan, savedSTB};
+}
+
+/* =========================
+   iOS niceties (no feature changes)
+   ========================= */
+(function iosTweaks(){
+  const topbar = document.querySelector('.topbar');
+  function setStickyOffset(){
+    const topH = topbar ? topbar.getBoundingClientRect().height : 0;
+    document.documentElement.style.setProperty('--sticky-offset', topH + 'px');
+  }
+  setStickyOffset();
+  window.addEventListener('resize', setStickyOffset);
+
+  const useVV = window.visualViewport;
+  if (useVV) {
+    const onVVChange = () => {
+      document.body.style.paddingBottom = `calc(${useVV.height < window.innerHeight ? '20vh' : '0px'} + var(--safe-bottom))`;
+    };
+    useVV.addEventListener('resize', onVVChange);
+    useVV.addEventListener('scroll', onVVChange);
+  }
+  document.addEventListener('focusin', (e)=>{
+    const el = e.target;
+    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT')) {
+      setTimeout(()=> el.scrollIntoView({ block:'center', behavior:'smooth' }), 100);
+    }
+  }, {passive:true});
+})();
+
+/* =========================
+   UI state / tabs
+   ========================= */
+const authView = $("#authView");
+const appView  = $("#appView");
+const tabs = $$(".tab");
+const sections = {
+  dashboard: $("#tab-dashboard"),
+  customers: $("#tab-customers"),
+  plans: $("#tab-plans"),
+  reports: $("#tab-reports"),
+  settings: $("#tab-settings"),
+};
+tabs.forEach(t=>{
+  t.addEventListener('click', ()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    Object.values(sections).forEach(s=>s.classList.add('hidden'));
+    sections[t.dataset.tab].classList.remove('hidden');
+  }, {passive:true});
 });
-$('#btnSignOut').addEventListener('click',()=>signOut(auth));
 
-onAuthStateChanged(auth, async (user)=>{
+/* =========================
+   AUTH
+   ========================= */
+const authEmail = $("#authEmail");
+const authPass  = $("#authPass");
+const authMsg   = $("#authMsg");
+$("#btnLogin").onclick = async ()=>{
+  authMsg.textContent = "Signing in...";
+  try{
+    await signInWithEmailAndPassword(auth, authEmail.value.trim(), authPass.value.trim());
+    authMsg.textContent = "Signed in.";
+  }catch(e){
+    console.error(e);
+    authMsg.textContent = (e.code||'auth/error') + " — " + e.message;
+  }
+};
+$("#btnDemo").onclick = ()=>{
+  authView.classList.add('hidden');
+  appView.classList.remove('hidden');
+  loadApp();
+};
+$("#signOutBtn").onclick = ()=> signOut(auth);
+
+onAuthStateChanged(auth, (user)=>{
+  console.log('[auth]', user ? 'in as '+user.email : 'out');
   if(user){
-    $('#authArea').style.display='none'; $('#whoami').style.display='flex'; $('#whoamiText').textContent=user.email||'';
-    await refreshAll();
+    authView.classList.add('hidden');
+    appView.classList.remove('hidden');
+    loadApp(user);
+    setTimeout(()=> window.dispatchEvent(new Event('resize')), 0);
   }else{
-    $('#authArea').style.display='flex'; $('#whoami').style.display='none';
-    $('#visitorsTable tbody').innerHTML='';
-    $('#bannerList').innerHTML='';
-    $('#galleryList').innerHTML='';
-    ['kpiVisitors','kpiAvgStepsToday','kpiAvgStepsSession'].forEach(id=>$('#'+id).textContent='0');
+    appView.classList.add('hidden');
+    authView.classList.remove('hidden');
   }
 });
 
-/* Range helpers */
-function rangeToStart(range){
+/* =========================
+   Data caches
+   ========================= */
+let plans = {};          // id -> plan
+let customers = [];      // array of {id, ...}
+let renewals = [];       // array of all renewals (collectionGroup)
+let settingNear = 30;    // days
+
+/* =========================
+   Load initial app data
+   ========================= */
+async function loadApp(user){
+  $("#envInfo").textContent = "Connected";
+  $("#settingNearDays").value = settingNear;
+  $("#settingNearDays").addEventListener('change', ()=>{
+    settingNear = Math.max(1, +$("#settingNearDays").value||30);
+    $("#nearDays").value = String(settingNear);
+    renderAll();
+  }, {passive:true});
+  $("#nearDays").value = String(settingNear);
+  $("#nearDays").addEventListener('change', ()=>{
+    settingNear = +$("#nearDays").value;
+    $("#settingNearDays").value = settingNear;
+    renderAll();
+  }, {passive:true});
+
+  $("#btnAddCustomer").onclick = () => openCustomerModal(null);
+  $("#btnSeedPlans").onclick = seedPlans;
+  $("#btnAddPlan").onclick = ()=>openPlanModal();
+
+  $("#btnRunReport")?.addEventListener("click", (e) => {
+    e.preventDefault(); e.stopPropagation(); runReport();
+  });
+  $("#btnCsv")?.addEventListener("click", (e) => {
+    e.preventDefault(); e.stopPropagation(); exportCSV();
+  });
+
+  $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
+  $("#searchCustomers").addEventListener('input', renderCustomers);
+  $("#timeFilter").addEventListener('change', renderCustomers);
+  $("#statusFilter").addEventListener('change', renderCustomers);
+
+  await Promise.all([loadPlans(), loadCustomers(), loadRenewals()]);
   const now = new Date();
-  if(range==='7d'){ return new Date(now.getTime()-7*24*3600*1000); }
-  if(range==='30d'){ return new Date(now.getTime()-30*24*3600*1000); }
-  if(range==='1y'){ return new Date(now.getTime()-365*24*3600*1000); }
-  return null; // lifetime
+  $("#repMonth").value = now.toISOString().slice(0,7);
+  $("#repYear").value  = String(now.getFullYear());
+  runReport();
+  $("#repType").addEventListener('change', onRepTypeChange, {passive:true});
+  onRepTypeChange();
+
+  renderAll();
 }
-
-/* ====== KPIs + Visitors ====== */
-let visCache = [];
-async function loadVisitors(){
-  const rg = $('#range').value;
-  const start = rangeToStart(rg);
-
-  // Pull recent daily visitor docs
-  const snap = await getDocs(query(collection(db,'visitors_daily'), orderBy('createdAt','desc'), limit(200)));
-  visCache = snap.docs.map(d=>({id:d.id, ...d.data()}))
-    .filter(r=>{
-      // Robust timestamp: createdAt, ts, or derive from doc id YYYY-MM-DD_*
-      const t =
-        r.createdAt?.toDate?.()
-        || (r.ts ? new Date(r.ts) : null)
-        || (/^\d{4}-\d{2}-\d{2}_/.test(r.id) ? new Date(r.id.slice(0,10)) : null);
-      return !start || (t && t>=start);
+async function cleanupOrphanRenewals(){
+  const msg = $("#cleanupMsg");
+  const btn = $("#btnCleanupOrphans");
+  try{
+    btn.disabled = true; msg.textContent = "Scanning…";
+    await loadCustomers();
+    const existing = new Set(customers.map(c => String(c.id)));
+    const snap = await getDocs(collectionGroup(db, "renewals"));
+    const orphans = [];
+    snap.forEach(d => {
+      const data = d.data() || {};
+      const cid  = String(data.customerId || "");
+      if (!existing.has(cid)) orphans.push(d.ref);
     });
+    if (orphans.length === 0){
+      msg.textContent = "No orphan renewals found."; return;
+    }
+    msg.textContent = `Deleting ${orphans.length} orphan renewals…`;
+    const CHUNK = 400;
+    for (let i = 0; i < orphans.length; i += CHUNK){
+      const batch = writeBatch(db);
+      for (let j = i; j < Math.min(i+CHUNK, orphans.length); j++){
+        batch.delete(orphans[j]);
+      }
+      await batch.commit();
+    }
+    await loadRenewals();
+    renderKPIs();
+    runReport();
+    msg.textContent = `Deleted ${orphans.length} orphan renewals.`;
+  }catch(err){
+    console.error("[cleanupOrphanRenewals]", err);
+    alert(err?.message || "Failed to clean up orphan renewals");
+    msg.textContent = "Error during cleanup.";
+  }finally{
+    btn.disabled = false;
+  }
+}
+/* =========================
+   Firestore load/save
+   ========================= */
+async function loadPlans(){
+  plans = {};
+  const snap = await getDocs(query(collection(db, "plans"), orderBy("id")));
+  snap.forEach(d=>{ plans[d.id] = d.data(); });
+  renderPlans();
+}
+async function savePlan(p){
+  const ref = doc(db, "plans", String(p.id));
+  await setDoc(ref, p, {merge:true});
+  plans[p.id] = p;
+  renderPlans();
+  refreshPlanSelects();
+}
+async function deleteCustomerAndRenewals(customerId) {
+  const idStr = String(customerId);
+  const renSnap = await getDocs(collection(db, "customers", idStr, "renewals"));
+  const batch = writeBatch(db);
+  renSnap.forEach(d => batch.delete(doc(db, "customers", idStr, "renewals", d.id)));
+  batch.delete(doc(db, "customers", idStr));
+  await batch.commit();
+  await loadCustomers();
+  await loadRenewals();
+  renderAll();
+}
+async function deletePlan(id){
+  await deleteDoc(doc(db, "plans", String(id)));
+  delete plans[id];
+  renderPlans();
+  refreshPlanSelects();
 }
 
-// KPIs
-function renderKPIs(){
-  // Unique viewer-days: visitors_daily already 1 row per vid per day
-  $('#kpiVisitors').textContent = String(visCache.length || 0);
-
-  // Step averages (only if fields exist)
-  let sumToday=0, sumSess=0, nToday=0, nSess=0;
-  visCache.forEach(r=>{
-    if(typeof r.steps_today === 'number'){ sumToday += r.steps_today; nToday++; }
-    if(typeof r.steps_session === 'number'){ sumSess += r.steps_session; nSess++; }
-  });
-  $('#kpiAvgStepsToday').textContent = nToday ? (sumToday/nToday).toFixed(1) : '0.0';
-  $('#kpiAvgStepsSession').textContent = nSess ? (sumSess/nSess).toFixed(1) : '0.0';
+async function loadCustomers(){
+  customers = [];
+  const snap = await getDocs(query(collection(db,"customers"), orderBy("name")));
+  snap.forEach(d=> customers.push({id:d.id, ...d.data()}) );
+  renderCustomers();
 }
 
-function renderVisitors(){
-  const term = ($('#visSearch').value||'').toLowerCase();
-  const rows = visCache.filter(r=>{
-    const text = [r.vid,r.page].map(v=>String(v||'').toLowerCase()).join(' ');
-    return !term || text.includes(term);
-  });
+async function saveCustomer(payload, existingId=null){
+  if (existingId) {
+    const idStr = String(existingId);
+    const ref = doc(db,"customers", idStr);
+    payload.updatedAt = serverTimestamp();
+    await updateDoc(ref, payload);
+    await loadCustomers();
+    return idStr;
+  } else {
+    const ref = await addDoc(collection(db,"customers"), {
+      ...payload,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+    await loadCustomers();
+    return String(ref.id);
+  }
+}
 
-  // Only show the latest 10 rows
-  const latest10 = rows.slice(0, 10);
+async function addRenewal(customerId, ren){
+  const ref = await addDoc(collection(db, "customers", String(customerId), "renewals"), { ...ren, createdAt: serverTimestamp() });
+  await loadRenewals();
+  return String(ref.id);
+}
+async function loadRenewals(){
+  renewals = [];
+  const snap = await getDocs(collectionGroup(db, "renewals"));
+  snap.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+}
 
-  const tb = $('#visitorsTable tbody'); tb.innerHTML='';
-  latest10.forEach(r=>{
-    const ts =
-      r.createdAt?.toDate?.()
-      || (r.ts ? new Date(r.ts) : null)
-      || (/^\d{4}-\d{2}-\d{2}_/.test(r.id) ? new Date(r.id.slice(0,10)) : null);
+async function setCustomerCurrentPlan(customerId, planFields){
+  const ref = doc(db, "customers", String(customerId));
+  await updateDoc(ref, { currentPlan: planFields, updatedAt: serverTimestamp() });
+}
+
+/* =========================
+   Rendering
+   ========================= */
+function renderAll(){
+  renderCustomers();
+  renderKPIs();
+  renderNearExpiry();
+}
+
+function renderPlans(){
+  const tbody = $("#plansGrid tbody");
+  tbody.innerHTML = "";
+  const ids = Object.keys(plans).sort();
+  ids.forEach(id=>{
+    const p = plans[id];
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${ts?ts.toLocaleString():''}</td>
-      <td class="sub">${r.vid||''}</td>
-      <td class="sub">${(r.sessionId||'').slice(0,10)}</td>
-      <td>${typeof r.steps_today==='number'? r.steps_today : ''}</td>
-      <td>${typeof r.steps_session==='number'? r.steps_session : ''}</td>
-      <td class="sub">${(r.page||'').slice(0,50)}${(r.page||'').length>50?'…':''}</td>
-      <td class="sub">${(r.ua||'').slice(0,50)}${(r.ua||'').length>50?'…':''}</td>
+      <td>${p.id}</td>
+      <td>${p.name||''}</td>
+      <td>${p.duration_months||0}</td>
+      <td>${(+p.retail_price||0).toFixed(2)}</td>
+      <td>${(+p.wholesale_cost||0).toFixed(2)}</td>
+      <td>${p.description||''}</td>
+      <td class="flex">
+        <button class="btn ghost" data-edit="${p.id}">Edit</button>
+        <button class="btn danger" data-del="${p.id}">Delete</button>
+      </td>
     `;
-    tb.appendChild(tr);
+    tbody.appendChild(tr);
   });
-}
-$('#visRefresh').addEventListener('click', async ()=>{ await loadVisitors(); renderKPIs(); renderVisitors(); });
-$('#visSearch').addEventListener('input', renderVisitors);
-
-/* CSV: export what's visible (10 rows) */
-function toCSV(rows){
-  return rows.map(r=>r.map(v=>{
-    const s=String(v??''); return /[",\n]/.test(s)? `"${s.replace(/"/g,'""')}"` : s;
-  }).join(',')).join('\n');
-}
-function downloadCSV(name,text){
-  const blob=new Blob([text],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
-}
-$('#visCSV').addEventListener('click', ()=>{
-  const rows=[["Time","VID","Session","StepsToday","StepsSession","Page","UA"]];
-  document.querySelectorAll('#visitorsTable tbody tr').forEach(tr=>{
-    rows.push([...tr.children].map(td=>td.textContent.trim()));
+  tbody.querySelectorAll("[data-edit]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const pid = btn.getAttribute('data-edit');
+      const p = plans[pid];
+      openPlanModal(p);
+    };
   });
-  downloadCSV(`visitors-${Date.now()}.csv`, toCSV(rows));
-});
+  tbody.querySelectorAll("[data-del]").forEach(btn=>{
+    btn.onclick = async()=>{
+      const pid = btn.getAttribute('data-del');
+      if(confirm("Delete plan "+pid+" ?")) await deletePlan(pid);
+    };
+  });
+  refreshPlanSelects();
+}
 
-/* ====== Banners CRUD ====== */
-async function loadBanners(){
-  const snap = await getDocs(query(collection(db,'site_settings','banners','items'), orderBy('order','asc')));
-  const list = $('#bannerList'); list.innerHTML='';
-  snap.forEach(docSnap=>{
-    const b = { id: docSnap.id, ...docSnap.data() };
-    const row = document.createElement('div'); row.className='item'; row.innerHTML = `
-      <div>
-        <div class="h">${b.title||'(no title)'} ${b.enabled? '' : '<span class="sub">[disabled]</span>'}</div>
-        <div class="sub">${b.text||''}</div>
-        <div class="sub">CTA: ${b.ctaLabel||''} → ${(b.ctaHref||'').slice(0,80)}</div>
-        <div class="sub">Order: ${b.order??0} | Valid: ${(b.validFrom||'')||'—'} → ${(b.validTo||'')||'—'}</div>
-        <div class="sub">${b.imageUrl? 'Image: '+b.imageUrl : ''}</div>
-      </div>
-      <div class="actions">
-        <button class="btn" data-act="toggle" data-id="${b.id}">${b.enabled? 'Disable' : 'Enable'}</button>
-        <button class="btn" data-act="edit" data-id="${b.id}">Edit</button>
-        <button class="btn" data-act="del" data-id="${b.id}">Delete</button>
-      </div>
+function renderCustomers(){
+  const q = ($("#searchCustomers").value||"").toLowerCase().trim();
+
+  const tVal = ($("#timeFilter")?.value)||"7";
+  const sVal = ($("#statusFilter")?.value)||"all";
+
+  const now = new Date();
+  const dayLimit = (tVal === 'lifetime') ? Infinity : parseInt(tVal, 10);
+
+  const tbody = $("#custGrid tbody");
+  tbody.innerHTML = "";
+
+  customers.forEach(c=>{
+    const plan = c.currentPlan || {};
+    const inText = `${c.name||''} ${c.phone||''} ${c.email||''} ${c.userId||''} ${c.mac||''}`.toLowerCase();
+
+    if(q && !inText.includes(q)) return;
+
+    const startISO = plan.startDate || c.originalStartDate || "";
+    let withinTime = true;
+    if (dayLimit !== Infinity && startISO){
+      const start = new Date(startISO + "T00:00:00");
+      const diffDays = Math.floor((now - start) / (1000*60*60*24));
+      withinTime = diffDays <= dayLimit;
+    } else if (dayLimit !== Infinity && !startISO){
+      withinTime = false;
+    }
+    if(!withinTime) return;
+
+    const paidStr = (plan.paymentReceived==='yes') ? 'paid' : 'unpaid';
+    if (sVal !== 'all' && paidStr !== sVal) return;
+
+    const paidBadge = (plan.paymentReceived==='yes')
+      ? '<span class="badge-ok pill">Yes</span>'
+      : '<span class="badge-warn pill">No</span>';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${c.name||''}</td>
+      <td>${c.phone||''}</td>
+      <td>${c.email||''}</td>
+      <td>${plan.planName||''}</td>
+      <td>${paidBadge}</td>
+      <td>${plan.startDate||''}</td>
+      <td>${plan.expiryDate||''} ${daysLeftBadge(plan.expiryDate)}</td>
+      <td class="flex" style="gap:6px;flex-wrap:wrap">
+        <button class="btn ghost" data-view="${c.id}">View</button>
+        <button class="btn secondary" data-edit="${c.id}">Edit</button>
+        <button class="btn ok" data-renew="${c.id}">Renew</button>
+        <button class="btn" data-invoice="${c.id}">Slip</button>
+        <button class="btn danger" data-del="${c.id}">Delete</button>
+      </td>
     `;
-    list.appendChild(row);
+    tbody.appendChild(tr);
   });
-  // wire actions
-  list.querySelectorAll('button[data-act]').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      const id = btn.dataset.id, act = btn.dataset.act;
-      const ref = doc(db,'site_settings','banners','items',id);
-      if(act==='toggle'){
-        const snap = await getDoc(ref); const cur = snap.data(); await setDoc(ref,{enabled:!cur.enabled, updatedAt:serverTimestamp()},{merge:true});
-      }else if(act==='edit'){
-        const snap = await getDoc(ref); const b = snap.data();
-        // load into form
-        $('#bnEnabled').checked = !!b.enabled;
-        $('#bnTitle').value = b.title||''; $('#bnText').value=b.text||'';
-        $('#bnCtaLabel').value=b.ctaLabel||''; $('#bnCtaHref').value=b.ctaHref||'';
-        $('#bnImageUrl').value=b.imageUrl||''; $('#bnValidFrom').value=b.validFrom||''; $('#bnValidTo').value=b.validTo||'';
-        $('#bnOrder').value=b.order??0;
-        $('#bnSave').dataset.editId = id; $('#bnSave').textContent='Save Changes';
-        $('#bnStatus').textContent='Loaded for editing';
-        setTimeout(()=>$('#bnStatus').textContent='',1500);
-        window.scrollTo({top:0,behavior:'smooth'});
-      }else if(act==='del'){
-        if(confirm('Delete this banner?')){ await deleteDoc(ref); }
+
+  $("#kpiCustomers").textContent = String(customers.length);
+
+  tbody.querySelectorAll("[data-edit]").forEach(btn=>{
+    btn.onclick = ()=> openCustomerModal(btn.getAttribute('data-edit'));
+  });
+  tbody.querySelectorAll("[data-del]").forEach(btn=>{
+    btn.onclick = async()=>{
+      const id = btn.getAttribute('data-del');
+      if(confirm("Delete this customer and all their renewals?")){
+        await deleteCustomerAndRenewals(id);
       }
-      await loadBanners();
-    });
+    };
+  });
+  tbody.querySelectorAll("[data-renew]").forEach(btn=>{
+    btn.onclick = ()=> openRenewModal(btn.getAttribute('data-renew'));
+  });
+  tbody.querySelectorAll("[data-view]").forEach(btn=>{
+    btn.onclick = ()=> viewCustomer(btn.getAttribute('data-view'));
+  });
+  tbody.querySelectorAll("[data-invoice]").forEach(btn=>{
+    btn.onclick = ()=> printInvoice(btn.getAttribute('data-invoice'));
   });
 }
-$('#bnSave').addEventListener('click', async ()=>{
-  const payload = {
-    enabled: $('#bnEnabled').checked,
-    title: $('#bnTitle').value.trim(),
-    text: $('#bnText').value.trim(),
-    ctaLabel: $('#bnCtaLabel').value.trim(),
-    ctaHref: $('#bnCtaHref').value.trim(),
-    imageUrl: $('#bnImageUrl').value.trim() || null,
-    validFrom: $('#bnValidFrom').value || null,
-    validTo: $('#bnValidTo').value || null,
-    order: Number($('#bnOrder').value||0),
-    updatedAt: serverTimestamp()
-  };
-  const editId = $('#bnSave').dataset.editId;
-  if(editId){
-    await setDoc(doc(db,'site_settings','banners','items',editId), payload, {merge:true});
-    $('#bnSave').textContent='Save New Banner';
-    delete $('#bnSave').dataset.editId;
-    $('#bnStatus').textContent='Saved ✔';
-  }else{
-    payload.createdAt = serverTimestamp();
-    await addDoc(collection(db,'site_settings','banners','items'), payload);
-    $('#bnStatus').textContent='Created ✔';
-  }
-  setTimeout(()=>$('#bnStatus').textContent='',1500);
-  // reset some fields
-  $('#bnTitle').value=''; $('#bnText').value=''; $('#bnCtaLabel').value=''; $('#bnCtaHref').value=''; $('#bnImageUrl').value=''; $('#bnOrder').value='';
-  await loadBanners();
-});
 
-/* ====== Gallery CRUD ====== */
-async function loadGallery(){
-  const snap = await getDocs(query(collection(db,'site_settings','gallery','items'), orderBy('order','asc')));
-  const list = $('#galleryList'); list.innerHTML='';
-  snap.forEach(docSnap=>{
-    const g = { id: docSnap.id, ...docSnap.data() };
-    const row = document.createElement('div'); row.className='item'; row.innerHTML = `
-      <div>
-        <div class="h">${g.name||'(no name)'}</div>
-        <div class="sub">${g.imageUrl||''}</div>
-        <div class="sub">Order: ${g.order??0}</div>
-      </div>
-      <div class="actions">
-        <button class="btn" data-gact="edit" data-id="${g.id}">Edit</button>
-        <button class="btn" data-gact="del" data-id="${g.id}">Delete</button>
-      </div>
+function daysLeftBadge(exp){
+  if(!exp) return '';
+  const d = daysLeft(exp);
+  if(d<0) return ` <span class="pill badge-exp">expired ${Math.abs(d)}d</span>`;
+  if(d<=settingNear) return ` <span class="pill badge-warn">${d}d</span>`;
+  return ` <span class="pill badge-ok">${d}d</span>`;
+}
+
+function renderNearExpiry(){
+  const days = +$("#nearDays").value;
+  const tbody = $("#nearGrid tbody"); tbody.innerHTML = "";
+  const list = customers
+    .map(c=> ({ c, plan: c.currentPlan||{} }))
+    .filter(x => x.plan.expiryDate)
+    .map(x => ({...x, left: daysLeft(x.plan.expiryDate)}))
+    .filter(x => x.left >= 0 && x.left <= days)
+    .sort((a,b)=> a.left - b.left);
+  $("#nearExpCount").textContent = `Near expiry: ${list.length}`;
+  list.forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${x.c.name||''}</td>
+      <td>${x.c.phone||''}</td>
+      <td>${x.plan.planName||''}</td>
+      <td>${x.plan.expiryDate||''}</td>
+      <td>${x.left}d</td>
+      <td><button class="btn ok" data-renew="${x.c.id}">Renew</button></td>
     `;
-    list.appendChild(row);
+    tbody.appendChild(tr);
   });
-  // bind actions
-  list.querySelectorAll('button[data-gact]').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      const id = btn.dataset.id, act = btn.dataset.gact;
-      const ref = doc(db,'site_settings','gallery','items',id);
-      if(act==='edit'){
-        const snap = await getDoc(ref); const g = snap.data();
-        $('#glName').value = g.name||'';
-        $('#glImageUrl').value = g.imageUrl||'';
-        $('#glOrder').value = g.order??0;
-        $('#glSave').dataset.editId = id; $('#glSave').textContent='Save Changes';
-        $('#glStatus').textContent='Loaded for editing';
-        setTimeout(()=>$('#glStatus').textContent='',1500);
-        window.scrollTo({top:0,behavior:'smooth'});
-      }else if(act==='del'){
-        if(confirm('Delete this gallery item?')){ await deleteDoc(ref); await loadGallery(); }
-      }
-    });
+  tbody.querySelectorAll("[data-renew]").forEach(btn=>{
+    btn.onclick = ()=> openRenewModal(btn.getAttribute('data-renew'));
   });
 }
-$('#glSave').addEventListener('click', async ()=>{
-  const payload = {
-    name: $('#glName').value.trim(),
-    imageUrl: $('#glImageUrl').value.trim(),
-    order: Number($('#glOrder').value||0),
-    updatedAt: serverTimestamp()
-  };
-  if(!payload.imageUrl){ $('#glStatus').textContent='Image URL required'; setTimeout(()=>$('#glStatus').textContent='',1500); return; }
-  const editId = $('#glSave').dataset.editId;
-  if(editId){
-    await setDoc(doc(db,'site_settings','gallery','items',editId), payload, {merge:true});
-    $('#glSave').textContent='Add Item';
-    delete $('#glSave').dataset.editId;
-    $('#glStatus').textContent='Saved ✔';
-  }else{
-    payload.createdAt = serverTimestamp();
-    await addDoc(collection(db,'site_settings','gallery','items'), payload);
-    $('#glStatus').textContent='Created ✔';
-  }
-  setTimeout(()=>$('#glStatus').textContent='',1500);
-  $('#glName').value=''; $('#glImageUrl').value=''; $('#glOrder').value='';
-  await loadGallery();
+
+function renderKPIs(){
+  let turnover=0, expense=0, profit=0;
+  renewals.forEach(r=>{
+    const f = calcFigures({
+      cost:r.cost, wholesale:r.wholesale,
+      stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale
+    });
+    turnover+=f.turnover; expense+=f.expense; profit+=f.profit;
+  });
+  $("#kpiTurnover").textContent = fmt(turnover);
+  $("#kpiExpense").textContent  = fmt(expense);
+  $("#kpiProfit").textContent   = fmt(profit);
+}
+
+/* =========================
+   Customers: Add/Edit
+   ========================= */
+const custModal = $("#modalCustomer");
+const custTitle = $("#custModalTitle");
+$("#xCust").onclick = ()=>{
+  editCustomerId = null;
+  custModal.classList.remove('open');
+};
+$("#c_stb").addEventListener('change', ()=>{
+  $("#stbBox").classList.toggle('hidden', $("#c_stb").value!=='yes');
+  previewTotals();
+});
+["#c_cost","#c_wholesale","#c_stbCost","#c_stbWholesale","#c_stb","#c_plan"].forEach(sel=>{
+  $(sel).addEventListener('input', previewTotals);
+});
+["#c_actual","#c_discName","#c_stbActual"].forEach(sel=>{
+  $(sel).addEventListener('input', previewTotals);
+});
+$("#c_start").addEventListener('change', ()=>{
+  const pid = $("#c_plan").value;
+  const dur = plans[pid]?.duration_months ?? 0;
+  $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
 });
 
-/* ====== Orchestration ====== */
-async function refreshAll(){ await Promise.all([loadVisitors(), loadBanners(), loadGallery()]); renderKPIs(); renderVisitors(); }
-$('#range').addEventListener('change', async ()=>{ await loadVisitors(); renderKPIs(); renderVisitors(); });
-$('#refreshAll').addEventListener('click', refreshAll);
+// robust Save button handler
+const saveBtn = document.getElementById('btnSaveCustomer');
+saveBtn.addEventListener('click', async (e) => {
+  e.preventDefault(); e.stopPropagation();
+  if (saveBtn.dataset.busy === '1') return;
+  saveBtn.dataset.busy = '1';
+  const old = saveBtn.textContent;
+  saveBtn.textContent = 'Saving…';
+  saveBtn.disabled = true;
+  try { await saveCustomerFromModal(); }
+  catch (err) { console.error('[save] error:', err); alert(err?.code ? `${err.code} — ${err.message}` : (err?.message||'Failed to save')); }
+  finally { saveBtn.disabled = false; saveBtn.textContent = old; saveBtn.dataset.busy = '0'; }
+});
+
+let editCustomerId = null;
+
+function refreshPlanSelects(){
+  const selList = [$("#c_plan"), $("#r_plan")];
+  selList.forEach(sel=>{
+    if(!sel) return;
+    const curr = sel.value;
+    sel.innerHTML = "";
+    const ids = Object.keys(plans).sort();
+    ids.forEach(id=>{
+      const p = plans[id];
+      const opt = document.createElement('option');
+      opt.value=id; opt.textContent=`${p.name} (${p.duration_months} mo)`;
+      sel.appendChild(opt);
+    });
+    if(curr && plans[curr]) sel.value = curr;
+  });
+}
+
+function previewTotals(){
+  const stbIncluded = $("#c_stb").value;
+  const f = calcFigures({
+    cost:$("#c_cost").value,
+    wholesale:$("#c_wholesale").value,
+    actual:$("#c_actual").value,
+    stbIncluded,
+    stbCost:$("#c_stbCost").value,
+    stbWholesale:$("#c_stbWholesale").value,
+    stbActual:$("#c_stbActual").value
+  });
+  const discName = ($("#c_discName").value || "").trim();
+  $("#c_preview").innerHTML = `
+    Turnover: <strong>${fmt(f.turnover)}</strong><br>
+    Expense: <strong>${fmt(f.expense)}</strong><br>
+    Profit: <strong>${fmt(f.profit)}</strong><br>
+    ${f.discountSaved > 0 ? `Customer discount: <strong>${fmt(f.discountSaved)}</strong>${discName ? ` <span class="chip">${discName}</span>`:''}` : `<span class="muted">No discount</span>`}
+  `;
+}
+
+function openCustomerModal(id=null){
+  editCustomerId = (typeof id === 'string') ? id : null;
+  custTitle.textContent = id ? "Edit Customer" : "Add Customer";
+  refreshPlanSelects();
+  const firstPlanId = Object.keys(plans)[0];
+  const defaults = firstPlanId ? plans[firstPlanId] : null;
+
+  $("#c_name").value = "";
+  $("#c_phone").value= "";
+  $("#c_email").value= "";
+  $("#c_userId").value= "";
+  $("#c_mac").value= "";
+  $("#c_plan").value = firstPlanId||"";
+  $("#c_actual").value = defaults? (defaults.retail_price||"") : "";
+  $("#c_cost").value = defaults? (defaults.retail_price||"") : "";
+  $("#c_wholesale").value = defaults? (defaults.wholesale_cost||"") : "";
+  $("#c_discName").value = "";
+  $("#c_stb").value="no"; $("#stbBox").classList.add('hidden');
+  $("#c_stbActual").value=""; $("#c_stbCost").value=""; $("#c_stbWholesale").value="";
+  $("#c_start").value = todayISO();
+  $("#c_expiry").value = defaults ? addMonthsISO($("#c_start").value, defaults.duration_months||0) : $("#c_start").value;
+  $("#c_paid").value="yes";
+  $("#c_preview").textContent="—";
+
+  if(id){
+    const c = customers.find(x=>x.id===id);
+    if(c){
+      $("#c_name").value=c.name||"";
+      $("#c_phone").value=c.phone||"";
+      $("#c_email").value=c.email||"";
+      $("#c_userId").value=c.userId||"";
+      $("#c_mac").value=c.mac||"";
+      if(c.currentPlan){
+        $("#c_plan").value=c.currentPlan.planId||firstPlanId||"";
+        $("#c_actual").value=c.currentPlan.actual||"";
+        $("#c_cost").value=c.currentPlan.cost||"";
+        $("#c_wholesale").value=c.currentPlan.wholesale||"";
+        $("#c_discName").value=c.currentPlan.discountName||"";
+        $("#c_stb").value=c.currentPlan.stbIncluded||"no";
+        $("#stbBox").classList.toggle('hidden', $("#c_stb").value!=='yes');
+        $("#c_stbActual").value=c.currentPlan.stbActual||"";
+        $("#c_stbCost").value=c.currentPlan.stbCost||"";
+        $("#c_stbWholesale").value=c.currentPlan.stbWholesale||"";
+        $("#c_start").value=c.currentPlan.startDate||todayISO();
+        $("#c_expiry").value=c.currentPlan.expiryDate||addMonthsISO($("#c_start").value, plans[$("#c_plan").value]?.duration_months||0);
+        $("#c_paid").value=c.currentPlan.paymentReceived||"yes";
+      }
+    }
+  }
+  previewTotals();
+  custModal.classList.add('open');
+}
+
+async function saveCustomerFromModal(){
+  const name=$("#c_name").value.trim();
+  if(!name){ throw new Error("Name is required"); }
+  const planId=$("#c_plan").value;
+  const p=plans[planId]||{};
+  const planName=p.name||"Custom";
+  const durationMonths = +p.duration_months||0;
+
+  const start=$("#c_start").value;
+  let expiry=$("#c_expiry").value || addMonthsISO(start, durationMonths);
+  if (!start || !expiry) throw new Error('Start and expiry dates are required');
+
+  const currentPlan = {
+    planId, planName, durationMonths,
+    actual:+$("#c_actual").value||0,
+    cost:+$("#c_cost").value||0,
+    wholesale:+$("#c_wholesale").value||0,
+    discountName: ($("#c_discName").value || "").trim(),
+    stbIncluded:$("#c_stb").value,
+    stbActual:+$("#c_stbActual").value||0,
+    stbCost:+$("#c_stbCost").value||0,
+    stbWholesale:+$("#c_stbWholesale").value||0,
+    startDate:start, expiryDate:expiry,
+    paymentReceived:$("#c_paid").value
+  };
+
+  const payload = {
+    name,
+    phone:$("#c_phone").value.trim(),
+    email:$("#c_email").value.trim(),
+    userId:$("#c_userId").value.trim(),
+    mac:$("#c_mac").value.trim(),
+    originalStartDate: (editCustomerId? (customers.find(x=>x.id===editCustomerId)?.originalStartDate || start) : start),
+    currentPlan
+  };
+
+  const cid = await saveCustomer(payload, editCustomerId ? String(editCustomerId) : null);
+
+  if(!editCustomerId){
+    await addRenewal(cid, {
+      customerId: cid, customerName: name,
+      planId, planName, durationMonths,
+      actual: currentPlan.actual, cost: currentPlan.cost, wholesale: currentPlan.wholesale,
+      stbIncluded: currentPlan.stbIncluded, stbActual: currentPlan.stbActual,
+      stbCost: currentPlan.stbCost, stbWholesale: currentPlan.stbWholesale,
+      discountName: currentPlan.discountName,
+      startDate: start, expiryDate: expiry,
+      paymentReceived: currentPlan.paymentReceived
+    });
+  }
+  custModal.classList.remove('open');
+  await loadCustomers();
+  await loadRenewals();
+  renderAll();
+
+  if (document.querySelector("#c_invoice")?.checked) {
+    setTimeout(()=> printInvoice(cid), 200);
+  }
+}
+
+function viewCustomer(id){
+  const c = customers.find(x=>x.id===id);
+  if(!c){ alert("Customer not found"); return; }
+  const cp = c.currentPlan||{};
+  const figs = calcFigures({
+    cost:cp.cost, wholesale:cp.wholesale, actual:cp.actual,
+    stbIncluded:cp.stbIncluded, stbCost:cp.stbCost, stbWholesale:cp.stbWholesale, stbActual:cp.stbActual
+  });
+  alert(
+`Customer: ${c.name}
+Phone: ${c.phone||'-'}  Email: ${c.email||'-'}
+User ID: ${c.userId||'-'}  MAC: ${c.mac||'-'}
+
+Original Start: ${c.originalStartDate||'-'}
+Current Plan: ${cp.planName||'-'} (${cp.durationMonths||0} mo)
+This Plan Start: ${cp.startDate||'-'}  Expiry: ${cp.expiryDate||'-'}
+
+This Plan:
+  Turnover: ${fmt(figs.turnover)}
+  Expense:  ${fmt(figs.expense)}
+  Profit:   ${fmt(figs.profit)}
+  Discount: ${fmt(figs.discountSaved)}${cp.discountName ? ' — '+cp.discountName : ''}
+
+Tip: Use "Reports" tab for totals across all renewals.`)
+}
+
+/* =========================
+   Renewals
+   ========================= */
+const renewModal = $("#modalRenew");
+$("#xRenew").onclick = ()=> renewModal.classList.remove('open');
+$("#r_stb").addEventListener('change', ()=>{
+  $("#r_stbBox").classList.toggle('hidden', $("#r_stb").value!=='yes');
+});
+let renewCustomerId = null;
+
+function openRenewModal(id){
+  renewCustomerId = id;
+  refreshPlanSelects();
+  const c = customers.find(x=>x.id===id);
+  $("#renewTitle").textContent = `Renew: ${c?.name||id}`;
+  const cp = c?.currentPlan||{};
+  $("#r_plan").value = cp.planId||Object.keys(plans)[0]||"";
+  const p = plans[$("#r_plan").value]||{};
+  $("#r_actual").value = cp.actual || p.retail_price || "";
+  $("#r_cost").value = cp.cost || p.retail_price || "";
+  $("#r_wholesale").value = cp.wholesale || p.wholesale_cost || "";
+  $("#r_discName").value = cp.discountName || "";
+  $("#r_stb").value = "no"; $("#r_stbBox").classList.add('hidden');
+  $("#r_stbActual").value = ""; $("#r_stbCost").value = ""; $("#r_stbWholesale").value="";
+  const defStart = cp.expiryDate ? addMonthsISO(cp.expiryDate, 0) : todayISO();
+  $("#r_start").value = defStart;
+  $("#r_expiry").value = addMonthsISO(defStart, p.duration_months||0);
+  $("#r_paid").value = "yes";
+
+  $("#r_plan").onchange = ()=>{
+    const p2 = plans[$("#r_plan").value]||{};
+    $("#r_expiry").value = addMonthsISO($("#r_start").value, p2.duration_months||0);
+    if(!cp.actual){ $("#r_actual").value = p2.retail_price||""; }
+    if(!cp.cost){ $("#r_cost").value = p2.retail_price||""; }
+    if(!cp.wholesale){ $("#r_wholesale").value = p2.wholesale_cost||""; }
+  };
+  $("#r_start").onchange = ()=>{
+    const p2 = plans[$("#r_plan").value]||{};
+    $("#r_expiry").value = addMonthsISO($("#r_start").value, p2.duration_months||0);
+  };
+
+  renewModal.classList.add('open');
+}
+$("#btnDoRenew").onclick = async ()=>{
+  const c = customers.find(x=>x.id===renewCustomerId);
+  if(!c){ alert("Missing customer"); return; }
+  const planId = $("#r_plan").value;
+  const p = plans[planId]||{};
+  const planName = p.name||'Custom';
+  const durationMonths = +p.duration_months||0;
+  const start = $("#r_start").value;
+  const expiry= $("#r_expiry").value || addMonthsISO(start, durationMonths);
+
+  const ren = {
+    customerId: String(renewCustomerId),
+    customerName: c.name||'',
+    planId, planName, durationMonths,
+    actual:+$("#r_actual").value||0,
+    cost:+$("#r_cost").value||0,
+    wholesale:+$("#r_wholesale").value||0,
+    stbIncluded:$("#r_stb").value,
+    stbActual:+$("#r_stbActual").value||0,
+    stbCost:+$("#r_stbCost").value||0,
+    stbWholesale:+$("#r_stbWholesale").value||0,
+    discountName: ($("#r_discName").value || "").trim(),
+    startDate:start, expiryDate:expiry,
+    paymentReceived: $("#r_paid").value
+  };
+  await addRenewal(String(renewCustomerId), ren);
+  await setCustomerCurrentPlan(String(renewCustomerId), ren);
+  renewModal.classList.remove('open');
+  await loadCustomers();
+  await loadRenewals();
+  renderAll();
+  runReport();
+
+  if (document.querySelector("#r_invoice")?.checked) {
+    setTimeout(()=> printInvoice(renewCustomerId), 200);
+  }
+};
+
+/* =========================
+   Plans modal
+   ========================= */
+const planModal = $("#modalPlan");
+$("#xPlan").onclick = ()=> planModal.classList.remove('open');
+function openPlanModal(p=null){
+  $("#planTitle").textContent = p? "Edit Plan":"Add Plan";
+  $("#p_id").value = p?.id||"";
+  $("#p_name").value = p?.name||"";
+  $("#p_months").value = p?.duration_months||1;
+  $("#p_retail").value = p?.retail_price||"";
+  $("#p_wholesale").value = p?.wholesale_cost||"";
+  $("#p_desc").value = p?.description||"";
+  planModal.classList.add('open');
+}
+$("#btnSavePlan").onclick = async ()=>{
+  const pid = $("#p_id").value.trim();
+  if(!pid){ alert("Plan ID required"); return; }
+  await savePlan({
+    id: pid,
+    name: $("#p_name").value.trim(),
+    duration_months: +$("#p_months").value||0,
+    retail_price: +$("#p_retail").value||0,
+    wholesale_cost: +$("#p_wholesale").value||0,
+    description: $("#p_desc").value.trim()
+  });
+  planModal.classList.remove('open');
+};
+
+/* =========================
+   Seed sample plans
+   ========================= */
+async function seedPlans(){
+  const samples = [
+    {id:"PLN-1MO", name:"1 month", duration_months:1, retail_price:15, wholesale_cost:4.5, description:"Entry plan"},
+    {id:"PLN-3MO", name:"3 months", duration_months:3, retail_price:35, wholesale_cost:13.5, description:"Most popular"},
+    {id:"PLN-6MO", name:"6 months", duration_months:6, retail_price:60, wholesale_cost:25, description:"Value saver"}
+  ];
+  for(const p of samples){ await savePlan(p); }
+  alert("Sample plans added.");
+}
+
+/* =========================
+   Reports
+   ========================= */
+function onRepTypeChange(){
+  const t = $("#repType").value;
+  $("#repMonthCol").classList.toggle('hidden', t!=="monthly");
+  $("#repYearCol").classList.toggle('hidden', t==="monthly" ? true : (t!=="yearly"));
+  $("#repFromCol").classList.toggle('hidden', t!=="custom");
+  $("#repToCol").classList.toggle('hidden', t!=="custom");
+  if(t==="monthly"){ $("#repYearCol").classList.add('hidden'); }
+}
+
+function filterRenewalsByPeriod(){
+  const t = $("#repType").value;
+  let from, to;
+
+  if (t === "monthly") {
+    let ym = $("#repMonth").value;
+    if (!ym) {
+      ym = new Date().toISOString().slice(0,7);
+      $("#repMonth").value = ym;
+    }
+    from = ym + "-01";
+    const [y, m] = ym.split("-").map(Number);
+    const last = new Date(y, m, 0).getDate();
+    to = ym + "-" + String(last).padStart(2, "0");
+  } else if (t === "yearly") {
+    const y = +$("#repYear").value;
+    if (!y) return {arr: [], from: undefined, to: undefined};
+    from = y + "-01-01";
+    to   = y + "-12-31";
+  } else { // custom
+    from = $("#repFrom").value;
+    to   = $("#repTo").value;
+    if (!from || !to) return {arr: [], from: undefined, to: undefined};
+  }
+
+  const arr = renewals.filter(r => r.startDate >= from && r.startDate <= to);
+  return {arr, from, to};
+}
+
+function runReport(){
+  const out = filterRenewalsByPeriod();
+  if(!out || !out.arr){ alert("Select a valid period."); return; }
+  const rows = out.arr.sort((a,b)=> a.startDate.localeCompare(b.startDate));
+  const tbody = $("#repGrid tbody"); tbody.innerHTML="";
+  let T=0,E=0,P=0;
+  rows.forEach(r=>{
+    const f = calcFigures({
+      cost:r.cost, wholesale:r.wholesale,
+      stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale
+    });
+    T+=f.turnover; E+=f.expense; P+=f.profit;
+
+    const payload = {
+      id: r.id,
+      customerId: r.customerId, customerName: r.customerName,
+      planId: r.planId, planName: r.planName, durationMonths: r.durationMonths,
+      actual: r.actual, cost: r.cost, wholesale: r.wholesale,
+      stbIncluded: r.stbIncluded, stbActual: r.stbActual, stbCost: r.stbCost, stbWholesale: r.stbWholesale,
+      discountName: r.discountName,
+      startDate: r.startDate, expiryDate: r.expiryDate,
+      paymentReceived: r.paymentReceived
+    };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.startDate}</td>
+      <td>${r.customerName||r.customerId}</td>
+      <td>${r.planName||r.planId} (${r.durationMonths||0}mo)</td>
+      <td>${f.turnover.toFixed(2)}</td>
+      <td>${f.expense.toFixed(2)}</td>
+      <td>${f.profit.toFixed(2)}</td>
+      <td>${r.paymentReceived==='yes'?'Yes':'No'}</td>
+      <td><button class="btn" data-inv-ren="${encoded}">Slip</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll("[data-inv-ren]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const encoded = btn.getAttribute("data-inv-ren");
+      printInvoiceFromRenewalData(encoded);
+    };
+  });
+
+  $("#repTurnover").textContent = fmt(T);
+  $("#repExpense").textContent  = fmt(E);
+  $("#repProfit").textContent   = fmt(P);
+}
+
+function exportCSV(){
+  const rows = [["Date","Customer","Plan","Turnover","Expense","Profit","Paid"]];
+  document.querySelectorAll("#repGrid tbody tr").forEach(tr=>{
+    const cols = [...tr.children].slice(0,7).map(td => td.textContent);
+    rows.push(cols);
+  });
+  const csvStr = "\uFEFF" + rows
+    .map(r => r.map(x => `"${String(x).replaceAll('"','""')}"`).join(","))
+    .join("\n");
+
+  const blob = new Blob([csvStr], { type: "text/csv;charset=utf-8;" });
+  const canDownloadAttr = "download" in HTMLAnchorElement.prototype;
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  if (canDownloadAttr && !isIOS) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "report.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } else {
+    const dataUrl = "data:text/csv;charset=utf-8," + encodeURIComponent(csvStr);
+    window.open(dataUrl, "_blank");
+  }
+}
+
+/* =========================
+   SLIP GENERATION (formerly Invoice)
+   ========================= */
+const LOGO_SVG = `
+<svg xmlns='http://www.w3.org/2000/svg' width='180' height='36' viewBox='0 0 430 86'>
+  <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+    <stop offset='0' stop-color='#6a8cff'/><stop offset='1' stop-color='#8a5fff'/>
+  </linearGradient></defs>
+  <rect rx='12' ry='12' width='86' height='86' fill='url(#g)'/>
+  <circle cx='43' cy='43' r='24' fill='none' stroke='white' stroke-width='8'/>
+  <path d='M108 62 h34 v-38 h-34 v38 M149 24 h14 v38 h-14 z' fill='url(#g)'/>
+  <text x='170' y='60' font-family='Segoe UI, Roboto, Arial' font-size='44' font-weight='800'
+        fill='white' letter-spacing='.5'>Net + TV</text>
+</svg>`;
+const LOGO_URL = "data:image/svg+xml;utf8," + encodeURIComponent(LOGO_SVG);
+
+function buildSlipHTML({invNo, today, billTo, contactLine, metaLine, plan, lines, total, paidBadge, discountBlock}){
+  return `
+<!doctype html>
+<html><head><meta charset="utf-8"><title>${invNo}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root{ --ink:#111; --muted:#666; --line:#e5e7eb; --bg:#fff; --pill:#f3f4f6; --ok:#16a34a; --warn:#b91c1c; --safe-bottom: env(safe-area-inset-bottom,0px); }
+  *{ box-sizing:border-box }
+  body{ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial; color:var(--ink); background:#fff; margin:24px; padding-bottom: calc(24px + var(--safe-bottom)); }
+  .hdr{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap }
+  .brand{ display:flex; gap:12px; align-items:center }
+  .brand img{ height:42px }
+  .brand h2{ margin:0; font-size:22px }
+  .muted{ color:var(--muted) }
+  .box{ border:1px solid var(--line); border-radius:10px; padding:14px; margin-top:14px }
+  .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px 16px; }
+  .grid .lbl{ color:var(--muted) }
+  table{ width:100%; border-collapse:collapse; margin-top:12px }
+  th,td{ padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:14px }
+  th{ background:#fafafa }
+  .right{ text-align:right }
+  .totals td{ font-weight:700 }
+  .badge{ display:inline-block; background:var(--pill); padding:4px 8px; border-radius:999px; font-size:12px }
+  .paid{ color:var(--ok) } .unpaid{ color:var(--warn) }
+  .strike{ text-decoration: line-through; opacity:.7; margin-right:6px }
+  @media print{ button{ display:none } body{ margin:0; } }
+</style></head>
+<body>
+  <div class="hdr">
+    <div class="brand">
+      <img src="${LOGO_URL}" alt="Net + TV">
+      <div>
+        <h2 style="margin:0">Sale Slip</h2>
+        <div class="muted">Net + TV</div>
+      </div>
+    </div>
+    <div class="right">
+      <div><strong>${invNo}</strong></div>
+      <div>Date: ${today}</div>
+    </div>
+  </div>
+
+  <div class="box">
+    <strong>Bill To</strong><br>
+    ${billTo}<br>
+    ${contactLine}
+    ${metaLine ? `<div class="muted">${metaLine}</div>` : ""}
+  </div>
+
+  <div class="box">
+    <strong>Plan Details</strong>
+    <div class="grid" style="margin-top:8px">
+      <div class="lbl">Plan</div><div>${plan?.name || '-'}</div>
+      <div class="lbl">Duration</div><div>${(plan?.months ?? 0)} months</div>
+      <div class="lbl">Start Date</div><div>${plan?.start || '-'}</div>
+      <div class="lbl">Expiry Date</div><div>${plan?.expiry || '-'}</div>
+      <div class="lbl">Payment</div><div>${plan?.paidText || '-'}</div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>Description</th><th class="right">Amount (CAD)</th></tr></thead>
+    <tbody>
+      ${lines.map(l=>`<tr><td>${l[0]}</td><td class="right">${(+l[1]||0).toFixed(2)}</td></tr>`).join("")}
+      ${discountBlock ? discountBlock : ""}
+      <tr class="totals"><td>Total</td><td class="right">${(+total||0).toFixed(2)}</td></tr>
+    </tbody>
+  </table>
+
+  <div class="badge ${plan?.paidText==='Paid'?'paid':'unpaid'}" style="margin-top:8px">${paidBadge}</div>
+  <p class="muted">Thank you.</p>
+
+  <button onclick="window.print()">Print / Save as PDF</button>
+</body></html>`;
+}
+
+function openPrintWindow(html){
+  const w = window.open("", "_blank");
+  if(!w){ alert("Pop-up blocked. Please allow pop-ups for this site."); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+  w.onload = ()=> w.print();
+}
+
+/* Keep function names for compatibility, but they now print a "Sale Slip" */
+function printInvoice(customerId){
+  const c = customers.find(x=> String(x.id) === String(customerId));
+  if(!c){ alert("Customer not found"); return; }
+  const p = c.currentPlan || {};
+  const f = calcFigures({
+    cost:p.cost, wholesale:p.wholesale, actual:p.actual,
+    stbIncluded:p.stbIncluded, stbCost:p.stbCost, stbWholesale:p.stbWholesale, stbActual:p.stbActual
+  });
+
+  const today = new Date().toISOString().slice(0,10);
+  const invNo = `SLIP-${String(customerId).slice(-6).toUpperCase()}-${today.replaceAll('-','')}`;
+
+  const planBlock = {
+    name: `${p.planName || 'Plan'}`,
+    months: +p.durationMonths || 0,
+    start: p.startDate || '-',
+    expiry: p.expiryDate || '-',
+    paidText: (p.paymentReceived==='yes' ? 'Paid' : 'Unpaid')
+  };
+
+  const lines = [];
+  const planLineLabel = `Plan — ${p.planName||'Plan'} (${p.durationMonths||0} mo)`;
+  if (+p.actual > 0) {
+    lines.push([`${planLineLabel} <span class="muted"><span class="strike">${fmt(+p.actual)}</span> now</span>`, +p.cost||0]);
+  } else {
+    lines.push([planLineLabel, +p.cost||0]);
+  }
+  if (p.stbIncluded==='yes') {
+    if (+p.stbActual > 0) {
+      lines.push([`STB <span class="muted"><span class="strike">${fmt(+p.stbActual)}</span> now</span>`, +p.stbCost||0]);
+    } else {
+      lines.push([`STB`, +p.stbCost||0]);
+    }
+  }
+
+  const discountName = (p.discountName || "").trim();
+  const discountBlock = (f.discountSaved > 0)
+    ? `<tr><td>${discountName ? `Discount — ${discountName}` : 'Discount'}</td><td class="right">-${f.discountSaved.toFixed(2)}</td></tr>`
+    : "";
+
+  const html = buildSlipHTML({
+    invNo,
+    today,
+    billTo: c.name || "-",
+    contactLine: [c.phone, c.email].filter(Boolean).join(" • ") || "",
+    metaLine: [c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • "),
+    plan: planBlock,
+    lines,
+    total: f.turnover,
+    paidBadge: (p.paymentReceived==='yes' ? 'Paid' : 'Unpaid'),
+    discountBlock
+  });
+
+  openPrintWindow(html);
+}
+
+function printInvoiceFromRenewalData(encoded){
+  try{
+    const ren = JSON.parse(decodeURIComponent(escape(atob(encoded))));
+    const c = customers.find(x=> String(x.id) === String(ren.customerId)) || {};
+    const f = calcFigures({
+      cost:ren.cost, wholesale:ren.wholesale, actual:ren.actual,
+      stbIncluded:ren.stbIncluded, stbCost:ren.stbCost, stbWholesale:ren.stbWholesale, stbActual:ren.stbActual
+    });
+    const today = new Date().toISOString().slice(0,10);
+    const suffix = ren.id ? ren.id.slice(-6).toUpperCase() : (ren.startDate?.replaceAll('-','')||today.replaceAll('-',''));
+    const invNo = `SLIP-${String(ren.customerId).slice(-6).toUpperCase()}-${suffix}`;
+
+    const planBlock = {
+      name: `${ren.planName || 'Plan'}`,
+      months: +ren.durationMonths || 0,
+      start: ren.startDate || '-',
+      expiry: ren.expiryDate || '-',
+      paidText: (ren.paymentReceived==='yes' ? 'Paid' : 'Unpaid')
+    };
+
+    const lines = [];
+    const planLineLabel = `Plan — ${ren.planName||ren.planId||'Plan'} (${ren.durationMonths||0} mo)`;
+    if (+ren.actual > 0) {
+      lines.push([`${planLineLabel} <span class="muted"><span class="strike">${fmt(+ren.actual)}</span> now</span>`, +ren.cost||0]);
+    } else {
+      lines.push([planLineLabel, +ren.cost||0]);
+    }
+    if (ren.stbIncluded==='yes') {
+      if (+ren.stbActual > 0) {
+        lines.push([`STB <span class="muted"><span class="strike">${fmt(+ren.stbActual)}</span> now</span>`, +ren.stbCost||0]);
+      } else {
+        lines.push([`STB`, +ren.stbCost||0]);
+      }
+    }
+
+    const discountName = (ren.discountName || "").trim();
+    const discountBlock = (f.discountSaved > 0)
+      ? `<tr><td>${discountName ? `Discount — ${discountName}` : 'Discount'}</td><td class="right">-${f.discountSaved.toFixed(2)}</td></tr>`
+      : "";
+
+    const html = buildSlipHTML({
+      invNo,
+      today,
+      billTo: ren.customerName || c.name || "-",
+      contactLine: [c.phone, c.email].filter(Boolean).join(" • "),
+      metaLine: [c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • "),
+      plan: planBlock,
+      lines,
+      total: f.turnover,
+      paidBadge: (ren.paymentReceived==='yes' ? 'Paid' : 'Unpaid'),
+      discountBlock
+    });
+
+    openPrintWindow(html);
+  }catch(e){
+    console.error(e);
+    alert("Could not open slip for this row.");
+  }
+}
+
+/* =========================
+   END
+   ========================= */
 </script>
+
 </body>
 </html>
