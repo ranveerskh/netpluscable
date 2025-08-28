@@ -684,6 +684,17 @@ async function loadApp(user){
 
   renderAll();
 }
+async function getLatestRenewalRef(customerId){
+  const snap = await getDocs(collection(db, "customers", String(customerId), "renewals"));
+  let latest = null;
+  snap.forEach(d => {
+    const r = d.data() || {};
+    // startDate is YYYY-MM-DD, so string compare works
+    const key = r.startDate || r.expiryDate || "";
+    if (!latest || key > latest.key) latest = { key, ref: d.ref, id: d.id, data: r };
+  });
+  return latest?.ref || null;
+}
 async function cleanupOrphanRenewals(){
   const msg = $("#cleanupMsg");
   const btn = $("#btnCleanupOrphans");
@@ -1158,6 +1169,44 @@ async function saveCustomerFromModal(){
   await loadCustomers();
   await loadRenewals();
   renderAll();
+// If this was an EDIT (correction mode), also update the latest renewal so Reports match.
+if (editCustomerId) {
+  const latestRef = await getLatestRenewalRef(editCustomerId);
+  if (latestRef) {
+    await updateDoc(latestRef, {
+      planId, planName, durationMonths,
+      cost: currentPlan.cost,
+      wholesale: currentPlan.wholesale,
+      stbIncluded: currentPlan.stbIncluded,
+      stbCost: currentPlan.stbCost,
+      stbWholesale: currentPlan.stbWholesale,
+      startDate: currentPlan.startDate,
+      expiryDate: currentPlan.expiryDate,
+      paymentReceived: currentPlan.paymentReceived,
+      customerId: editCustomerId,
+      customerName: name,
+      updatedAt: serverTimestamp()
+    });
+  } else {
+    // Safety net: if somehow no renewal exists, create one so Reports have data.
+    await addRenewal(editCustomerId, {
+      customerId: editCustomerId,
+      customerName: name,
+      planId, planName, durationMonths,
+      cost: currentPlan.cost,
+      wholesale: currentPlan.wholesale,
+      stbIncluded: currentPlan.stbIncluded,
+      stbCost: currentPlan.stbCost,
+      stbWholesale: currentPlan.stbWholesale,
+      startDate: currentPlan.startDate,
+      expiryDate: currentPlan.expiryDate,
+      paymentReceived: currentPlan.paymentReceived
+    });
+  }
+}
+
+// Refresh the Reports view immediately so you see the change.
+runReport();
 
   if (document.querySelector("#c_invoice")?.checked) {
     setTimeout(()=> printInvoice(cid), 200);
