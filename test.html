@@ -8,100 +8,103 @@
 <style>
   :root{
     --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
-    --g1:#6a11cb;--g2:#2575fc;--ok:#32d296;
+    --g1:#6a11cb;--g2:#2575fc;--tap:44px;
     --safe-top: env(safe-area-inset-top,0px);
-    --tap:44px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#0b1020;color:var(--ink);-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1200px;margin:0 auto;padding:16px}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px}
 
   /* Topbar */
   .topbar{position:sticky;top:0;z-index:100;background:rgba(11,16,32,.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
-  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .brand{font-weight:900;display:flex;gap:10px;align-items:center}
+  .bar{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:10px 16px;padding-top:calc(10px + var(--safe-top))}
+  .brand{display:flex;gap:10px;align-items:center;font-weight:900}
   .badge{background:linear-gradient(135deg,var(--g1),var(--g2));padding:6px 10px;border-radius:10px;font-weight:900}
-
-  /* Buttons & inputs (iOS-friendly tap sizes) */
+  .auth{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .chip{border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#0f1732}
   .btn{border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px 14px;font-weight:800;background:#0f1732;color:var(--ink);cursor:pointer;min-height:var(--tap)}
   .btn.primary{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff}
-  .btn.ghost{background:transparent}
   .input{background:#0b122a;border:1px solid #22305a;border-radius:12px;padding:12px 14px;color:#e9edff;min-height:var(--tap)}
-  .chip{border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#0f1732}
 
-  /* Quick links */
-  .quicklinks{display:flex;gap:10px;overflow:auto;padding:10px 16px;border-top:1px solid rgba(255,255,255,.08)}
-  .qbtn{flex:0 0 auto;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#0f1732;font-weight:900;white-space:nowrap}
+  /* 2x2 main links */
+  .ql-wrap{padding:10px 16px;border-top:1px solid rgba(255,255,255,.08)}
+  .ql-grid{display:grid;gap:10px;grid-template-columns:repeat(2, minmax(0,1fr))}
+  .qbtn{display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:#0f1732}
   .qbtn.primary{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent}
 
-  /* Hosts */
-  .hosts{padding:12px 16px;border-top:1px solid rgba(255,255,255,.08);color:#cfe0ff}
-  .pill{display:inline-block;margin:6px 8px 0 0;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:#0f1732;font-size:13px}
+  /* Nav buttons to panels */
+  .tools{display:flex;gap:10px;flex-wrap:wrap;margin:10px 16px}
+  .tbtn{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#0f1732;font-weight:800}
 
   /* Sections */
   .section{padding:16px}
-  .h{font-weight:900;font-size:18px}
   .sub{color:#a9b5e6;font-size:13px}
   .cards{display:grid;gap:12px}
-  @media(min-width:900px){.cards{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:900px){.cards{grid-template-columns:repeat(4,1fr)}}
   .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
   .kpi-val{font-size:28px;font-weight:900;line-height:1.1;margin-top:6px}
-  .kpi-foot{font-size:12px;color:#9fb2ef;margin-top:8px}
 
-  /* Settings forms */
+  /* Panel containers */
+  .panel{display:none}
+  .panel.active{display:block}
+
+  /* Hosts pills */
+  .pill{display:inline-block;margin:6px 8px 0 0;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:#0f1732;font-size:13px}
+
+  /* Lists for banners/gallery */
   .grid2{display:grid;gap:10px}
   @media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
   .item{display:grid;grid-template-columns:1fr auto;gap:8px;background:#0f1732;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px;margin-top:8px}
   .actions{display:flex;gap:8px;align-items:center}
-
-  /* Sticky bottom padding for iOS home bar */
-  .pad-bottom{height:calc(12px + env(safe-area-inset-bottom,0px))}
 </style>
 </head>
 <body>
 
 <!-- Topbar -->
 <div class="topbar">
-  <div class="wrap row" style="justify-content:space-between;padding:10px 16px;padding-top:calc(10px + var(--safe-top))">
+  <div class="bar">
     <div class="brand"><span class="badge">net+TV</span> <span>Admin</span></div>
 
-    <!-- Signed-out -->
-    <div class="row" id="authArea">
+    <!-- Right-corner auth -->
+    <div class="auth" id="authArea">
       <input id="email" class="input" placeholder="Admin email" autocomplete="username" inputmode="email">
       <input id="password" class="input" placeholder="Password" type="password" autocomplete="current-password">
       <button class="btn primary" id="btnSignIn">Sign In</button>
     </div>
-
-    <!-- Signed-in (with Sign Out restored) -->
-    <div class="row" id="whoami" style="display:none">
+    <div class="auth" id="whoami" style="display:none">
       <span id="whoamiText" class="chip"></span>
-      <button class="btn ghost" id="btnSignOut" aria-label="Sign out">Sign Out</button>
+      <button class="btn" id="btnSignOut">Sign Out</button>
     </div>
   </div>
 
-  <!-- Quick links -->
-  <div class="quicklinks wrap" role="navigation" aria-label="Quick admin links">
-    <a class="qbtn primary" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glow TV</a>
-    <a class="qbtn" href="https://bill.spicetv.cc/login" target="_blank" rel="noopener">Spice TV</a>
-    <a class="qbtn" href="https://fast4k.cc/login" target="_blank" rel="noopener">Smart4K TV</a>
-    <a class="qbtn" href="data.html" target="_blank" rel="noopener">Users Data</a>
+  <!-- 2x2 grid of the four main buttons -->
+  <div class="ql-wrap">
+    <div class="ql-grid">
+      <a class="qbtn primary" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glow TV</a>
+      <a class="qbtn" href="https://bill.spicetv.cc/login" target="_blank" rel="noopener">Spice TV</a>
+      <a class="qbtn" href="https://fast4k.cc/login" target="_blank" rel="noopener">Smart4K TV</a>
+      <a class="qbtn" href="data.html" target="_blank" rel="noopener">Users Data</a>
+    </div>
   </div>
 
-  <!-- Hosts -->
-  <div class="hosts wrap">
-    <span class="sub" style="display:block;margin-bottom:6px">Hosts</span>
-    <a class="pill" href="http://glotv.me" target="_blank" rel="noopener">Glow TV: glotv.me</a>
-    <a class="pill" href="http://4k.spicetv.cc" target="_blank" rel="noopener">Spice TV: 4k.spicetv.cc</a>
-    <a class="pill" href="http://smart4k.me" target="_blank" rel="noopener">Smart4K TV: smart4k.me</a>
+  <!-- Buttons to in-page panels -->
+  <div class="tools">
+    <button class="tbtn" onclick="showPanel('home')">Home</button>
+    <button class="tbtn" onclick="showPanel('hosts')">Hosts</button>
+    <button class="tbtn" onclick="showPanel('banners')">Banners</button>
+    <button class="tbtn" onclick="showPanel('gallery')">Gallery</button>
   </div>
 </div>
 
-<!-- Analytics (KPIs only, no table) -->
-<section class="section wrap" id="analytics">
-  <div class="row" style="justify-content:space-between;margin-bottom:8px">
-    <div class="row" style="gap:8px">
+<!-- PANELS -->
+<div class="wrap">
+
+  <!-- HOME: KPIs only -->
+  <section id="panel-home" class="panel active section">
+    <div class="sub" style="margin-bottom:10px">Analytics track steps only (no location)</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
       <label class="sub" for="range">Range</label>
       <select id="range" class="input">
         <option value="7d">Last 7 days</option>
@@ -111,76 +114,59 @@
       </select>
       <button class="btn" id="refreshKPI">Refresh</button>
     </div>
-    <div class="sub">Analytics track steps only (no location)</div>
-  </div>
 
-  <div class="cards">
-    <div class="card">
-      <div class="sub">Unique Viewer-Days</div>
-      <div class="kpi-val" id="kpiVisitors">—</div>
-      <div class="kpi-foot">Count of VID per calendar day in range</div>
+    <div class="cards">
+      <div class="card"><div class="sub">Unique Viewer-Days</div><div class="kpi-val" id="kpiVisitors">—</div></div>
+      <div class="card"><div class="sub">Pings in Range</div><div class="kpi-val" id="kpiPings">—</div></div>
+      <div class="card"><div class="sub">Avg Steps (today)</div><div class="kpi-val" id="kpiAvgStepsToday">—</div></div>
+      <div class="card"><div class="sub">Avg Steps (session)</div><div class="kpi-val" id="kpiAvgStepsSession">—</div></div>
     </div>
-    <div class="card">
-      <div class="sub">Pings in Range</div>
-      <div class="kpi-val" id="kpiPings">—</div>
-      <div class="kpi-foot">Total analytics records loaded</div>
-    </div>
-    <div class="card">
-      <div class="sub">Avg Steps (today)</div>
-      <div class="kpi-val" id="kpiAvgStepsToday">—</div>
-      <div class="kpi-foot">Mean of steps_today across pings</div>
-    </div>
-    <div class="card">
-      <div class="sub">Avg Steps (session)</div>
-      <div class="kpi-val" id="kpiAvgStepsSession">—</div>
-      <div class="kpi-foot">Mean of steps_session across pings</div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- Settings (Banners + Gallery) -->
-<section class="section wrap">
-  <div class="h" style="margin-bottom:8px">Settings</div>
-  <div class="sub" style="margin-bottom:14px">Manage banners and gallery items shown on your site.</div>
+  <!-- HOSTS panel -->
+  <section id="panel-hosts" class="panel section">
+    <h3 style="margin:0 0 8px 0">Hosts</h3>
+    <div class="sub" style="margin-bottom:8px">Tap to open; long-press to copy if your iPhone feels fancy.</div>
+    <a class="pill" href="http://glotv.me" target="_blank" rel="noopener">Glow TV: glotv.me</a>
+    <a class="pill" href="http://4k.spicetv.cc" target="_blank" rel="noopener">Spice TV: 4k.spicetv.cc</a>
+    <a class="pill" href="http://smart4k.me" target="_blank" rel="noopener">Smart4K TV: smart4k.me</a>
+  </section>
 
-  <div class="cards" style="grid-template-columns:1fr">
-    <!-- BANNERS -->
-    <div class="card">
-      <div class="h">Swipe Banners</div>
-      <div class="sub">Only enabled banners within date window are displayed.</div>
-      <div class="grid2" style="margin-top:12px">
-        <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="bnEnabled" checked> <span class="sub">Enabled</span></label>
-        <input class="input" id="bnTitle" placeholder="Title (e.g., Canada Day Offer)">
-        <input class="input" id="bnText" placeholder="Text (e.g., Get 1 month extra with 1-year)">
-        <input class="input" id="bnCtaLabel" placeholder="CTA label (e.g., Get 13 months)">
-        <input class="input" id="bnCtaHref" placeholder="CTA href (https:// or #)">
-        <input class="input" id="bnImageUrl" placeholder="Image URL (optional)">
-        <input class="input" id="bnValidFrom" type="date" placeholder="Valid from">
-        <input class="input" id="bnValidTo" type="date" placeholder="Valid to">
-        <input class="input" id="bnOrder" type="number" placeholder="Order (0..N)">
-        <button class="btn primary" id="bnSave">Save New Banner</button>
-      </div>
-      <div class="sub" id="bnStatus" style="margin-top:6px"></div>
-      <div id="bannerList"></div>
+  <!-- BANNERS panel -->
+  <section id="panel-banners" class="panel section">
+    <h3 style="margin:0 0 8px 0">Swipe Banners</h3>
+    <div class="sub">Only enabled banners within date window are displayed on site.</div>
+    <div class="grid2" style="margin-top:12px">
+      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="bnEnabled" checked> <span class="sub">Enabled</span></label>
+      <input class="input" id="bnTitle" placeholder="Title (e.g., Canada Day Offer)">
+      <input class="input" id="bnText" placeholder="Text (e.g., Get 1 month extra with 1-year)">
+      <input class="input" id="bnCtaLabel" placeholder="CTA label (e.g., Get 13 months)">
+      <input class="input" id="bnCtaHref" placeholder="CTA href (https:// or #)">
+      <input class="input" id="bnImageUrl" placeholder="Image URL (optional)">
+      <input class="input" id="bnValidFrom" type="date" placeholder="Valid from">
+      <input class="input" id="bnValidTo" type="date" placeholder="Valid to">
+      <input class="input" id="bnOrder" type="number" placeholder="Order (0..N)">
+      <button class="btn primary" id="bnSave">Save New Banner</button>
     </div>
+    <div class="sub" id="bnStatus" style="margin-top:6px"></div>
+    <div id="bannerList"></div>
+  </section>
 
-    <!-- GALLERY -->
-    <div class="card">
-      <div class="h">Gallery</div>
-      <div class="sub">Shown in Menu → Gallery modal on site.</div>
-      <div class="grid2" style="margin-top:12px">
-        <input class="input" id="glName" placeholder="Name / caption">
-        <input class="input" id="glImageUrl" placeholder="Image URL (https://...)">
-        <input class="input" id="glOrder" type="number" placeholder="Order (0..N)">
-        <button class="btn primary" id="glSave">Add Item</button>
-      </div>
-      <div class="sub" id="glStatus" style="margin-top:6px"></div>
-      <div id="galleryList"></div>
+  <!-- GALLERY panel -->
+  <section id="panel-gallery" class="panel section">
+    <h3 style="margin:0 0 8px 0">Gallery</h3>
+    <div class="sub">Shown in Menu → Gallery modal on site.</div>
+    <div class="grid2" style="margin-top:12px">
+      <input class="input" id="glName" placeholder="Name / caption">
+      <input class="input" id="glImageUrl" placeholder="Image URL (https://...)">
+      <input class="input" id="glOrder" type="number" placeholder="Order (0..N)">
+      <button class="btn primary" id="glSave">Add Item</button>
     </div>
-  </div>
-</section>
+    <div class="sub" id="glStatus" style="margin-top:6px"></div>
+    <div id="galleryList"></div>
+  </section>
 
-<div class="pad-bottom"></div>
+</div>
 
 <script type="module">
 /* Firebase */
@@ -203,23 +189,23 @@ const app = getApps().length? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-/* Helpers */
+/* DOM */
 const $ = s => document.querySelector(s);
-function rangeToStart(range){
-  const now = new Date();
-  if(range==='7d')  return new Date(now.getTime()-7*24*3600*1000);
-  if(range==='30d') return new Date(now.getTime()-30*24*3600*1000);
-  if(range==='1y')  return new Date(now.getTime()-365*24*3600*1000);
-  return null; // lifetime
+function showPanel(name){
+  ['home','hosts','banners','gallery'].forEach(n=>{
+    $('#panel-'+n).classList.toggle('active', n===name);
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
 }
+window.showPanel = showPanel;
 
-/* Auth UI */
+/* Auth */
 $('#btnSignIn').addEventListener('click', async ()=>{
   const email=$('#email').value.trim(), pass=$('#password').value;
   if(!email||!pass) return alert('Enter email and password');
   try{ await signInWithEmailAndPassword(auth,email,pass); }catch(e){ alert('Sign in failed: '+(e?.message||e)); }
 });
-$('#btnSignOut').addEventListener('click', ()=>signOut(auth));
+$('#btnSignOut').addEventListener('click',()=>signOut(auth));
 
 onAuthStateChanged(auth, async (user)=>{
   if(user){
@@ -230,52 +216,51 @@ onAuthStateChanged(auth, async (user)=>{
   }else{
     $('#authArea').style.display='flex';
     $('#whoami').style.display='none';
-    // clear lists
+    // clear data
     $('#bannerList').innerHTML='';
     $('#galleryList').innerHTML='';
     ['kpiVisitors','kpiPings','kpiAvgStepsToday','kpiAvgStepsSession'].forEach(id=>$('#'+id).textContent='—');
   }
 });
 
-/* ====== KPIs (no table) ====== */
-let visCache = [];
-async function loadAnalytics(){
-  const rg = $('#range').value;
-  const start = rangeToStart(rg);
+/* Range helper */
+function rangeToStart(range){
+  const now = new Date();
+  if(range==='7d')  return new Date(now.getTime()-7*24*3600*1000);
+  if(range==='30d') return new Date(now.getTime()-30*24*3600*1000);
+  if(range==='1y')  return new Date(now.getTime()-365*24*3600*1000);
+  return null;
+}
 
-  // Pull recent pings and filter client-side by date
+/* ===== KPIs (Home) ===== */
+let visCache=[];
+async function loadAnalytics(){
+  const start = rangeToStart($('#range').value);
   const snap = await getDocs(query(collection(db,'analytics_visitors'), orderBy('createdAt','desc'), limit(300)));
-  visCache = snap.docs.map(d=>({id:d.id, ...d.data()}))
-    .filter(r=>{
-      const t = r.createdAt?.toDate?.() || (r.ts? new Date(r.ts) : null);
-      return !start || (t && t>=start);
-    });
+  visCache = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(r=>{
+    const t = r.createdAt?.toDate?.() || (r.ts? new Date(r.ts) : null);
+    return !start || (t && t>=start);
+  });
 }
 function renderKPIs(){
-  const uniqueDayPairs = new Set(); // yyyy-mm-dd|vid
-  let pings=0, sumToday=0, sumSess=0, nToday=0, nSess=0;
-
+  const unique=new Set(); let pings=0,sumT=0,sumS=0,nT=0,nS=0;
   visCache.forEach(r=>{
-    const t = r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
-    if(t && r.vid){
-      const day = t.toISOString().slice(0,10);
-      uniqueDayPairs.add(`${day}|${r.vid}`);
-    }
+    const t=r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
+    if(t && r.vid){ unique.add(t.toISOString().slice(0,10)+'|'+r.vid); }
     pings++;
-    if(typeof r.steps_today==='number'){ sumToday+=r.steps_today; nToday++; }
-    if(typeof r.steps_session==='number'){ sumSess+=r.steps_session; nSess++; }
+    if(typeof r.steps_today==='number'){ sumT+=r.steps_today; nT++; }
+    if(typeof r.steps_session==='number'){ sumS+=r.steps_session; nS++; }
   });
-
-  $('#kpiVisitors').textContent = String(uniqueDayPairs.size);
-  $('#kpiPings').textContent = String(pings);
-  $('#kpiAvgStepsToday').textContent = nToday? (sumToday/nToday).toFixed(1) : '0.0';
-  $('#kpiAvgStepsSession').textContent = nSess? (sumSess/nSess).toFixed(1) : '0.0';
+  $('#kpiVisitors').textContent=String(unique.size);
+  $('#kpiPings').textContent=String(pings);
+  $('#kpiAvgStepsToday').textContent=nT? (sumT/nT).toFixed(1):'0.0';
+  $('#kpiAvgStepsSession').textContent=nS? (sumS/nS).toFixed(1):'0.0';
 }
 async function refreshKPIs(){ await loadAnalytics(); renderKPIs(); }
 $('#range').addEventListener('change', refreshKPIs);
 $('#refreshKPI').addEventListener('click', refreshKPIs);
 
-/* ====== Banners CRUD ====== */
+/* ===== Banners CRUD ===== */
 async function loadBanners(){
   const snap = await getDocs(query(collection(db,'site_settings','banners','items'), orderBy('order','asc')));
   const list = $('#bannerList'); list.innerHTML='';
@@ -297,7 +282,6 @@ async function loadBanners(){
     `;
     list.appendChild(row);
   });
-  // actions
   list.querySelectorAll('button[data-act]').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
       const id = btn.dataset.id, act = btn.dataset.act;
@@ -352,7 +336,7 @@ $('#bnSave').addEventListener('click', async ()=>{
   await loadBanners();
 });
 
-/* ====== Gallery CRUD ====== */
+/* ===== Gallery CRUD ===== */
 async function loadGallery(){
   const snap = await getDocs(query(collection(db,'site_settings','gallery','items'), orderBy('order','asc')));
   const list = $('#galleryList'); list.innerHTML='';
@@ -414,7 +398,7 @@ $('#glSave').addEventListener('click', async ()=>{
   await loadGallery();
 });
 
-/* ====== Orchestration ====== */
+/* ===== Orchestration ===== */
 async function refreshAll(){ await Promise.all([refreshKPIs(), loadBanners(), loadGallery()]); }
 </script>
 </body>
