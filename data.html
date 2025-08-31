@@ -1549,15 +1549,16 @@ function buildSlipHTML({invNo, today, billTo, contactLine, metaLine, plan, lines
   </div>
 
   <div class="box">
-    <strong>Plan Details</strong>
-    <div class="grid" style="margin-top:8px">
-      <div class="lbl">Plan</div><div>${plan?.name || '-'}</div>
-      <div class="lbl">Duration</div><div>${(plan?.months ?? 0)} months</div>
-      <div class="lbl">Start Date</div><div>${plan?.start || '-'}</div>
-      <div class="lbl">Expiry Date</div><div>${plan?.expiry || '-'}</div>
-      <div class="lbl">Payment</div><div>${plan?.paidText || '-'}</div>
-    </div>
+  <strong>Plan Details</strong>
+  <div class="grid" style="margin-top:8px">
+    <div class="lbl">Plan</div><div>${plan?.name || '-'}</div>
+    <div class="lbl">Duration</div><div>${(plan?.months ?? 0)} months</div>
+    <div class="lbl">Parental Pin</div><div>7274</div>
+    <div class="lbl">Start Date</div><div>${plan?.start || '-'}</div>
+    <div class="lbl">Expiry Date</div><div>${plan?.expiry || '-'}</div>
+    <div class="lbl">Payment</div><div>${plan?.paidText || '-'}</div>
   </div>
+</div>
 
   <table>
     <thead><tr><th>Description</th><th class="right">Amount (CAD)</th></tr></thead>
