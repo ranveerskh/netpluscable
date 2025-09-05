@@ -104,7 +104,7 @@
   <!-- HOME: KPIs only -->
   <section id="panel-home" class="panel active section">
     <div class="sub" style="margin-bottom:10px">
-      Unique Visitors and Pings are filtered to the homepage only.
+      Unique Visitors and Pings are filtered strictly to <code>/index.html</code>.
     </div>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
       <label class="sub" for="range">Range</label>
@@ -118,8 +118,8 @@
     </div>
 
     <div class="cards">
-      <div class="card"><div class="sub">Unique Visitors (human, daily, homepage)</div><div class="kpi-val" id="kpiVisitors">—</div></div>
-      <div class="card"><div class="sub">Pings in Range (homepage)</div><div class="kpi-val" id="kpiPings">—</div></div>
+      <div class="card"><div class="sub">Unique Visitors (human, daily, index.html)</div><div class="kpi-val" id="kpiVisitors">—</div></div>
+      <div class="card"><div class="sub">Pings in Range (index.html)</div><div class="kpi-val" id="kpiPings">—</div></div>
       <div class="card"><div class="sub">Avg Steps (today)</div><div class="kpi-val" id="kpiAvgStepsToday">—</div></div>
       <div class="card"><div class="sub">Avg Steps (session)</div><div class="kpi-val" id="kpiAvgStepsSession">—</div></div>
     </div>
@@ -235,19 +235,18 @@ function rangeToStart(range){
 }
 
 /* ===== KPIs (Home) =====
-   Pull from analytics_visitors but ONLY count homepage pings:
-   pagePath must be "/", "/index", or "/index.html".
-   We also require vid to exist and use human flags when available.
+   Strictly count docs with pagePath === "/index.html"
+   Also prefer human-filtered uniques via isHuman/humanScore when present.
 */
-const HOMEPAGE_PATHS = new Set(["/","/index","/index.html"]);
+const HOMEPAGE_PATH = "/index.html";
 let visCache=[];
 async function loadAnalytics(){
   const start = rangeToStart($('#range').value);
   const snap = await getDocs(query(collection(db,'analytics_visitors'), orderBy('createdAt','desc'), limit(1200)));
   visCache = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(r=>{
     const t = r.createdAt?.toDate?.() || (r.ts? new Date(r.ts) : null);
-    const path = (r.pagePath || "").toLowerCase();
-    const inHome = HOMEPAGE_PATHS.has(path);
+    const path = String(r.pagePath || "").toLowerCase();
+    const inHome = path === HOMEPAGE_PATH;
     return inHome && (!start || (t && t>=start));
   });
 }
@@ -272,7 +271,6 @@ function renderKPIs(){
     if(key && isHuman){ uniqueHuman.add(key); }
   });
 
-  // Prefer human-filtered uniques if present
   const finalUnique = uniqueHuman.size>0 ? uniqueHuman.size : uniqueAny.size;
 
   $('#kpiVisitors').textContent = String(finalUnique);
@@ -281,8 +279,8 @@ function renderKPIs(){
   $('#kpiAvgStepsSession').textContent = nS? (sumS/nS).toFixed(1):'0.0';
 
   $('#humanExplain').textContent = uniqueHuman.size>0
-    ? `Filtered by pagePath (homepage only). Human-filtered uniques: ${uniqueHuman.size}.`
-    : `Filtered by pagePath (homepage only). No human flags yet; showing basic uniques.`;
+    ? `Filtered by pagePath=/index.html. Human-filtered uniques: ${uniqueHuman.size}.`
+    : `Filtered by pagePath=/index.html. No human flags yet; showing basic uniques.`;
 }
 async function refreshKPIs(){ await loadAnalytics(); renderKPIs(); }
 $('#range').addEventListener('change', refreshKPIs);
@@ -430,7 +428,7 @@ $('#glSave').addEventListener('click', async ()=>{
 async function refreshAll(){ await Promise.all([refreshKPIs(), loadBanners(), loadGallery()]); }
 </script>
 
-<!-- TRACKER SNIPPET (safe to include site-wide). WILL NOT LOG ON ADMIN PAGES. -->
+<!-- TRACKER SNIPPET (include on all public pages). It WILL NOT log on admin pages. -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -461,7 +459,8 @@ if(!isAdminPage){
     ua:navigator.userAgent||"", lang:navigator.language||"",
     tz:Intl.DateTimeFormat().resolvedOptions().timeZone||"",
     w:innerWidth, h:innerHeight,
-    pagePath: (location.pathname||"/").toLowerCase(),
+    // force explicit pagePath; this is what the admin filters on
+    pagePath: "/index.html",
     pageTitle: document.title||""
   };
 
