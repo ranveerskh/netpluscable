@@ -103,7 +103,9 @@
 
   <!-- HOME: KPIs only -->
   <section id="panel-home" class="panel active section">
-    <div class="sub" style="margin-bottom:10px">Analytics track steps only (no location)</div>
+    <div class="sub" style="margin-bottom:10px">
+      Unique Visitors are human-filtered (if fields exist). Pings are raw hits.
+    </div>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
       <label class="sub" for="range">Range</label>
       <select id="range" class="input">
@@ -116,17 +118,18 @@
     </div>
 
     <div class="cards">
-      <div class="card"><div class="sub">Unique Viewer-Days</div><div class="kpi-val" id="kpiVisitors">—</div></div>
+      <div class="card"><div class="sub">Unique Visitors (human, daily)</div><div class="kpi-val" id="kpiVisitors">—</div></div>
       <div class="card"><div class="sub">Pings in Range</div><div class="kpi-val" id="kpiPings">—</div></div>
       <div class="card"><div class="sub">Avg Steps (today)</div><div class="kpi-val" id="kpiAvgStepsToday">—</div></div>
       <div class="card"><div class="sub">Avg Steps (session)</div><div class="kpi-val" id="kpiAvgStepsSession">—</div></div>
     </div>
+    <div class="sub" id="humanExplain" style="margin-top:8px"></div>
   </section>
 
   <!-- HOSTS panel -->
   <section id="panel-hosts" class="panel section">
     <h3 style="margin:0 0 8px 0">Hosts</h3>
-    <div class="sub" style="margin-bottom:8px">Tap to open; long-press to copy if your iPhone feels fancy.</div>
+    <div class="sub" style="margin-bottom:8px">Tap to open; long-press to copy.</div>
     <a class="pill" href="http://glotv.me" target="_blank" rel="noopener">Glow TV: glotv.me</a>
     <a class="pill" href="http://4k.spicetv.cc" target="_blank" rel="noopener">Spice TV: 4k.spicetv.cc</a>
     <a class="pill" href="http://smart4k.me" target="_blank" rel="noopener">Smart4K TV: smart4k.me</a>
@@ -173,7 +176,7 @@
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
-  getFirestore, collection, query, orderBy, limit, getDocs,
+  getFirestore, collection, collectionGroup, query, orderBy, limit, getDocs,
   doc, addDoc, setDoc, getDoc, deleteDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -219,7 +222,7 @@ onAuthStateChanged(auth, async (user)=>{
     // clear data
     $('#bannerList').innerHTML='';
     $('#galleryList').innerHTML='';
-    ['kpiVisitors','kpiPings','kpiAvgStepsToday','kpiAvgStepsSession'].forEach(id=>$('#'+id).textContent='—');
+    ['kpiVisitors','kpiPings','kpiAvgStepsToday','kpiAvgStepsSession','humanExplain'].forEach(id=>$('#'+id).textContent='');
   }
 });
 
@@ -232,29 +235,54 @@ function rangeToStart(range){
   return null;
 }
 
-/* ===== KPIs (Home) ===== */
+/* ===== KPIs (Home) =====
+   Uses your existing analytics_visitors collection. If docs include
+   isHuman:true or humanScore>=3, we count them as human unique visitor-days.
+   Fallback: if those fields are missing, we still dedupe by (date|vid).
+*/
 let visCache=[];
 async function loadAnalytics(){
   const start = rangeToStart($('#range').value);
-  const snap = await getDocs(query(collection(db,'analytics_visitors'), orderBy('createdAt','desc'), limit(300)));
+  // pull last 1000 pings; client-side filter by range
+  const snap = await getDocs(query(collection(db,'analytics_visitors'), orderBy('createdAt','desc'), limit(1000)));
   visCache = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(r=>{
     const t = r.createdAt?.toDate?.() || (r.ts? new Date(r.ts) : null);
     return !start || (t && t>=start);
   });
 }
 function renderKPIs(){
-  const unique=new Set(); let pings=0,sumT=0,sumS=0,nT=0,nS=0;
+  const uniqueHuman=new Set();
+  const uniqueAny=new Set();
+  let pings=0,sumT=0,sumS=0,nT=0,nS=0, humans=0;
+
   visCache.forEach(r=>{
     const t=r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
-    if(t && r.vid){ unique.add(t.toISOString().slice(0,10)+'|'+r.vid); }
+    const day = t ? t.toISOString().slice(0,10) : null;
+    const key = (day && r.vid) ? `${day}|${r.vid}` : null;
+
     pings++;
+
     if(typeof r.steps_today==='number'){ sumT+=r.steps_today; nT++; }
     if(typeof r.steps_session==='number'){ sumS+=r.steps_session; nS++; }
+
+    if(key){ uniqueAny.add(key); }
+
+    const isHuman = r.isHuman === true || (typeof r.humanScore === 'number' && r.humanScore >= 3);
+    if(key && isHuman){ uniqueHuman.add(key); humans++; }
   });
-  $('#kpiVisitors').textContent=String(unique.size);
-  $('#kpiPings').textContent=String(pings);
-  $('#kpiAvgStepsToday').textContent=nT? (sumT/nT).toFixed(1):'0.0';
-  $('#kpiAvgStepsSession').textContent=nS? (sumS/nS).toFixed(1):'0.0';
+
+  // If no human flags yet, fall back to any unique
+  const finalUnique = uniqueHuman.size>0 ? uniqueHuman.size : uniqueAny.size;
+
+  $('#kpiVisitors').textContent = String(finalUnique);
+  $('#kpiPings').textContent    = String(pings);
+  $('#kpiAvgStepsToday').textContent   = nT? (sumT/nT).toFixed(1):'0.0';
+  $('#kpiAvgStepsSession').textContent = nS? (sumS/nS).toFixed(1):'0.0';
+
+  const humanRate = uniqueHuman.size>0 ? Math.round((uniqueHuman.size/Math.max(uniqueAny.size,1))*100) : null;
+  $('#humanExplain').textContent = humanRate===null
+    ? "No human flags yet in analytics_visitors. Add the tracker to public pages to enable bot filtering."
+    : `Human share of unique visitor-days: ${humanRate}%`;
 }
 async function refreshKPIs(){ await loadAnalytics(); renderKPIs(); }
 $('#range').addEventListener('change', refreshKPIs);
@@ -400,6 +428,76 @@ $('#glSave').addEventListener('click', async ()=>{
 
 /* ===== Orchestration ===== */
 async function refreshAll(){ await Promise.all([refreshKPIs(), loadBanners(), loadGallery()]); }
+</script>
+
+<!-- OPTIONAL: Copy this block into PUBLIC PAGES to enable human flags (isHuman/humanScore).
+     It does nothing harmful here if you leave it, but real value is on your marketing pages. -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig2 = {
+  apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
+  authDomain: "netplustv-90b29.firebaseapp.com",
+  projectId: "netplustv-90b29"
+};
+const app2 = initializeApp(firebaseConfig2, "np-human");
+const db2  = getFirestore(app2);
+
+const ls = window.localStorage;
+function uuid(){return (crypto.randomUUID?crypto.randomUUID():
+  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
+    const r=Math.random()*16|0,v=c=='x'?r:(r&0x3|0x8);return v.toString(16);
+  })
+);}
+const VID_KEY="npv_vid"; let vid=ls.getItem(VID_KEY); if(!vid){vid=uuid(); ls.setItem(VID_KEY,vid);}
+const SID=uuid(); const startMs=Date.now();
+const visitorRef = doc(db2,"visitors",vid);
+const sessionRef = doc(db2,"visitors",vid,"sessions",SID);
+
+// write a ping into your existing analytics collection to keep backwards compatibility
+const analyticsRef = doc(db2,"analytics_visitors",SID);
+
+let humanScore=0, clicks=0, keys=0, scrollYMax=0, timeActive=0;
+const envInfo={ ua:navigator.userAgent||"", lang:navigator.language||"", tz:Intl.DateTimeFormat().resolvedOptions().timeZone||"", w:innerWidth, h:innerHeight };
+
+function bump(p=1){ humanScore=Math.min(8, humanScore+p); flagSoon(); }
+document.addEventListener("click",()=>{clicks++;bump(1);},{passive:true});
+document.addEventListener("keydown",()=>{keys++;bump(1);},{passive:true});
+document.addEventListener("scroll",()=>{ const y=Math.max(scrollYMax, scrollY||document.documentElement.scrollTop||0); if(y>scrollYMax){const d=y-scrollYMax; scrollYMax=y; if(scrollYMax>200 && d>30) bump(1);}},{passive:true});
+setInterval(()=>{ timeActive=Math.floor((Date.now()-startMs)/1000); if([10,30,60].includes(timeActive)) bump(1); },1000);
+
+let pending=false; async function flagSoon(){
+  if(pending) return; pending=true; setTimeout(async ()=>{
+    pending=false;
+    const payload = {
+      isHuman: humanScore>=3, humanScore, clicks, keys, scrollYMax, timeActive,
+      lastUpdated: serverTimestamp(), vid
+    };
+    try{
+      await updateDoc(sessionRef, payload);
+    }catch{ await setDoc(sessionRef, { startedAt: serverTimestamp(), ...envInfo, ...payload }); }
+    try{
+      await updateDoc(analyticsRef, { ...payload, createdAt: serverTimestamp() });
+    }catch{
+      await setDoc(analyticsRef, { ...envInfo, ...payload, createdAt: serverTimestamp(), steps_today: 0, steps_session: 0 });
+    }
+  }, 1200);
+}
+
+// ensure base docs exist quickly
+(async ()=>{
+  try{
+    const v=await getDoc(visitorRef);
+    if(!v.exists()) await setDoc(visitorRef, {createdAt:serverTimestamp(), lastSeen:serverTimestamp(), ...envInfo});
+    else await updateDoc(visitorRef, {lastSeen:serverTimestamp()});
+  }catch{}
+  try{
+    await setDoc(sessionRef, { startedAt: serverTimestamp(), ...envInfo, isHuman:false, humanScore:0 }, {merge:true});
+  }catch{}
+  // first ping
+  bump(0.5);
+})();
 </script>
 </body>
 </html>
