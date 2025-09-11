@@ -139,6 +139,15 @@
 
   /* Lock page scroll when a modal is open (iOS friendly) */
   body.modal-open{overflow:hidden;position:fixed;width:100%}
+
+  /* ====== Simple image carousel for boxes (local settings) ====== */
+  .bx-carousel{position:relative;margin:8px 0;border-radius:12px;overflow:hidden;background:#0b122a;border:1px solid #22305a}
+  .bx-track{display:flex;gap:6px;overflow:auto;scroll-snap-type:x mandatory;padding:6px}
+  .bx-slide{min-width:85%;scroll-snap-align:center;border-radius:10px;overflow:hidden;background:#0b122a;border:1px solid #22305a}
+  .bx-slide img{display:block;width:100%;height:160px;object-fit:cover}
+  .bx-dots{display:flex;gap:6px;justify-content:center;margin-top:6px}
+  .bx-dot{width:8px;height:8px;border-radius:999px;background:#2a396f;opacity:.6}
+  .bx-dot.active{opacity:1;background:#5a7dff}
 </style>
 </head>
 <body>
@@ -217,7 +226,7 @@
   <div class="help">No payment needed. We’ll send trial credentials on WhatsApp.</div>
 </div>
       <!-- 1M -->
-      <div class="card">
+      <div class="card" data-plan="1 Month">
         <span class="mark">Starter</span>
         <div class="row"><div class="title">1 Month</div><div class="price">$15</div></div>
         <ul class="features">
@@ -236,7 +245,7 @@
       </div>
 
       <!-- 3M -->
-      <div class="card">
+      <div class="card" data-plan="3 Months">
         <span class="mark">Popular</span>
         <div class="row"><div class="title">3 Months</div><div class="price">$40</div></div>
         <ul class="features">
@@ -255,7 +264,7 @@
       </div>
 
       <!-- 6M -->
-      <div class="card">
+      <div class="card" data-plan="6 Months">
         <span class="mark">Most Picked</span>
         <div class="row"><div class="title">6 Months</div><div class="price">$60</div></div>
         <ul class="features">
@@ -274,7 +283,7 @@
       </div>
 
       <!-- 12M -->
-      <div class="card">
+      <div class="card" data-plan="12 Months (+1 free)">
         <span class="mark">Best Value</span>
         <div class="row"><div class="title">12 Months</div><div class="price">$100</div></div>
         <div class="note">+ 1 extra month free (13 total)</div>
@@ -294,22 +303,22 @@
       </div>
     </div>
 
-    <!-- WhatsApp Registration for +1 month with 1‑Year -->
+    <!-- WhatsApp Registration for +1 month with 1-Year -->
     <div class="card" style="margin-top:12px">
-      <div class="title">Get +1 month with 1‑Year plan</div>
+      <div class="title">Get +1 month with 1-Year plan</div>
       <div class="sub" style="color:var(--muted)">Register via WhatsApp (we’ll apply the offer when you subscribe)</div>
 
       <div class="field"><label>Name</label><input class="input" id="waName" placeholder="Full Name"></div>
       <div class="field"><label>Email</label><input class="input" id="waEmail" placeholder="email@example.com" type="email"></div>
 
       <button class="btn whats" onclick="waRegisterOffer()">Register on WhatsApp</button>
-      <div class="help">Refer a friend who buys a 1‑Year plan and get +1 month free (details below).</div>
+      <div class="help">Refer a friend who buys a 1-Year plan and get +1 month free (details below).</div>
     </div>
 
     <!-- NEW: Referral Form -->
     <div class="card" style="margin-top:12px">
       <div class="title">Referral — Get +2 Months Free</div>
-      <div class="sub" style="color:var(--muted)">If your friend buys a 1‑Year plan, you get 2 months free.</div>
+      <div class="sub" style="color:var(--muted)">If your friend buys a 1-Year plan, you get 2 months free.</div>
 
       <div class="cols">
         <div>
@@ -328,13 +337,13 @@
       </div>
 
       <button class="btn whats" onclick="waReferral()">Submit Referral on WhatsApp</button>
-      <div class="help">We’ll verify when your friend subscribes for 1‑Year and add +2 months to your account.</div>
+      <div class="help">We’ll verify when your friend subscribes for 1-Year and add +2 months to your account.</div>
     </div>
 
     <div class="table">
       <table aria-label="Plan comparison">
         <thead><tr><th>Plan</th><th>Duration</th><th>Price</th><th>Note</th></tr></thead>
-        <tbody>
+        <tbody id="planTableBody">
           <tr><td>1 Month</td><td>30 days</td><td>$15</td><td>Full features</td></tr>
           <tr><td>3 Months</td><td>90 days</td><td>$40</td><td>Save vs monthly</td></tr>
           <tr><td>6 Months</td><td>180 days</td><td>$65</td><td>Most picked</td></tr>
@@ -346,109 +355,108 @@
 
   <!-- Boxes -->
   <div class="panel" id="panel-boxes">
-    <div class="grid">
-      <div class="card">
+    <div class="grid" id="boxesGrid">
+      <div class="card" data-box="Android FULL HD Box">
         <span class="mark">Not Recommended</span>
         <div class="row"><div class="title">Android FULL HD Box</div><div class="price">$50</div></div>
-        <div class="combo">Box + 1‑Year: $140</div>
+        <div class="combo">Box + 1-Year: $140</div>
         <ul class="features">
-          <li>ARM Cortex Quad‑Core • Mali‑G31</li>
+          <li>ARM Cortex Quad-Core • Mali-G31</li>
           <li>2GB DDR3 • 8GB eMMC</li>
-          <li>Wi‑Fi 2.4/5.8 • BT 5.2</li>
+          <li>Wi-Fi 2.4/5.8 • BT 5.2</li>
           <li>Lemon TV App• Netflix • YouTube • Disney+ • Play</li>
           <li>Bluetooth voice remote</li>
           <li>Full HD output</li>
         </ul>
         <div class="btns">
           <button class="btn" onclick="buyBox('Android FULL HD Box',50)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Android FULL HD Box',140)">Box + 1‑Year</button>
+          <button class="btn whats" onclick="buyBoxBundle('Android FULL HD Box',140)">Box + 1-Year</button>
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-box="Sword+ 4K Box">
         <span class="mark">Good</span>
         <div class="row"><div class="title">Sword+ 4K Box</div><div class="price">$100</div></div>
-        <div class="combo">Box + 1‑Year: $180</div>
+        <div class="combo">Box + 1-Year: $180</div>
         <ul class="features">
           <li>Android 11 • TV ONAIR • 4K 60FPS</li>
           <li>2GB DDR3 • 16GB eMMC</li>
-          <li>Wi‑Fi 2.4/5.8</li>
+          <li>Wi-Fi 2.4/5.8</li>
         </ul>
         <div class="btns">
           <button class="btn" onclick="buyBox('Sword+ 4K Box',100)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Sword+ 4K Box',180)">Box + 1‑Year</button>
+          <button class="btn whats" onclick="buyBoxBundle('Sword+ 4K Box',180)">Box + 1-Year</button>
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-box="Sheild Ultimate 4K Box">
         <span class="mark">Value for Money</span>
         <div class="row"><div class="title">Sheild Ultimate 4K Box</div><div class="price">$120</div></div>
-        <div class="combo">Box + 1‑Year: $200</div>
+        <div class="combo">Box + 1-Year: $200</div>
         <ul class="features">
           <li>Android 9 • TV ONAIR • 4K 60FPS</li>
           <li>4GB DDR3 • 32GB eMMC</li>
-          <li>Wi‑Fi 2.4/5.8</li>
+          <li>Wi-Fi 2.4/5.8</li>
         </ul>
         <div class="btns">
           <button class="btn" onclick="buyBox('Sheild Ultimate 4K Box',120)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Sheild Ultimate 4K Box',200)">Box + 1‑Year</button>
+          <button class="btn whats" onclick="buyBoxBundle('Sheild Ultimate 4K Box',200)">Box + 1-Year</button>
         </div>
       </div>
 
-
-      <div class="card">
+      <div class="card" data-box="Formular Z10 Box">
         <span class="mark rec">Recommended</span>
         <div class="row"><div class="title">Formular Z10 Box</div><div class="price">$130</div></div>
-        <div class="combo">Box + 1‑Year: $210</div>
+        <div class="combo">Box + 1-Year: $210</div>
         <ul class="features">
           <li>Android 10 • TV ONAIR • 4K 60FPS • HDR10*</li>
-          <li>2GB DDR3 • 8GB eMMC • Wi‑Fi 2.4/5.8</li>
+          <li>2GB DDR3 • 8GB eMMC • Wi-Fi 2.4/5.8</li>
         </ul>
         <div class="btns">
           <button class="btn" onclick="buyBox('Formular Z10 Box',130)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Formular Z10 Box',210)">Box + 1‑Year</button>
+          <button class="btn whats" onclick="buyBoxBundle('Formular Z10 Box',210)">Box + 1-Year</button>
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-box="Mag544 4K Linux Box">
         <span class="mark dur">Durable</span>
         <div class="row"><div class="title">Mag544 4K Linux Box</div><div class="price">$120</div></div>
-        <div class="combo">Box + 1‑Year: $210</div>
+        <div class="combo">Box + 1-Year: $210</div>
         <ul class="features">
           <li>Linux OS • 4K • Durable build</li>
           <li>1GB RAM • 4GB Flash</li>
         </ul>
         <div class="btns">
           <button class="btn" onclick="buyBox('Mag544 4K Linux Box',120)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Mag544 4K Linux Box',210)">Box + 1‑Year</button>
+          <button class="btn whats" onclick="buyBoxBundle('Mag544 4K Linux Box',210)">Box + 1-Year</button>
         </div>
       </div>
 
-       <div class="card">
+      <div class="card" data-box="Formular Z11 PRO">
         <span class="mark rec">Powerful</span>
         <div class="row"><div class="title">Formular Z11 PRO</div><div class="price">$180</div></div>
-        <div class="combo">Box + 1‑Year: $260</div>
+        <div class="combo">Box + 1-Year: $260</div>
         <ul class="features">
           <li>Android 11 • TV ONAIR • 4K 60FPS • HDR10*</li>
-          <li>2GB DDR4 • 16GB eMMC • Wi‑Fi 5</li>
+          <li>2GB DDR4 • 16GB eMMC • Wi-Fi 5</li>
         </ul>
         <div class="btns">
           <button class="btn" onclick="buyBox('Formular Z11 PRO',180)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Formular Z11 PRO',260)">Box + 1‑Year</button>
+          <button class="btn whats" onclick="buyBoxBundle('Formular Z11 PRO',260)">Box + 1-Year</button>
         </div>
       </div>
 
-       <div class="card">
+      <div class="card" data-box="Formular Z11 PRO MAX">
         <span class="mark rec">High End</span>
         <div class="row"><div class="title">Formular Z11 PRO MAX</div><div class="price">$220</div></div>
-        <div class="combo">Box + 1‑Year: $300</div>
+        <div class="combo">Box + 1-Year: $300</div>
         <ul class="features">
           <li>Android 11 • TV ONAIR • 4K ULTRA • HDR10*</li>
-          <li>4GB DDR3 • 32GB eMMC • Wi‑Fi 6</li>
+          <li>4GB DDR3 • 32GB eMMC • Wi-Fi 6</li>
         </ul>
         <div class="btns">
           <button class="btn" onclick="buyBox('Formular Z11 PRO MAX',220)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Formular Z11 PRO MAX',300)">Box + 1‑Year</button>
+          <button class="btn whats" onclick="buyBoxBundle('Formular Z11 PRO MAX',300)">Box + 1-Year</button>
         </div>
       </div>
     </div>
@@ -582,7 +590,7 @@
           <li>DUTCH | BELGIUM / NETHERLAND</li>
           <li>ENGLISH 24/7 • UK • USA • CANADA • AUSTRALIA • CARIBBEAN</li>
           <li>ENGLISH | KIDS • MOVIES • MUSIC • NEWS • SPORTS</li>
-          <li>EX‑YUGO | ALBANIAN</li>
+          <li>EX-YUGO | ALBANIAN</li>
           <li>FILIPINO | PHILIPPINES</li>
           <li>FRENCH | CANADA • FRANCE</li>
           <li>GERMAN | GREEK | ITALIAN</li>
@@ -596,7 +604,7 @@
           <li>SPORTS | CRICKET</li>
           <li>SWEDEN | NORWAY | FINLAND</li>
           <li>LOCAL USA | RADIO</li>
-          <li><strong>LIVE‑ADULT</strong></li>
+          <li><strong>LIVE-ADULT</strong></li>
         </ul>
       </div>
       <div>
@@ -620,7 +628,7 @@
           <li>Classic Movies & Series</li>
           <li>New Releases (daily updates)</li>
           <li>Music Videos • Concerts</li>
-          <li>Stand‑up Comedy</li>
+          <li>Stand-up Comedy</li>
         </ul>
       </div>
     </div>
@@ -700,11 +708,33 @@
     }
   }
 
-  /* ===== Gallery from Firestore ===== */
+  /* ===== Gallery from Firestore (fallback) or local settings override ===== */
   async function loadGallery(){
     const grid = document.getElementById('galleryGrid');
     if(!grid) return;
     grid.innerHTML = '';
+
+    const settings = JSON.parse(localStorage.getItem('netplus.settings.v1.public')||'null');
+
+    if(settings && Array.isArray(settings.gallery) && settings.gallery.length){
+      settings.gallery
+        .filter(g=>g.visible!==false)
+        .sort((a,b)=>(a.order||0)-(b.order||0))
+        .forEach(g=>{
+          const item = document.createElement('div');
+          item.className = 'gitem';
+          item.innerHTML = `
+            <img src="${g.url||''}" alt="${g.caption||''}" loading="lazy" />
+            <div class="gcap">${g.caption||''}</div>
+          `;
+          item.onclick = ()=>{ if(g.url) window.open(g.url,'_blank'); };
+          grid.appendChild(item);
+        });
+      return;
+    }
+
+    // Fallback to Firestore if no local override
+    const { collection, query, orderBy, getDocs } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
     const snap = await getDocs(query(collection(db,'site_settings','gallery','items'), orderBy('order','asc')));
     snap.forEach(d=>{
       const g = d.data();
@@ -722,6 +752,7 @@
   window.loadGallery = loadGallery;
   async function ping(){
     try{
+      const { addDoc, collection, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
       await addDoc(collection(db,'analytics_visitors'),{
         createdAt: serverTimestamp(),
         page: location.pathname,
@@ -730,7 +761,6 @@
     }catch(_){}
   }
   setInterval(ping,15000);
-
 
   // init
   loadBanners();
@@ -784,6 +814,14 @@
     window.open(url,'_blank');
   }
 
+  function waStartTrial(){
+    const name=(document.getElementById('trialName').value||'').trim();
+    const email=(document.getElementById('trialEmail').value||'').trim();
+    const mac=(document.getElementById('trialMac').value||'').trim();
+    const msg=`Trial Request (2 Days)\nName: ${name}\nEmail: ${email}\nDevice: ${mac}`;
+    waSend(msg);
+  }
+
   // Offer registration
   function waRegisterOffer(){
     const name=(document.getElementById('waName').value||'').trim();
@@ -822,7 +860,7 @@
     waSend(`I'm interested in: Box Only\nModel: ${name}\nPrice: $${price}\nPlease guide me with purchase & setup.`);
   }
   function buyBoxBundle(name,price){
-    waSend(`I'm interested in: ${name} + 12‑Month Plan\nBundle Price: $${price}\nPlease guide me with activation & setup.`);
+    waSend(`I'm interested in: ${name} + 12-Month Plan\nBundle Price: $${price}\nPlease guide me with activation & setup.`);
   }
 
   /* ===== Recharge ===== */
@@ -854,6 +892,254 @@
   window.showPanel=showPanel; window.sendRecharge=sendRecharge;
   window.sendRequest=sendRequest; window.sendPin=sendPin;
   window.subscribePlan=subscribePlan; window.waRegisterOffer=waRegisterOffer; window.waReferral=waReferral;
+
+  /* ======== LOCAL SETTINGS APPLY (from setup.html) ========
+
+     Reads settings from localStorage key:
+     netplus.settings.v1.public
+
+     Shape we expect (examples):
+     {
+       "plans":[
+         {"id":"p1","name":"1 Month","months":1,"price":17,"badge":"Starter","note":"","visible":true,"order":1},
+         {"id":"pX","name":"2 Years","months":24,"price":180,"badge":"Pro","note":"Best long term","visible":true,"order":99}
+       ],
+       "boxes":[
+         {"id":"b1","name":"Formular Z11 PRO","price":185,"bundle":265,"badge":"Powerful","specs":["Android 11","Wi-Fi 5"],"images":[{"url":"https://.../a.jpg"},{"url":"https://.../b.jpg"}],"order":2,"visible":true},
+         {"id":"bNew","name":"Omega 8K","price":300,"bundle":380,"badge":"Flagship","specs":["8K"],"images":[{"url":"https://..."}],"order":10,"visible":true}
+       ],
+       "gallery":[{"id":"g1","url":"https://...","caption":"Living room","order":1,"visible":true}]
+     }
+
+  ======================================================= */
+
+  function applyLocalSettings(){
+    const raw = localStorage.getItem('netplus.settings.v1.public');
+    if(!raw) return;
+    let settings;
+    try{ settings = JSON.parse(raw); }catch(_){ return; }
+
+    /* Plans */
+    if(Array.isArray(settings.plans) && settings.plans.length){
+      const grid = document.querySelector('#panel-plans .grid');
+      const tableBody = document.getElementById('planTableBody');
+      const rechargeSel = document.getElementById('rcPlan');
+
+      // Map existing plan cards by title text
+      const existingCards = Array.from(grid.querySelectorAll('.card[data-plan]'));
+      const byName = {};
+      existingCards.forEach(c=>{
+        const name = c.getAttribute('data-plan');
+        byName[name] = c;
+      });
+
+      // Update existing cards and collect rendered names
+      const renderedNames = new Set();
+      settings.plans
+        .filter(p=>p.visible!==false)
+        .sort((a,b)=>(a.order||0)-(b.order||0))
+        .forEach(p=>{
+          const price = Number(p.price);
+          const planName = p.name || '';
+          const card = byName[planName];
+          if(card){
+            const priceEl = card.querySelector('.price');
+            if(priceEl) priceEl.textContent = (isFinite(price)? `$${price}` : priceEl.textContent);
+            const titleEl = card.querySelector('.title');
+            if(titleEl && titleEl.textContent.trim()!==planName){
+              // Keep old label visible title if you like, but data-plan is our key
+              titleEl.textContent = planName;
+              card.setAttribute('data-plan', planName);
+            }
+            // Update Subscribe button onclick with new price
+            const subBtn = card.querySelector('.btn.primary.whats');
+            if(subBtn){
+              subBtn.setAttribute('onclick', `subscribePlan(${JSON.stringify(planName)},${isFinite(price)? price : 0})`);
+            }
+            renderedNames.add(planName);
+          }
+        });
+
+      // Append new plan cards not present before
+      settings.plans
+        .filter(p=>p.visible!==false && !renderedNames.has(p.name))
+        .forEach(p=>{
+          const price = Number(p.price)||0;
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.setAttribute('data-plan', p.name);
+          card.innerHTML = `
+            <span class="mark">${p.badge? p.badge : 'Plan'}</span>
+            <div class="row"><div class="title">${p.name}</div><div class="price">$${price}</div></div>
+            <ul class="features">
+              <li>⚡ Quick Activation</li>
+              <li>📡 20,000+ Live Channels</li>
+              <li>🎬 All Shows, Movies & PPV</li>
+              <li>🖥️ Full HD & SD Channels</li>
+            </ul>
+            ${p.note? `<div class="note">${p.note}</div>`:''}
+            <div class="btns">
+              <button class="btn primary whats" onclick='subscribePlan(${JSON.stringify(p.name)},${price})'>Subscribe</button>
+              <button class="btn" onclick="openSheet('info')">Info</button>
+            </div>
+          `;
+          grid.appendChild(card);
+          renderedNames.add(p.name);
+        });
+
+      // Rebuild comparison table (keeps your table structure, just replaces tbody)
+      if(tableBody){
+        tableBody.innerHTML = '';
+        settings.plans
+          .filter(p=>p.visible!==false)
+          .sort((a,b)=>(a.order||0)-(b.order||0))
+          .forEach(p=>{
+            const days = p.months ? (p.months*30) : '';
+            const note = p.note || '';
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${p.name}</td><td>${days? days+' days' : ''}</td><td>$${p.price}</td><td>${note}</td>`;
+            tableBody.appendChild(tr);
+          });
+      }
+
+      // Rebuild recharge dropdown
+      if(rechargeSel){
+        const current = rechargeSel.value;
+        rechargeSel.innerHTML = `<option value="">Choose a plan</option>`;
+        settings.plans
+          .filter(p=>p.visible!==false)
+          .sort((a,b)=>(a.order||0)-(b.order||0))
+          .forEach(p=>{
+            const opt = document.createElement('option');
+            opt.textContent = `${p.name} - $${p.price}${p.note? ' ('+p.note+')':''}`;
+            rechargeSel.appendChild(opt);
+          });
+        // try keep previous selection if still present
+        const hasPrev = Array.from(rechargeSel.options).some(o=>o.textContent===current);
+        if(hasPrev) rechargeSel.value = current;
+      }
+    }
+
+    /* Boxes */
+    if(Array.isArray(settings.boxes)){
+      const grid = document.getElementById('boxesGrid');
+      const existing = Array.from(grid.querySelectorAll('.card[data-box]'));
+      const byName = {};
+      existing.forEach(c=>{
+        byName[c.getAttribute('data-box')] = c;
+      });
+
+      // Update existing and mark seen
+      const seen = new Set();
+      settings.boxes
+        .filter(b=>b.visible!==false)
+        .sort((a,b)=>(a.order||0)-(b.order||0))
+        .forEach(b=>{
+          const name = b.name;
+          const price = Number(b.price)||0;
+          const bundle = Number(b.bundle)||0;
+          const badge = b.badge || null;
+          const specs = Array.isArray(b.specs)? b.specs : [];
+
+          let card = byName[name];
+          if(card){
+            // update number fields and badge text if exists
+            const priceEl = card.querySelector('.price');
+            if(priceEl) priceEl.textContent = `$${price}`;
+            const comboEl = card.querySelector('.combo');
+            if(comboEl) comboEl.textContent = `Box + 1-Year: $${bundle}`;
+            const titleEl = card.querySelector('.title');
+            if(titleEl) titleEl.textContent = name;
+            const markEl = card.querySelector('.mark');
+            if(markEl && badge) markEl.textContent = badge;
+
+            // replace specs list if provided
+            if(specs.length){
+              const ul = card.querySelector('ul.features');
+              if(ul){
+                ul.innerHTML = specs.map(s=>`<li>${s}</li>`).join('');
+              }
+            }
+
+            // update buttons
+            const btns = card.querySelectorAll('.btns .btn, .btns .btn.whats');
+            // first button is "Box Only"
+            const onlyBtn = card.querySelector('.btns .btn:not(.whats)');
+            if(onlyBtn) onlyBtn.setAttribute('onclick', `buyBox(${JSON.stringify(name)},${price})`);
+            const bundleBtn = card.querySelector('.btns .btn.whats');
+            if(bundleBtn) bundleBtn.setAttribute('onclick', `buyBoxBundle(${JSON.stringify(name)},${bundle})`);
+
+            // inject carousel if images exist
+            applyBoxCarousel(card, b.images || []);
+          }else{
+            // create new card for extra boxes
+            const cardEl = document.createElement('div');
+            cardEl.className = 'card';
+            cardEl.setAttribute('data-box', name);
+            const specHtml = specs.length ? specs.map(s=>`<li>${s}</li>`).join('') : `
+              <li>Android • 4K • HDMI • Wi-Fi</li>`;
+            cardEl.innerHTML = `
+              ${badge? `<span class="mark">${badge}</span>`:''}
+              <div class="row"><div class="title">${name}</div><div class="price">$${price}</div></div>
+              ${bundle? `<div class="combo">Box + 1-Year: $${bundle}</div>`:''}
+              <div class="bx-carousel" style="display:none"></div>
+              <ul class="features">${specHtml}</ul>
+              <div class="btns">
+                <button class="btn" onclick='buyBox(${JSON.stringify(name)},${price})'>Box Only</button>
+                <button class="btn whats" onclick='buyBoxBundle(${JSON.stringify(name)},${bundle||price})'>Box + 1-Year</button>
+              </div>
+            `;
+            grid.appendChild(cardEl);
+            applyBoxCarousel(cardEl, b.images || []);
+          }
+          seen.add(name);
+        });
+
+      // Optionally hide boxes that are not in settings and have visible === false there.
+      // We are NOT auto-removing your original boxes; you said keep them. If you want hide,
+      // you’ll control visibility in setup.html later and we’ll implement honoring that here.
+    }
+  }
+
+  function applyBoxCarousel(cardEl, images){
+    const wrap = cardEl.querySelector('.bx-carousel');
+    if(!wrap) return;
+    if(!Array.isArray(images) || images.length===0){ wrap.style.display='none'; wrap.innerHTML=''; return; }
+    wrap.style.display='block';
+    const trackId = 'bxtrk_'+Math.random().toString(36).slice(2);
+    const dotsId  = 'bxdots_'+Math.random().toString(36).slice(2);
+    wrap.innerHTML = `
+      <div id="${trackId}" class="bx-track">
+        ${images.map(img=>`
+          <div class="bx-slide">
+            <img src="${img.url||''}" alt="${(img.alt||'')}" loading="lazy" referrerpolicy="no-referrer" />
+          </div>
+        `).join('')}
+      </div>
+      <div id="${dotsId}" class="bx-dots">
+        ${images.map((_,i)=>`<div class="bx-dot ${i===0?'active':''}"></div>`).join('')}
+      </div>
+    `;
+    // activate dots on scroll
+    const track = wrap.querySelector('#'+trackId);
+    const dots  = Array.from(wrap.querySelectorAll('#'+dotsId+' .bx-dot'));
+    track.addEventListener('scroll', ()=>{
+      const slides = Array.from(track.querySelectorAll('.bx-slide'));
+      const pos = track.scrollLeft + track.clientWidth/2;
+      let idx = 0;
+      let acc = 0;
+      for(let i=0;i<slides.length;i++){
+        const s = slides[i];
+        const left = s.offsetLeft;
+        const right = left + s.clientWidth;
+        if(pos>=left && pos<=right){ idx=i; break; }
+      }
+      dots.forEach((d,i)=>d.classList.toggle('active', i===idx));
+    }, {passive:true});
+  }
+
+  // Apply on load
+  applyLocalSettings();
 </script>
 </body>
 </html>
