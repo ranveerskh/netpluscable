@@ -1,678 +1,784 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>net+TV • Setup</title>
-<meta name="theme-color" content="#0b1020" />
+<meta charset="utf-8">
+<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1">
+<title>net+TV Admin</title>
+<meta name="theme-color" content="#0b1020">
 <style>
   :root{
-    --bg:#0b1020;--ink:#e9edff;--muted:#9aa7d9;--card:#111734;--line:#23305b;
-    --accent1:#6a11cb;--accent2:#2575fc;--ok:#32d296;--warn:#f8b84a;--danger:#ff6b6b;
+    --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
+    --g1:#6a11cb;--g2:#2575fc;--tap:44px;
+    --safe-top: env(safe-area-inset-top,0px);
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#0b1020;color:var(--ink)}
-  a{color:#cfe0ff}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#0b1020;color:var(--ink);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
   .wrap{max-width:1100px;margin:0 auto;padding:16px}
-  header{position:sticky;top:0;z-index:10;background:rgba(11,16,32,.9);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08)}
-  .row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 16px}
-  .h1{font-weight:900}
-  .btn{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:#0d1430;color:#e9edff;font-weight:800;cursor:pointer}
-  .btn.primary{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
-  .btn.ok{background:var(--ok);border-color:transparent;color:#052414}
-  .btn.warn{background:var(--warn);border-color:transparent;color:#251b07}
-  .btn.danger{background:var(--danger);border-color:transparent;color:#370c0c}
-  .btn.ghost{background:transparent}
-  .grid{display:grid;gap:14px}
-  @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
-  .title{font-weight:900;margin:0 0 8px}
-  .sub{color:#bcd0ff;font-size:13px;margin-bottom:10px}
-  .field{display:grid;gap:6px;margin:10px 0}
-  .field.inline{grid-template-columns:1fr 1fr;gap:8px}
-  .field.inline3{grid-template-columns:1.3fr .7fr .7fr;gap:8px}
-  label{font-size:12px;color:#b6c7ff}
-  input,select,textarea{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:10px;color:#e9edff}
-  textarea{min-height:90px}
-  .list{display:grid;gap:10px;margin-top:8px}
-  .rowline{display:grid;gap:8px;background:#0b122a;border:1px solid #22305a;border-radius:12px;padding:10px}
-  @media(min-width:680px){.rowline.cols2{grid-template-columns:1fr 1fr}.rowline.cols3{grid-template-columns:1.2fr .6fr .6fr}}
-  .chips{display:flex;gap:6px;flex-wrap:wrap}
-  .chip{background:#0b122a;border:1px solid #22305a;color:#cfe0ff;padding:6px 10px;border-radius:999px;font-size:12px}
-  .muted{color:#9aa7d9}
-  .right{margin-left:auto}
-  .tools{display:flex;flex-wrap:wrap;gap:8px}
-  .hr{height:1px;background:#22305a;margin:12px 0}
-  .hint{font-size:12px;color:#a7b6ef}
-  .dangerline{border-color:#5a2435;background:#1a0c13}
-  .flex{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .stickybar{position:sticky;bottom:0;z-index:20;background:rgba(11,16,32,.92);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08);padding:8px}
-  .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;background:#0b122a;border:1px solid #22305a;padding:2px 6px;border-radius:6px}
-  .small{font-size:12px}
-  /* modal */
-  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:9999}
-  .dialog{width:min(560px,92vw);background:#0d142d;border:1px solid #22305a;border-radius:14px;padding:16px}
+
+  /* Topbar */
+  .topbar{position:sticky;top:0;z-index:100;background:rgba(11,16,32,.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .bar{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:10px 16px;padding-top:calc(10px + var(--safe-top))}
+  .brand{display:flex;gap:10px;align-items:center;font-weight:900}
+  .badge{background:linear-gradient(135deg,var(--g1),var(--g2));padding:6px 10px;border-radius:10px;font-weight:900}
+  .auth{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .chip{border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#0f1732}
+  .btn{border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px 14px;font-weight:800;background:#0f1732;color:var(--ink);cursor:pointer;min-height:var(--tap)}
+  .btn.primary{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff}
+  .btn.warn{background:#2d1d00;border-color:#5f3f00}
+  .input{background:#0b122a;border:1px solid #22305a;border-radius:12px;padding:12px 14px;color:#e9edff;min-height:var(--tap);width:100%}
+  textarea.input{min-height:120px}
+
+  /* Quick links */
+  .ql-wrap{padding:10px 16px;border-top:1px solid rgba(255,255,255,.08)}
+  .ql-grid{display:grid;gap:10px;grid-template-columns:repeat(2, minmax(0,1fr))}
+  .qbtn{display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:#0f1732}
+  .qbtn.primary{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent}
+
+  /* Nav buttons to panels */
+  .tools{display:flex;gap:10px;flex-wrap:wrap;margin:10px 16px}
+  .tbtn{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#0f1732;font-weight:800}
+  .tbtn.active{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff}
+
+  /* Sections */
+  .section{padding:16px}
+  .sub{color:#a9b5e6;font-size:13px}
+  .cards{display:grid;gap:12px}
+  @media(min-width:900px){.cards{grid-template-columns:repeat(4,1fr)}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+  .kpi-val{font-size:28px;font-weight:900;line-height:1.1;margin-top:6px}
+
+  /* Panel containers */
+  .panel{display:none}
+  .panel.active{display:block}
+
+  /* Pills */
+  .pill{display:inline-block;margin:6px 8px 0 0;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:#0f1732;font-size:13px}
+
+  /* Reusable grids */
+  .grid2{display:grid;gap:10px}
+  @media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
+  .grid3{display:grid;gap:10px}
+  @media(min-width:900px){.grid3{grid-template-columns:repeat(3,1fr)}}
+
+  .item{display:grid;grid-template-columns:1fr auto;gap:8px;background:#0f1732;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px;margin-top:8px}
+  .actions{display:flex;gap:8px;align-items:center}
+
+  /* Small table-like list */
+  .rows{display:grid;gap:8px;margin-top:10px}
+  .row{display:grid;gap:8px;background:#0f1732;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px}
+  @media(min-width:800px){.row{grid-template-columns:2fr 1fr 1fr auto}}
+
+  .badge2{display:inline-block;background:#0f1732;border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12px}
 </style>
 </head>
 <body>
-<header>
-  <div class="row">
-    <div class="h1">net+TV • Setup</div>
-    <div class="tools">
-      <button class="btn" id="btnImport">Import JSON</button>
-      <button class="btn" id="btnExport">Export JSON</button>
-      <button class="btn warn" id="btnDefaults">Reset to Defaults</button>
-      <button class="btn primary" id="btnPublish">Publish to Site</button>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="bar">
+    <div class="brand"><span class="badge">net+TV</span> <span>Admin</span></div>
+
+    <!-- Right-corner auth -->
+    <div class="auth" id="authArea">
+      <input id="email" class="input" placeholder="Admin email" autocomplete="username" inputmode="email" style="width:220px">
+      <input id="password" class="input" placeholder="Password" type="password" autocomplete="current-password" style="width:180px">
+      <button class="btn primary" id="btnSignIn">Sign In</button>
+    </div>
+    <div class="auth" id="whoami" style="display:none">
+      <span id="whoamiText" class="chip"></span>
+      <button class="btn" id="btnSignOut">Sign Out</button>
     </div>
   </div>
-</header>
 
-<div class="wrap">
-  <!-- PLANS -->
-  <section class="card">
-    <h3 class="title">Plans</h3>
-    <div class="sub">Add, edit, reorder. The public site reads from these when you publish.</div>
-    <div id="plansList" class="list"></div>
-    <div class="flex">
-      <button class="btn" id="addPlan">+ Add Plan</button>
-      <span class="hint">Fields: name, months, price, badge, note, order, visible</span>
+  <!-- 2x2 grid of the four main buttons -->
+  <div class="ql-wrap">
+    <div class="ql-grid">
+      <a class="qbtn primary" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glow TV</a>
+      <a class="qbtn" href="https://bill.spicetv.cc/login" target="_blank" rel="noopener">Spice TV</a>
+      <a class="qbtn" href="https://fast4k.cc/login" target="_blank" rel="noopener">Smart4K TV</a>
+      <a class="qbtn" href="data.html" target="_blank" rel="noopener">Users Data</a>
     </div>
+  </div>
+
+  <!-- Buttons to in-page panels -->
+  <div class="tools" id="navTabs">
+    <button class="tbtn active" data-panel="home">Home</button>
+    <button class="tbtn" data-panel="hosts">Hosts</button>
+    <button class="tbtn" data-panel="banners">Banners</button>
+    <button class="tbtn" data-panel="galleryFs">Gallery (Firestore)</button>
+    <span class="pill">Site Settings</span>
+    <button class="tbtn" data-panel="general">General</button>
+    <button class="tbtn" data-panel="plans">Plans</button>
+    <button class="tbtn" data-panel="boxes">Boxes</button>
+    <button class="tbtn" data-panel="galleryLocal">Gallery (Site)</button>
+    <button class="tbtn" data-panel="importExport">Import/Export</button>
+  </div>
+</div>
+
+<!-- PANELS -->
+<div class="wrap">
+
+  <!-- HOME: KPIs only -->
+  <section id="panel-home" class="panel active section">
+    <div class="sub" style="margin-bottom:10px">Analytics track steps only (no location)</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+      <label class="sub" for="range">Range</label>
+      <select id="range" class="input" style="width:auto">
+        <option value="7d">Last 7 days</option>
+        <option value="30d">Last 30 days</option>
+        <option value="1y">Last 1 year</option>
+        <option value="all">Lifetime</option>
+      </select>
+      <button class="btn" id="refreshKPI">Refresh</button>
+    </div>
+
+    <div class="cards">
+      <div class="card"><div class="sub">Unique Viewer-Days</div><div class="kpi-val" id="kpiVisitors">—</div></div>
+      <div class="card"><div class="sub">Pings in Range</div><div class="kpi-val" id="kpiPings">—</div></div>
+      <div class="card"><div class="sub">Avg Steps (today)</div><div class="kpi-val" id="kpiAvgStepsToday">—</div></div>
+      <div class="card"><div class="sub">Avg Steps (session)</div><div class="kpi-val" id="kpiAvgStepsSession">—</div></div>
+    </div>
+  </section>
+
+  <!-- HOSTS -->
+  <section id="panel-hosts" class="panel section">
+    <h3 style="margin:0 0 8px 0">Hosts</h3>
+    <div class="sub" style="margin-bottom:8px">Tap to open; long-press to copy.</div>
+    <a class="pill" href="http://glotv.me" target="_blank" rel="noopener">Glow TV: glotv.me</a>
+    <a class="pill" href="http://4k.spicetv.cc" target="_blank" rel="noopener">Spice TV: 4k.spicetv.cc</a>
+    <a class="pill" href="http://smart4k.me" target="_blank" rel="noopener">Smart4K TV: smart4k.me</a>
+  </section>
+
+  <!-- BANNERS (Firestore) -->
+  <section id="panel-banners" class="panel section">
+    <h3 style="margin:0 0 8px 0">Swipe Banners (Firestore)</h3>
+    <div class="sub">Only enabled banners within date window are displayed on site.</div>
+    <div class="grid2" style="margin-top:12px">
+      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="bnEnabled" checked> <span class="sub">Enabled</span></label>
+      <input class="input" id="bnTitle" placeholder="Title (e.g., Canada Day Offer)">
+      <input class="input" id="bnText" placeholder="Text (e.g., Get 1 month extra with 1-year)">
+      <input class="input" id="bnCtaLabel" placeholder="CTA label (e.g., Get 13 months)">
+      <input class="input" id="bnCtaHref" placeholder="CTA href (https:// or #)">
+      <input class="input" id="bnImageUrl" placeholder="Image URL (optional)">
+      <input class="input" id="bnValidFrom" type="date" placeholder="Valid from">
+      <input class="input" id="bnValidTo" type="date" placeholder="Valid to">
+      <input class="input" id="bnOrder" type="number" placeholder="Order (0..N)">
+      <button class="btn primary" id="bnSave">Save New Banner</button>
+    </div>
+    <div class="sub" id="bnStatus" style="margin-top:6px"></div>
+    <div id="bannerList"></div>
+  </section>
+
+  <!-- GALLERY (Firestore legacy) -->
+  <section id="panel-galleryFs" class="panel section">
+    <h3 style="margin:0 0 8px 0">Gallery (Firestore)</h3>
+    <div class="sub">Legacy gallery used by the modal in index as fallback.</div>
+    <div class="grid2" style="margin-top:12px">
+      <input class="input" id="glName" placeholder="Name / caption">
+      <input class="input" id="glImageUrl" placeholder="Image URL (https://...)">
+      <input class="input" id="glOrder" type="number" placeholder="Order (0..N)">
+      <button class="btn primary" id="glSave">Add Item</button>
+    </div>
+    <div class="sub" id="glStatus" style="margin-top:6px"></div>
+    <div id="galleryList"></div>
+  </section>
+
+  <!-- ===== SITE SETTINGS (LocalStorage for index.html) ===== -->
+
+  <!-- GENERAL -->
+  <section id="panel-general" class="panel section">
+    <h3 style="margin:0 0 8px 0">Site Settings — General</h3>
+    <div class="sub">These values are stored in browser <span class="badge2">localStorage</span> under <code>netplus.settings.v1.public</code>. Index reads from here.</div>
+    <div class="grid3" style="margin-top:12px">
+      <div class="card">
+        <div class="sub">Currency</div>
+        <div class="grid2" style="margin-top:8px">
+          <input class="input" id="curSymbol" placeholder="Symbol (e.g., $)">
+          <select class="input" id="curPos">
+            <option value="prefix">Prefix ($100)</option>
+            <option value="suffix">Suffix (100$)</option>
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sub">WhatsApp</div>
+        <input class="input" id="waNumber" placeholder="WhatsApp number (digits only)" style="margin-top:8px">
+      </div>
+      <div class="card">
+        <div class="sub">Housekeeping</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+          <button class="btn" id="btnLoadLocal">Load current</button>
+          <button class="btn primary" id="btnSaveLocal">Save</button>
+          <button class="btn warn" id="btnResetLocal">Reset (defaults)</button>
+        </div>
+        <div class="sub" id="genStatus" style="margin-top:8px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANS -->
+  <section id="panel-plans" class="panel section">
+    <h3 style="margin:0 0 8px 0">Site Settings — Plans</h3>
+    <div class="sub">Add plans; index cards and the recharge dropdown are built from this list.</div>
+
+    <div class="grid3" style="margin-top:12px">
+      <input class="input" id="plName" placeholder="Name (e.g., 6 Months)">
+      <input class="input" id="plMonths" type="number" placeholder="Months (e.g., 6)">
+      <input class="input" id="plPrice" type="number" placeholder="Price (number)">
+      <input class="input" id="plBadge" placeholder="Badge (e.g., Most Picked)">
+      <input class="input" id="plNote" placeholder="Note (e.g., +1 month free)">
+      <input class="input" id="plOrder" type="number" placeholder="Order (0..N)">
+      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="plVisible" checked> <span class="sub">Visible</span></label>
+      <button class="btn primary" id="plAdd">Add / Save</button>
+      <button class="btn" id="plClear">Clear form</button>
+    </div>
+    <div class="rows" id="planRows"></div>
   </section>
 
   <!-- BOXES -->
-  <section class="card">
-    <h3 class="title">Boxes</h3>
-    <div class="sub">Each box can have multiple photos and spec bullets.</div>
-    <div id="boxesList" class="list"></div>
-    <div class="flex">
-      <button class="btn" id="addBox">+ Add Box</button>
-      <button class="btn" id="checkImages">Validate Images</button>
-      <span class="hint">Fields: name, badge, price, bundle, order, visible, specs[], images[]</span>
+  <section id="panel-boxes" class="panel section">
+    <h3 style="margin:0 0 8px 0">Site Settings — Boxes</h3>
+    <div class="sub">Each box supports photos (swipe on site) and specs list.</div>
+
+    <div class="grid3" style="margin-top:12px">
+      <input class="input" id="bxName" placeholder="Name (e.g., Formular Z11 PRO)">
+      <input class="input" id="bxPrice" type="number" placeholder="Price">
+      <input class="input" id="bxBundle" type="number" placeholder="Bundle price (Box + 1-Year)">
+      <input class="input" id="bxBadge" placeholder="Badge (e.g., Recommended)">
+      <input class="input" id="bxOrder" type="number" placeholder="Order (0..N)">
+      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="bxVisible" checked> <span class="sub">Visible</span></label>
+      <textarea class="input" id="bxSpecs" placeholder="Specs: one per line"></textarea>
+      <textarea class="input" id="bxPhotos" placeholder="Photo URLs: one per line (optional captions with |, e.g. https://...jpg|Front)"></textarea>
+      <button class="btn primary" id="bxAdd">Add / Save</button>
+      <button class="btn" id="bxClear">Clear form</button>
     </div>
+    <div class="rows" id="boxRows"></div>
   </section>
 
-  <!-- GALLERY -->
-  <section class="card">
-    <h3 class="title">Gallery</h3>
-    <div class="sub">These override the Firestore gallery on index if present.</div>
-    <div id="galleryList" class="list"></div>
-    <div class="flex">
-      <button class="btn" id="addGallery">+ Add Photo</button>
-      <button class="btn" id="bulkGallery">Bulk Paste URLs</button>
-      <span class="hint">Each item: url, caption, order, visible</span>
+  <!-- GALLERY (LOCAL for site) -->
+  <section id="panel-galleryLocal" class="panel section">
+    <h3 style="margin:0 0 8px 0">Site Settings — Gallery (Site)</h3>
+    <div class="sub">Shown in the Gallery tab on index. Use this instead of Firestore if you want pure local control.</div>
+
+    <div class="grid3" style="margin-top:12px">
+      <input class="input" id="glLocCaption" placeholder="Caption">
+      <input class="input" id="glLocUrl" placeholder="Image URL">
+      <input class="input" id="glLocOrder" type="number" placeholder="Order">
+      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="glLocVisible" checked> <span class="sub">Visible</span></label>
+      <button class="btn primary" id="glLocAdd">Add / Save</button>
+      <button class="btn" id="glLocClear">Clear form</button>
     </div>
+    <div class="rows" id="galLocalRows"></div>
   </section>
 
-  <!-- GLOBAL SETTINGS (minimal for now, extend later if you want) -->
-  <section class="card">
-    <h3 class="title">Settings</h3>
-    <div class="field inline">
-      <div>
-        <label>Currency symbol</label>
-        <input id="curSymbol" value="$" />
+  <!-- IMPORT / EXPORT -->
+  <section id="panel-importExport" class="panel section">
+    <h3 style="margin:0 0 8px 0">Site Settings — Import / Export</h3>
+    <div class="sub">Backup or move settings between browsers.</div>
+    <div class="grid2" style="margin-top:12px">
+      <div class="card">
+        <div class="sub">Export JSON</div>
+        <button class="btn" id="btnExport">Download settings.json</button>
       </div>
-      <div>
-        <label>Currency position</label>
-        <select id="curPos">
-          <option value="prefix" selected>prefix ($100)</option>
-          <option value="suffix">suffix (100$)</option>
-        </select>
+      <div class="card">
+        <div class="sub">Import JSON</div>
+        <input type="file" id="fileImport" accept="application/json" class="input">
+        <button class="btn primary" id="btnImport">Import</button>
       </div>
     </div>
-    <div class="field">
-      <label>WhatsApp Number (E.164)</label>
-      <input id="waNumber" placeholder="+16476961656" />
-    </div>
-    <div class="hint">Index still uses your hardcoded number for now. We can wire this in later if you want.</div>
+    <div class="sub" id="ieStatus" style="margin-top:8px"></div>
   </section>
 
-  <div class="stickybar">
-    <div class="flex">
-      <span class="small muted">Draft is stored while you edit. Click <span class="kbd">Publish to Site</span> to write <code>localStorage["netplus.settings.v1.public"]</code>.</span>
-      <span class="right small muted" id="statusText"></span>
-    </div>
-  </div>
 </div>
 
-<!-- AUTH MODAL -->
-<div class="modal" id="authModal">
-  <div class="dialog">
-    <h3 style="margin:0 0 10px">Admin Login</h3>
-    <div class="field">
-      <label>Password</label>
-      <input id="authPwd" type="password" placeholder="••••••••" />
-    </div>
-    <div class="field">
-      <label class="flex" style="align-items:center;gap:8px">
-        <input type="checkbox" id="rememberDevice" style="width:auto"> Remember this device for 30 minutes
-      </label>
-    </div>
-    <div class="flex" style="justify-content:flex-end">
-      <button class="btn ghost" id="authCancel">Cancel</button>
-      <button class="btn primary" id="authOk">Unlock</button>
-    </div>
-    <div class="hint" style="margin-top:8px">Password is <code>8netRafer@@</code>. Change it when we wire a better gate.</div>
-  </div>
-</div>
+<script type="module">
+/* ================= Firebase (unchanged core) ================= */
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore, collection, query, orderBy, limit, getDocs,
+  doc, addDoc, setDoc, getDoc, deleteDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-<input id="fileImport" type="file" accept="application/json" style="display:none" />
-
-<script>
-/* =========================
-   Simple data model + seed
-   ========================= */
-const STORAGE_KEY_PUBLIC = 'netplus.settings.v1.public';
-const STORAGE_KEY_DRAFT  = 'netplus.settings.v1.draft';
-const SESSION_KEY_AUTH   = 'netplus.setup.authUntil';
-
-const defaultData = {
-  meta: { schema:1, updatedAt: new Date().toISOString() },
-  currency: { symbol: "$", position: "prefix" },
-  whatsapp: { number: "+16476961656" },
-  plans: [
-    { id:"p1", name:"1 Month", months:1,  price:15, badge:"Starter",     note:"",                       visible:true, order:1 },
-    { id:"p3", name:"3 Months", months:3, price:40, badge:"Popular",     note:"Save vs monthly",        visible:true, order:2 },
-    { id:"p6", name:"6 Months", months:6, price:65, badge:"Most Picked", note:"Most picked",            visible:true, order:3 },
-    { id:"p12",name:"12 Months (+1 free)", months:12, price:100, badge:"Best Value", note:"+1 month free", visible:true, order:4 }
-  ],
-  boxes: [
-    { id:"b_andfh", name:"Android FULL HD Box", price:50, bundle:140, badge:"Not Recommended",
-      specs:["ARM Cortex Quad-Core • Mali-G31","2GB DDR3 • 8GB eMMC","Wi-Fi 2.4/5.8 • BT 5.2","Lemon TV App• Netflix • YouTube • Disney+ • Play","Bluetooth voice remote","Full HD output"],
-      images:[], order:1, visible:true
-    },
-    { id:"b_sword", name:"Sword+ 4K Box", price:100, bundle:180, badge:"Good",
-      specs:["Android 11 • TV ONAIR • 4K 60FPS","2GB DDR3 • 16GB eMMC","Wi-Fi 2.4/5.8"],
-      images:[], order:2, visible:true
-    },
-    { id:"b_shield", name:"Sheild Ultimate 4K Box", price:120, bundle:200, badge:"Value for Money",
-      specs:["Android 9 • TV ONAIR • 4K 60FPS","4GB DDR3 • 32GB eMMC","Wi-Fi 2.4/5.8"],
-      images:[], order:3, visible:true
-    },
-    { id:"b_z10", name:"Formular Z10 Box", price:130, bundle:210, badge:"Recommended",
-      specs:["Android 10 • TV ONAIR • 4K 60FPS • HDR10*","2GB DDR3 • 8GB eMMC • Wi-Fi 2.4/5.8"],
-      images:[], order:4, visible:true
-    },
-    { id:"b_mag544", name:"Mag544 4K Linux Box", price:120, bundle:210, badge:"Durable",
-      specs:["Linux OS • 4K • Durable build","1GB RAM • 4GB Flash"],
-      images:[], order:5, visible:true
-    },
-    { id:"b_z11", name:"Formular Z11 PRO", price:180, bundle:260, badge:"Powerful",
-      specs:["Android 11 • TV ONAIR • 4K 60FPS • HDR10*","2GB DDR4 • 16GB eMMC • Wi-Fi 5"],
-      images:[], order:6, visible:true
-    },
-    { id:"b_z11max", name:"Formular Z11 PRO MAX", price:220, bundle:300, badge:"High End",
-      specs:["Android 11 • TV ONAIR • 4K ULTRA • HDR10*","4GB DDR3 • 32GB eMMC • Wi-Fi 6"],
-      images:[], order:7, visible:true
-    }
-  ],
-  gallery: []
+const firebaseConfig = {
+  apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
+  authDomain: "netplustv-90b29.firebaseapp.com",
+  projectId: "netplustv-90b29",
+  storageBucket: "netplustv-90b29.firebasestorage.app",
+  messagingSenderId: "639722274355",
+  appId: "1:639722274355:web:ebe34fdf093f8191da2d46"
 };
+const app = getApps().length? getApps()[0] : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
 
-let draft = loadDraft();
+/* ================= Helpers ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function toast(id,msg){ const el=$(id); if(!el) return; el.textContent=msg; setTimeout(()=>{el.textContent='';},1800); }
+function fmt(n){ return Number(n||0); }
 
-/* =========================
-   Auth Gate
-   ========================= */
-function needAuth(){
-  const until = Number(sessionStorage.getItem(SESSION_KEY_AUTH)||0);
-  return !(until && Date.now() < until);
-}
-function showAuth(){
-  const m = document.getElementById('authModal');
-  m.style.display='flex';
-  document.getElementById('authPwd').value='';
-  setTimeout(()=>document.getElementById('authPwd').focus(), 0);
-}
-function hideAuth(){ document.getElementById('authModal').style.display='none'; }
-function unlock(){
-  const pwd = document.getElementById('authPwd').value;
-  if(pwd !== '8netRafer@@'){ alert('Wrong password.'); return; }
-  const remember = document.getElementById('rememberDevice').checked;
-  if(remember){ sessionStorage.setItem(SESSION_KEY_AUTH, String(Date.now() + 30*60*1000)); }
-  hideAuth();
-}
-document.getElementById('authOk').onclick = unlock;
-document.getElementById('authCancel').onclick = ()=>{ location.href='index.html'; };
-
-if(needAuth()) showAuth();
-
-/* =========================
-   Storage helpers
-   ========================= */
-function loadPublic(){
-  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY_PUBLIC)||'null'); }catch(_){ return null; }
-}
-function loadDraft(){
-  let d = null;
-  try{ d = JSON.parse(localStorage.getItem(STORAGE_KEY_DRAFT)||'null'); }catch(_){}
-  if(!d){
-    const pub = loadPublic();
-    d = pub ? JSON.parse(JSON.stringify(pub)) : JSON.parse(JSON.stringify(defaultData));
-    localStorage.setItem(STORAGE_KEY_DRAFT, JSON.stringify(d));
-  }
-  return d;
-}
-function saveDraft(){
-  draft.meta = draft.meta || {};
-  draft.meta.updatedAt = new Date().toISOString();
-  localStorage.setItem(STORAGE_KEY_DRAFT, JSON.stringify(draft));
-  setStatus('Draft saved.');
-}
-function publish(){
-  draft.meta = draft.meta || {};
-  draft.meta.updatedAt = new Date().toISOString();
-  localStorage.setItem(STORAGE_KEY_PUBLIC, JSON.stringify(draft));
-  setStatus('Published to site. Open index.html to see changes.');
-}
-function resetDefaults(){
-  if(!confirm('Reset draft to defaults? This does NOT touch published settings.')) return;
-  draft = JSON.parse(JSON.stringify(defaultData));
-  renderAll();
-  saveDraft();
-}
-function setStatus(t){
-  document.getElementById('statusText').textContent = t;
-  setTimeout(()=>{ if(document.getElementById('statusText').textContent===t) document.getElementById('statusText').textContent=''; }, 4000);
-}
-
-/* =========================
-   ID helper
-   ========================= */
-function uid(prefix='id'){
-  return prefix + '_' + Math.random().toString(36).slice(2,8);
-}
-
-/* =========================
-   Render: Plans
-   ========================= */
-function renderPlans(){
-  const wrap = document.getElementById('plansList');
-  wrap.innerHTML='';
-  const plans = (draft.plans||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
-  for(const p of plans){
-    const row = document.createElement('div');
-    row.className = 'rowline cols3';
-    row.innerHTML = `
-      <div>
-        <label>Name</label>
-        <input value="${p.name||''}" data-k="name">
-      </div>
-      <div>
-        <label>Months</label>
-        <input type="number" min="1" value="${p.months||1}" data-k="months">
-      </div>
-      <div>
-        <label>Price</label>
-        <input type="number" min="0" value="${p.price||0}" data-k="price">
-      </div>
-      <div>
-        <label>Badge</label>
-        <input value="${p.badge||''}" data-k="badge">
-      </div>
-      <div>
-        <label>Note</label>
-        <input value="${p.note||''}" data-k="note">
-      </div>
-      <div>
-        <label>Order</label>
-        <input type="number" value="${p.order||0}" data-k="order">
-      </div>
-      <div class="flex" style="align-items:center">
-        <label>Visible</label>
-        <select data-k="visible">
-          <option value="true" ${p.visible!==false?'selected':''}>true</option>
-          <option value="false" ${p.visible===false?'selected':''}>false</option>
-        </select>
-      </div>
-      <div class="flex" style="gap:6px;align-items:flex-end">
-        <button class="btn" data-act="up">↑</button>
-        <button class="btn" data-act="down">↓</button>
-        <button class="btn danger" data-act="del">Delete</button>
-      </div>
-    `;
-    // wire inputs
-    row.querySelectorAll('input,select').forEach(inp=>{
-      inp.onchange = ()=>{
-        const k = inp.getAttribute('data-k');
-        let v = inp.value;
-        if(k==='months' || k==='price' || k==='order') v = Number(v||0);
-        if(k==='visible') v = (v==='true');
-        p[k] = v;
-        saveDraft();
-      };
-    });
-    // actions
-    row.querySelector('[data-act="del"]').onclick = ()=>{
-      if(!confirm('Delete this plan?')) return;
-      draft.plans = draft.plans.filter(x=>x!==p);
-      renderPlans(); saveDraft();
-    };
-    row.querySelector('[data-act="up"]').onclick = ()=>{
-      p.order = (p.order||0) - 1; renderPlans(); saveDraft();
-    };
-    row.querySelector('[data-act="down"]').onclick = ()=>{
-      p.order = (p.order||0) + 1; renderPlans(); saveDraft();
-    };
-    wrap.appendChild(row);
-  }
-}
-document.getElementById('addPlan').onclick = ()=>{
-  draft.plans = draft.plans || [];
-  draft.plans.push({ id: uid('p'), name:'New Plan', months:1, price:0, badge:'', note:'', visible:true, order:(draft.plans.length+1) });
-  renderPlans(); saveDraft();
-};
-
-/* =========================
-   Render: Boxes
-   ========================= */
-function renderBoxes(){
-  const wrap = document.getElementById('boxesList');
-  wrap.innerHTML='';
-  const boxes = (draft.boxes||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
-  for(const b of boxes){
-    const row = document.createElement('div');
-    row.className = 'rowline';
-    row.innerHTML = `
-      <div class="field inline">
-        <div>
-          <label>Name</label>
-          <input value="${b.name||''}" data-k="name">
-        </div>
-        <div>
-          <label>Badge</label>
-          <input value="${b.badge||''}" data-k="badge">
-        </div>
-      </div>
-      <div class="field inline">
-        <div>
-          <label>Price</label>
-          <input type="number" min="0" value="${b.price||0}" data-k="price">
-        </div>
-        <div>
-          <label>Bundle</label>
-          <input type="number" min="0" value="${b.bundle||0}" data-k="bundle">
-        </div>
-      </div>
-      <div class="field inline">
-        <div>
-          <label>Order</label>
-          <input type="number" value="${b.order||0}" data-k="order">
-        </div>
-        <div>
-          <label>Visible</label>
-          <select data-k="visible">
-            <option value="true" ${b.visible!==false?'selected':''}>true</option>
-            <option value="false" ${b.visible===false?'selected':''}>false</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="field">
-        <label>Specs (one per line)</label>
-        <textarea data-k="specs">${(b.specs||[]).join('\n')}</textarea>
-      </div>
-
-      <div class="field">
-        <label>Images</label>
-        <div class="list" data-k="images"></div>
-        <div class="flex">
-          <button class="btn" data-act="add-image">+ Add Image</button>
-          <button class="btn" data-act="bulk-images">Bulk Paste URLs</button>
-          <span class="hint">Tip: first image is the cover in index carousel.</span>
-        </div>
-      </div>
-
-      <div class="flex" style="justify-content:flex-end">
-        <button class="btn" data-act="up">↑</button>
-        <button class="btn" data-act="down">↓</button>
-        <button class="btn danger" data-act="del">Delete Box</button>
-      </div>
-    `;
-
-    // wire simple fields
-    row.querySelectorAll('input,select,textarea').forEach(inp=>{
-      const k = inp.getAttribute('data-k');
-      if(!k || k==='images') return;
-      inp.onchange = ()=>{
-        let v = inp.value;
-        if(k==='price' || k==='bundle' || k==='order') v = Number(v||0);
-        if(k==='visible') v = (v==='true');
-        if(k==='specs'){ v = v.split('\n').map(s=>s.trim()).filter(Boolean); }
-        b[k] = v;
-        saveDraft();
-      };
-    });
-
-    // images list
-    const imgWrap = row.querySelector('[data-k="images"]');
-    function renderImages(){
-      imgWrap.innerHTML='';
-      (b.images||[]).forEach((img,idx)=>{
-        const line = document.createElement('div');
-        line.className = 'rowline';
-        line.innerHTML = `
-          <div class="field">
-            <label>Image URL</label>
-            <input value="${img.url||''}" data-k="url">
-          </div>
-          <div class="field">
-            <label>Alt</label>
-            <input value="${img.alt||''}" data-k="alt">
-          </div>
-          <div class="flex">
-            <button class="btn" data-act="img-up">↑</button>
-            <button class="btn" data-act="img-down">↓</button>
-            <button class="btn danger" data-act="img-del">Delete</button>
-            <a class="btn ghost" href="${img.url||'#'}" target="_blank" rel="noopener">Open</a>
-          </div>
-        `;
-        line.querySelectorAll('input').forEach(inp=>{
-          const kk = inp.getAttribute('data-k');
-          inp.onchange = ()=>{ img[kk] = inp.value; saveDraft(); };
-        });
-        line.querySelector('[data-act="img-del"]').onclick = ()=>{
-          b.images.splice(idx,1); renderImages(); saveDraft();
-        };
-        line.querySelector('[data-act="img-up"]').onclick = ()=>{
-          if(idx<=0) return; const tmp=b.images[idx-1]; b.images[idx-1]=b.images[idx]; b.images[idx]=tmp; renderImages(); saveDraft();
-        };
-        line.querySelector('[data-act="img-down"]').onclick = ()=>{
-          if(idx>=b.images.length-1) return; const tmp=b.images[idx+1]; b.images[idx+1]=b.images[idx]; b.images[idx]=tmp; renderImages(); saveDraft();
-        };
-        imgWrap.appendChild(line);
-      });
-    }
-    renderImages();
-
-    // image buttons
-    row.querySelector('[data-act="add-image"]').onclick = ()=>{
-      b.images = b.images||[];
-      b.images.push({url:'',alt:''});
-      renderImages(); saveDraft();
-    };
-    row.querySelector('[data-act="bulk-images"]').onclick = ()=>{
-      const txt = prompt('Paste image URLs, one per line:','');
-      if(!txt) return;
-      const lines = txt.split('\n').map(s=>s.trim()).filter(Boolean).map(u=>({url:u,alt:''}));
-      b.images = (b.images||[]).concat(lines);
-      renderImages(); saveDraft();
-    };
-
-    // box actions
-    row.querySelector('[data-act="del"]').onclick = ()=>{
-      if(!confirm('Delete this box?')) return;
-      draft.boxes = draft.boxes.filter(x=>x!==b);
-      renderBoxes(); saveDraft();
-    };
-    row.querySelector('[data-act="up"]').onclick = ()=>{ b.order=(b.order||0)-1; renderBoxes(); saveDraft(); };
-    row.querySelector('[data-act="down"]').onclick = ()=>{ b.order=(b.order||0)+1; renderBoxes(); saveDraft(); };
-
-    wrap.appendChild(row);
-  }
-}
-document.getElementById('addBox').onclick = ()=>{
-  draft.boxes = draft.boxes || [];
-  draft.boxes.push({ id: uid('b'), name:'New Box', badge:'', price:0, bundle:0, specs:[], images:[], order:(draft.boxes.length+1), visible:true });
-  renderBoxes(); saveDraft();
-};
-
-/* simple image validator (HEAD requests aren’t allowed from browser reliably; we attempt to load images) */
-document.getElementById('checkImages').onclick = async ()=>{
-  const all = (draft.boxes||[]).flatMap(b=>(b.images||[]).map(img=>img.url)).filter(Boolean);
-  if(!all.length){ alert('No images to check.'); return; }
-  let ok=0, bad=0;
-  const test = (url)=> new Promise(res=>{
-    const i = new Image(); i.onload=()=>res(true); i.onerror=()=>res(false); i.src = url + (url.includes('?')?'&':'?') + 'chk=' + Date.now();
+/* ================= Nav ================= */
+function showPanel(name){
+  $$('#navTabs .tbtn').forEach(b=>b.classList.toggle('active', b.dataset.panel===name));
+  ['home','hosts','banners','galleryFs','general','plans','boxes','galleryLocal','importExport'].forEach(n=>{
+    $('#panel-'+n).classList.toggle('active', n===name);
   });
-  for(const u of all){
-    /* eslint-disable no-await-in-loop */
-    const good = await test(u);
-    if(good) ok++; else bad++;
-  }
-  alert(`Images checked.\nOK: ${ok}\nBroken: ${bad}`);
-};
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$('#navTabs').addEventListener('click', e=>{
+  const b=e.target.closest('button[data-panel]'); if(!b) return;
+  showPanel(b.dataset.panel);
+});
+window.showPanel = showPanel;
 
-/* =========================
-   Render: Gallery
-   ========================= */
-function renderGallery(){
-  const wrap = document.getElementById('galleryList');
-  wrap.innerHTML='';
-  const gal = (draft.gallery||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
-  for(const g of gal){
-    const row = document.createElement('div');
-    row.className = 'rowline';
-    row.innerHTML = `
-      <div class="field inline">
-        <div>
-          <label>Image URL</label>
-          <input value="${g.url||''}" data-k="url">
-        </div>
-        <div>
-          <label>Caption</label>
-          <input value="${g.caption||''}" data-k="caption">
-        </div>
+/* ================= Auth ================= */
+$('#btnSignIn').addEventListener('click', async ()=>{
+  const email=$('#email').value.trim(), pass=$('#password').value;
+  if(!email||!pass) return alert('Enter email and password');
+  try{ await signInWithEmailAndPassword(auth,email,pass); }catch(e){ alert('Sign in failed: '+(e?.message||e)); }
+});
+$('#btnSignOut').addEventListener('click',()=>signOut(auth));
+onAuthStateChanged(auth, async (user)=>{
+  if(user){
+    $('#authArea').style.display='none';
+    $('#whoami').style.display='flex';
+    $('#whoamiText').textContent = user.email || '';
+    await refreshAll();
+  }else{
+    $('#authArea').style.display='flex';
+    $('#whoami').style.display='none';
+    $('#bannerList').innerHTML='';
+    $('#galleryList').innerHTML='';
+    ['kpiVisitors','kpiPings','kpiAvgStepsToday','kpiAvgStepsSession'].forEach(id=>$('#'+id).textContent='—');
+  }
+});
+
+/* ================= KPIs ================= */
+function rangeToStart(range){
+  const now = new Date();
+  if(range==='7d')  return new Date(now.getTime()-7*24*3600*1000);
+  if(range==='30d') return new Date(now.getTime()-30*24*3600*1000);
+  if(range==='1y')  return new Date(now.getTime()-365*24*3600*1000);
+  return null;
+}
+let visCache=[];
+async function loadAnalytics(){
+  const start = rangeToStart($('#range').value);
+  const snap = await getDocs(query(collection(db,'analytics_visitors'), orderBy('createdAt','desc'), limit(300)));
+  visCache = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(r=>{
+    const t = r.createdAt?.toDate?.() || (r.ts? new Date(r.ts) : null);
+    return !start || (t && t>=start);
+  });
+}
+function renderKPIs(){
+  const unique=new Set(); let pings=0,sumT=0,sumS=0,nT=0,nS=0;
+  visCache.forEach(r=>{
+    const t=r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
+    if(t && r.vid){ unique.add(t.toISOString().slice(0,10)+'|'+r.vid); }
+    pings++;
+    if(typeof r.steps_today==='number'){ sumT+=r.steps_today; nT++; }
+    if(typeof r.steps_session==='number'){ sumS+=r.steps_session; nS++; }
+  });
+  $('#kpiVisitors').textContent=String(unique.size);
+  $('#kpiPings').textContent=String(pings);
+  $('#kpiAvgStepsToday').textContent=nT? (sumT/nT).toFixed(1):'0.0';
+  $('#kpiAvgStepsSession').textContent=nS? (sumS/nS).toFixed(1):'0.0';
+}
+async function refreshKPIs(){ await loadAnalytics(); renderKPIs(); }
+$('#range').addEventListener('change', refreshKPIs);
+$('#refreshKPI').addEventListener('click', refreshKPIs);
+
+/* ================= Firestore: Banners ================= */
+async function loadBanners(){
+  const snap = await getDocs(query(collection(db,'site_settings','banners','items'), orderBy('order','asc')));
+  const list = $('#bannerList'); list.innerHTML='';
+  snap.forEach(docSnap=>{
+    const b = { id: docSnap.id, ...docSnap.data() };
+    const row = document.createElement('div'); row.className='item'; row.innerHTML = `
+      <div>
+        <div class="h">${b.title||'(no title)'} ${b.enabled? '' : '<span class="sub">[disabled]</span>'}</div>
+        <div class="sub">${b.text||''}</div>
+        <div class="sub">CTA: ${b.ctaLabel||''} → ${(b.ctaHref||'').slice(0,80)}</div>
+        <div class="sub">Order: ${b.order??0} | Valid: ${(b.validFrom||'')||'—'} → ${(b.validTo||'')||'—'}</div>
+        <div class="sub">${b.imageUrl? 'Image: '+b.imageUrl : ''}</div>
       </div>
-      <div class="field inline">
-        <div>
-          <label>Order</label>
-          <input type="number" value="${g.order||0}" data-k="order">
-        </div>
-        <div>
-          <label>Visible</label>
-          <select data-k="visible">
-            <option value="true" ${g.visible!==false?'selected':''}>true</option>
-            <option value="false" ${g.visible===false?'selected':''}>false</option>
-          </select>
-        </div>
-      </div>
-      <div class="flex" style="justify-content:flex-end">
-        <button class="btn" data-act="up">↑</button>
-        <button class="btn" data-act="down">↓</button>
-        <a class="btn ghost" href="${g.url||'#'}" target="_blank" rel="noopener">Open</a>
-        <button class="btn danger" data-act="del">Delete</button>
+      <div class="actions">
+        <button class="btn" data-act="toggle" data-id="${b.id}">${b.enabled? 'Disable' : 'Enable'}</button>
+        <button class="btn" data-act="edit" data-id="${b.id}">Edit</button>
+        <button class="btn" data-act="del" data-id="${b.id}">Delete</button>
       </div>
     `;
-    row.querySelectorAll('input,select').forEach(inp=>{
-      const k=inp.getAttribute('data-k'); if(!k) return;
-      inp.onchange=()=>{
-        let v = inp.value;
-        if(k==='order') v = Number(v||0);
-        if(k==='visible') v = (v==='true');
-        g[k]=v; saveDraft();
-      };
+    list.appendChild(row);
+  });
+  list.querySelectorAll('button[data-act]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.dataset.id, act = btn.dataset.act;
+      const ref = doc(db,'site_settings','banners','items',id);
+      if(act==='toggle'){
+        const snap = await getDoc(ref); const cur = snap.data();
+        await setDoc(ref,{enabled:!cur.enabled, updatedAt:serverTimestamp()},{merge:true});
+      }else if(act==='edit'){
+        const snap = await getDoc(ref); const b = snap.data();
+        $('#bnEnabled').checked = !!b.enabled;
+        $('#bnTitle').value = b.title||''; $('#bnText').value=b.text||'';
+        $('#bnCtaLabel').value=b.ctaLabel||''; $('#bnCtaHref').value=b.ctaHref||'';
+        $('#bnImageUrl').value=b.imageUrl||''; $('#bnValidFrom').value=b.validFrom||''; $('#bnValidTo').value=b.validTo||'';
+        $('#bnOrder').value=b.order??0;
+        $('#bnSave').dataset.editId = id; $('#bnSave').textContent='Save Changes';
+        toast('#bnStatus','Loaded for editing');
+        window.scrollTo({top:0,behavior:'smooth'});
+      }else if(act==='del'){
+        if(confirm('Delete this banner?')){ await deleteDoc(ref); }
+      }
+      await loadBanners();
     });
-    row.querySelector('[data-act="del"]').onclick = ()=>{
-      if(!confirm('Delete this photo?')) return;
-      draft.gallery = draft.gallery.filter(x=>x!==g);
-      renderGallery(); saveDraft();
+  });
+}
+$('#bnSave').addEventListener('click', async ()=>{
+  const payload = {
+    enabled: $('#bnEnabled').checked,
+    title: $('#bnTitle').value.trim(),
+    text: $('#bnText').value.trim(),
+    ctaLabel: $('#bnCtaLabel').value.trim(),
+    ctaHref: $('#bnCtaHref').value.trim(),
+    imageUrl: $('#bnImageUrl').value.trim() || null,
+    validFrom: $('#bnValidFrom').value || null,
+    validTo: $('#bnValidTo').value || null,
+    order: Number($('#bnOrder').value||0),
+    updatedAt: serverTimestamp()
+  };
+  const editId = $('#bnSave').dataset.editId;
+  if(editId){
+    await setDoc(doc(db,'site_settings','banners','items',editId), payload, {merge:true});
+    $('#bnSave').textContent='Save New Banner';
+    delete $('#bnSave').dataset.editId;
+    toast('#bnStatus','Saved ✔');
+  }else{
+    payload.createdAt = serverTimestamp();
+    await addDoc(collection(db,'site_settings','banners','items'), payload);
+    toast('#bnStatus','Created ✔');
+  }
+  $('#bnTitle').value=''; $('#bnText').value=''; $('#bnCtaLabel').value=''; $('#bnCtaHref').value=''; $('#bnImageUrl').value=''; $('#bnOrder').value='';
+  await loadBanners();
+});
+
+/* ================= Firestore: Gallery (legacy) ================= */
+async function loadGalleryFS(){
+  const snap = await getDocs(query(collection(db,'site_settings','gallery','items'), orderBy('order','asc')));
+  const list = $('#galleryList'); list.innerHTML='';
+  snap.forEach(docSnap=>{
+    const g = { id: docSnap.id, ...docSnap.data() };
+    const row = document.createElement('div'); row.className='item'; row.innerHTML = `
+      <div>
+        <div class="h">${g.name||'(no name)'}</div>
+        <div class="sub">${g.imageUrl||''}</div>
+        <div class="sub">Order: ${g.order??0}</div>
+      </div>
+      <div class="actions">
+        <button class="btn" data-gact="edit" data-id="${g.id}">Edit</button>
+        <button class="btn" data-gact="del" data-id="${g.id}">Delete</button>
+      </div>
+    `;
+    list.appendChild(row);
+  });
+  list.querySelectorAll('button[data-gact]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.dataset.id, act = btn.dataset.gact;
+      const ref = doc(db,'site_settings','gallery','items',id);
+      if(act==='edit'){
+        const snap = await getDoc(ref); const g = snap.data();
+        $('#glName').value = g.name||'';
+        $('#glImageUrl').value = g.imageUrl||'';
+        $('#glOrder').value = g.order??0;
+        $('#glSave').dataset.editId = id; $('#glSave').textContent='Save Changes';
+        toast('#glStatus','Loaded for editing');
+        window.scrollTo({top:0,behavior:'smooth'});
+      }else if(act==='del'){
+        if(confirm('Delete this gallery item?')){ await deleteDoc(ref); await loadGalleryFS(); }
+      }
+    });
+  });
+}
+$('#glSave').addEventListener('click', async ()=>{
+  const payload = {
+    name: $('#glName').value.trim(),
+    imageUrl: $('#glImageUrl').value.trim(),
+    order: Number($('#glOrder').value||0),
+    updatedAt: serverTimestamp()
+  };
+  if(!payload.imageUrl){ toast('#glStatus','Image URL required'); return; }
+  const editId = $('#glSave').dataset.editId;
+  if(editId){
+    await setDoc(doc(db,'site_settings','gallery','items',editId), payload, {merge:true});
+    $('#glSave').textContent='Add Item';
+    delete $('#glSave').dataset.editId;
+    toast('#glStatus','Saved ✔');
+  }else{
+    payload.createdAt = serverTimestamp();
+    await addDoc(collection(db,'site_settings','gallery','items'), payload);
+    toast('#glStatus','Created ✔');
+  }
+  $('#glName').value=''; $('#glImageUrl').value=''; $('#glOrder').value='';
+  await loadGalleryFS();
+});
+
+/* ================= LocalStorage Site Settings ================= */
+const LS_KEY = 'netplus.settings.v1.public';
+
+function getSite(){
+  try{ return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); }catch(_){ return null; }
+}
+function defaults(){
+  return {
+    currency:{symbol:'$', position:'prefix'},
+    whatsapp:{number:'16476961656'},
+    plans:[
+      {id:crypto.randomUUID(), name:'1 Month', months:1, price:15, badge:'Starter', order:0, visible:true, note:'Full features'},
+      {id:crypto.randomUUID(), name:'3 Months', months:3, price:40, badge:'Popular', order:1, visible:true, note:'Save vs monthly'},
+      {id:crypto.randomUUID(), name:'6 Months', months:6, price:65, badge:'Most Picked', order:2, visible:true},
+      {id:crypto.randomUUID(), name:'12 Months (+1 free)', months:12, price:100, badge:'Best Value', order:3, visible:true, note:'+1 month free'}
+    ],
+    boxes:[],
+    gallery:[]
+  };
+}
+function setSite(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj)); }
+function ensure(){ let s=getSite(); if(!s){ s=defaults(); setSite(s); } return s; }
+
+/* General */
+function loadGeneral(){
+  const s = ensure();
+  $('#curSymbol').value = s.currency?.symbol || '$';
+  $('#curPos').value = s.currency?.position || 'prefix';
+  $('#waNumber').value = s.whatsapp?.number || '';
+}
+$('#btnLoadLocal').addEventListener('click', loadGeneral);
+$('#btnSaveLocal').addEventListener('click', ()=>{
+  const s = ensure();
+  s.currency = {symbol: $('#curSymbol').value || '$', position: $('#curPos').value || 'prefix'};
+  s.whatsapp = {number: ($('#waNumber').value||'').replace(/[^\d]/g,'')};
+  setSite(s); toast('#genStatus','Saved ✔');
+});
+$('#btnResetLocal').addEventListener('click', ()=>{
+  if(!confirm('Reset to defaults?')) return;
+  setSite(defaults()); loadAllLocal(); toast('#genStatus','Reset ✔');
+});
+
+/* Plans CRUD */
+let editingPlanId=null;
+function renderPlans(){
+  const s = ensure(); const rows = $('#planRows'); rows.innerHTML='';
+  const list = [...(s.plans||[])].sort((a,b)=>(a.order||0)-(b.order||0));
+  list.forEach(p=>{
+    const row = document.createElement('div'); row.className='row';
+    row.innerHTML = `
+      <div><strong>${p.name||''}</strong> <span class="sub">(${p.months||''} months)</span> ${p.badge? `<span class="badge2">${p.badge}</span>`:''} ${p.note? `<span class="sub">• ${p.note}</span>`:''}</div>
+      <div>${(s.currency?.position==='suffix')? (Number(p.price)+ (s.currency?.symbol||'$')) : ((s.currency?.symbol||'$')+Number(p.price))}</div>
+      <div class="sub">Order: ${p.order??0} • ${p.visible===false? 'Hidden':'Visible'}</div>
+      <div class="actions">
+        <button class="btn" data-ed="${p.id}">Edit</button>
+        <button class="btn" data-del="${p.id}">Delete</button>
+      </div>`;
+    rows.appendChild(row);
+  });
+  rows.querySelectorAll('button[data-ed]').forEach(b=>{
+    b.onclick = ()=>{
+      const s=ensure(); const p=s.plans.find(x=>x.id===b.dataset.ed); if(!p) return;
+      editingPlanId=p.id;
+      $('#plName').value=p.name||''; $('#plMonths').value=p.months||''; $('#plPrice').value=p.price||'';
+      $('#plBadge').value=p.badge||''; $('#plNote').value=p.note||''; $('#plOrder').value=p.order||0;
+      $('#plVisible').checked=p.visible!==false;
+      $('#plAdd').textContent='Save Changes';
+      window.scrollTo({top:0,behavior:'smooth'});
     };
-    row.querySelector('[data-act="up"]').onclick = ()=>{ g.order=(g.order||0)-1; renderGallery(); saveDraft(); };
-    row.querySelector('[data-act="down"]').onclick = ()=>{ g.order=(g.order||0)+1; renderGallery(); saveDraft(); };
-    wrap.appendChild(row);
-  }
+  });
+  rows.querySelectorAll('button[data-del]').forEach(b=>{
+    b.onclick=()=>{
+      if(!confirm('Delete this plan?')) return;
+      const s=ensure(); s.plans=s.plans.filter(x=>x.id!==b.dataset.del); setSite(s); renderPlans();
+    };
+  });
 }
-document.getElementById('addGallery').onclick = ()=>{
-  draft.gallery = draft.gallery || [];
-  draft.gallery.push({ id: uid('g'), url:'', caption:'', order:(draft.gallery.length+1), visible:true });
-  renderGallery(); saveDraft();
-};
-document.getElementById('bulkGallery').onclick = ()=>{
-  const txt = prompt('Paste image URLs, one per line:','');
-  if(!txt) return;
-  const lines = txt.split('\n').map(s=>s.trim()).filter(Boolean).map((u,i)=>({ id: uid('g'), url:u, caption:'', order:(draft.gallery.length+i+1), visible:true }));
-  draft.gallery = (draft.gallery||[]).concat(lines);
-  renderGallery(); saveDraft();
-};
-
-/* =========================
-   Settings section bind
-   ========================= */
-function bindSettings(){
-  const curSymbol = document.getElementById('curSymbol');
-  const curPos    = document.getElementById('curPos');
-  const waNumber  = document.getElementById('waNumber');
-
-  curSymbol.value = (draft.currency && draft.currency.symbol) || '$';
-  curPos.value    = (draft.currency && draft.currency.position) || 'prefix';
-  waNumber.value  = (draft.whatsapp && draft.whatsapp.number) || '';
-
-  curSymbol.onchange = ()=>{ draft.currency = draft.currency||{}; draft.currency.symbol = curSymbol.value; saveDraft(); };
-  curPos.onchange    = ()=>{ draft.currency = draft.currency||{}; draft.currency.position = curPos.value; saveDraft(); };
-  waNumber.onchange  = ()=>{ draft.whatsapp = draft.whatsapp||{}; draft.whatsapp.number = waNumber.value; saveDraft(); };
-}
-
-/* =========================
-   Import / Export / Publish
-   ========================= */
-document.getElementById('btnPublish').onclick = ()=>{ if(needAuth()) return showAuth(); publish(); };
-document.getElementById('btnDefaults').onclick = ()=>{ if(needAuth()) return showAuth(); resetDefaults(); };
-document.getElementById('btnExport').onclick = ()=>{
-  const blob = new Blob([JSON.stringify(draft,null,2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'netplus.settings.v1.draft.json'; a.click();
-  setTimeout(()=>URL.revokeObjectURL(url), 2000);
-};
-document.getElementById('btnImport').onclick = ()=> document.getElementById('fileImport').click();
-document.getElementById('fileImport').addEventListener('change', async (e)=>{
-  const f = e.target.files[0]; if(!f) return;
-  try{
-    const text = await f.text();
-    const obj = JSON.parse(text);
-    if(!obj || typeof obj!=='object'){ throw new Error('Invalid JSON'); }
-    if(!confirm('Replace current draft with imported data?')) return;
-    draft = obj;
-    renderAll(); saveDraft();
-  }catch(err){
-    alert('Import failed: '+ (err.message||err));
-  }finally{
-    e.target.value='';
+$('#plAdd').addEventListener('click', ()=>{
+  const s=ensure();
+  const payload = {
+    id: editingPlanId || crypto.randomUUID(),
+    name: $('#plName').value.trim() || 'Plan',
+    months: fmt($('#plMonths').value) || null,
+    price: fmt($('#plPrice').value) || 0,
+    badge: $('#plBadge').value.trim() || null,
+    note: $('#plNote').value.trim() || null,
+    order: fmt($('#plOrder').value) || 0,
+    visible: $('#plVisible').checked
+  };
+  if(editingPlanId){
+    const i=s.plans.findIndex(x=>x.id===editingPlanId);
+    if(i>-1) s.plans[i]=payload;
+    editingPlanId=null; $('#plAdd').textContent='Add / Save';
+  }else{
+    s.plans.push(payload);
   }
+  setSite(s); renderPlans(); $('#plClear').click();
+});
+$('#plClear').addEventListener('click', ()=>{
+  editingPlanId=null; $('#plAdd').textContent='Add / Save';
+  ['plName','plMonths','plPrice','plBadge','plNote','plOrder'].forEach(id=>$('#'+id).value='');
+  $('#plVisible').checked=true;
 });
 
-/* =========================
-   Initial render
-   ========================= */
-function renderAll(){
-  renderPlans();
-  renderBoxes();
-  renderGallery();
-  bindSettings();
+/* Boxes CRUD */
+let editingBoxId=null;
+function parseLines(v){ return v.split('\n').map(s=>s.trim()).filter(Boolean); }
+function renderBoxes(){
+  const s = ensure(); const rows = $('#boxRows'); rows.innerHTML='';
+  const list = [...(s.boxes||[])].sort((a,b)=>(a.order||0)-(b.order||0));
+  list.forEach(bx=>{
+    const photosCount = Array.isArray(bx.images)? bx.images.length : 0;
+    const specsCount = Array.isArray(bx.specs)? bx.specs.length : 0;
+    const row = document.createElement('div'); row.className='row';
+    row.innerHTML = `
+      <div><strong>${bx.name||''}</strong> ${bx.badge? `<span class="badge2">${bx.badge}</span>`:''} <span class="sub">photos:${photosCount} • specs:${specsCount}</span></div>
+      <div>${(s.currency?.position==='suffix')? (Number(bx.price)+(s.currency?.symbol||'$')) : ((s.currency?.symbol||'$')+Number(bx.price))}</div>
+      <div class="sub">Order: ${bx.order??0} • ${bx.visible===false?'Hidden':'Visible'}</div>
+      <div class="actions">
+        <button class="btn" data-ed="${bx.id}">Edit</button>
+        <button class="btn" data-del="${bx.id}">Delete</button>
+      </div>`;
+    rows.appendChild(row);
+  });
+  rows.querySelectorAll('button[data-ed]').forEach(b=>{
+    b.onclick=()=>{
+      const s=ensure(); const bx=s.boxes.find(x=>x.id===b.dataset.ed); if(!bx) return;
+      editingBoxId=bx.id;
+      $('#bxName').value=bx.name||''; $('#bxPrice').value=bx.price||''; $('#bxBundle').value=bx.bundle||'';
+      $('#bxBadge').value=bx.badge||''; $('#bxOrder').value=bx.order||0; $('#bxVisible').checked=bx.visible!==false;
+      $('#bxSpecs').value=(bx.specs||[]).join('\n');
+      $('#bxPhotos').value=(bx.images||[]).map(i=>i.url + (i.alt? `|${i.alt}`:'')).join('\n');
+      $('#bxAdd').textContent='Save Changes';
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
+  });
+  rows.querySelectorAll('button[data-del]').forEach(b=>{
+    b.onclick=()=>{
+      if(!confirm('Delete this box?')) return;
+      const s=ensure(); s.boxes=s.boxes.filter(x=>x.id!==b.dataset.del); setSite(s); renderBoxes();
+    };
+  });
 }
-renderAll();
-setStatus('Draft loaded.');
-
-/* =========================
-   Warn on unload if editing
-   ========================= */
-window.addEventListener('beforeunload', (e)=>{
-  // Mild nag to avoid accidental closes while editing
-  e.preventDefault(); e.returnValue = '';
+$('#bxAdd').addEventListener('click', ()=>{
+  const s=ensure();
+  const imgs = parseLines($('#bxPhotos').value).map(line=>{
+    const [url, alt] = line.split('|');
+    return {url:url?.trim(), alt:(alt||'').trim()};
+  }).filter(i=>i.url);
+  const specs = parseLines($('#bxSpecs').value);
+  const payload = {
+    id: editingBoxId || crypto.randomUUID(),
+    name: $('#bxName').value.trim() || 'Box',
+    price: fmt($('#bxPrice').value)||0,
+    bundle: $('#bxBundle').value? fmt($('#bxBundle').value) : null,
+    badge: $('#bxBadge').value.trim() || null,
+    order: fmt($('#bxOrder').value)||0,
+    visible: $('#bxVisible').checked,
+    images: imgs,
+    specs: specs
+  };
+  if(editingBoxId){
+    const i=s.boxes.findIndex(x=>x.id===editingBoxId);
+    if(i>-1) s.boxes[i]=payload;
+    editingBoxId=null; $('#bxAdd').textContent='Add / Save';
+  }else{
+    s.boxes.push(payload);
+  }
+  setSite(s); renderBoxes(); $('#bxClear').click();
 });
+$('#bxClear').addEventListener('click', ()=>{
+  editingBoxId=null; $('#bxAdd').textContent='Add / Save';
+  ['bxName','bxPrice','bxBundle','bxBadge','bxOrder','bxSpecs','bxPhotos'].forEach(id=>$('#'+id).value='');
+  $('#bxVisible').checked=true;
+});
+
+/* Gallery (Local) CRUD */
+let editingGalId=null;
+function renderGalLocal(){
+  const s=ensure(); const rows=$('#galLocalRows'); rows.innerHTML='';
+  const list=[...(s.gallery||[])].sort((a,b)=>(a.order||0)-(b.order||0));
+  list.forEach(g=>{
+    const row=document.createElement('div'); row.className='row';
+    row.innerHTML=`
+      <div><strong>${g.caption||''}</strong> <span class="sub">${g.url||''}</span></div>
+      <div class="sub">Order: ${g.order??0}</div>
+      <div class="sub">${g.visible===false?'Hidden':'Visible'}</div>
+      <div class="actions">
+        <button class="btn" data-ed="${g.id}">Edit</button>
+        <button class="btn" data-del="${g.id}">Delete</button>
+      </div>`;
+    rows.appendChild(row);
+  });
+  rows.querySelectorAll('button[data-ed]').forEach(b=>{
+    b.onclick=()=>{
+      const s=ensure(); const g=s.gallery.find(x=>x.id===b.dataset.ed); if(!g) return;
+      editingGalId=g.id;
+      $('#glLocCaption').value=g.caption||''; $('#glLocUrl').value=g.url||''; $('#glLocOrder').value=g.order||0; $('#glLocVisible').checked=g.visible!==false;
+      $('#glLocAdd').textContent='Save Changes';
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
+  });
+  rows.querySelectorAll('button[data-del]').forEach(b=>{
+    b.onclick=()=>{
+      if(!confirm('Delete this image?')) return;
+      const s=ensure(); s.gallery=s.gallery.filter(x=>x.id!==b.dataset.del); setSite(s); renderGalLocal();
+    };
+  });
+}
+$('#glLocAdd').addEventListener('click', ()=>{
+  const s=ensure();
+  const payload={
+    id: editingGalId || crypto.randomUUID(),
+    caption: $('#glLocCaption').value.trim() || '',
+    url: $('#glLocUrl').value.trim(),
+    order: fmt($('#glLocOrder').value)||0,
+    visible: $('#glLocVisible').checked
+  };
+  if(!payload.url){ alert('Image URL required'); return; }
+  if(editingGalId){
+    const i=s.gallery.findIndex(x=>x.id===editingGalId); if(i>-1) s.gallery[i]=payload;
+    editingGalId=null; $('#glLocAdd').textContent='Add / Save';
+  }else{
+    s.gallery.push(payload);
+  }
+  setSite(s); renderGalLocal(); $('#glLocClear').click();
+});
+$('#glLocClear').addEventListener('click', ()=>{
+  editingGalId=null; $('#glLocAdd').textContent='Add / Save';
+  ['glLocCaption','glLocUrl','glLocOrder'].forEach(id=>$('#'+id).value='');
+  $('#glLocVisible').checked=true;
+});
+
+/* Import / Export */
+$('#btnExport').addEventListener('click', ()=>{
+  const blob = new Blob([localStorage.getItem(LS_KEY)||'{}'], {type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='settings.json'; a.click();
+});
+$('#btnImport').addEventListener('click', ()=>{
+  const f=$('#fileImport').files?.[0]; if(!f){ toast('#ieStatus','Choose a JSON file first'); return; }
+  const r=new FileReader();
+  r.onload=()=>{ try{ const obj=JSON.parse(r.result); setSite(obj); loadAllLocal(); toast('#ieStatus','Imported ✔'); }catch(e){ toast('#ieStatus','Invalid JSON'); } };
+  r.readAsText(f);
+});
+
+/* Load all local sections */
+function loadAllLocal(){ loadGeneral(); renderPlans(); renderBoxes(); renderGalLocal(); }
+
+/* ===== Orchestration ===== */
+async function refreshAll(){
+  await Promise.all([refreshKPIs(), loadBanners(), loadGalleryFS()]);
+  loadAllLocal();
+}
+// initial default visible panel already active
 </script>
 </body>
 </html>
