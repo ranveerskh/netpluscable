@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>net+TV • Setup</title>
+<meta name="theme-color" content="#0b1020" />
+<style>
+  :root{
+    --bg:#0b1020;--ink:#e9edff;--muted:#9aa7d9;--card:#111734;--line:#23305b;
+    --accent1:#6a11cb;--accent2:#2575fc;--ok:#32d296;--warn:#f8b84a;--danger:#ff6b6b;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#0b1020;color:var(--ink)}
+  a{color:#cfe0ff}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px}
+  header{position:sticky;top:0;z-index:10;background:rgba(11,16,32,.9);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 16px}
+  .h1{font-weight:900}
+  .btn{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:#0d1430;color:#e9edff;font-weight:800;cursor:pointer}
+  .btn.primary{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
+  .btn.ok{background:var(--ok);border-color:transparent;color:#052414}
+  .btn.warn{background:var(--warn);border-color:transparent;color:#251b07}
+  .btn.danger{background:var(--danger);border-color:transparent;color:#370c0c}
+  .btn.ghost{background:transparent}
+  .grid{display:grid;gap:14px}
+  @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+  .title{font-weight:900;margin:0 0 8px}
+  .sub{color:#bcd0ff;font-size:13px;margin-bottom:10px}
+  .field{display:grid;gap:6px;margin:10px 0}
+  .field.inline{grid-template-columns:1fr 1fr;gap:8px}
+  .field.inline3{grid-template-columns:1.3fr .7fr .7fr;gap:8px}
+  label{font-size:12px;color:#b6c7ff}
+  input,select,textarea{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:10px;color:#e9edff}
+  textarea{min-height:90px}
+  .list{display:grid;gap:10px;margin-top:8px}
+  .rowline{display:grid;gap:8px;background:#0b122a;border:1px solid #22305a;border-radius:12px;padding:10px}
+  @media(min-width:680px){.rowline.cols2{grid-template-columns:1fr 1fr}.rowline.cols3{grid-template-columns:1.2fr .6fr .6fr}}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{background:#0b122a;border:1px solid #22305a;color:#cfe0ff;padding:6px 10px;border-radius:999px;font-size:12px}
+  .muted{color:#9aa7d9}
+  .right{margin-left:auto}
+  .tools{display:flex;flex-wrap:wrap;gap:8px}
+  .hr{height:1px;background:#22305a;margin:12px 0}
+  .hint{font-size:12px;color:#a7b6ef}
+  .dangerline{border-color:#5a2435;background:#1a0c13}
+  .flex{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .stickybar{position:sticky;bottom:0;z-index:20;background:rgba(11,16,32,.92);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08);padding:8px}
+  .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;background:#0b122a;border:1px solid #22305a;padding:2px 6px;border-radius:6px}
+  .small{font-size:12px}
+  /* modal */
+  .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);z-index:9999}
+  .dialog{width:min(560px,92vw);background:#0d142d;border:1px solid #22305a;border-radius:14px;padding:16px}
+</style>
+</head>
+<body>
+<header>
+  <div class="row">
+    <div class="h1">net+TV • Setup</div>
+    <div class="tools">
+      <button class="btn" id="btnImport">Import JSON</button>
+      <button class="btn" id="btnExport">Export JSON</button>
+      <button class="btn warn" id="btnDefaults">Reset to Defaults</button>
+      <button class="btn primary" id="btnPublish">Publish to Site</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- PLANS -->
+  <section class="card">
+    <h3 class="title">Plans</h3>
+    <div class="sub">Add, edit, reorder. The public site reads from these when you publish.</div>
+    <div id="plansList" class="list"></div>
+    <div class="flex">
+      <button class="btn" id="addPlan">+ Add Plan</button>
+      <span class="hint">Fields: name, months, price, badge, note, order, visible</span>
+    </div>
+  </section>
+
+  <!-- BOXES -->
+  <section class="card">
+    <h3 class="title">Boxes</h3>
+    <div class="sub">Each box can have multiple photos and spec bullets.</div>
+    <div id="boxesList" class="list"></div>
+    <div class="flex">
+      <button class="btn" id="addBox">+ Add Box</button>
+      <button class="btn" id="checkImages">Validate Images</button>
+      <span class="hint">Fields: name, badge, price, bundle, order, visible, specs[], images[]</span>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="card">
+    <h3 class="title">Gallery</h3>
+    <div class="sub">These override the Firestore gallery on index if present.</div>
+    <div id="galleryList" class="list"></div>
+    <div class="flex">
+      <button class="btn" id="addGallery">+ Add Photo</button>
+      <button class="btn" id="bulkGallery">Bulk Paste URLs</button>
+      <span class="hint">Each item: url, caption, order, visible</span>
+    </div>
+  </section>
+
+  <!-- GLOBAL SETTINGS (minimal for now, extend later if you want) -->
+  <section class="card">
+    <h3 class="title">Settings</h3>
+    <div class="field inline">
+      <div>
+        <label>Currency symbol</label>
+        <input id="curSymbol" value="$" />
+      </div>
+      <div>
+        <label>Currency position</label>
+        <select id="curPos">
+          <option value="prefix" selected>prefix ($100)</option>
+          <option value="suffix">suffix (100$)</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>WhatsApp Number (E.164)</label>
+      <input id="waNumber" placeholder="+16476961656" />
+    </div>
+    <div class="hint">Index still uses your hardcoded number for now. We can wire this in later if you want.</div>
+  </section>
+
+  <div class="stickybar">
+    <div class="flex">
+      <span class="small muted">Draft is stored while you edit. Click <span class="kbd">Publish to Site</span> to write <code>localStorage["netplus.settings.v1.public"]</code>.</span>
+      <span class="right small muted" id="statusText"></span>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal" id="authModal">
+  <div class="dialog">
+    <h3 style="margin:0 0 10px">Admin Login</h3>
+    <div class="field">
+      <label>Password</label>
+      <input id="authPwd" type="password" placeholder="••••••••" />
+    </div>
+    <div class="field">
+      <label class="flex" style="align-items:center;gap:8px">
+        <input type="checkbox" id="rememberDevice" style="width:auto"> Remember this device for 30 minutes
+      </label>
+    </div>
+    <div class="flex" style="justify-content:flex-end">
+      <button class="btn ghost" id="authCancel">Cancel</button>
+      <button class="btn primary" id="authOk">Unlock</button>
+    </div>
+    <div class="hint" style="margin-top:8px">Password is <code>8netRafer@@</code>. Change it when we wire a better gate.</div>
+  </div>
+</div>
+
+<input id="fileImport" type="file" accept="application/json" style="display:none" />
+
+<script>
+/* =========================
+   Simple data model + seed
+   ========================= */
+const STORAGE_KEY_PUBLIC = 'netplus.settings.v1.public';
+const STORAGE_KEY_DRAFT  = 'netplus.settings.v1.draft';
+const SESSION_KEY_AUTH   = 'netplus.setup.authUntil';
+
+const defaultData = {
+  meta: { schema:1, updatedAt: new Date().toISOString() },
+  currency: { symbol: "$", position: "prefix" },
+  whatsapp: { number: "+16476961656" },
+  plans: [
+    { id:"p1", name:"1 Month", months:1,  price:15, badge:"Starter",     note:"",                       visible:true, order:1 },
+    { id:"p3", name:"3 Months", months:3, price:40, badge:"Popular",     note:"Save vs monthly",        visible:true, order:2 },
+    { id:"p6", name:"6 Months", months:6, price:65, badge:"Most Picked", note:"Most picked",            visible:true, order:3 },
+    { id:"p12",name:"12 Months (+1 free)", months:12, price:100, badge:"Best Value", note:"+1 month free", visible:true, order:4 }
+  ],
+  boxes: [
+    { id:"b_andfh", name:"Android FULL HD Box", price:50, bundle:140, badge:"Not Recommended",
+      specs:["ARM Cortex Quad-Core • Mali-G31","2GB DDR3 • 8GB eMMC","Wi-Fi 2.4/5.8 • BT 5.2","Lemon TV App• Netflix • YouTube • Disney+ • Play","Bluetooth voice remote","Full HD output"],
+      images:[], order:1, visible:true
+    },
+    { id:"b_sword", name:"Sword+ 4K Box", price:100, bundle:180, badge:"Good",
+      specs:["Android 11 • TV ONAIR • 4K 60FPS","2GB DDR3 • 16GB eMMC","Wi-Fi 2.4/5.8"],
+      images:[], order:2, visible:true
+    },
+    { id:"b_shield", name:"Sheild Ultimate 4K Box", price:120, bundle:200, badge:"Value for Money",
+      specs:["Android 9 • TV ONAIR • 4K 60FPS","4GB DDR3 • 32GB eMMC","Wi-Fi 2.4/5.8"],
+      images:[], order:3, visible:true
+    },
+    { id:"b_z10", name:"Formular Z10 Box", price:130, bundle:210, badge:"Recommended",
+      specs:["Android 10 • TV ONAIR • 4K 60FPS • HDR10*","2GB DDR3 • 8GB eMMC • Wi-Fi 2.4/5.8"],
+      images:[], order:4, visible:true
+    },
+    { id:"b_mag544", name:"Mag544 4K Linux Box", price:120, bundle:210, badge:"Durable",
+      specs:["Linux OS • 4K • Durable build","1GB RAM • 4GB Flash"],
+      images:[], order:5, visible:true
+    },
+    { id:"b_z11", name:"Formular Z11 PRO", price:180, bundle:260, badge:"Powerful",
+      specs:["Android 11 • TV ONAIR • 4K 60FPS • HDR10*","2GB DDR4 • 16GB eMMC • Wi-Fi 5"],
+      images:[], order:6, visible:true
+    },
+    { id:"b_z11max", name:"Formular Z11 PRO MAX", price:220, bundle:300, badge:"High End",
+      specs:["Android 11 • TV ONAIR • 4K ULTRA • HDR10*","4GB DDR3 • 32GB eMMC • Wi-Fi 6"],
+      images:[], order:7, visible:true
+    }
+  ],
+  gallery: []
+};
+
+let draft = loadDraft();
+
+/* =========================
+   Auth Gate
+   ========================= */
+function needAuth(){
+  const until = Number(sessionStorage.getItem(SESSION_KEY_AUTH)||0);
+  return !(until && Date.now() < until);
+}
+function showAuth(){
+  const m = document.getElementById('authModal');
+  m.style.display='flex';
+  document.getElementById('authPwd').value='';
+  setTimeout(()=>document.getElementById('authPwd').focus(), 0);
+}
+function hideAuth(){ document.getElementById('authModal').style.display='none'; }
+function unlock(){
+  const pwd = document.getElementById('authPwd').value;
+  if(pwd !== '8netRafer@@'){ alert('Wrong password.'); return; }
+  const remember = document.getElementById('rememberDevice').checked;
+  if(remember){ sessionStorage.setItem(SESSION_KEY_AUTH, String(Date.now() + 30*60*1000)); }
+  hideAuth();
+}
+document.getElementById('authOk').onclick = unlock;
+document.getElementById('authCancel').onclick = ()=>{ location.href='index.html'; };
+
+if(needAuth()) showAuth();
+
+/* =========================
+   Storage helpers
+   ========================= */
+function loadPublic(){
+  try{ return JSON.parse(localStorage.getItem(STORAGE_KEY_PUBLIC)||'null'); }catch(_){ return null; }
+}
+function loadDraft(){
+  let d = null;
+  try{ d = JSON.parse(localStorage.getItem(STORAGE_KEY_DRAFT)||'null'); }catch(_){}
+  if(!d){
+    const pub = loadPublic();
+    d = pub ? JSON.parse(JSON.stringify(pub)) : JSON.parse(JSON.stringify(defaultData));
+    localStorage.setItem(STORAGE_KEY_DRAFT, JSON.stringify(d));
+  }
+  return d;
+}
+function saveDraft(){
+  draft.meta = draft.meta || {};
+  draft.meta.updatedAt = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY_DRAFT, JSON.stringify(draft));
+  setStatus('Draft saved.');
+}
+function publish(){
+  draft.meta = draft.meta || {};
+  draft.meta.updatedAt = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY_PUBLIC, JSON.stringify(draft));
+  setStatus('Published to site. Open index.html to see changes.');
+}
+function resetDefaults(){
+  if(!confirm('Reset draft to defaults? This does NOT touch published settings.')) return;
+  draft = JSON.parse(JSON.stringify(defaultData));
+  renderAll();
+  saveDraft();
+}
+function setStatus(t){
+  document.getElementById('statusText').textContent = t;
+  setTimeout(()=>{ if(document.getElementById('statusText').textContent===t) document.getElementById('statusText').textContent=''; }, 4000);
+}
+
+/* =========================
+   ID helper
+   ========================= */
+function uid(prefix='id'){
+  return prefix + '_' + Math.random().toString(36).slice(2,8);
+}
+
+/* =========================
+   Render: Plans
+   ========================= */
+function renderPlans(){
+  const wrap = document.getElementById('plansList');
+  wrap.innerHTML='';
+  const plans = (draft.plans||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
+  for(const p of plans){
+    const row = document.createElement('div');
+    row.className = 'rowline cols3';
+    row.innerHTML = `
+      <div>
+        <label>Name</label>
+        <input value="${p.name||''}" data-k="name">
+      </div>
+      <div>
+        <label>Months</label>
+        <input type="number" min="1" value="${p.months||1}" data-k="months">
+      </div>
+      <div>
+        <label>Price</label>
+        <input type="number" min="0" value="${p.price||0}" data-k="price">
+      </div>
+      <div>
+        <label>Badge</label>
+        <input value="${p.badge||''}" data-k="badge">
+      </div>
+      <div>
+        <label>Note</label>
+        <input value="${p.note||''}" data-k="note">
+      </div>
+      <div>
+        <label>Order</label>
+        <input type="number" value="${p.order||0}" data-k="order">
+      </div>
+      <div class="flex" style="align-items:center">
+        <label>Visible</label>
+        <select data-k="visible">
+          <option value="true" ${p.visible!==false?'selected':''}>true</option>
+          <option value="false" ${p.visible===false?'selected':''}>false</option>
+        </select>
+      </div>
+      <div class="flex" style="gap:6px;align-items:flex-end">
+        <button class="btn" data-act="up">↑</button>
+        <button class="btn" data-act="down">↓</button>
+        <button class="btn danger" data-act="del">Delete</button>
+      </div>
+    `;
+    // wire inputs
+    row.querySelectorAll('input,select').forEach(inp=>{
+      inp.onchange = ()=>{
+        const k = inp.getAttribute('data-k');
+        let v = inp.value;
+        if(k==='months' || k==='price' || k==='order') v = Number(v||0);
+        if(k==='visible') v = (v==='true');
+        p[k] = v;
+        saveDraft();
+      };
+    });
+    // actions
+    row.querySelector('[data-act="del"]').onclick = ()=>{
+      if(!confirm('Delete this plan?')) return;
+      draft.plans = draft.plans.filter(x=>x!==p);
+      renderPlans(); saveDraft();
+    };
+    row.querySelector('[data-act="up"]').onclick = ()=>{
+      p.order = (p.order||0) - 1; renderPlans(); saveDraft();
+    };
+    row.querySelector('[data-act="down"]').onclick = ()=>{
+      p.order = (p.order||0) + 1; renderPlans(); saveDraft();
+    };
+    wrap.appendChild(row);
+  }
+}
+document.getElementById('addPlan').onclick = ()=>{
+  draft.plans = draft.plans || [];
+  draft.plans.push({ id: uid('p'), name:'New Plan', months:1, price:0, badge:'', note:'', visible:true, order:(draft.plans.length+1) });
+  renderPlans(); saveDraft();
+};
+
+/* =========================
+   Render: Boxes
+   ========================= */
+function renderBoxes(){
+  const wrap = document.getElementById('boxesList');
+  wrap.innerHTML='';
+  const boxes = (draft.boxes||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
+  for(const b of boxes){
+    const row = document.createElement('div');
+    row.className = 'rowline';
+    row.innerHTML = `
+      <div class="field inline">
+        <div>
+          <label>Name</label>
+          <input value="${b.name||''}" data-k="name">
+        </div>
+        <div>
+          <label>Badge</label>
+          <input value="${b.badge||''}" data-k="badge">
+        </div>
+      </div>
+      <div class="field inline">
+        <div>
+          <label>Price</label>
+          <input type="number" min="0" value="${b.price||0}" data-k="price">
+        </div>
+        <div>
+          <label>Bundle</label>
+          <input type="number" min="0" value="${b.bundle||0}" data-k="bundle">
+        </div>
+      </div>
+      <div class="field inline">
+        <div>
+          <label>Order</label>
+          <input type="number" value="${b.order||0}" data-k="order">
+        </div>
+        <div>
+          <label>Visible</label>
+          <select data-k="visible">
+            <option value="true" ${b.visible!==false?'selected':''}>true</option>
+            <option value="false" ${b.visible===false?'selected':''}>false</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="field">
+        <label>Specs (one per line)</label>
+        <textarea data-k="specs">${(b.specs||[]).join('\n')}</textarea>
+      </div>
+
+      <div class="field">
+        <label>Images</label>
+        <div class="list" data-k="images"></div>
+        <div class="flex">
+          <button class="btn" data-act="add-image">+ Add Image</button>
+          <button class="btn" data-act="bulk-images">Bulk Paste URLs</button>
+          <span class="hint">Tip: first image is the cover in index carousel.</span>
+        </div>
+      </div>
+
+      <div class="flex" style="justify-content:flex-end">
+        <button class="btn" data-act="up">↑</button>
+        <button class="btn" data-act="down">↓</button>
+        <button class="btn danger" data-act="del">Delete Box</button>
+      </div>
+    `;
+
+    // wire simple fields
+    row.querySelectorAll('input,select,textarea').forEach(inp=>{
+      const k = inp.getAttribute('data-k');
+      if(!k || k==='images') return;
+      inp.onchange = ()=>{
+        let v = inp.value;
+        if(k==='price' || k==='bundle' || k==='order') v = Number(v||0);
+        if(k==='visible') v = (v==='true');
+        if(k==='specs'){ v = v.split('\n').map(s=>s.trim()).filter(Boolean); }
+        b[k] = v;
+        saveDraft();
+      };
+    });
+
+    // images list
+    const imgWrap = row.querySelector('[data-k="images"]');
+    function renderImages(){
+      imgWrap.innerHTML='';
+      (b.images||[]).forEach((img,idx)=>{
+        const line = document.createElement('div');
+        line.className = 'rowline';
+        line.innerHTML = `
+          <div class="field">
+            <label>Image URL</label>
+            <input value="${img.url||''}" data-k="url">
+          </div>
+          <div class="field">
+            <label>Alt</label>
+            <input value="${img.alt||''}" data-k="alt">
+          </div>
+          <div class="flex">
+            <button class="btn" data-act="img-up">↑</button>
+            <button class="btn" data-act="img-down">↓</button>
+            <button class="btn danger" data-act="img-del">Delete</button>
+            <a class="btn ghost" href="${img.url||'#'}" target="_blank" rel="noopener">Open</a>
+          </div>
+        `;
+        line.querySelectorAll('input').forEach(inp=>{
+          const kk = inp.getAttribute('data-k');
+          inp.onchange = ()=>{ img[kk] = inp.value; saveDraft(); };
+        });
+        line.querySelector('[data-act="img-del"]').onclick = ()=>{
+          b.images.splice(idx,1); renderImages(); saveDraft();
+        };
+        line.querySelector('[data-act="img-up"]').onclick = ()=>{
+          if(idx<=0) return; const tmp=b.images[idx-1]; b.images[idx-1]=b.images[idx]; b.images[idx]=tmp; renderImages(); saveDraft();
+        };
+        line.querySelector('[data-act="img-down"]').onclick = ()=>{
+          if(idx>=b.images.length-1) return; const tmp=b.images[idx+1]; b.images[idx+1]=b.images[idx]; b.images[idx]=tmp; renderImages(); saveDraft();
+        };
+        imgWrap.appendChild(line);
+      });
+    }
+    renderImages();
+
+    // image buttons
+    row.querySelector('[data-act="add-image"]').onclick = ()=>{
+      b.images = b.images||[];
+      b.images.push({url:'',alt:''});
+      renderImages(); saveDraft();
+    };
+    row.querySelector('[data-act="bulk-images"]').onclick = ()=>{
+      const txt = prompt('Paste image URLs, one per line:','');
+      if(!txt) return;
+      const lines = txt.split('\n').map(s=>s.trim()).filter(Boolean).map(u=>({url:u,alt:''}));
+      b.images = (b.images||[]).concat(lines);
+      renderImages(); saveDraft();
+    };
+
+    // box actions
+    row.querySelector('[data-act="del"]').onclick = ()=>{
+      if(!confirm('Delete this box?')) return;
+      draft.boxes = draft.boxes.filter(x=>x!==b);
+      renderBoxes(); saveDraft();
+    };
+    row.querySelector('[data-act="up"]').onclick = ()=>{ b.order=(b.order||0)-1; renderBoxes(); saveDraft(); };
+    row.querySelector('[data-act="down"]').onclick = ()=>{ b.order=(b.order||0)+1; renderBoxes(); saveDraft(); };
+
+    wrap.appendChild(row);
+  }
+}
+document.getElementById('addBox').onclick = ()=>{
+  draft.boxes = draft.boxes || [];
+  draft.boxes.push({ id: uid('b'), name:'New Box', badge:'', price:0, bundle:0, specs:[], images:[], order:(draft.boxes.length+1), visible:true });
+  renderBoxes(); saveDraft();
+};
+
+/* simple image validator (HEAD requests aren’t allowed from browser reliably; we attempt to load images) */
+document.getElementById('checkImages').onclick = async ()=>{
+  const all = (draft.boxes||[]).flatMap(b=>(b.images||[]).map(img=>img.url)).filter(Boolean);
+  if(!all.length){ alert('No images to check.'); return; }
+  let ok=0, bad=0;
+  const test = (url)=> new Promise(res=>{
+    const i = new Image(); i.onload=()=>res(true); i.onerror=()=>res(false); i.src = url + (url.includes('?')?'&':'?') + 'chk=' + Date.now();
+  });
+  for(const u of all){
+    /* eslint-disable no-await-in-loop */
+    const good = await test(u);
+    if(good) ok++; else bad++;
+  }
+  alert(`Images checked.\nOK: ${ok}\nBroken: ${bad}`);
+};
+
+/* =========================
+   Render: Gallery
+   ========================= */
+function renderGallery(){
+  const wrap = document.getElementById('galleryList');
+  wrap.innerHTML='';
+  const gal = (draft.gallery||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
+  for(const g of gal){
+    const row = document.createElement('div');
+    row.className = 'rowline';
+    row.innerHTML = `
+      <div class="field inline">
+        <div>
+          <label>Image URL</label>
+          <input value="${g.url||''}" data-k="url">
+        </div>
+        <div>
+          <label>Caption</label>
+          <input value="${g.caption||''}" data-k="caption">
+        </div>
+      </div>
+      <div class="field inline">
+        <div>
+          <label>Order</label>
+          <input type="number" value="${g.order||0}" data-k="order">
+        </div>
+        <div>
+          <label>Visible</label>
+          <select data-k="visible">
+            <option value="true" ${g.visible!==false?'selected':''}>true</option>
+            <option value="false" ${g.visible===false?'selected':''}>false</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex" style="justify-content:flex-end">
+        <button class="btn" data-act="up">↑</button>
+        <button class="btn" data-act="down">↓</button>
+        <a class="btn ghost" href="${g.url||'#'}" target="_blank" rel="noopener">Open</a>
+        <button class="btn danger" data-act="del">Delete</button>
+      </div>
+    `;
+    row.querySelectorAll('input,select').forEach(inp=>{
+      const k=inp.getAttribute('data-k'); if(!k) return;
+      inp.onchange=()=>{
+        let v = inp.value;
+        if(k==='order') v = Number(v||0);
+        if(k==='visible') v = (v==='true');
+        g[k]=v; saveDraft();
+      };
+    });
+    row.querySelector('[data-act="del"]').onclick = ()=>{
+      if(!confirm('Delete this photo?')) return;
+      draft.gallery = draft.gallery.filter(x=>x!==g);
+      renderGallery(); saveDraft();
+    };
+    row.querySelector('[data-act="up"]').onclick = ()=>{ g.order=(g.order||0)-1; renderGallery(); saveDraft(); };
+    row.querySelector('[data-act="down"]').onclick = ()=>{ g.order=(g.order||0)+1; renderGallery(); saveDraft(); };
+    wrap.appendChild(row);
+  }
+}
+document.getElementById('addGallery').onclick = ()=>{
+  draft.gallery = draft.gallery || [];
+  draft.gallery.push({ id: uid('g'), url:'', caption:'', order:(draft.gallery.length+1), visible:true });
+  renderGallery(); saveDraft();
+};
+document.getElementById('bulkGallery').onclick = ()=>{
+  const txt = prompt('Paste image URLs, one per line:','');
+  if(!txt) return;
+  const lines = txt.split('\n').map(s=>s.trim()).filter(Boolean).map((u,i)=>({ id: uid('g'), url:u, caption:'', order:(draft.gallery.length+i+1), visible:true }));
+  draft.gallery = (draft.gallery||[]).concat(lines);
+  renderGallery(); saveDraft();
+};
+
+/* =========================
+   Settings section bind
+   ========================= */
+function bindSettings(){
+  const curSymbol = document.getElementById('curSymbol');
+  const curPos    = document.getElementById('curPos');
+  const waNumber  = document.getElementById('waNumber');
+
+  curSymbol.value = (draft.currency && draft.currency.symbol) || '$';
+  curPos.value    = (draft.currency && draft.currency.position) || 'prefix';
+  waNumber.value  = (draft.whatsapp && draft.whatsapp.number) || '';
+
+  curSymbol.onchange = ()=>{ draft.currency = draft.currency||{}; draft.currency.symbol = curSymbol.value; saveDraft(); };
+  curPos.onchange    = ()=>{ draft.currency = draft.currency||{}; draft.currency.position = curPos.value; saveDraft(); };
+  waNumber.onchange  = ()=>{ draft.whatsapp = draft.whatsapp||{}; draft.whatsapp.number = waNumber.value; saveDraft(); };
+}
+
+/* =========================
+   Import / Export / Publish
+   ========================= */
+document.getElementById('btnPublish').onclick = ()=>{ if(needAuth()) return showAuth(); publish(); };
+document.getElementById('btnDefaults').onclick = ()=>{ if(needAuth()) return showAuth(); resetDefaults(); };
+document.getElementById('btnExport').onclick = ()=>{
+  const blob = new Blob([JSON.stringify(draft,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'netplus.settings.v1.draft.json'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 2000);
+};
+document.getElementById('btnImport').onclick = ()=> document.getElementById('fileImport').click();
+document.getElementById('fileImport').addEventListener('change', async (e)=>{
+  const f = e.target.files[0]; if(!f) return;
+  try{
+    const text = await f.text();
+    const obj = JSON.parse(text);
+    if(!obj || typeof obj!=='object'){ throw new Error('Invalid JSON'); }
+    if(!confirm('Replace current draft with imported data?')) return;
+    draft = obj;
+    renderAll(); saveDraft();
+  }catch(err){
+    alert('Import failed: '+ (err.message||err));
+  }finally{
+    e.target.value='';
+  }
+});
+
+/* =========================
+   Initial render
+   ========================= */
+function renderAll(){
+  renderPlans();
+  renderBoxes();
+  renderGallery();
+  bindSettings();
+}
+renderAll();
+setStatus('Draft loaded.');
+
+/* =========================
+   Warn on unload if editing
+   ========================= */
+window.addEventListener('beforeunload', (e)=>{
+  // Mild nag to avoid accidental closes while editing
+  e.preventDefault(); e.returnValue = '';
+});
+</script>
+</body>
+</html>
