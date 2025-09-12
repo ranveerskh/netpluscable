@@ -67,6 +67,436 @@
   .badge2{display:inline-block;background:#0f1732;border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12px}
 </style>
 </head>
+<script type="module">
+/* ================= Firebase (KPIs + Banners only) ================= */
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore, collection, query, orderBy, limit, getDocs,
+  doc, addDoc, setDoc, getDoc, deleteDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
+  authDomain: "netplustv-90b29.firebaseapp.com",
+  projectId: "netplustv-90b29",
+  storageBucket: "netplustv-90b29.firebasestorage.app",
+  messagingSenderId: "639722274355",
+  appId: "1:639722274355:web:ebe34fdf093f8191da2d46"
+};
+const app = getApps().length? getApps()[0] : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ================= Small helpers ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const fmt = v => Number(v||0);
+function toast(sel,msg){ const el=$(sel); if(!el) return; el.textContent=msg; setTimeout(()=>el.textContent='',1800); }
+
+/* ================= NAV ================= */
+function showPanel(name){
+  $$('#navTabs .tbtn').forEach(b=>b.classList.toggle('active', b.dataset.panel===name));
+  ['home','hosts','banners','general','plans','boxes','galleryLocal','importExport']
+    .forEach(n=>$('#panel-'+n).classList.toggle('active', n===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+$('#navTabs').addEventListener('click', e=>{
+  const b=e.target.closest('button[data-panel]'); if(!b) return;
+  showPanel(b.dataset.panel);
+});
+window.showPanel = showPanel;
+
+/* ================= AUTH ================= */
+$('#btnSignIn').addEventListener('click', async ()=>{
+  const email=$('#email').value.trim(), pass=$('#password').value;
+  if(!email||!pass) return alert('Enter email and password');
+  try{ await signInWithEmailAndPassword(auth,email,pass); }catch(e){ alert('Sign in failed: '+(e?.message||e)); }
+});
+$('#btnSignOut').addEventListener('click',()=>signOut(auth));
+
+onAuthStateChanged(auth, async (user)=>{
+  if(user){
+    $('#authArea').style.display='none';
+    $('#whoami').style.display='flex';
+    $('#whoamiText').textContent = user.email || '';
+    await refreshAll();
+  }else{
+    $('#authArea').style.display='flex';
+    $('#whoami').style.display='none';
+    $('#bannerList').innerHTML='';
+    ['kpiVisitors','kpiPings','kpiAvgStepsToday','kpiAvgStepsSession'].forEach(id=>$('#'+id).textContent='—');
+  }
+});
+
+/* ================= KPIs ================= */
+function rangeToStart(v){ const n=new Date(); if(v==='7d')return new Date(n-7*864e5); if(v==='30d')return new Date(n-30*864e5); if(v==='1y')return new Date(n-365*864e5); return null; }
+let visCache=[];
+async function loadAnalytics(){
+  const start = rangeToStart($('#range').value);
+  const snap = await getDocs(query(collection(db,'analytics_visitors'), orderBy('createdAt','desc'), limit(300)));
+  visCache = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(r=>{
+    const t = r.createdAt?.toDate?.() || (r.ts? new Date(r.ts) : null);
+    return !start || (t && t>=start);
+  });
+}
+function renderKPIs(){
+  const unique=new Set(); let pings=0,sumT=0,sumS=0,nT=0,nS=0;
+  visCache.forEach(r=>{
+    const t=r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
+    if(t && r.vid){ unique.add(t.toISOString().slice(0,10)+'|'+r.vid); }
+    pings++; if(typeof r.steps_today==='number'){ sumT+=r.steps_today; nT++; }
+    if(typeof r.steps_session==='number'){ sumS+=r.steps_session; nS++; }
+  });
+  $('#kpiVisitors').textContent=String(unique.size);
+  $('#kpiPings').textContent=String(pings);
+  $('#kpiAvgStepsToday').textContent=nT? (sumT/nT).toFixed(1):'0.0';
+  $('#kpiAvgStepsSession').textContent=nS? (sumS/nS).toFixed(1):'0.0';
+}
+async function refreshKPIs(){ await loadAnalytics(); renderKPIs(); }
+$('#range').addEventListener('change', refreshKPIs);
+$('#refreshKPI').addEventListener('click', refreshKPIs);
+
+/* ================= Firestore BANNERS ================= */
+async function loadBanners(){
+  const snap = await getDocs(query(collection(db,'site_settings','banners','items'), orderBy('order','asc')));
+  const list = $('#bannerList'); list.innerHTML='';
+  snap.forEach(docSnap=>{
+    const b = { id: docSnap.id, ...docSnap.data() };
+    const row = document.createElement('div'); row.className='row'; row.innerHTML = `
+      <div>
+        <div class="h"><strong>${b.title||'(no title)'}</strong> ${b.enabled? '' : '<span class="sub">[disabled]</span>'}</div>
+        <div class="sub">${b.text||''}</div>
+        <div class="sub">CTA: ${b.ctaLabel||''} → ${(b.ctaHref||'').slice(0,80)}</div>
+        <div class="sub">Order: ${b.order??0} | Valid: ${(b.validFrom||'')||'—'} → ${(b.validTo||'')||'—'}</div>
+        <div class="sub">${b.imageUrl? 'Image: '+b.imageUrl : ''}</div>
+      </div>
+      <div class="actions" style="display:flex;gap:8px;align-items:center">
+        <button class="btn" data-act="toggle" data-id="${b.id}">${b.enabled? 'Disable' : 'Enable'}</button>
+        <button class="btn" data-act="edit" data-id="${b.id}">Edit</button>
+        <button class="btn" data-act="del" data-id="${b.id}">Delete</button>
+      </div>`;
+    list.appendChild(row);
+  });
+  list.querySelectorAll('button[data-act]').forEach(btn=>{
+    btn.addEventListener('click', async ()=>{
+      const id = btn.dataset.id, act = btn.dataset.act;
+      const ref = doc(db,'site_settings','banners','items',id);
+      if(act==='toggle'){
+        const snap = await getDoc(ref); const cur = snap.data();
+        await setDoc(ref,{enabled:!cur.enabled, updatedAt:serverTimestamp()},{merge:true});
+      }else if(act==='edit'){
+        const snap = await getDoc(ref); const b = snap.data();
+        $('#bnEnabled').checked = !!b.enabled;
+        $('#bnTitle').value = b.title||''; $('#bnText').value=b.text||'';
+        $('#bnCtaLabel').value=b.ctaLabel||''; $('#bnCtaHref').value=b.ctaHref||'';
+        $('#bnImageUrl').value=b.imageUrl||''; $('#bnValidFrom').value=b.validFrom||''; $('#bnValidTo').value=b.validTo||'';
+        $('#bnOrder').value=b.order??0;
+        $('#bnSave').dataset.editId = id; $('#bnSave').textContent='Save Changes';
+        toast('#bnStatus','Loaded for editing'); window.scrollTo({top:0,behavior:'smooth'});
+      }else if(act==='del'){
+        if(confirm('Delete this banner?')) await deleteDoc(ref);
+      }
+      await loadBanners();
+    });
+  });
+}
+$('#bnSave').addEventListener('click', async ()=>{
+  const payload = {
+    enabled: $('#bnEnabled').checked,
+    title: $('#bnTitle').value.trim(),
+    text: $('#bnText').value.trim(),
+    ctaLabel: $('#bnCtaLabel').value.trim(),
+    ctaHref: $('#bnCtaHref').value.trim(),
+    imageUrl: $('#bnImageUrl').value.trim() || null,
+    validFrom: $('#bnValidFrom').value || null,
+    validTo: $('#bnValidTo').value || null,
+    order: Number($('#bnOrder').value||0),
+    updatedAt: serverTimestamp()
+  };
+  const editId = $('#bnSave').dataset.editId;
+  if(editId){
+    await setDoc(doc(db,'site_settings','banners','items',editId), payload, {merge:true});
+    $('#bnSave').textContent='Save New Banner'; delete $('#bnSave').dataset.editId; toast('#bnStatus','Saved ✔');
+  }else{
+    payload.createdAt = serverTimestamp();
+    await addDoc(collection(db,'site_settings','banners','items'), payload);
+    toast('#bnStatus','Created ✔');
+  }
+  ['bnTitle','bnText','bnCtaLabel','bnCtaHref','bnImageUrl','bnOrder'].forEach(id=>$('#'+id).value='');
+  await loadBanners();
+});
+
+/* ================= LocalStorage Site Settings ================= */
+const KEY_CANON = 'netplus.settings.v1.public';
+const KEY_OLD   = ['netplus.settings.v1','netplus.settings']; // migrate if present
+
+// MIGRATION to canonical key (one-time)
+(function migrate(){
+  if(localStorage.getItem(KEY_CANON)) return;
+  for(const k of KEY_OLD){
+    const raw = localStorage.getItem(k);
+    if(raw){ try{ const o=JSON.parse(raw); localStorage.setItem(KEY_CANON, JSON.stringify(o)); break; }catch(_){ } }
+  }
+})();
+
+function defaults(){
+  return {
+    currency:{symbol:'$', position:'prefix'},
+    whatsapp:{number:'16476961656'},
+    plans:[
+      {id:crypto.randomUUID(), name:'1 Month', months:1, price:15, badge:'Starter', order:0, visible:true, note:'Full features'},
+      {id:crypto.randomUUID(), name:'3 Months', months:3, price:40, badge:'Popular', order:1, visible:true, note:'Save vs monthly'},
+      {id:crypto.randomUUID(), name:'6 Months', months:6, price:65, badge:'Most Picked', order:2, visible:true},
+      {id:crypto.randomUUID(), name:'12 Months (+1 free)', months:12, price:100, badge:'Best Value', order:3, visible:true, note:'+1 month free'}
+    ],
+    boxes:[],
+    gallery:[]
+  };
+}
+function getSite(){ try{ return JSON.parse(localStorage.getItem(KEY_CANON) || 'null'); }catch(_){ return null; } }
+function setSite(obj){ localStorage.setItem(KEY_CANON, JSON.stringify(obj)); }
+function ensure(){ let s=getSite(); if(!s){ s=defaults(); setSite(s); } return s; }
+
+// keep other tabs (including index.html) in sync
+window.addEventListener('storage', e=>{
+  if(e.key===KEY_CANON){ loadAllLocal(); }
+});
+
+/* ===== General ===== */
+function loadGeneral(){
+  const s = ensure();
+  $('#curSymbol').value = s.currency?.symbol || '$';
+  $('#curPos').value = s.currency?.position || 'prefix';
+  $('#waNumber').value = s.whatsapp?.number || '';
+}
+$('#btnLoadLocal').addEventListener('click', loadGeneral);
+$('#btnSaveLocal').addEventListener('click', ()=>{
+  const s = ensure();
+  s.currency = {symbol: $('#curSymbol').value || '$', position: $('#curPos').value || 'prefix'};
+  s.whatsapp = {number: ($('#waNumber').value||'').replace(/[^\d]/g,'')};
+  setSite(s); toast('#genStatus','Saved ✔');
+});
+$('#btnResetLocal').addEventListener('click', ()=>{
+  if(!confirm('Reset to defaults?')) return;
+  setSite(defaults()); loadAllLocal(); toast('#genStatus','Reset ✔');
+});
+
+/* ===== Plans CRUD ===== */
+let editingPlanId=null;
+function renderPlans(){
+  const s = ensure(); const rows = $('#planRows'); rows.innerHTML='';
+  const list = [...(s.plans||[])].sort((a,b)=>(a.order||0)-(b.order||0));
+  const sym=s.currency?.symbol||'$'; const suf=s.currency?.position==='suffix';
+  list.forEach(p=>{
+    const priceTxt = suf? `${Number(p.price)}${sym}`:`${sym}${Number(p.price)}`;
+    const row = document.createElement('div'); row.className='row';
+    row.innerHTML = `
+      <div><strong>${p.name||''}</strong> <span class="sub">(${p.months||''} months)</span> ${p.badge? `<span class="badge2">${p.badge}</span>`:''} ${p.note? `<span class="sub">• ${p.note}</span>`:''}</div>
+      <div>${priceTxt}</div>
+      <div class="sub">Order: ${p.order??0} • ${p.visible===false? 'Hidden':'Visible'}</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" data-ed="${p.id}">Edit</button>
+        <button class="btn" data-del="${p.id}">Delete</button>
+      </div>`;
+    rows.appendChild(row);
+  });
+  rows.querySelectorAll('button[data-ed]').forEach(b=>{
+    b.onclick = ()=>{
+      const s=ensure(); const p=s.plans.find(x=>x.id===b.dataset.ed); if(!p) return;
+      editingPlanId=p.id;
+      $('#plName').value=p.name||''; $('#plMonths').value=p.months||''; $('#plPrice').value=p.price||'';
+      $('#plBadge').value=p.badge||''; $('#plNote').value=p.note||''; $('#plOrder').value=p.order||0;
+      $('#plVisible').checked=p.visible!==false;
+      $('#plAdd').textContent='Save Changes';
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
+  });
+  rows.querySelectorAll('button[data-del]').forEach(b=>{
+    b.onclick=()=>{
+      if(!confirm('Delete this plan?')) return;
+      const s=ensure(); s.plans=s.plans.filter(x=>x.id!==b.dataset.del); setSite(s); renderPlans();
+    };
+  });
+}
+$('#plAdd').addEventListener('click', ()=>{
+  const s=ensure();
+  const payload = {
+    id: editingPlanId || crypto.randomUUID(),
+    name: $('#plName').value.trim() || 'Plan',
+    months: fmt($('#plMonths').value) || null,
+    price: fmt($('#plPrice').value) || 0,
+    badge: $('#plBadge').value.trim() || null,
+    note: $('#plNote').value.trim() || null,
+    order: fmt($('#plOrder').value) || 0,
+    visible: $('#plVisible').checked
+  };
+  if(editingPlanId){
+    const i=s.plans.findIndex(x=>x.id===editingPlanId);
+    if(i>-1) s.plans[i]=payload;
+    editingPlanId=null; $('#plAdd').textContent='Add / Save';
+  }else{
+    s.plans.push(payload);
+  }
+  setSite(s); renderPlans(); $('#plClear').click();
+});
+$('#plClear').addEventListener('click', ()=>{
+  editingPlanId=null; $('#plAdd').textContent='Add / Save';
+  ['plName','plMonths','plPrice','plBadge','plNote','plOrder'].forEach(id=>$('#'+id).value='');
+  $('#plVisible').checked=true;
+});
+
+/* ===== Boxes CRUD ===== */
+let editingBoxId=null;
+function parseLines(v){ return v.split('\n').map(s=>s.trim()).filter(Boolean); }
+function renderBoxes(){
+  const s = ensure(); const rows = $('#boxRows'); rows.innerHTML='';
+  const list = [...(s.boxes||[])].sort((a,b)=>(a.order||0)-(b.order||0));
+  const sym = s.currency?.symbol || '$', suffix = s.currency?.position === 'suffix';
+  list.forEach(bx=>{
+    const priceTxt = suffix ? `${Number(bx.price)}${sym}` : `${sym}${Number(bx.price)}`;
+    const photosCount = Array.isArray(bx.images)? bx.images.length : 0;
+    const specsCount = Array.isArray(bx.specs)? bx.specs.length : 0;
+    const row = document.createElement('div'); row.className='row';
+    row.innerHTML = `
+      <div><strong>${bx.name||''}</strong> ${bx.badge? `<span class="badge2">${bx.badge}</span>`:''} <span class="sub">photos:${photosCount} • specs:${specsCount}</span></div>
+      <div>${priceTxt}${bx.bundle? ` <span class="sub">/ bundle: ${suffix? `${bx.bundle}${sym}` : `${sym}${bx.bundle}`}</span>`:''}</div>
+      <div class="sub">Order: ${bx.order??0} • ${bx.visible===false?'Hidden':'Visible'}</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" data-ed="${bx.id}">Edit</button>
+        <button class="btn" data-del="${bx.id}">Delete</button>
+      </div>`;
+    rows.appendChild(row);
+  });
+  rows.querySelectorAll('button[data-ed]').forEach(b=>{
+    b.onclick=()=>{
+      const s=ensure(); const bx=s.boxes.find(x=>x.id===b.dataset.ed); if(!bx) return;
+      editingBoxId=bx.id;
+      $('#bxName').value=bx.name||''; $('#bxPrice').value=bx.price||''; $('#bxBundle').value=bx.bundle||'';
+      $('#bxBadge').value=bx.badge||''; $('#bxOrder').value=bx.order||0; $('#bxVisible').checked=bx.visible!==false;
+      $('#bxSpecs').value=(bx.specs||[]).join('\n');
+      $('#bxPhotos').value=(bx.images||[]).map(i=>i.url + (i.alt? `|${i.alt}`:'')).join('\n');
+      $('#bxAdd').textContent='Save Changes';
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
+  });
+  rows.querySelectorAll('button[data-del]').forEach(b=>{
+    b.onclick=()=>{
+      if(!confirm('Delete this box?')) return;
+      const s=ensure(); s.boxes=s.boxes.filter(x=>x.id!==b.dataset.del); setSite(s); renderBoxes();
+    };
+  });
+}
+$('#bxAdd').addEventListener('click', ()=>{
+  const s=ensure();
+  const imgs = parseLines($('#bxPhotos').value).map(line=>{
+    const [url, alt] = line.split('|'); return {url:url?.trim(), alt:(alt||'').trim()};
+  }).filter(i=>i.url);
+  const specs = parseLines($('#bxSpecs').value);
+  const payload = {
+    id: editingBoxId || crypto.randomUUID(),
+    name: $('#bxName').value.trim() || 'Box',
+    price: fmt($('#bxPrice').value)||0,
+    bundle: $('#bxBundle').value? fmt($('#bxBundle').value) : null,
+    badge: $('#bxBadge').value.trim() || null,
+    order: fmt($('#bxOrder').value)||0,
+    visible: $('#bxVisible').checked,
+    images: imgs,
+    specs: specs
+  };
+  if(editingBoxId){
+    const i=s.boxes.findIndex(x=>x.id===editingBoxId);
+    if(i>-1) s.boxes[i]=payload;
+    editingBoxId=null; $('#bxAdd').textContent='Add / Save';
+  }else{
+    s.boxes.push(payload);
+  }
+  setSite(s); renderBoxes(); $('#bxClear').click();
+});
+$('#bxClear').addEventListener('click', ()=>{
+  editingBoxId=null; $('#bxAdd').textContent='Add / Save';
+  ['bxName','bxPrice','bxBundle','bxBadge','bxOrder','bxSpecs','bxPhotos'].forEach(id=>$('#'+id).value='');
+  $('#bxVisible').checked=true;
+});
+
+/* ===== Gallery (Local) CRUD ===== */
+let editingGalId=null;
+function renderGalLocal(){
+  const s=ensure(); const rows=$('#galLocalRows'); rows.innerHTML='';
+  const list=[...(s.gallery||[])].sort((a,b)=>(a.order||0)-(b.order||0));
+  list.forEach(g=>{
+    const row=document.createElement('div'); row.className='row';
+    row.innerHTML=`
+      <div><strong>${g.caption||''}</strong> <span class="sub">${g.url||''}</span></div>
+      <div class="sub">Order: ${g.order??0}</div>
+      <div class="sub">${g.visible===false?'Hidden':'Visible'}</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" data-ed="${g.id}">Edit</button>
+        <button class="btn" data-del="${g.id}">Delete</button>
+      </div>`;
+    rows.appendChild(row);
+  });
+  rows.querySelectorAll('button[data-ed]').forEach(b=>{
+    b.onclick=()=>{
+      const s=ensure(); const g=s.gallery.find(x=>x.id===b.dataset.ed); if(!g) return;
+      editingGalId=g.id;
+      $('#glLocCaption').value=g.caption||''; $('#glLocUrl').value=g.url||''; $('#glLocOrder').value=g.order||0; $('#glLocVisible').checked=g.visible!==false;
+      $('#glLocAdd').textContent='Save Changes';
+      window.scrollTo({top:0,behavior:'smooth'});
+    };
+  });
+  rows.querySelectorAll('button[data-del]').forEach(b=>{
+    b.onclick=()=>{
+      if(!confirm('Delete this image?')) return;
+      const s=ensure(); s.gallery=s.gallery.filter(x=>x.id!==b.dataset.del); setSite(s); renderGalLocal();
+    };
+  });
+}
+$('#glLocAdd').addEventListener('click', ()=>{
+  const s=ensure();
+  const payload={
+    id: editingGalId || crypto.randomUUID(),
+    caption: $('#glLocCaption').value.trim() || '',
+    url: $('#glLocUrl').value.trim(),
+    order: fmt($('#glLocOrder').value)||0,
+    visible: $('#glLocVisible').checked
+  };
+  if(!payload.url){ alert('Image URL required'); return; }
+  if(editingGalId){
+    const i=s.gallery.findIndex(x=>x.id===editingGalId); if(i>-1) s.gallery[i]=payload;
+    editingGalId=null; $('#glLocAdd').textContent='Add / Save';
+  }else{
+    s.gallery.push(payload);
+  }
+  setSite(s); renderGalLocal(); $('#glLocClear').click();
+});
+$('#glLocClear').addEventListener('click', ()=>{
+  editingGalId=null; $('#glLocAdd').textContent='Add / Save';
+  ['glLocCaption','glLocUrl','glLocOrder'].forEach(id=>$('#'+id).value='');
+  $('#glLocVisible').checked=true;
+});
+
+/* ===== Import / Export ===== */
+$('#btnExport').addEventListener('click', ()=>{
+  const blob = new Blob([localStorage.getItem(KEY_CANON)||'{}'], {type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='settings.json'; a.click();
+});
+$('#btnImport').addEventListener('click', ()=>{
+  const f=$('#fileImport').files?.[0]; if(!f){ toast('#ieStatus','Choose a JSON file first'); return; }
+  const r=new FileReader();
+  r.onload=()=>{ try{ const obj=JSON.parse(r.result); setSite(obj); loadAllLocal(); toast('#ieStatus','Imported ✔'); }catch(e){ toast('#ieStatus','Invalid JSON'); } };
+  r.readAsText(f);
+});
+
+/* ===== Load all local sections ===== */
+function loadAllLocal(){ loadGeneral(); renderPlans(); renderBoxes(); renderGalLocal(); }
+
+/* ===== Orchestration ===== */
+async function refreshAll(){
+  await Promise.all([refreshKPIs(), loadBanners()]);
+  loadAllLocal();
+}
+</script>
 <body>
 
 <!-- Topbar -->
