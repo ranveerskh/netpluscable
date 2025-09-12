@@ -701,7 +701,7 @@ $('#btnImport').addEventListener('click', ()=>{
 /* Load all local sections */
 function loadAllLocal(){ loadGeneral(); renderPlans(); renderBoxes(); renderGalLocal(); }
 
-/* ===== Orchestration ===== */
+/* ===== Orchestration ==== */
 async function refreshAll(){
   await Promise.all([refreshKPIs(), loadBanners()]);
   loadAllLocal();
