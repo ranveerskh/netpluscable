@@ -24,33 +24,20 @@
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1100px;margin:0 auto;padding:14px}
 
-  /* Swipe Promo Carousel (sticky) */
-  .promo{
-    position:sticky;top:0;z-index:1000;background:transparent;padding:8px 0 4px;
-    animation:bannerSlide .5s ease-out;
-  }
+  /* Promo */
+  .promo{position:sticky;top:0;z-index:1000;background:transparent;padding:8px 0 4px;animation:bannerSlide .5s ease-out}
   #promoTrack{display:flex;gap:10px;overflow:auto;scroll-snap-type:x mandatory;padding:0 14px}
-  .slide{
-    scroll-snap-align:center;min-width:92%;
-    background:linear-gradient(135deg,var(--accent1),var(--accent2));
-    color:#fff;border-radius:14px;padding:12px 14px;position:relative;
-    box-shadow:0 6px 20px rgba(0,0,0,.25);
-  }
+  .slide{scroll-snap-align:center;min-width:92%;background:linear-gradient(135deg,var(--accent1),var(--accent2));color:#fff;border-radius:14px;padding:12px 14px;position:relative;box-shadow:0 6px 20px rgba(0,0,0,.25)}
   .slide .t{font-weight:900}
   .slide .x{position:absolute;right:8px;top:8px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);border-radius:10px;padding:4px 8px;font-weight:900;cursor:pointer}
   .slide a{font-weight:900;text-decoration:underline}
   @keyframes bannerSlide{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
 
   /* Header */
-  .top{
-    position:sticky;top:0;z-index:900;backdrop-filter: blur(8px);
-    background:rgba(11,16,32,.6);border-bottom:1px solid rgba(255,255,255,.06);
-    display:flex;align-items:center;justify-content:space-between;padding:12px 14px;
-  }
+  .top{position:sticky;top:0;z-index:900;backdrop-filter: blur(8px);background:rgba(11,16,32,.6);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;padding:12px 14px}
   .logo{display:flex;align-items:center;gap:4px;color:var(--ink);font-weight:800}
   .logo svg{height:26px;width:auto}
-  .menu-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--ink);
-    padding:6px 10px;border-radius:10px}
+  .menu-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--ink);padding:6px 10px;border-radius:10px}
 
   /* Hero */
   .hero{padding:10px 14px 8px;text-align:center}
@@ -67,14 +54,11 @@
   .panel{display:none}
   .panel.active{display:block}
 
-  /* Cards grid */
+  /* Card grid */
   .grid{display:grid;gap:12px}
   @media(min-width:680px){.grid{grid-template-columns: repeat(2,1fr)}}
   @media(min-width:1024px){.grid{grid-template-columns: repeat(3,1fr)}}
-  .card{
-    background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;
-    box-shadow:0 10px 30px rgba(0,0,0,.25);
-  }
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
   .mark{display:inline-block;font-size:11px;margin-bottom:6px;padding:4px 8px;border-radius:999px;background:#0e1a3d;border:1px solid rgba(255,255,255,.12);color:#bcd0ff;font-weight:800}
   .mark.rec{background:#14224f;border-color:#3e5cdf;color:#cfe2ff}
   .mark.dur{background:#10311f;border-color:#2f7d55;color:#c9f6e4}
@@ -90,10 +74,7 @@
   .note{font-size:12px;color:#ffdca1;margin-top:6px}
 
   /* Combo chip */
-  .combo{
-    display:inline-block;margin-top:8px;padding:7px 12px;border-radius:10px;font-weight:900;font-size:13px;color:#fff;
-    background:linear-gradient(135deg,#6a11cb,#2575fc);box-shadow:0 6px 16px rgba(37,117,252,.25)
-  }
+  .combo{display:inline-block;margin-top:8px;padding:7px 12px;border-radius:10px;font-weight:900;font-size:13px;color:#fff;background:linear-gradient(135deg,#6a11cb,#2575fc);box-shadow:0 6px 16px rgba(37,117,252,.25)}
 
   /* Table */
   .table{margin-top:12px;overflow:auto;border:1px solid var(--line);border-radius:12px}
@@ -101,23 +82,18 @@
   th,td{padding:12px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
   thead th{background:#0e1836;color:#cfe0ff;text-align:left}
 
-  /* Bottom Dock (now 5 tabs incl. Gallery) */
-  .dock{
-    position:sticky;bottom:0;z-index:40;background:rgba(11,16,32,.92);backdrop-filter: blur(10px);
-    border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(5,1fr);gap:8px;
-    padding:8px 8px calc(8px + env(safe-area-inset-bottom));
-  }
+  /* Photo scroller inside cards */
+  .photoTrack{display:flex;gap:8px;overflow:auto;scroll-snap-type:x mandatory;margin:8px 0}
+  .photoTrack img{height:140px;width:auto;border-radius:10px;scroll-snap-align:center;display:block}
+
+  /* Bottom Dock (5 tabs including Gallery) */
+  .dock{position:sticky;bottom:0;z-index:40;background:rgba(11,16,32,.92);backdrop-filter: blur(10px);border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
   .dbtn{color:var(--ink);text-align:center;padding:10px 6px;border:1px solid rgba(255,255,255,.12);border-radius:12px}
   .dactive{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
 
-  /* Modals / Sheets */
+  /* Modals */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;z-index:9999}
-  .sheet{
-    background:#0d142d;border-top:1px solid var(--line);width:100%;
-    max-height:90vh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
-    border-radius:16px 16px 0 0;padding:16px 14px calc(24px + env(safe-area-inset-bottom));
-    color:#e9edff
-  }
+  .sheet{background:#0d142d;border-top:1px solid var(--line);width:100%;max-height:90vh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border-radius:16px 16px 0 0;padding:16px 14px calc(24px + env(safe-area-inset-bottom));color:#e9edff}
   .field{display:flex;flex-direction:column;gap:6px;margin:10px 0}
   .input,select,textarea{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:12px;color:#e9edff}
   .chips{display:flex;gap:6px;flex-wrap:wrap}
@@ -130,27 +106,19 @@
   .catlist{margin:6px 0 0;padding-left:18px}
   .catlist li{margin:6px 0}
 
-  /* Gallery grid */
+  /* Gallery */
   .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
   @media(min-width:700px){.gallery{grid-template-columns:repeat(4,1fr)}}
   .gitem{background:#0b122a;border:1px solid #22305a;border-radius:12px;overflow:hidden}
   .gitem img{width:100%;height:120px;object-fit:cover;display:block}
   .gcap{padding:8px;font-size:12px;color:#cfe0ff;text-align:center}
 
-  /* Simple photo scroller inside cards */
-  .photoTrack{display:flex;gap:8px;overflow:auto;scroll-snap-type:x mandatory;margin:8px 0}
-  .photoTrack img{height:140px;width:auto;border-radius:10px;scroll-snap-align:center;display:block}
-  .photoDots{display:flex;gap:4px;margin-top:4px}
-  .dot{width:6px;height:6px;border-radius:999px;background:#2a335e}
-  .dot.on{background:#8ea2ff}
-
-  /* Lock page scroll when a modal is open (iOS friendly) */
   body.modal-open{overflow:hidden;position:fixed;width:100%}
 </style>
 </head>
 <body>
 
-<!-- Swipe Promo (from Admin banners via Firestore) -->
+<!-- Swipe Promo (Firestore banners) -->
 <section id="promoCarousel" class="promo" role="region" aria-label="Offers" style="display:none">
   <div id="promoTrack"></div>
 </section>
@@ -293,7 +261,7 @@
   <a class="dbtn" href="#support" onclick="showPanel('support')">Support</a>
 </nav>
 
-<!-- Menu sheet -->
+<!-- Menu -->
 <div class="modal" id="sheet-menu" aria-hidden="true">
   <div class="sheet">
     <button class="x" onclick="closeSheet('menu')">Close</button>
@@ -312,10 +280,10 @@
   </div>
 </div>
 
+<!-- Firebase (banners + settings) -->
 <script type="module">
-  /* ===== Firebase (CDN) for banners only ===== */
   import { getApps, initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, query, orderBy, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
@@ -328,7 +296,7 @@
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
   const db  = getFirestore(app);
 
-  /* ===== Banners from Firestore ===== */
+  /* ========== Firestore: Banners ========== */
   async function loadBanners(){
     const wrap = document.getElementById('promoCarousel');
     const track = document.getElementById('promoTrack');
@@ -362,18 +330,23 @@
       wrap.style.display='none';
     }
   }
-  loadBanners();
-</script>
 
-<script>
-  /* ===== Bullet-proof SETTINGS loader with migration ===== */
-  const KEY = 'netplus.settings.v1.public';
-  const CANDIDATES = [
-    'netplus.settings.v1.public',
-    'netplus.settings.v1',
-    'netplus.settings'
-  ];
-  function defaultSettings(){
+  /* ========== Firestore: Public Settings (single doc) ========== */
+  // Document path: site_settings/public
+  async function loadPublicSettings(){
+    // schema:
+    // {
+    //   currency:{symbol:'$', position:'prefix'|'suffix'},
+    //   whatsapp:{number:'16476961656'},
+    //   plans:[{id,name,months,price,badge,note,order,visible}],
+    //   boxes:[{id,name,price,bundle:{price,freeMonths,note},badge,order,visible,images:[{url,alt}],specs:[...]}],
+    //   gallery:[{id,caption,url,order,visible}]
+    // }
+    const ref = doc(db,'site_settings','public');
+    const snap = await getDoc(ref);
+    if(snap.exists()) return snap.data();
+
+    // fallback defaults if doc missing
     return {
       currency:{symbol:'$', position:'prefix'},
       whatsapp:{number:'16476961656'},
@@ -387,40 +360,21 @@
       gallery:[]
     };
   }
-  function loadSettings(){
-    let obj=null;
-    for(const k of CANDIDATES){
-      const raw = localStorage.getItem(k);
-      if(raw){ try{ obj = JSON.parse(raw); if(obj) break; }catch(_){/*ignore*/} }
-    }
-    if(!obj || typeof obj!=='object') obj = defaultSettings();
 
-    // minimal schema healing
-    obj.currency = obj.currency || {symbol:'$', position:'prefix'};
-    obj.whatsapp = obj.whatsapp || {number:'16476961656'};
-    obj.plans = Array.isArray(obj.plans)? obj.plans : [];
-    obj.boxes = Array.isArray(obj.boxes)? obj.boxes : [];
-    obj.gallery = Array.isArray(obj.gallery)? obj.gallery : [];
+  /* ========== Render helpers ========== */
+  let SETTINGS = null;
 
-    // persist to canonical key so admin/index stay in sync
-    localStorage.setItem(KEY, JSON.stringify(obj));
-    return obj;
-  }
-  let SITE = loadSettings();
-
-  /* ===== Helpers ===== */
   function money(n){
-    const s = SITE.currency?.symbol || '$';
-    const suf = SITE.currency?.position === 'suffix';
+    const s = SETTINGS?.currency?.symbol || '$';
+    const suf = SETTINGS?.currency?.position === 'suffix';
     const val = Number(n||0);
     return suf ? `${val}${s}` : `${s}${val}`;
   }
   function waLink(text){
-    const num = (SITE.whatsapp?.number||'16476961656').replace(/[^\d]/g,'');
+    const num = (SETTINGS?.whatsapp?.number||'16476961656').replace(/[^\d]/g,'');
     return `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
   }
 
-  /* ===== Panels / tabs ===== */
   function showPanel(name){
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     document.querySelector('#panel-'+name).classList.add('active');
@@ -433,8 +387,7 @@
   }
   window.showPanel = showPanel;
 
-  /* ===== Modals ===== */
-  let _scrollY = 0;
+  let _scrollY=0;
   function openSheet(key){
     _scrollY = window.scrollY || window.pageYOffset;
     document.body.classList.add('modal-open');
@@ -462,18 +415,47 @@
   }
   window.openSheet=openSheet; window.closeSheet=closeSheet;
 
-  /* ===== WhatsApp helpers ===== */
   function waSend(msg){ window.open(waLink(msg),'_blank'); }
-  window.waSend = waSend;
+  window.waSend=waSend;
 
-  /* ===== Render: Plans ===== */
+  function subscribePlan(label,price){ waSend(`New Subscription\nPlan: ${label} - ${money(price)}\nSource: website`); }
+  function buyBox(name,price){ waSend(`I'm interested in: Box Only\nModel: ${name}\nPrice: ${money(price)}\nPlease guide me with purchase & setup.`); }
+  function buyBoxBundle(name,price,bonus){
+    const bonusTxt = bonus? `\nBonus: ${bonus}` : '';
+    waSend(`I'm interested in: ${name} + 12-Month Plan\nBundle Price: ${money(price)}${bonusTxt}\nPlease guide me with activation & setup.`);
+  }
+  function sendRecharge(){
+    const n=(document.getElementById('rcName').value||'').trim();
+    const u=(document.getElementById('rcUser').value||'').trim();
+    const e=(document.getElementById('rcEmail').value||'').trim();
+    const p=document.getElementById('rcPlan').value||'';
+    waSend(`Recharge Request\nName: ${n}\nUser ID: ${u}\nEmail: ${e}\nPlan: ${p}`);
+  }
+  function sendRequest(){
+    const n=(document.getElementById('reqName').value||'').trim();
+    const ph=(document.getElementById('reqPhone').value||'').trim();
+    const e=(document.getElementById('reqEmail').value||'').trim();
+    const note=(document.getElementById('reqNote').value||'').trim();
+    waSend(`General Request\nName: ${n}\nPhone: ${ph}\nEmail: ${e}\nDetails: ${note}`);
+  }
+  function sendPin(){
+    const mac=(document.getElementById('pinMac').value||'').trim();
+    const e=(document.getElementById('pinEmail').value||'').trim();
+    const note=(document.getElementById('pinNote').value||'').trim();
+    waSend(`Parental PIN Request\nMAC: ${mac}\nEmail: ${e}\nNote: ${note}`);
+  }
+  window.subscribePlan=subscribePlan; window.buyBox=buyBox; window.buyBoxBundle=buyBoxBundle;
+  window.sendRecharge=sendRecharge; window.sendRequest=sendRequest; window.sendPin=sendPin;
+
+  /* ========== Renderers ========== */
   function renderPlans(){
     const grid = document.getElementById('plansGrid');
     const tbody = document.getElementById('plansTableBody');
     const rcSel = document.getElementById('rcPlan');
     grid.innerHTML=''; tbody.innerHTML=''; rcSel.innerHTML='<option value="">Choose a plan</option>';
 
-    const list = [...SITE.plans].filter(p=>p.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+    const list = [...(SETTINGS?.plans||[])].filter(p=>p.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+
     for(const p of list){
       const card = document.createElement('div');
       card.className='card';
@@ -509,49 +491,55 @@
     }
   }
 
-  /* ===== Render: Boxes ===== */
   function renderBoxes(){
     const grid = document.getElementById('boxesGrid'); grid.innerHTML='';
-    const list = [...SITE.boxes].filter(b=>b.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+    const list = [...(SETTINGS?.boxes||[])].filter(b=>b.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+
     for(const b of list){
       const card = document.createElement('div'); card.className='card';
 
       // photos
       let photosHTML = '';
       if(Array.isArray(b.images) && b.images.length){
-        const pid = 'p'+Math.random().toString(36).slice(2);
         photosHTML = `
-          <div id="${pid}" class="photoTrack" aria-label="Photos">
-            ${b.images.map(i=>`<img src="${i.url}" alt="${i.alt||''}" loading="lazy">`).join('')}
+          <div class="photoTrack" aria-label="Photos">
+            ${(b.images||[]).map(i=>`<img src="${i.url}" alt="${i.alt||''}" loading="lazy">`).join('')}
           </div>
         `;
+      }
+
+      // bundle display (with free months badge if present)
+      let bundleHTML = '';
+      if(b.bundle && (b.bundle.price || b.bundle.note || b.bundle.freeMonths)){
+        const bonus = (b.bundle.freeMonths && Number(b.bundle.freeMonths)>0)
+          ? `+${Number(b.bundle.freeMonths)} month${Number(b.bundle.freeMonths)>1?'s':''} free`
+          : '';
+        const note = b.bundle.note || bonus;
+        bundleHTML = `<div class="combo">Box + 1-Year: ${money(b.bundle.price||0)}${note? ` — ${note}`:''}</div>`;
       }
 
       card.innerHTML = `
         ${b.badge? `<span class="mark">${b.badge}</span>`:''}
         <div class="row"><div class="title">${b.name||''}</div><div class="price">${money(b.price)}</div></div>
-        ${b.bundle? `<div class="combo">Box + 1-Year: ${money(b.bundle)}</div>`:''}
+        ${bundleHTML}
         ${photosHTML}
-        <ul class="features">
-          ${(b.specs||[]).map(s=>`<li>${s}</li>`).join('')}
-        </ul>
+        <ul class="features">${(b.specs||[]).map(s=>`<li>${s}</li>`).join('')}</ul>
         <div class="btns">
           <button class="btn" onclick="buyBox('${(b.name||'').replace(/'/g,'\\\'')}',${Number(b.price)||0})">Box Only</button>
-          <button class="btn whats" ${b.bundle? '' : 'disabled'} onclick="buyBoxBundle('${(b.name||'').replace(/'/g,'\\\'')}',${Number(b.bundle)||0})">Box + 1-Year</button>
+          <button class="btn whats" ${b.bundle && b.bundle.price? '' : 'disabled'}
+            onclick="buyBoxBundle('${(b.name||'').replace(/'/g,'\\\'')}',${Number(b.bundle?.price)||0}, '${(b.bundle?.note||'').replace(/'/g,'\\\'')}')">
+            Box + 1-Year
+          </button>
         </div>
       `;
       grid.appendChild(card);
     }
   }
 
-  /* ===== Render: Gallery ===== */
   function renderGallery(){
     const grid = document.getElementById('galleryGrid'); grid.innerHTML='';
-    const list = [...SITE.gallery].filter(g=>g.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
-    if(!list.length){
-      grid.innerHTML = `<div class="help">No images yet.</div>`;
-      return;
-    }
+    const list = [...(SETTINGS?.gallery||[])].filter(g=>g.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+    if(!list.length){ grid.innerHTML = `<div class="help">No images yet.</div>`; return; }
     for(const g of list){
       const item = document.createElement('div');
       item.className = 'gitem';
@@ -564,61 +552,22 @@
     }
   }
 
-  /* ===== CTAs using WA number from settings ===== */
   function wireWhatsAppLinks(){
     const subHref = waLink('Hi, I want to subscribe to net+TV.');
     document.getElementById('waSubscribeMenu').href = subHref;
     document.getElementById('waSupport').href = waLink('Hi, I need help with net+TV.');
   }
 
-  /* ===== Existing CTA helpers ===== */
-  function subscribePlan(label,price){
-    waSend(`New Subscription\nPlan: ${label} - ${money(price)}\nSource: website`);
-  }
-  function buyBox(name,price){
-    waSend(`I'm interested in: Box Only\nModel: ${name}\nPrice: ${money(price)}\nPlease guide me with purchase & setup.`);
-  }
-  function buyBoxBundle(name,price){
-    waSend(`I'm interested in: ${name} + 12-Month Plan\nBundle Price: ${money(price)}\nPlease guide me with activation & setup.`);
-  }
-  function sendRecharge(){
-    const n=(document.getElementById('rcName').value||'').trim();
-    const u=(document.getElementById('rcUser').value||'').trim();
-    const e=(document.getElementById('rcEmail').value||'').trim();
-    const p=document.getElementById('rcPlan').value||'';
-    waSend(`Recharge Request\nName: ${n}\nUser ID: ${u}\nEmail: ${e}\nPlan: ${p}`);
-  }
-  function sendRequest(){
-    const n=(document.getElementById('reqName').value||'').trim();
-    const ph=(document.getElementById('reqPhone').value||'').trim();
-    const e=(document.getElementById('reqEmail').value||'').trim();
-    const note=(document.getElementById('reqNote').value||'').trim();
-    waSend(`General Request\nName: ${n}\nPhone: ${ph}\nEmail: ${e}\nDetails: ${note}`);
-  }
-  function sendPin(){
-    const mac=(document.getElementById('pinMac').value||'').trim();
-    const e=(document.getElementById('pinEmail').value||'').trim();
-    const note=(document.getElementById('pinNote').value||'').trim();
-    waSend(`Parental PIN Request\nMAC: ${mac}\nEmail: ${e}\nNote: ${note}`);
-  }
-  window.subscribePlan=subscribePlan; window.buyBox=buyBox; window.buyBoxBundle=buyBoxBundle;
-  window.sendRecharge=sendRecharge; window.sendRequest=sendRequest; window.sendPin=sendPin;
-
-  /* ===== Init render ===== */
-  function renderAll(){
-    // reload from canonical key in case admin changed it in another tab
-    try{ SITE = JSON.parse(localStorage.getItem(KEY)) || SITE; }catch(_){}
+  /* ========== Bootstrap ========== */
+  async function start(){
+    loadBanners();
+    SETTINGS = await loadPublicSettings();
     renderPlans();
     renderBoxes();
     renderGallery();
     wireWhatsAppLinks();
   }
-  renderAll();
-
-  // Optional: react to storage changes from another tab on the same origin
-  window.addEventListener('storage', e=>{
-    if(e.key === KEY){ try{ SITE = JSON.parse(e.newValue); renderAll(); }catch(_){} }
-  });
+  start();
 </script>
 </body>
 </html>
