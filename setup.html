@@ -1,711 +1,624 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1">
-<title>net+TV Admin</title>
-<meta name="theme-color" content="#0b1020">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>net+TV</title>
+<meta name="theme-color" content="#6a11cb" />
 <style>
   :root{
-    --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
-    --g1:#6a11cb;--g2:#2575fc;--tap:44px;
-    --safe-top: env(safe-area-inset-top,0px);
+    --bg:#0b1020;--ink:#e9edff;--muted:#9aa7d9;--card:#121831;--line:#23305b;
+    --accent1:#6a11cb;--accent2:#2575fc;--ok:#32d296;--whats:#25D366;--warn:#f8b84a;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#0b1020;color:var(--ink);-webkit-font-smoothing:antialiased}
+  body{
+    margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    background:
+      radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.14),transparent 60%),
+      radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 55%),
+      linear-gradient(180deg,#0b1020,#0b1020);
+    color:var(--ink);
+    padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  }
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1100px;margin:0 auto;padding:16px}
+  .wrap{max-width:1100px;margin:0 auto;padding:14px}
 
-  /* Topbar */
-  .topbar{position:sticky;top:0;z-index:100;background:rgba(11,16,32,.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
-  .bar{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:10px 16px;padding-top:calc(10px + var(--safe-top))}
-  .brand{display:flex;gap:10px;align-items:center;font-weight:900}
-  .badge{background:linear-gradient(135deg,var(--g1),var(--g2));padding:6px 10px;border-radius:10px;font-weight:900}
-  .auth{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-  .chip{border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#0f1732}
-  .btn{border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px 14px;font-weight:800;background:#0f1732;color:var(--ink);cursor:pointer;min-height:var(--tap)}
-  .btn.primary{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff}
-  .btn.warn{background:#2d1d00;border-color:#5f3f00}
-  .input{background:#0b122a;border:1px solid #22305a;border-radius:12px;padding:12px 14px;color:#e9edff;min-height:var(--tap);width:100%}
-  textarea.input{min-height:120px}
+  /* Swipe Promo Carousel (sticky) */
+  .promo{
+    position:sticky;top:0;z-index:1000;background:transparent;padding:8px 0 4px;
+    animation:bannerSlide .5s ease-out;
+  }
+  #promoTrack{display:flex;gap:10px;overflow:auto;scroll-snap-type:x mandatory;padding:0 14px}
+  .slide{
+    scroll-snap-align:center;min-width:92%;
+    background:linear-gradient(135deg,var(--accent1),var(--accent2));
+    color:#fff;border-radius:14px;padding:12px 14px;position:relative;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
+  }
+  .slide .t{font-weight:900}
+  .slide .x{position:absolute;right:8px;top:8px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);border-radius:10px;padding:4px 8px;font-weight:900;cursor:pointer}
+  .slide a{font-weight:900;text-decoration:underline}
+  @keyframes bannerSlide{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
 
-  /* Quick links */
-  .ql-wrap{padding:10px 16px;border-top:1px solid rgba(255,255,255,.08)}
-  .ql-grid{display:grid;gap:10px;grid-template-columns:repeat(2, minmax(0,1fr))}
-  .qbtn{display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;padding:16px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:#0f1732}
-  .qbtn.primary{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent}
+  /* Header */
+  .top{
+    position:sticky;top:0;z-index:900;backdrop-filter: blur(8px);
+    background:rgba(11,16,32,.6);border-bottom:1px solid rgba(255,255,255,.06);
+    display:flex;align-items:center;justify-content:space-between;padding:12px 14px;
+  }
+  .logo{display:flex;align-items:center;gap:4px;color:var(--ink);font-weight:800}
+  .logo svg{height:26px;width:auto}
+  .menu-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--ink);
+    padding:6px 10px;border-radius:10px}
 
-  /* Nav buttons to panels */
-  .tools{display:flex;gap:10px;flex-wrap:wrap;margin:10px 16px}
-  .tbtn{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#0f1732;font-weight:800}
-  .tbtn.active{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff}
-  .pill{display:inline-block;margin:6px 8px 0 0;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:#0f1732;font-size:13px}
+  /* Hero */
+  .hero{padding:10px 14px 8px;text-align:center}
+  .hero h1{font-size:24px;letter-spacing:.5px;margin:6px 0 10px}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+  .badge{font-size:12px;color:#cbd5ff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:6px 8px;border-radius:999px}
 
-  /* Sections */
-  .section{padding:16px}
-  .sub{color:#a9b5e6;font-size:13px}
-  .cards{display:grid;gap:12px}
-  @media(min-width:900px){.cards{grid-template-columns:repeat(4,1fr)}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
-  .kpi-val{font-size:28px;font-weight:900;line-height:1.1;margin-top:6px}
+  /* Tabs */
+  .tabs{display:flex;gap:8px;margin:14px 0 8px}
+  .tab{flex:1;text-align:center;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:12px;border-radius:12px;font-weight:800}
+  .tab.active{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
 
-  /* Panel containers */
+  /* Panels */
   .panel{display:none}
   .panel.active{display:block}
 
-  /* Reusable grids */
-  .grid2{display:grid;gap:10px}
-  @media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
-  .grid3{display:grid;gap:10px}
-  @media(min-width:900px){.grid3{grid-template-columns:repeat(3,1fr)}}
+  /* Cards grid */
+  .grid{display:grid;gap:12px}
+  @media(min-width:680px){.grid{grid-template-columns: repeat(2,1fr)}}
+  @media(min-width:1024px){.grid{grid-template-columns: repeat(3,1fr)}}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  .mark{display:inline-block;font-size:11px;margin-bottom:6px;padding:4px 8px;border-radius:999px;background:#0e1a3d;border:1px solid rgba(255,255,255,.12);color:#bcd0ff;font-weight:800}
+  .mark.rec{background:#14224f;border-color:#3e5cdf;color:#cfe2ff}
+  .mark.dur{background:#10311f;border-color:#2f7d55;color:#c9f6e4}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .title{font-weight:900;font-size:18px}
+  .price{font-weight:900;font-size:18px;background:rgba(255,255,255,.06);padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12)}
+  ul.features{list-style:none;padding:0;margin:10px 0 0}
+  ul.features li{margin:6px 0;font-size:13px;color:#cfdbff}
+  .btns{display:flex;gap:8px;margin-top:12px}
+  .btn{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);color:var(--ink);background:transparent;font-weight:800;cursor:pointer}
+  .btn.primary{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
+  .btn.whats{background:var(--whats);border-color:transparent;color:#fff}
+  .note{font-size:12px;color:#ffdca1;margin-top:6px}
 
-  /* List rows */
-  .rows{display:grid;gap:8px;margin-top:10px}
-  .row{display:grid;gap:8px;background:#0f1732;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px}
-  @media(min-width:800px){.row{grid-template-columns:2fr 1fr 1fr auto}}
+  /* Combo chip */
+  .combo{
+    display:inline-block;margin-top:8px;padding:7px 12px;border-radius:10px;font-weight:900;font-size:13px;color:#fff;
+    background:linear-gradient(135deg,#6a11cb,#2575fc);box-shadow:0 6px 16px rgba(37,117,252,.25)
+  }
 
-  .badge2{display:inline-block;background:#0f1732;border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12px}
+  /* Table */
+  .table{margin-top:12px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:12px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
+  thead th{background:#0e1836;color:#cfe0ff;text-align:left}
+
+  /* Bottom Dock (now 5 tabs incl. Gallery) */
+  .dock{
+    position:sticky;bottom:0;z-index:40;background:rgba(11,16,32,.92);backdrop-filter: blur(10px);
+    border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(5,1fr);gap:8px;
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+  }
+  .dbtn{color:var(--ink);text-align:center;padding:10px 6px;border:1px solid rgba(255,255,255,.12);border-radius:12px}
+  .dactive{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
+
+  /* Modals / Sheets */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;z-index:9999}
+  .sheet{
+    background:#0d142d;border-top:1px solid var(--line);width:100%;
+    max-height:90vh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+    border-radius:16px 16px 0 0;padding:16px 14px calc(24px + env(safe-area-inset-bottom));
+    color:#e9edff
+  }
+  .field{display:flex;flex-direction:column;gap:6px;margin:10px 0}
+  .input,select,textarea{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:12px;color:#e9edff}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{background:#0b122a;border:1px solid #22305a;color:#cfe0ff;padding:6px 10px;border-radius:999px;font-size:12px}
+  .x{float:right;background:transparent;border:1px solid rgba(255,255,255,.15);color:#cfe0ff;border-radius:10px;padding:6px 10px}
+  .help{font-size:12px;color:#b6c7ff}
+  .cols{display:grid;gap:12px;margin-top:8px}
+  @media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
+  .h{font-weight:900;margin-top:8px}
+  .catlist{margin:6px 0 0;padding-left:18px}
+  .catlist li{margin:6px 0}
+
+  /* Gallery grid */
+  .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+  @media(min-width:700px){.gallery{grid-template-columns:repeat(4,1fr)}}
+  .gitem{background:#0b122a;border:1px solid #22305a;border-radius:12px;overflow:hidden}
+  .gitem img{width:100%;height:120px;object-fit:cover;display:block}
+  .gcap{padding:8px;font-size:12px;color:#cfe0ff;text-align:center}
+
+  /* Simple photo scroller inside cards */
+  .photoTrack{display:flex;gap:8px;overflow:auto;scroll-snap-type:x mandatory;margin:8px 0}
+  .photoTrack img{height:140px;width:auto;border-radius:10px;scroll-snap-align:center;display:block}
+  .photoDots{display:flex;gap:4px;margin-top:4px}
+  .dot{width:6px;height:6px;border-radius:999px;background:#2a335e}
+  .dot.on{background:#8ea2ff}
+
+  /* Lock page scroll when a modal is open (iOS friendly) */
+  body.modal-open{overflow:hidden;position:fixed;width:100%}
 </style>
 </head>
 <body>
 
-<!-- Topbar -->
-<div class="topbar">
-  <div class="bar">
-    <div class="brand"><span class="badge">net+TV</span> <span>Admin</span></div>
+<!-- Swipe Promo (from Admin banners via Firestore) -->
+<section id="promoCarousel" class="promo" role="region" aria-label="Offers" style="display:none">
+  <div id="promoTrack"></div>
+</section>
 
-    <!-- Right-corner auth -->
-    <div class="auth" id="authArea">
-      <input id="email" class="input" placeholder="Admin email" autocomplete="username" inputmode="email" style="width:220px">
-      <input id="password" class="input" placeholder="Password" type="password" autocomplete="current-password" style="width:180px">
-      <button class="btn primary" id="btnSignIn">Sign In</button>
-    </div>
-    <div class="auth" id="whoami" style="display:none">
-      <span id="whoamiText" class="chip"></span>
-      <button class="btn" id="btnSignOut">Sign Out</button>
+<!-- Header -->
+<header class="top">
+  <div class="logo" aria-label="net+TV">
+    <svg viewBox="0 0 180 36" role="img" aria-label="net+TV logo">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6a11cb"/><stop offset="1" stop-color="#2575fc"/></linearGradient></defs>
+      <text x="0" y="25" font-size="24" font-weight="800" fill="#ffffff">net</text>
+      <rect x="52" y="6" width="24" height="24" rx="6" fill="url(#g)"/>
+      <rect x="62" y="10" width="4" height="16" fill="#fff"/><rect x="56" y="16" width="16" height="4" fill="#fff"/>
+      <text x="90" y="25" font-size="24" font-weight="900" fill="#e9edff">TV</text>
+    </svg>
+  </div>
+  <button class="menu-btn" onclick="openSheet('menu')">Menu</button>
+</header>
+
+<!-- Hero -->
+<section class="hero wrap">
+  <h1>All TV. All VOD.</h1>
+  <div class="badges">
+    <span class="badge">10,000+ Channels</span>
+    <span class="badge">Movies • Sports • Series</span>
+    <span class="badge">Full HD & 4K</span>
+    <span class="badge">24/7 Support</span>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Primary sections">
+    <button class="tab active" id="tab-plans" onclick="showPanel('plans')">Plans</button>
+    <button class="tab" id="tab-boxes" onclick="showPanel('boxes')">Boxes</button>
+    <button class="tab" id="tab-gallery" onclick="showPanel('gallery')">Gallery</button>
+    <button class="tab" id="tab-recharge" onclick="showPanel('recharge')">Recharge</button>
+    <button class="tab" id="tab-support" onclick="showPanel('support')">Support</button>
+  </div>
+</section>
+
+<!-- Main -->
+<main class="wrap">
+
+  <!-- Plans -->
+  <div class="panel active" id="panel-plans">
+    <div id="plansGrid" class="grid"></div>
+
+    <!-- Table generated from same plans -->
+    <div class="table">
+      <table aria-label="Plan comparison">
+        <thead><tr><th>Plan</th><th>Duration</th><th>Price</th><th>Note</th></tr></thead>
+        <tbody id="plansTableBody"></tbody>
+      </table>
     </div>
   </div>
 
-  <!-- Quick links -->
-  <div class="ql-wrap">
-    <div class="ql-grid">
-      <a class="qbtn primary" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glow TV</a>
-      <a class="qbtn" href="https://bill.spicetv.cc/login" target="_blank" rel="noopener">Spice TV</a>
-      <a class="qbtn" href="https://fast4k.cc/login" target="_blank" rel="noopener">Smart4K TV</a>
-      <a class="qbtn" href="data.html" target="_blank" rel="noopener">Users Data</a>
+  <!-- Boxes -->
+  <div class="panel" id="panel-boxes">
+    <div id="boxesGrid" class="grid"></div>
+  </div>
+
+  <!-- Gallery -->
+  <div class="panel" id="panel-gallery">
+    <div class="card">
+      <div class="title">Gallery</div>
+      <div class="sub" style="color:var(--muted)">Curated images</div>
+      <div id="galleryGrid" class="gallery"></div>
     </div>
   </div>
 
-  <!-- Buttons to panels -->
-  <div class="tools" id="navTabs">
-    <button class="tbtn active" data-panel="home">Home</button>
-    <button class="tbtn" data-panel="hosts">Hosts</button>
-    <button class="tbtn" data-panel="banners">Banners</button>
-    <span class="pill">Site Settings</span>
-    <button class="tbtn" data-panel="general">General</button>
-    <button class="tbtn" data-panel="plans">Plans</button>
-    <button class="tbtn" data-panel="boxes">Boxes</button>
-    <button class="tbtn" data-panel="galleryLocal">Gallery (Site)</button>
-    <button class="tbtn" data-panel="importExport">Import/Export</button>
+  <!-- Recharge -->
+  <div class="panel" id="panel-recharge">
+    <div class="card">
+      <div class="title">Recharge</div>
+      <div class="sub" style="color:var(--muted)">Fast renewal via WhatsApp</div>
+
+      <div class="field"><label>Name</label><input class="input" id="rcName" placeholder="Full Name"></div>
+      <div class="field"><label>User ID</label><input class="input" id="rcUser" placeholder="e.g., STB MAC / ID"></div>
+      <div class="field"><label>Email</label><input class="input" id="rcEmail" placeholder="email@example.com" type="email"></div>
+
+      <div class="field">
+        <label>Plan</label>
+        <select id="rcPlan" class="input">
+          <option value="">Choose a plan</option>
+        </select>
+      </div>
+
+      <button class="btn whats" onclick="sendRecharge()">Recharge via WhatsApp</button>
+      <div class="help">We reply quickly.</div>
+    </div>
   </div>
-</div>
 
-<!-- PANELS -->
-<div class="wrap">
-
-  <!-- HOME -->
-  <section id="panel-home" class="panel active section">
-    <div class="sub" style="margin-bottom:10px">Analytics track steps only (no location)</div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
-      <label class="sub" for="range">Range</label>
-      <select id="range" class="input" style="width:auto">
-        <option value="7d">Last 7 days</option>
-        <option value="30d">Last 30 days</option>
-        <option value="1y">Last 1 year</option>
-        <option value="all">Lifetime</option>
-      </select>
-      <button class="btn" id="refreshKPI">Refresh</button>
-    </div>
-
-    <div class="cards">
-      <div class="card"><div class="sub">Unique Viewer-Days</div><div class="kpi-val" id="kpiVisitors">—</div></div>
-      <div class="card"><div class="sub">Pings in Range</div><div class="kpi-val" id="kpiPings">—</div></div>
-      <div class="card"><div class="sub">Avg Steps (today)</div><div class="kpi-val" id="kpiAvgStepsToday">—</div></div>
-      <div class="card"><div class="sub">Avg Steps (session)</div><div class="kpi-val" id="kpiAvgStepsSession">—</div></div>
-    </div>
-  </section>
-
-  <!-- HOSTS -->
-  <section id="panel-hosts" class="panel section">
-    <h3 style="margin:0 0 8px 0">Hosts</h3>
-    <div class="sub" style="margin-bottom:8px">Tap to open; long-press to copy.</div>
-    <a class="pill" href="http://glotv.me" target="_blank" rel="noopener">Glow TV: glotv.me</a>
-    <a class="pill" href="http://4k.spicetv.cc" target="_blank" rel="noopener">Spice TV: 4k.spicetv.cc</a>
-    <a class="pill" href="http://smart4k.me" target="_blank" rel="noopener">Smart4K TV: smart4k.me</a>
-  </section>
-
-  <!-- BANNERS (Firestore) -->
-  <section id="panel-banners" class="panel section">
-    <h3 style="margin:0 0 8px 0">Swipe Banners (Firestore)</h3>
-    <div class="sub">Only enabled banners within date window are displayed on site.</div>
-    <div class="grid2" style="margin-top:12px">
-      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="bnEnabled" checked> <span class="sub">Enabled</span></label>
-      <input class="input" id="bnTitle" placeholder="Title (e.g., Canada Day Offer)">
-      <input class="input" id="bnText" placeholder="Text (e.g., Get 1 month extra with 1-year)">
-      <input class="input" id="bnCtaLabel" placeholder="CTA label (e.g., Get 13 months)">
-      <input class="input" id="bnCtaHref" placeholder="CTA href (https:// or #)">
-      <input class="input" id="bnImageUrl" placeholder="Image URL (optional)">
-      <input class="input" id="bnValidFrom" type="date" placeholder="Valid from">
-      <input class="input" id="bnValidTo" type="date" placeholder="Valid to">
-      <input class="input" id="bnOrder" type="number" placeholder="Order (0..N)">
-      <button class="btn primary" id="bnSave">Save New Banner</button>
-    </div>
-    <div class="sub" id="bnStatus" style="margin-top:6px"></div>
-    <div id="bannerList"></div>
-  </section>
-
-  <!-- ===== SITE SETTINGS (LocalStorage for index.html) ===== -->
-
-  <!-- GENERAL -->
-  <section id="panel-general" class="panel section">
-    <h3 style="margin:0 0 8px 0">Site Settings — General</h3>
-    <div class="sub">Stored in <span class="badge2">localStorage</span> at <code>netplus.settings.v1.public</code>. Index reads from here.</div>
-    <div class="grid3" style="margin-top:12px">
-      <div class="card">
-        <div class="sub">Currency</div>
-        <div class="grid2" style="margin-top:8px">
-          <input class="input" id="curSymbol" placeholder="Symbol (e.g., $)">
-          <select class="input" id="curPos">
-            <option value="prefix">Prefix ($100)</option>
-            <option value="suffix">Suffix (100$)</option>
-          </select>
-        </div>
+  <!-- Support -->
+  <div class="panel" id="panel-support">
+    <div class="card">
+      <div class="title">We’re here 24/7</div>
+      <div class="sub" style="color:var(--muted)">Install • Issues • Upgrades</div>
+      <div class="btns">
+        <a class="btn whats" id="waSupport" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
       </div>
-      <div class="card">
-        <div class="sub">WhatsApp</div>
-        <input class="input" id="waNumber" placeholder="WhatsApp number (digits only)" style="margin-top:8px">
-      </div>
-      <div class="card">
-        <div class="sub">Housekeeping</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-          <button class="btn" id="btnLoadLocal">Load current</button>
-          <button class="btn primary" id="btnSaveLocal">Save</button>
-          <button class="btn warn" id="btnResetLocal">Reset (defaults)</button>
-        </div>
-        <div class="sub" id="genStatus" style="margin-top:8px"></div>
-      </div>
+      <ul class="features" style="margin-top:8px">
+        <li>📦 Quick activation after payment</li>
+        <li>🛠 Remote setup help</li>
+        <li>🔒 No hidden charges</li>
+      </ul>
     </div>
-  </section>
 
-  <!-- PLANS -->
-  <section id="panel-plans" class="panel section">
-    <h3 style="margin:0 0 8px 0">Site Settings — Plans</h3>
-    <div class="sub">Cards and the recharge dropdown are built from this list.</div>
+    <!-- General Request -->
+    <div class="card" style="margin-top:12px">
+      <div class="title">General Request</div>
+      <div class="sub" style="color:var(--muted)">Tell us what you need — we’ll reply on WhatsApp</div>
 
-    <div class="grid3" style="margin-top:12px">
-      <input class="input" id="plName" placeholder="Name (e.g., 6 Months)">
-      <input class="input" id="plMonths" type="number" placeholder="Months (e.g., 6)">
-      <input class="input" id="plPrice" type="number" placeholder="Price (number)">
-      <input class="input" id="plBadge" placeholder="Badge (e.g., Most Picked)">
-      <input class="input" id="plNote" placeholder="Note (e.g., +1 month free)">
-      <input class="input" id="plOrder" type="number" placeholder="Order (0..N)">
-      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="plVisible" checked> <span class="sub">Visible</span></label>
-      <button class="btn primary" id="plAdd">Add / Save</button>
-      <button class="btn" id="plClear">Clear form</button>
+      <div class="field"><label>Name</label><input class="input" id="reqName" placeholder="Full Name"></div>
+      <div class="field"><label>Phone (WhatsApp)</label><input class="input" id="reqPhone" placeholder="+1 ..."></div>
+      <div class="field"><label>Email</label><input class="input" id="reqEmail" placeholder="email@example.com" type="email"></div>
+      <div class="field"><label>Details</label><textarea class="input" id="reqNote" placeholder="Write your request..." rows="3"></textarea></div>
+
+      <button class="btn whats" onclick="sendRequest()">Send Request via WhatsApp</button>
+      <div class="help">We usually respond within minutes.</div>
     </div>
-    <div class="rows" id="planRows"></div>
-  </section>
 
-  <!-- BOXES -->
-  <section id="panel-boxes" class="panel section">
-    <h3 style="margin:0 0 8px 0">Site Settings — Boxes</h3>
-    <div class="sub">Supports photos (swipe on site) and specs list.</div>
+    <!-- Parental PIN -->
+    <div class="card" style="margin-top:12px">
+      <div class="title">Parental PIN Request</div>
+      <div class="sub" style="color:var(--muted)">Enter your device MAC and email</div>
 
-    <div class="grid3" style="margin-top:12px">
-      <input class="input" id="bxName" placeholder="Name (e.g., Formular Z11 PRO)">
-      <input class="input" id="bxPrice" type="number" placeholder="Price">
-      <input class="input" id="bxBundle" type="number" placeholder="Bundle price (Box + 1-Year)">
-      <input class="input" id="bxBadge" placeholder="Badge (e.g., Recommended)">
-      <input class="input" id="bxOrder" type="number" placeholder="Order (0..N)">
-      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="bxVisible" checked> <span class="sub">Visible</span></label>
-      <textarea class="input" id="bxSpecs" placeholder="Specs: one per line"></textarea>
-      <textarea class="input" id="bxPhotos" placeholder="Photo URLs: one per line (optional captions with |, e.g. https://...jpg|Front)"></textarea>
-      <button class="btn primary" id="bxAdd">Add / Save</button>
-      <button class="btn" id="bxClear">Clear form</button>
+      <div class="field"><label>Device MAC Address</label><input class="input" id="pinMac" placeholder="e.g., 00:1A:79:xx:xx:xx"></div>
+      <div class="field"><label>Email</label><input class="input" id="pinEmail" placeholder="email@example.com" type="email"></div>
+      <div class="field"><label>Note (optional)</label><input class="input" id="pinNote" placeholder="Any extra info..."></div>
+
+      <button class="btn whats" onclick="sendPin()">Request PIN via WhatsApp</button>
+      <div class="help">We’ll verify the device and send your PIN.</div>
     </div>
-    <div class="rows" id="boxRows"></div>
-  </section>
+  </div>
+</main>
 
-  <!-- GALLERY (LOCAL for site) -->
-  <section id="panel-galleryLocal" class="panel section">
-    <h3 style="margin:0 0 8px 0">Site Settings — Gallery (Site)</h3>
-    <div class="sub">Shown in the Gallery tab on index. Purely local; no Firestore.</div>
+<!-- Bottom dock -->
+<nav class="dock wrap" aria-label="Quick navigation">
+  <a class="dbtn dactive" href="#plans" onclick="showPanel('plans')">Plans</a>
+  <a class="dbtn" href="#boxes" onclick="showPanel('boxes')">Boxes</a>
+  <a class="dbtn" href="#gallery" onclick="showPanel('gallery')">Gallery</a>
+  <a class="dbtn" href="#recharge" onclick="showPanel('recharge')">Recharge</a>
+  <a class="dbtn" href="#support" onclick="showPanel('support')">Support</a>
+</nav>
 
-    <div class="grid3" style="margin-top:12px">
-      <input class="input" id="glLocCaption" placeholder="Caption">
-      <input class="input" id="glLocUrl" placeholder="Image URL">
-      <input class="input" id="glLocOrder" type="number" placeholder="Order">
-      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="glLocVisible" checked> <span class="sub">Visible</span></label>
-      <button class="btn primary" id="glLocAdd">Add / Save</button>
-      <button class="btn" id="glLocClear">Clear form</button>
+<!-- Menu sheet -->
+<div class="modal" id="sheet-menu" aria-hidden="true">
+  <div class="sheet">
+    <button class="x" onclick="closeSheet('menu')">Close</button>
+    <h3>Menu</h3>
+    <div class="chips" style="margin:8px 0 12px">
+      <span class="chip" onclick="showPanel('plans');closeSheet('menu')">Plans</span>
+      <span class="chip" onclick="showPanel('boxes');closeSheet('menu')">Boxes</span>
+      <span class="chip" onclick="showPanel('gallery');closeSheet('menu')">Gallery</span>
+      <span class="chip" onclick="showPanel('recharge');closeSheet('menu')">Recharge</span>
+      <span class="chip" onclick="showPanel('support');closeSheet('menu')">Support</span>
     </div>
-    <div class="rows" id="galLocalRows"></div>
-  </section>
-
-  <!-- IMPORT / EXPORT -->
-  <section id="panel-importExport" class="panel section">
-    <h3 style="margin:0 0 8px 0">Site Settings — Import / Export</h3>
-    <div class="sub">Backup or move settings between browsers.</div>
-    <div class="grid2" style="margin-top:12px">
-      <div class="card">
-        <div class="sub">Export JSON</div>
-        <button class="btn" id="btnExport">Download settings.json</button>
-      </div>
-      <div class="card">
-        <div class="sub">Import JSON</div>
-        <input type="file" id="fileImport" accept="application/json" class="input">
-        <button class="btn primary" id="btnImport">Import</button>
-      </div>
+    <p class="help">All TV. All VOD. One app. Full HD & 4K where available.</p>
+    <div class="btns">
+      <a class="btn whats" id="waSubscribeMenu" href="#" target="_blank" rel="noopener">Subscribe on WhatsApp</a>
     </div>
-    <div class="sub" id="ieStatus" style="margin-top:8px"></div>
-  </section>
-
+  </div>
 </div>
 
 <script type="module">
-/* ================= Firebase (KPIs + Banners only) ================= */
-import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import {
-  getFirestore, collection, query, orderBy, limit, getDocs,
-  doc, addDoc, setDoc, getDoc, deleteDoc, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  /* ===== Firebase (CDN) for banners only ===== */
+  import { getApps, initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
-  authDomain: "netplustv-90b29.firebaseapp.com",
-  projectId: "netplustv-90b29",
-  storageBucket: "netplustv-90b29.firebasestorage.app",
-  messagingSenderId: "639722274355",
-  appId: "1:639722274355:web:ebe34fdf093f8191da2d46"
-};
-const app = getApps().length? getApps()[0] : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
+  const firebaseConfig = {
+    apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
+    authDomain: "netplustv-90b29.firebaseapp.com",
+    projectId: "netplustv-90b29",
+    storageBucket: "netplustv-90b29.firebasestorage.app",
+    messagingSenderId: "639722274355",
+    appId: "1:639722274355:web:ebe34fdf093f8191da2d46"
+  };
+  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
 
-/* ================= Helpers ================= */
-const $ = s => document.querySelector(s);
-const $$ = s => [...document.querySelectorAll(s)];
-function toast(id,msg){ const el=$(id); if(!el) return; el.textContent=msg; setTimeout(()=>{el.textContent='';},1800); }
-function fmt(n){ return Number(n||0); }
-
-/* ================= Nav ================= */
-function showPanel(name){
-  $$('#navTabs .tbtn').forEach(b=>b.classList.toggle('active', b.dataset.panel===name));
-  ['home','hosts','banners','general','plans','boxes','galleryLocal','importExport'].forEach(n=>{
-    $('#panel-'+n).classList.toggle('active', n===name);
-  });
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-$('#navTabs').addEventListener('click', e=>{
-  const b=e.target.closest('button[data-panel]'); if(!b) return;
-  showPanel(b.dataset.panel);
-});
-window.showPanel = showPanel;
-
-/* ================= Auth ================= */
-$('#btnSignIn').addEventListener('click', async ()=>{
-  const email=$('#email').value.trim(), pass=$('#password').value;
-  if(!email||!pass) return alert('Enter email and password');
-  try{ await signInWithEmailAndPassword(auth,email,pass); }catch(e){ alert('Sign in failed: '+(e?.message||e)); }
-});
-$('#btnSignOut').addEventListener('click',()=>signOut(auth));
-onAuthStateChanged(auth, async (user)=>{
-  if(user){
-    $('#authArea').style.display='none';
-    $('#whoami').style.display='flex';
-    $('#whoamiText').textContent = user.email || '';
-    await refreshAll();
-  }else{
-    $('#authArea').style.display='flex';
-    $('#whoami').style.display='none';
-    $('#bannerList').innerHTML='';
-    ['kpiVisitors','kpiPings','kpiAvgStepsToday','kpiAvgStepsSession'].forEach(id=>$('#'+id).textContent='—');
-  }
-});
-
-/* ================= KPIs ================= */
-function rangeToStart(range){
-  const now = new Date();
-  if(range==='7d')  return new Date(now.getTime()-7*24*3600*1000);
-  if(range==='30d') return new Date(now.getTime()-30*24*3600*1000);
-  if(range==='1y')  return new Date(now.getTime()-365*24*3600*1000);
-  return null;
-}
-let visCache=[];
-async function loadAnalytics(){
-  const start = rangeToStart($('#range').value);
-  const snap = await getDocs(query(collection(db,'analytics_visitors'), orderBy('createdAt','desc'), limit(300)));
-  visCache = snap.docs.map(d=>({id:d.id, ...d.data()})).filter(r=>{
-    const t = r.createdAt?.toDate?.() || (r.ts? new Date(r.ts) : null);
-    return !start || (t && t>=start);
-  });
-}
-function renderKPIs(){
-  const unique=new Set(); let pings=0,sumT=0,sumS=0,nT=0,nS=0;
-  visCache.forEach(r=>{
-    const t=r.createdAt?.toDate?.() || (r.ts?new Date(r.ts):null);
-    if(t && r.vid){ unique.add(t.toISOString().slice(0,10)+'|'+r.vid); }
-    pings++;
-    if(typeof r.steps_today==='number'){ sumT+=r.steps_today; nT++; }
-    if(typeof r.steps_session==='number'){ sumS+=r.steps_session; nS++; }
-  });
-  $('#kpiVisitors').textContent=String(unique.size);
-  $('#kpiPings').textContent=String(pings);
-  $('#kpiAvgStepsToday').textContent=nT? (sumT/nT).toFixed(1):'0.0';
-  $('#kpiAvgStepsSession').textContent=nS? (sumS/nS).toFixed(1):'0.0';
-}
-async function refreshKPIs(){ await loadAnalytics(); renderKPIs(); }
-$('#range').addEventListener('change', refreshKPIs);
-$('#refreshKPI').addEventListener('click', refreshKPIs);
-
-/* ================= Firestore: Banners ================= */
-async function loadBanners(){
-  const snap = await getDocs(query(collection(db,'site_settings','banners','items'), orderBy('order','asc')));
-  const list = $('#bannerList'); list.innerHTML='';
-  snap.forEach(docSnap=>{
-    const b = { id: docSnap.id, ...docSnap.data() };
-    const row = document.createElement('div'); row.className='item'; row.innerHTML = `
-      <div>
-        <div class="h">${b.title||'(no title)'} ${b.enabled? '' : '<span class="sub">[disabled]</span>'}</div>
-        <div class="sub">${b.text||''}</div>
-        <div class="sub">CTA: ${b.ctaLabel||''} → ${(b.ctaHref||'').slice(0,80)}</div>
-        <div class="sub">Order: ${b.order??0} | Valid: ${(b.validFrom||'')||'—'} → ${(b.validTo||'')||'—'}</div>
-        <div class="sub">${b.imageUrl? 'Image: '+b.imageUrl : ''}</div>
-      </div>
-      <div class="actions">
-        <button class="btn" data-act="toggle" data-id="${b.id}">${b.enabled? 'Disable' : 'Enable'}</button>
-        <button class="btn" data-act="edit" data-id="${b.id}">Edit</button>
-        <button class="btn" data-act="del" data-id="${b.id}">Delete</button>
-      </div>
-    `;
-    list.appendChild(row);
-  });
-  list.querySelectorAll('button[data-act]').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      const id = btn.dataset.id, act = btn.dataset.act;
-      const ref = doc(db,'site_settings','banners','items',id);
-      if(act==='toggle'){
-        const snap = await getDoc(ref); const cur = snap.data();
-        await setDoc(ref,{enabled:!cur.enabled, updatedAt:serverTimestamp()},{merge:true});
-      }else if(act==='edit'){
-        const snap = await getDoc(ref); const b = snap.data();
-        $('#bnEnabled').checked = !!b.enabled;
-        $('#bnTitle').value = b.title||''; $('#bnText').value=b.text||'';
-        $('#bnCtaLabel').value=b.ctaLabel||''; $('#bnCtaHref').value=b.ctaHref||'';
-        $('#bnImageUrl').value=b.imageUrl||''; $('#bnValidFrom').value=b.validFrom||''; $('#bnValidTo').value=b.validTo||'';
-        $('#bnOrder').value=b.order??0;
-        $('#bnSave').dataset.editId = id; $('#bnSave').textContent='Save Changes';
-        toast('#bnStatus','Loaded for editing');
-        window.scrollTo({top:0,behavior:'smooth'});
-      }else if(act==='del'){
-        if(confirm('Delete this banner?')){ await deleteDoc(ref); }
+  /* ===== Banners from Firestore ===== */
+  async function loadBanners(){
+    const wrap = document.getElementById('promoCarousel');
+    const track = document.getElementById('promoTrack');
+    try{
+      track.innerHTML='';
+      const snap = await getDocs(query(collection(db,'site_settings','banners','items'), orderBy('order','asc')));
+      const nowStr = new Date().toISOString().slice(0,10);
+      const items = [];
+      snap.forEach(d=>{
+        const b = d.data();
+        if(b.enabled===false) return;
+        if(b.validFrom && nowStr < b.validFrom) return;
+        if(b.validTo && nowStr > b.validTo) return;
+        items.push({id:d.id,...b});
+      });
+      if(!items.length){ wrap.style.display='none'; return; }
+      wrap.style.display='block';
+      for(const b of items){
+        const el = document.createElement('div');
+        el.className='slide';
+        el.innerHTML = `
+          <button class="x" aria-label="Close" onclick="this.closest('.slide').remove()">&times;</button>
+          <div class="t">${b.title||''}</div>
+          <div style="margin:6px 0">${b.text||''}</div>
+          ${b.ctaLabel? `<a href="${b.ctaHref||'#'}">${b.ctaLabel}</a>`:''}
+          ${b.imageUrl? `<img src="${b.imageUrl}" alt="" style="position:absolute;right:10px;bottom:10px;max-height:42px;border-radius:8px">`:''}
+        `;
+        track.appendChild(el);
       }
-      await loadBanners();
-    });
-  });
-}
-$('#bnSave').addEventListener('click', async ()=>{
-  const payload = {
-    enabled: $('#bnEnabled').checked,
-    title: $('#bnTitle').value.trim(),
-    text: $('#bnText').value.trim(),
-    ctaLabel: $('#bnCtaLabel').value.trim(),
-    ctaHref: $('#bnCtaHref').value.trim(),
-    imageUrl: $('#bnImageUrl').value.trim() || null,
-    validFrom: $('#bnValidFrom').value || null,
-    validTo: $('#bnValidTo').value || null,
-    order: Number($('#bnOrder').value||0),
-    updatedAt: serverTimestamp()
-  };
-  const editId = $('#bnSave').dataset.editId;
-  if(editId){
-    await setDoc(doc(db,'site_settings','banners','items',editId), payload, {merge:true});
-    $('#bnSave').textContent='Save New Banner';
-    delete $('#bnSave').dataset.editId;
-    toast('#bnStatus','Saved ✔');
-  }else{
-    payload.createdAt = serverTimestamp();
-    await addDoc(collection(db,'site_settings','banners','items'), payload);
-    toast('#bnStatus','Created ✔');
+    }catch(e){
+      wrap.style.display='none';
+    }
   }
-  $('#bnTitle').value=''; $('#bnText').value=''; $('#bnCtaLabel').value=''; $('#bnCtaHref').value=''; $('#bnImageUrl').value=''; $('#bnOrder').value='';
-  await loadBanners();
-});
+  loadBanners();
+</script>
 
-/* ================= LocalStorage Site Settings ================= */
-const LS_KEY = 'netplus.settings.v1.public';
-
-const $status = {
-  gen:'#genStatus',
-  ie:'#ieStatus'
-};
-
-function getSite(){
-  try{ return JSON.parse(localStorage.getItem(LS_KEY) || 'null'); }catch(_){ return null; }
-}
-function defaults(){
-  return {
-    currency:{symbol:'$', position:'prefix'},
-    whatsapp:{number:'16476961656'},
-    plans:[
-      {id:crypto.randomUUID(), name:'1 Month', months:1, price:15, badge:'Starter', order:0, visible:true, note:'Full features'},
-      {id:crypto.randomUUID(), name:'3 Months', months:3, price:40, badge:'Popular', order:1, visible:true, note:'Save vs monthly'},
-      {id:crypto.randomUUID(), name:'6 Months', months:6, price:65, badge:'Most Picked', order:2, visible:true},
-      {id:crypto.randomUUID(), name:'12 Months (+1 free)', months:12, price:100, badge:'Best Value', order:3, visible:true, note:'+1 month free'}
-    ],
-    boxes:[],
-    gallery:[]
-  };
-}
-function setSite(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj)); }
-function ensure(){ let s=getSite(); if(!s){ s=defaults(); setSite(s); } return s; }
-
-/* General */
-function loadGeneral(){
-  const s = ensure();
-  $('#curSymbol').value = s.currency?.symbol || '$';
-  $('#curPos').value = s.currency?.position || 'prefix';
-  $('#waNumber').value = s.whatsapp?.number || '';
-}
-$('#btnLoadLocal').addEventListener('click', loadGeneral);
-$('#btnSaveLocal').addEventListener('click', ()=>{
-  const s = ensure();
-  s.currency = {symbol: $('#curSymbol').value || '$', position: $('#curPos').value || 'prefix'};
-  s.whatsapp = {number: ($('#waNumber').value||'').replace(/[^\d]/g,'')};
-  setSite(s); toast($status.gen,'Saved ✔');
-});
-$('#btnResetLocal').addEventListener('click', ()=>{
-  if(!confirm('Reset to defaults?')) return;
-  setSite(defaults()); loadAllLocal(); toast($status.gen,'Reset ✔');
-});
-
-/* Plans CRUD */
-let editingPlanId=null;
-function renderPlans(){
-  const s = ensure(); const rows = $('#planRows'); rows.innerHTML='';
-  const list = [...(s.plans||[])].sort((a,b)=>(a.order||0)-(b.order||0));
-  list.forEach(p=>{
-    const row = document.createElement('div'); row.className='row';
-    const sym = s.currency?.symbol || '$', suffix = s.currency?.position === 'suffix';
-    const priceTxt = suffix ? `${Number(p.price)}${sym}` : `${sym}${Number(p.price)}`;
-    row.innerHTML = `
-      <div><strong>${p.name||''}</strong> <span class="sub">(${p.months||''} months)</span> ${p.badge? `<span class="badge2">${p.badge}</span>`:''} ${p.note? `<span class="sub">• ${p.note}</span>`:''}</div>
-      <div>${priceTxt}</div>
-      <div class="sub">Order: ${p.order??0} • ${p.visible===false? 'Hidden':'Visible'}</div>
-      <div class="actions">
-        <button class="btn" data-ed="${p.id}">Edit</button>
-        <button class="btn" data-del="${p.id}">Delete</button>
-      </div>`;
-    rows.appendChild(row);
-  });
-  rows.querySelectorAll('button[data-ed]').forEach(b=>{
-    b.onclick = ()=>{
-      const s=ensure(); const p=s.plans.find(x=>x.id===b.dataset.ed); if(!p) return;
-      editingPlanId=p.id;
-      $('#plName').value=p.name||''; $('#plMonths').value=p.months||''; $('#plPrice').value=p.price||'';
-      $('#plBadge').value=p.badge||''; $('#plNote').value=p.note||''; $('#plOrder').value=p.order||0;
-      $('#plVisible').checked=p.visible!==false;
-      $('#plAdd').textContent='Save Changes';
-      window.scrollTo({top:0,behavior:'smooth'});
+<script>
+  /* ===== Bullet-proof SETTINGS loader with migration ===== */
+  const KEY = 'netplus.settings.v1.public';
+  const CANDIDATES = [
+    'netplus.settings.v1.public',
+    'netplus.settings.v1',
+    'netplus.settings'
+  ];
+  function defaultSettings(){
+    return {
+      currency:{symbol:'$', position:'prefix'},
+      whatsapp:{number:'16476961656'},
+      plans:[
+        {id:'p1', name:'1 Month', months:1, price:15, badge:'Starter', order:0, visible:true, note:'Full features'},
+        {id:'p3', name:'3 Months', months:3, price:40, badge:'Popular', order:1, visible:true, note:'Save vs monthly'},
+        {id:'p6', name:'6 Months', months:6, price:65, badge:'Most Picked', order:2, visible:true},
+        {id:'p12', name:'12 Months (+1 free)', months:12, price:100, badge:'Best Value', order:3, visible:true, note:'+1 month free'}
+      ],
+      boxes:[],
+      gallery:[]
     };
-  });
-  rows.querySelectorAll('button[data-del]').forEach(b=>{
-    b.onclick=()=>{
-      if(!confirm('Delete this plan?')) return;
-      const s=ensure(); s.plans=s.plans.filter(x=>x.id!==b.dataset.del); setSite(s); renderPlans();
-    };
-  });
-}
-$('#plAdd').addEventListener('click', ()=>{
-  const s=ensure();
-  const payload = {
-    id: editingPlanId || crypto.randomUUID(),
-    name: $('#plName').value.trim() || 'Plan',
-    months: fmt($('#plMonths').value) || null,
-    price: fmt($('#plPrice').value) || 0,
-    badge: $('#plBadge').value.trim() || null,
-    note: $('#plNote').value.trim() || null,
-    order: fmt($('#plOrder').value) || 0,
-    visible: $('#plVisible').checked
-  };
-  if(editingPlanId){
-    const i=s.plans.findIndex(x=>x.id===editingPlanId);
-    if(i>-1) s.plans[i]=payload;
-    editingPlanId=null; $('#plAdd').textContent='Add / Save';
-  }else{
-    s.plans.push(payload);
   }
-  setSite(s); renderPlans(); $('#plClear').click();
-});
-$('#plClear').addEventListener('click', ()=>{
-  editingPlanId=null; $('#plAdd').textContent='Add / Save';
-  ['plName','plMonths','plPrice','plBadge','plNote','plOrder'].forEach(id=>$('#'+id).value='');
-  $('#plVisible').checked=true;
-});
+  function loadSettings(){
+    let obj=null;
+    for(const k of CANDIDATES){
+      const raw = localStorage.getItem(k);
+      if(raw){ try{ obj = JSON.parse(raw); if(obj) break; }catch(_){/*ignore*/} }
+    }
+    if(!obj || typeof obj!=='object') obj = defaultSettings();
 
-/* Boxes CRUD */
-let editingBoxId=null;
-function parseLines(v){ return v.split('\n').map(s=>s.trim()).filter(Boolean); }
-function renderBoxes(){
-  const s = ensure(); const rows = $('#boxRows'); rows.innerHTML='';
-  const list = [...(s.boxes||[])].sort((a,b)=>(a.order||0)-(b.order||0));
-  list.forEach(bx=>{
-    const photosCount = Array.isArray(bx.images)? bx.images.length : 0;
-    const specsCount = Array.isArray(bx.specs)? bx.specs.length : 0;
-    const sym = s.currency?.symbol || '$', suffix = s.currency?.position === 'suffix';
-    const priceTxt = suffix ? `${Number(bx.price)}${sym}` : `${sym}${Number(bx.price)}`;
-    const row = document.createElement('div'); row.className='row';
-    row.innerHTML = `
-      <div><strong>${bx.name||''}</strong> ${bx.badge? `<span class="badge2">${bx.badge}</span>`:''} <span class="sub">photos:${photosCount} • specs:${specsCount}</span></div>
-      <div>${priceTxt}</div>
-      <div class="sub">Order: ${bx.order??0} • ${bx.visible===false?'Hidden':'Visible'}</div>
-      <div class="actions">
-        <button class="btn" data-ed="${bx.id}">Edit</button>
-        <button class="btn" data-del="${bx.id}">Delete</button>
-      </div>`;
-    rows.appendChild(row);
-  });
-  rows.querySelectorAll('button[data-ed]').forEach(b=>{
-    b.onclick=()=>{
-      const s=ensure(); const bx=s.boxes.find(x=>x.id===b.dataset.ed); if(!bx) return;
-      editingBoxId=bx.id;
-      $('#bxName').value=bx.name||''; $('#bxPrice').value=bx.price||''; $('#bxBundle').value=bx.bundle||'';
-      $('#bxBadge').value=bx.badge||''; $('#bxOrder').value=bx.order||0; $('#bxVisible').checked=bx.visible!==false;
-      $('#bxSpecs').value=(bx.specs||[]).join('\n');
-      $('#bxPhotos').value=(bx.images||[]).map(i=>i.url + (i.alt? `|${i.alt}`:'')).join('\n');
-      $('#bxAdd').textContent='Save Changes';
-      window.scrollTo({top:0,behavior:'smooth'});
-    };
-  });
-  rows.querySelectorAll('button[data-del]').forEach(b=>{
-    b.onclick=()=>{
-      if(!confirm('Delete this box?')) return;
-      const s=ensure(); s.boxes=s.boxes.filter(x=>x.id!==b.dataset.del); setSite(s); renderBoxes();
-    };
-  });
-}
-$('#bxAdd').addEventListener('click', ()=>{
-  const s=ensure();
-  const imgs = parseLines($('#bxPhotos').value).map(line=>{
-    const [url, alt] = line.split('|');
-    return {url:url?.trim(), alt:(alt||'').trim()};
-  }).filter(i=>i.url);
-  const specs = parseLines($('#bxSpecs').value);
-  const payload = {
-    id: editingBoxId || crypto.randomUUID(),
-    name: $('#bxName').value.trim() || 'Box',
-    price: fmt($('#bxPrice').value)||0,
-    bundle: $('#bxBundle').value? fmt($('#bxBundle').value) : null,
-    badge: $('#bxBadge').value.trim() || null,
-    order: fmt($('#bxOrder').value)||0,
-    visible: $('#bxVisible').checked,
-    images: imgs,
-    specs: specs
-  };
-  if(editingBoxId){
-    const i=s.boxes.findIndex(x=>x.id===editingBoxId);
-    if(i>-1) s.boxes[i]=payload;
-    editingBoxId=null; $('#bxAdd').textContent='Add / Save';
-  }else{
-    s.boxes.push(payload);
+    // minimal schema healing
+    obj.currency = obj.currency || {symbol:'$', position:'prefix'};
+    obj.whatsapp = obj.whatsapp || {number:'16476961656'};
+    obj.plans = Array.isArray(obj.plans)? obj.plans : [];
+    obj.boxes = Array.isArray(obj.boxes)? obj.boxes : [];
+    obj.gallery = Array.isArray(obj.gallery)? obj.gallery : [];
+
+    // persist to canonical key so admin/index stay in sync
+    localStorage.setItem(KEY, JSON.stringify(obj));
+    return obj;
   }
-  setSite(s); renderBoxes(); $('#bxClear').click();
-});
-$('#bxClear').addEventListener('click', ()=>{
-  editingBoxId=null; $('#bxAdd').textContent='Add / Save';
-  ['bxName','bxPrice','bxBundle','bxBadge','bxOrder','bxSpecs','bxPhotos'].forEach(id=>$('#'+id).value='');
-  $('#bxVisible').checked=true;
-});
+  let SITE = loadSettings();
 
-/* Gallery (Local) CRUD */
-let editingGalId=null;
-function renderGalLocal(){
-  const s=ensure(); const rows=$('#galLocalRows'); rows.innerHTML='';
-  const list=[...(s.gallery||[])].sort((a,b)=>(a.order||0)-(b.order||0));
-  list.forEach(g=>{
-    const row=document.createElement('div'); row.className='row';
-    row.innerHTML=`
-      <div><strong>${g.caption||''}</strong> <span class="sub">${g.url||''}</span></div>
-      <div class="sub">Order: ${g.order??0}</div>
-      <div class="sub">${g.visible===false?'Hidden':'Visible'}</div>
-      <div class="actions">
-        <button class="btn" data-ed="${g.id}">Edit</button>
-        <button class="btn" data-del="${g.id}">Delete</button>
-      </div>`;
-    rows.appendChild(row);
-  });
-  rows.querySelectorAll('button[data-ed]').forEach(b=>{
-    b.onclick=()=>{
-      const s=ensure(); const g=s.gallery.find(x=>x.id===b.dataset.ed); if(!g) return;
-      editingGalId=g.id;
-      $('#glLocCaption').value=g.caption||''; $('#glLocUrl').value=g.url||''; $('#glLocOrder').value=g.order||0; $('#glLocVisible').checked=g.visible!==false;
-      $('#glLocAdd').textContent='Save Changes';
-      window.scrollTo({top:0,behavior:'smooth'});
-    };
-  });
-  rows.querySelectorAll('button[data-del]').forEach(b=>{
-    b.onclick=()=>{
-      if(!confirm('Delete this image?')) return;
-      const s=ensure(); s.gallery=s.gallery.filter(x=>x.id!==b.dataset.del); setSite(s); renderGalLocal();
-    };
-  });
-}
-$('#glLocAdd').addEventListener('click', ()=>{
-  const s=ensure();
-  const payload={
-    id: editingGalId || crypto.randomUUID(),
-    caption: $('#glLocCaption').value.trim() || '',
-    url: $('#glLocUrl').value.trim(),
-    order: fmt($('#glLocOrder').value)||0,
-    visible: $('#glLocVisible').checked
-  };
-  if(!payload.url){ alert('Image URL required'); return; }
-  if(editingGalId){
-    const i=s.gallery.findIndex(x=>x.id===editingGalId); if(i>-1) s.gallery[i]=payload;
-    editingGalId=null; $('#glLocAdd').textContent='Add / Save';
-  }else{
-    s.gallery.push(payload);
+  /* ===== Helpers ===== */
+  function money(n){
+    const s = SITE.currency?.symbol || '$';
+    const suf = SITE.currency?.position === 'suffix';
+    const val = Number(n||0);
+    return suf ? `${val}${s}` : `${s}${val}`;
   }
-  setSite(s); renderGalLocal(); $('#glLocClear').click();
-});
-$('#glLocClear').addEventListener('click', ()=>{
-  editingGalId=null; $('#glLocAdd').textContent='Add / Save';
-  ['glLocCaption','glLocUrl','glLocOrder'].forEach(id=>$('#'+id).value='');
-  $('#glLocVisible').checked=true;
-});
+  function waLink(text){
+    const num = (SITE.whatsapp?.number||'16476961656').replace(/[^\d]/g,'');
+    return `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
+  }
 
-/* Import / Export */
-$('#btnExport').addEventListener('click', ()=>{
-  const blob = new Blob([localStorage.getItem(LS_KEY)||'{}'], {type:'application/json'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='settings.json'; a.click();
-});
-$('#btnImport').addEventListener('click', ()=>{
-  const f=$('#fileImport').files?.[0]; if(!f){ toast('#ieStatus','Choose a JSON file first'); return; }
-  const r=new FileReader();
-  r.onload=()=>{ try{ const obj=JSON.parse(r.result); setSite(obj); loadAllLocal(); toast('#ieStatus','Imported ✔'); }catch(e){ toast('#ieStatus','Invalid JSON'); } };
-  r.readAsText(f);
-});
+  /* ===== Panels / tabs ===== */
+  function showPanel(name){
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.querySelector('#panel-'+name).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    const tId = {plans:'tab-plans',boxes:'tab-boxes',gallery:'tab-gallery',recharge:'tab-recharge',support:'tab-support'}[name];
+    if(tId) document.getElementById(tId).classList.add('active');
+    document.querySelectorAll('.dbtn').forEach(b=>b.classList.remove('dactive'));
+    const idx={plans:0,boxes:1,gallery:2,recharge:3,support:4}[name];document.querySelectorAll('.dbtn')[idx].classList.add('dactive');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  window.showPanel = showPanel;
 
-/* Load all local sections */
-function loadAllLocal(){ loadGeneral(); renderPlans(); renderBoxes(); renderGalLocal(); }
+  /* ===== Modals ===== */
+  let _scrollY = 0;
+  function openSheet(key){
+    _scrollY = window.scrollY || window.pageYOffset;
+    document.body.classList.add('modal-open');
+    document.body.style.top = `-${_scrollY}px`;
+    const el = document.getElementById('sheet-'+key);
+    el.style.display = 'flex';
+    el.addEventListener('click', backdropCloser);
+    const sheetEl = el.querySelector('.sheet');
+    if (sheetEl) sheetEl.addEventListener('click', e => e.stopPropagation());
+  }
+  function backdropCloser(e){
+    if(e.target.classList.contains('modal')){
+      const id = e.currentTarget.id.replace('sheet-','');
+      closeSheet(id);
+    }
+  }
+  function closeSheet(key){
+    const el = document.getElementById('sheet-'+key);
+    if(!el) return;
+    el.style.display = 'none';
+    el.removeEventListener('click', backdropCloser);
+    document.body.classList.remove('modal-open');
+    document.body.style.top = '';
+    window.scrollTo(0, _scrollY);
+  }
+  window.openSheet=openSheet; window.closeSheet=closeSheet;
 
-/* ===== Orchestration ==== */
-async function refreshAll(){
-  await Promise.all([refreshKPIs(), loadBanners()]);
-  loadAllLocal();
-}
+  /* ===== WhatsApp helpers ===== */
+  function waSend(msg){ window.open(waLink(msg),'_blank'); }
+  window.waSend = waSend;
+
+  /* ===== Render: Plans ===== */
+  function renderPlans(){
+    const grid = document.getElementById('plansGrid');
+    const tbody = document.getElementById('plansTableBody');
+    const rcSel = document.getElementById('rcPlan');
+    grid.innerHTML=''; tbody.innerHTML=''; rcSel.innerHTML='<option value="">Choose a plan</option>';
+
+    const list = [...SITE.plans].filter(p=>p.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+    for(const p of list){
+      const card = document.createElement('div');
+      card.className='card';
+      card.innerHTML = `
+        ${p.badge? `<span class="mark">${p.badge}</span>`:''}
+        <div class="row"><div class="title">${p.name||''}</div><div class="price">${money(p.price)}</div></div>
+        ${p.note? `<div class="note">${p.note}</div>`:''}
+        <ul class="features">
+          <li>⚡ Quick Activation</li>
+          <li>📡 20,000+ Live Channels</li>
+          <li>🎬 All Shows, Movies & PPV</li>
+          <li>📚 Latest & Classic Series/Movies</li>
+          <li>🖥️ Full HD & SD Channels</li>
+          <li>❄️ AntiFreeze Technology</li>
+          <li>💬 24/7 WhatsApp Support</li>
+        </ul>
+        <div class="btns">
+          <button class="btn primary whats">Subscribe</button>
+          <button class="btn" onclick="openSheet('info')">Info</button>
+        </div>
+      `;
+      card.querySelector('.whats').onclick = ()=>subscribePlan(p.name, p.price);
+      grid.appendChild(card);
+
+      const days = p.months ? (p.months*30) : (p.name||'').toLowerCase().includes('trial')? 2 : '';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${p.name||''}</td><td>${days? `${days} days`:'—'}</td><td>${money(p.price)}</td><td>${p.note||''}</td>`;
+      tbody.appendChild(tr);
+
+      const opt = document.createElement('option');
+      opt.value = p.name; opt.textContent = `${p.name} - ${money(p.price)}`;
+      rcSel.appendChild(opt);
+    }
+  }
+
+  /* ===== Render: Boxes ===== */
+  function renderBoxes(){
+    const grid = document.getElementById('boxesGrid'); grid.innerHTML='';
+    const list = [...SITE.boxes].filter(b=>b.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+    for(const b of list){
+      const card = document.createElement('div'); card.className='card';
+
+      // photos
+      let photosHTML = '';
+      if(Array.isArray(b.images) && b.images.length){
+        const pid = 'p'+Math.random().toString(36).slice(2);
+        photosHTML = `
+          <div id="${pid}" class="photoTrack" aria-label="Photos">
+            ${b.images.map(i=>`<img src="${i.url}" alt="${i.alt||''}" loading="lazy">`).join('')}
+          </div>
+        `;
+      }
+
+      card.innerHTML = `
+        ${b.badge? `<span class="mark">${b.badge}</span>`:''}
+        <div class="row"><div class="title">${b.name||''}</div><div class="price">${money(b.price)}</div></div>
+        ${b.bundle? `<div class="combo">Box + 1-Year: ${money(b.bundle)}</div>`:''}
+        ${photosHTML}
+        <ul class="features">
+          ${(b.specs||[]).map(s=>`<li>${s}</li>`).join('')}
+        </ul>
+        <div class="btns">
+          <button class="btn" onclick="buyBox('${(b.name||'').replace(/'/g,'\\\'')}',${Number(b.price)||0})">Box Only</button>
+          <button class="btn whats" ${b.bundle? '' : 'disabled'} onclick="buyBoxBundle('${(b.name||'').replace(/'/g,'\\\'')}',${Number(b.bundle)||0})">Box + 1-Year</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    }
+  }
+
+  /* ===== Render: Gallery ===== */
+  function renderGallery(){
+    const grid = document.getElementById('galleryGrid'); grid.innerHTML='';
+    const list = [...SITE.gallery].filter(g=>g.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+    if(!list.length){
+      grid.innerHTML = `<div class="help">No images yet.</div>`;
+      return;
+    }
+    for(const g of list){
+      const item = document.createElement('div');
+      item.className = 'gitem';
+      item.innerHTML = `
+        <img src="${g.url}" alt="${g.caption||''}" loading="lazy" />
+        <div class="gcap">${g.caption||''}</div>
+      `;
+      item.onclick = ()=>{ if(g.url) window.open(g.url,'_blank'); };
+      grid.appendChild(item);
+    }
+  }
+
+  /* ===== CTAs using WA number from settings ===== */
+  function wireWhatsAppLinks(){
+    const subHref = waLink('Hi, I want to subscribe to net+TV.');
+    document.getElementById('waSubscribeMenu').href = subHref;
+    document.getElementById('waSupport').href = waLink('Hi, I need help with net+TV.');
+  }
+
+  /* ===== Existing CTA helpers ===== */
+  function subscribePlan(label,price){
+    waSend(`New Subscription\nPlan: ${label} - ${money(price)}\nSource: website`);
+  }
+  function buyBox(name,price){
+    waSend(`I'm interested in: Box Only\nModel: ${name}\nPrice: ${money(price)}\nPlease guide me with purchase & setup.`);
+  }
+  function buyBoxBundle(name,price){
+    waSend(`I'm interested in: ${name} + 12-Month Plan\nBundle Price: ${money(price)}\nPlease guide me with activation & setup.`);
+  }
+  function sendRecharge(){
+    const n=(document.getElementById('rcName').value||'').trim();
+    const u=(document.getElementById('rcUser').value||'').trim();
+    const e=(document.getElementById('rcEmail').value||'').trim();
+    const p=document.getElementById('rcPlan').value||'';
+    waSend(`Recharge Request\nName: ${n}\nUser ID: ${u}\nEmail: ${e}\nPlan: ${p}`);
+  }
+  function sendRequest(){
+    const n=(document.getElementById('reqName').value||'').trim();
+    const ph=(document.getElementById('reqPhone').value||'').trim();
+    const e=(document.getElementById('reqEmail').value||'').trim();
+    const note=(document.getElementById('reqNote').value||'').trim();
+    waSend(`General Request\nName: ${n}\nPhone: ${ph}\nEmail: ${e}\nDetails: ${note}`);
+  }
+  function sendPin(){
+    const mac=(document.getElementById('pinMac').value||'').trim();
+    const e=(document.getElementById('pinEmail').value||'').trim();
+    const note=(document.getElementById('pinNote').value||'').trim();
+    waSend(`Parental PIN Request\nMAC: ${mac}\nEmail: ${e}\nNote: ${note}`);
+  }
+  window.subscribePlan=subscribePlan; window.buyBox=buyBox; window.buyBoxBundle=buyBoxBundle;
+  window.sendRecharge=sendRecharge; window.sendRequest=sendRequest; window.sendPin=sendPin;
+
+  /* ===== Init render ===== */
+  function renderAll(){
+    // reload from canonical key in case admin changed it in another tab
+    try{ SITE = JSON.parse(localStorage.getItem(KEY)) || SITE; }catch(_){}
+    renderPlans();
+    renderBoxes();
+    renderGallery();
+    wireWhatsAppLinks();
+  }
+  renderAll();
+
+  // Optional: react to storage changes from another tab on the same origin
+  window.addEventListener('storage', e=>{
+    if(e.key === KEY){ try{ SITE = JSON.parse(e.newValue); renderAll(); }catch(_){} }
+  });
 </script>
 </body>
 </html>
