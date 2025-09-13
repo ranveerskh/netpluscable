@@ -10,64 +10,69 @@
     --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
     --g1:#6a11cb;--g2:#2575fc;--ok:#32d296;--warn:#f8b84a;--whats:#25D366;
     --safe-top: env(safe-area-inset-top,0px);--safe-bottom: env(safe-area-inset-bottom,0px);
+    --shadow:0 10px 30px rgba(0,0,0,.35);
   }
   :root[data-theme="light"]{
-    --bg:#ffffff;--ink:#0b1020;--muted:#36415f;--card:#f5f7ff;--line:#d9e0ff;
+    --bg:#ffffff;--ink:#0b1020;--muted:#36415f;--card:#ffffff;--line:#d9e0ff;
     --g1:#2575fc;--g2:#6a11cb;--ok:#15a37a;--warn:#e59f2a;--whats:#25D366;
+    --shadow:0 10px 30px rgba(0,12,60,.10);
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
   button{font:inherit;cursor:pointer}
-  .wrap{max-width:1100px;margin:0 auto;padding:16px}
+  .wrap{max-width:1160px;margin:0 auto;padding:16px}
 
+  /* Topbar */
   .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:calc(8px + var(--safe-top)) 16px 8px}
-  :root[data-theme="light"] .topbar{background:#ffffffcc;border-bottom:1px solid #d9e0ff;backdrop-filter:saturate(1.2) blur(8px)}
+  :root[data-theme="light"] .topbar{background:#ffffffcc;border-bottom:1px solid #d9e0ff;backdrop-filter:blur(10px) saturate(1.2)}
   .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .logo{display:flex;align-items:center;gap:10px}
-  .dot{width:10px;height:10px;border-radius:50%;background:conic-gradient(from 180deg,var(--g1),var(--g2))}
+  .dot{width:12px;height:12px;border-radius:50%;background:conic-gradient(from 180deg,var(--g1),var(--g2))}
   .brand{font-weight:800;letter-spacing:.3px}
   .badge{font-size:12px;color:var(--muted)}
-  .menuBtn{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px 12px;border-radius:14px}
-  :root[data-theme="light"] .menuBtn{background:#eff3ff;border-color:#d9e0ff;color:#0b1020}
+  .menuBtn{border:1px solid var(--line);background:rgba(255,255,255,.06);padding:10px 12px;border-radius:14px}
+  :root[data-theme="light"] .menuBtn{background:#f2f6ff;border-color:#d9e0ff;color:#0b1020}
 
-  .hero{
-    position:relative;overflow:hidden;border-bottom:1px solid var(--line);
-    background:
-      radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
-      radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 50%);
-  }
+  /* Hero */
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+    background:radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.15),transparent 60%),radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 50%)}
   :root[data-theme="light"] .hero{background:linear-gradient(180deg,#f6f8ff,transparent)}
-  .heroInner{padding:40px 16px 24px}
-  .title{font-size:28px;line-height:1.2;font-weight:800;margin:6px 0 8px}
+  .heroInner{padding:32px 16px 24px}
+  .title{font-size:30px;line-height:1.2;font-weight:800;margin:6px 0 10px}
   .subtitle{color:var(--muted)}
+  .hint{font-size:13px;color:var(--muted);margin-top:6px}
 
-  /* Banner carousel (16:9, 1280x720 friendly) */
-  .banner{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:14px;margin-bottom:14px}
+  /* Banners 16:9 */
+  .banner{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;margin:0 0 14px;box-shadow:var(--shadow)}
   .banner::before{content:"";display:block;aspect-ratio:16/9}
-  .bannerTrack{display:flex;transform:translateX(0);transition:transform .4s ease}
+  .bannerTrack{display:flex;transform:translateX(0);transition:transform .5s ease}
   .bannerSlide{min-width:100%;position:relative}
   .bannerSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
 
-  /* Moving ticker */
-  .ticker{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03);margin-top:12px}
+  /* Ticker */
+  .ticker{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);margin-top:12px}
   :root[data-theme="light"] .ticker{background:#eef2ff}
   .tickerInner{display:inline-block;white-space:nowrap;animation:tickerMove 18s linear infinite}
   .tickerInner span{display:inline-block;padding:8px 18px}
   @keyframes tickerMove{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
-  .ctaRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:8px 0 18px}
-  .bigBtn{height:64px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg, rgba(106,17,203,.18), rgba(37,117,252,.18));display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:700}
+  /* CTA buttons */
+  .ctaRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 18px}
+  .bigBtn{height:64px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg, rgba(106,17,203,.18), rgba(37,117,252,.18));display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:800;box-shadow:var(--shadow)}
 
   /* Posters rail */
   .postersRail{margin-top:12px;display:flex;gap:10px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
-  .postersRail img{width:200px;height:300px;object-fit:cover;border-radius:10px;flex:0 0 auto;scroll-snap-align:start;border:1px solid var(--line);background:#000}
+  .postersRail img{width:200px;height:300px;object-fit:cover;border-radius:12px;flex:0 0 auto;scroll-snap-align:start;border:1px solid var(--line);background:#000;box-shadow:var(--shadow)}
 
-  .section{padding:18px 16px;border-top:1px solid var(--line)}
-  .hidden{display:none}
+  /* Sections */
+  .section{padding:22px 16px;border-top:1px solid var(--line)}
+  .list{display:grid;gap:10px}
+  .pill{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04)}
+  :root[data-theme="light"] .pill{background:#f7f9ff}
 
-  /* Menu sheet */
+  /* Sheet (menu) */
   .sheet{position:fixed;inset:auto 0 0 0;background:rgba(18,24,49,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(100%);transition:transform .25s ease;z-index:70;max-height:80vh;display:flex;flex-direction:column}
   :root[data-theme="light"] .sheet{background:#ffffff; border-top:1px solid #d9e0ff}
   .sheet.open{transform:translateY(0)}
@@ -75,35 +80,33 @@
   :root[data-theme="light"] .sheetHead{background:#f6f9ff}
   .sheetBody{padding:10px 16px;overflow:auto}
   .menuList{display:grid;gap:10px}
-  .menuItem{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.03)}
+  .menuItem{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.04)}
   :root[data-theme="light"] .menuItem{background:#f6f9ff}
 
   /* Modal */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:90}
   .modal.open{display:flex}
-  .modalCard{margin:auto;max-width:720px;width:100%;height:90vh;background:var(--card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column}
+  .modalCard{margin:auto;max-width:780px;width:100%;height:90vh;background:var(--card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
   :root[data-theme="light"] .modalCard{background:#ffffff;border-color:#d9e0ff}
   .modalHead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
   .modalBody{padding:12px 14px;overflow:auto}
   .x{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
   :root[data-theme="light"] .x{background:#eef2ff}
 
-  /* Plans + Boxes shared */
-  .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-  .card{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:16px;padding:14px}
+  /* Cards/grids */
+  .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .card{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
   :root[data-theme="light"] .card{background:#ffffff}
   .card h3{margin:0 0 6px;font-size:18px;line-height:1.2}
   .muted{color:var(--muted)}
-  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px 12px}
+  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);padding:10px 12px;cursor:pointer}
   .btn.whats{background:var(--whats);border-color:#1fa851;color:#08210e;font-weight:800}
-  .btn.ghost{background:rgba(255,255,255,.04)}
-  .price{font-weight:800}
+  .priceRight{font-weight:900;font-size:18px}
   .cardHead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
-  .priceRight{font-size:18px}
   .tag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin-bottom:6px}
   .benefit{font-size:12px;font-weight:800;color:var(--ok);margin-top:4px}
 
-  /* Box mini carousel */
+  /* Boxes */
   .boxSlider{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000}
   .boxSlider::before{content:"";display:block;aspect-ratio:16/9}
   .boxTrack{display:flex;transition:transform .35s ease}
@@ -112,26 +115,20 @@
   .boxDots{display:flex;gap:6px;justify-content:center;margin-top:6px}
   .boxDot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25)}
   .boxDot.active{background:#fff}
-  .miniTag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin:8px 0 6px}
+  .miniTag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin:10px 0 6px}
   .comboCallout{margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:12px;background:rgba(37,117,252,.08)}
   :root[data-theme="light"] .comboCallout{background:#eef5ff}
   .boxMeta{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-  .boxPrice{font-weight:800}
+  .boxPrice{font-weight:900}
   .boxName{font-size:18px;font-weight:800;margin:0}
 
   /* Forms */
   .grid{display:grid;gap:10px}
   .two{grid-template-columns:1fr 1fr}
   input,select,textarea{width:100%;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff}
-  :root[data-theme="light"] input, :root[data-theme="light"] select, :root[data-theme="light"] textarea{background:#eaf0ff;color:#0b1020}
-  label{font-size:13px;color:var(--muted)}
+  :root[data-theme="light"] input, :root[data-theme="light"] select, :root[data-theme="light"] textarea{background:#f6f8ff;color:#0b1020}
   .help{font-size:12px;color:var(--muted)}
   .footpad{height:calc(24px + var(--safe-bottom))}
-
-  /* Info list */
-  .list{display:grid;gap:10px}
-  .pill{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)}
-  :root[data-theme="light"] .pill{background:#ffffff}
 
   /* Footer */
   .footer{padding:16px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
@@ -154,47 +151,29 @@
     </div>
   </div>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="heroInner wrap">
-
       <!-- BANNERS -->
-      <div class="banner" aria-label="Promotions">
-        <div class="bannerTrack" id="bannerTrack">
-          <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+1" alt="Banner 1"></div>
-          <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+2" alt="Banner 2"></div>
-          <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+3" alt="Banner 3"></div>
-        </div>
-      </div>
+      <div class="banner" aria-label="Promotions"><div class="bannerTrack" id="bannerTrack"></div></div>
 
-      <div class="subtitle">Quick Activation</div>
-      <h1 class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
-      <p class="subtitle">Latest + classic Movies & Series • Full HD & 4K Channels • Anti-Freeze Tech</p>
+      <div id="heroSubtitle" class="subtitle">Quick Activation</div>
+      <h1 id="heroTitle" class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
+      <p id="heroSubline" class="subtitle">Latest + classic Movies & Series • Full HD & 4K Channels • Anti-Freeze Tech</p>
 
-      <!-- TICKER -->
-      <div class="ticker">
-        <div class="tickerInner" id="featureTicker">
-          <span>🇨🇦 Proudly Canadian</span>
-          <span>Zero Latency Streams</span>
-          <span>24/7 Support</span>
-          <span>Multi-Device</span>
-        </div>
-      </div>
+      <!-- Ticker -->
+      <div class="ticker"><div class="tickerInner" id="featureTicker"></div></div>
 
       <div class="ctaRow" id="actionButtons">
-        <button class="bigBtn" data-open="plansModal">Our Plans</button>
-        <button class="bigBtn" data-open="boxesModal">New Boxes</button>
-        <button class="bigBtn" data-open="rechargeModal">Renew Plan</button>
-        <button class="bigBtn" data-open="supportModal">Contact Support</button>
+        <button class="bigBtn" data-open="plansModal" id="cta0">Our Plans</button>
+        <button class="bigBtn" data-open="boxesModal" id="cta1">New Boxes</button>
+        <button class="bigBtn" data-open="rechargeModal" id="cta2">Renew Plan</button>
+        <button class="bigBtn" data-open="supportModal" id="cta3">Contact Support</button>
       </div>
 
       <!-- Posters -->
-      <div class="postersRail" id="postersRail">
-        <img src="https://via.placeholder.com/300x450?text=Poster+1" loading="lazy" alt="">
-        <img src="https://via.placeholder.com/300x450?text=Poster+2" loading="lazy" alt="">
-        <img src="https://via.placeholder.com/300x450?text=Poster+3" loading="lazy" alt="">
-        <img src="https://via.placeholder.com/300x450?text=Poster+4" loading="lazy" alt="">
-      </div>
+      <div class="postersRail" id="postersRail"></div>
+
+      <div class="hint">Scroll for more. Scroll back up any time to use the big buttons.</div>
     </div>
   </section>
 
@@ -209,16 +188,11 @@
     </div>
   </section>
 
-  <footer class="footer">
-    © <span id="year"></span> net+TV. All rights reserved.
-  </footer>
+  <footer class="footer">© <span id="year"></span> net+TV. All rights reserved.</footer>
 
   <!-- MENU SHEET -->
   <div id="menuSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Main menu">
-    <div class="sheetHead">
-      <div style="font-weight:800">Menu</div>
-      <button class="x" data-close="menuSheet">Close</button>
-    </div>
+    <div class="sheetHead"><div style="font-weight:800">Menu</div><button class="x" data-close="menuSheet">Close</button></div>
     <div class="sheetBody">
       <div class="menuList">
         <a class="menuItem" data-open="plansModal">Our Plans</a>
@@ -234,99 +208,52 @@
     </div>
   </div>
 
-  <!-- MODALS -->
-  <!-- Plans Modal -->
+  <!-- MODALS (plans/boxes/own/renew/support/faq/about/pin/subscribe) -->
   <div id="plansModal" class="modal" role="dialog" aria-modal="true" aria-label="Plans">
     <div class="modalCard">
-      <div class="modalHead">
-        <strong>Our Plans</strong>
-        <div style="display:flex;gap:8px">
-          <button class="btn ghost" id="refreshPlans">Refresh</button>
-          <button class="x" data-close="plansModal">Close</button>
-        </div>
-      </div>
+      <div class="modalHead"><strong>Our Plans</strong><div style="display:flex;gap:8px"><button class="btn" id="refreshPlans">Refresh</button><button class="x" data-close="plansModal">Close</button></div></div>
       <div class="modalBody">
-        <p class="muted">All plans include: Quick Activation, Live Channels, Movies/Series, PPV (where available), Anti-Freeze Tech.</p>
+        <p class="muted">All plans include Live Channels, Movies/Series, PPV (where available) and Anti-Freeze Tech.</p>
         <div id="plansGrid" class="plans"></div>
         <div class="footpad"></div>
       </div>
     </div>
   </div>
 
-  <!-- Boxes Modal -->
   <div id="boxesModal" class="modal" role="dialog" aria-modal="true" aria-label="New Boxes">
     <div class="modalCard">
-      <div class="modalHead">
-        <strong>New Boxes</strong>
-        <button class="x" data-close="boxesModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <div id="boxesGrid" class="plans"></div>
-        <div class="footpad"></div>
-      </div>
+      <div class="modalHead"><strong>New Boxes</strong><button class="x" data-close="boxesModal">Close</button></div>
+      <div class="modalBody"><div id="boxesGrid" class="plans"></div><div class="footpad"></div></div>
     </div>
   </div>
 
-  <!-- Own Plan Modal -->
   <div id="ownPlanModal" class="modal" role="dialog" aria-modal="true" aria-label="Build your plan">
     <div class="modalCard">
-      <div class="modalHead">
-        <strong>Your Own Plan</strong>
-        <button class="x" data-close="ownPlanModal">Close</button>
-      </div>
+      <div class="modalHead"><strong>Your Own Plan</strong><button class="x" data-close="ownPlanModal">Close</button></div>
       <div class="modalBody">
         <form id="ownPlanForm" class="grid">
           <div class="grid two">
-            <div>
-              <label>Full Name</label>
-              <input required name="name" placeholder="Your name">
-            </div>
-            <div>
-              <label>Phone</label>
-              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-            </div>
+            <div><label>Full Name</label><input required name="name" placeholder="Your name"></div>
+            <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
           </div>
-          <div>
-            <label>Email (optional)</label>
-            <input name="email" type="email" placeholder="you@example.com">
-          </div>
+          <div><label>Email (optional)</label><input name="email" type="email" placeholder="you@example.com"></div>
           <div>
             <label>Preferred Channels</label>
             <select name="channels" required>
-              <option>English</option>
-              <option>Punjabi</option>
-              <option>Hindi</option>
-              <option>Urdu</option>
-              <option>French</option>
-              <option>Arabic</option>
-              <option>Korean</option>
-              <option>Gujarati</option>
-              <option>Others</option>
+              <option>English</option><option>Punjabi</option><option>Hindi</option><option>Urdu</option>
+              <option>French</option><option>Arabic</option><option>Korean</option><option>Gujarati</option><option>Others</option>
             </select>
             <div class="help">You’ll get Full HD and 4K where available.</div>
           </div>
           <div>
             <label>VOD Category</label>
             <select name="vod" required>
-              <option>English</option>
-              <option>Panjabi</option>
-              <option>Hindi</option>
-              <option>Urdu</option>
-              <option>French</option>
-              <option>Action</option>
-              <option>Drama</option>
-              <option>Comedy</option>
-              <option>Kids</option>
-              <option>Documentary</option>
-              <option>Others</option>
-              <option>Adult</option>
+              <option>English</option><option>Panjabi</option><option>Hindi</option><option>Urdu</option>
+              <option>French</option><option>Action</option><option>Drama</option><option>Comedy</option>
+              <option>Kids</option><option>Documentary</option><option>Others</option><option>Adult</option>
             </select>
-            <div class="help">“Adult” stays at the bottom where it belongs.</div>
           </div>
-          <div>
-            <label>Notes</label>
-            <textarea name="note" rows="3" placeholder="Any specific channel packs, devices, or timing?"></textarea>
-          </div>
+          <div><label>Notes</label><textarea name="note" rows="3" placeholder="Any channel packs, devices, or timing?"></textarea></div>
           <button class="btn whats" type="submit">Send Request on WhatsApp</button>
         </form>
         <div class="footpad"></div>
@@ -334,44 +261,22 @@
     </div>
   </div>
 
-  <!-- Renew Plan Modal -->
   <div id="rechargeModal" class="modal" role="dialog" aria-modal="true" aria-label="Renew Plan">
     <div class="modalCard">
-      <div class="modalHead">
-        <strong>Renew Plan</strong>
-        <button class="x" data-close="rechargeModal">Close</button>
-      </div>
+      <div class="modalHead"><strong>Renew Plan</strong><button class="x" data-close="rechargeModal">Close</button></div>
       <div class="modalBody">
         <form id="rechargeForm" class="grid two">
-          <div>
-            <label>Email</label>
-            <input required name="email" type="email" placeholder="you@example.com">
-          </div>
-          <div>
-            <label>Registered Name</label>
-            <input required name="name" placeholder="Account name">
-          </div>
-          <div>
-            <label>Phone</label>
-            <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-          </div>
-          <div>
-            <label>MAC Address</label>
-            <input required name="mac" placeholder="00:1A:79:xx:xx:xx">
-          </div>
+          <div><label>Email</label><input required name="email" type="email" placeholder="you@example.com"></div>
+          <div><label>Registered Name</label><input required name="name" placeholder="Account name"></div>
+          <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
+          <div><label>MAC Address</label><input required name="mac" placeholder="00:1A:79:xx:xx:xx"></div>
           <div>
             <label>Plan Duration</label>
             <select name="duration" required>
-              <option value="1">1 month</option>
-              <option value="3">3 months</option>
-              <option value="6">6 months</option>
-              <option value="12">12 months</option>
+              <option value="1">1 month</option><option value="3">3 months</option><option value="6">6 months</option><option value="12">12 months</option>
             </select>
           </div>
-          <div>
-            <label>Notes</label>
-            <input name="note" placeholder="Optional note">
-          </div>
+          <div><label>Notes</label><input name="note" placeholder="Optional note"></div>
           <button class="btn whats" type="submit">Request Renewal</button>
         </form>
         <div class="footpad"></div>
@@ -379,29 +284,16 @@
     </div>
   </div>
 
-  <!-- Support Modal -->
   <div id="supportModal" class="modal" role="dialog" aria-modal="true" aria-label="Support">
     <div class="modalCard">
-      <div class="modalHead">
-        <strong>Contact Support</strong>
-        <button class="x" data-close="supportModal">Close</button>
-      </div>
+      <div class="modalHead"><strong>Contact Support</strong><button class="x" data-close="supportModal">Close</button></div>
       <div class="modalBody">
         <form id="supportForm" class="grid">
           <div class="grid two">
-            <div>
-              <label>Name</label>
-              <input required name="name" placeholder="Your name">
-            </div>
-            <div>
-              <label>Phone</label>
-              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-            </div>
+            <div><label>Name</label><input required name="name" placeholder="Your name"></div>
+            <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
           </div>
-          <div>
-            <label>Issue</label>
-            <textarea required name="issue" rows="4" placeholder="Describe the problem..."></textarea>
-          </div>
+          <div><label>Issue</label><textarea required name="issue" rows="4" placeholder="Describe the problem..."></textarea></div>
           <button class="btn whats" type="submit">Send on WhatsApp</button>
         </form>
         <div class="footpad"></div>
@@ -409,13 +301,9 @@
     </div>
   </div>
 
-  <!-- FAQ Modal -->
   <div id="faqModal" class="modal" role="dialog" aria-modal="true" aria-label="FAQ">
     <div class="modalCard">
-      <div class="modalHead">
-        <strong>FAQ</strong>
-        <button class="x" data-close="faqModal">Close</button>
-      </div>
+      <div class="modalHead"><strong>FAQ</strong><button class="x" data-close="faqModal">Close</button></div>
       <div class="modalBody">
         <div class="list">
           <div class="pill"><strong>Q:</strong> Do all channels stream in 4K?<br><span class="muted">A:</span> 4K where available. Otherwise Full HD or SD.</div>
@@ -427,127 +315,65 @@
     </div>
   </div>
 
-  <!-- About Modal -->
   <div id="aboutModal" class="modal" role="dialog" aria-modal="true" aria-label="About">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>About Us</strong>
-        <button class="x" data-close="aboutModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <p>net+TV is built for stability and clarity. We focus on consistent quality and straight answers.</p>
-        <div class="footpad"></div>
-      </div>
-    </div>
+    <div class="modalCard"><div class="modalHead"><strong>About Us</strong><button class="x" data-close="aboutModal">Close</button></div><div class="modalBody"><p>net+TV is built for stability and clarity. If something isn’t true, we don’t print it on banners.</p><div class="footpad"></div></div></div>
   </div>
 
-  <!-- PIN Modal -->
   <div id="pinModal" class="modal" role="dialog" aria-modal="true" aria-label="Know Your Parental PIN">
     <div class="modalCard">
-      <div class="modalHead">
-        <strong>Know Your Parental PIN</strong>
-        <button class="x" data-close="pinModal">Close</button>
-      </div>
+      <div class="modalHead"><strong>Know Your Parental PIN</strong><button class="x" data-close="pinModal">Close</button></div>
       <div class="modalBody">
         <form id="pinForm" class="grid">
           <div class="grid two">
-            <div>
-              <label>MAC Address</label>
-              <input required name="mac" placeholder="00:1A:79:xx:xx:xx">
-            </div>
-            <div>
-              <label>Email</label>
-              <input required name="email" type="email" placeholder="you@example.com">
-            </div>
+            <div><label>MAC Address</label><input required name="mac" placeholder="00:1A:79:xx:xx:xx"></div>
+            <div><label>Email</label><input required name="email" type="email" placeholder="you@example.com"></div>
           </div>
-
           <div class="grid two">
             <div>
               <label>Set-top Box Brand</label>
               <select id="pinBrand" name="brand" required>
-                <option value="">Select</option>
-                <option>MAG / Stalker</option>
-                <option>Formuler</option>
-                <option>Buzztv</option>
-                <option>Dreamlink</option>
-                <option>Other</option>
+                <option value="">Select</option><option>MAG / Stalker</option><option>Formuler</option><option>Buzztv</option><option>Dreamlink</option><option>Other</option>
               </select>
             </div>
-            <div>
-              <label>PIN</label>
-              <input id="pinOutput" readonly placeholder="Will show after brand" />
-            </div>
+            <div><label>PIN</label><input id="pinOutput" readonly placeholder="Will show after brand" /></div>
           </div>
-
-          <div>
-            <label>Notes</label>
-            <input name="note" placeholder="Optional note">
-          </div>
+          <div><label>Notes</label><input name="note" placeholder="Optional note"></div>
           <button class="btn whats" type="submit">Request PIN on WhatsApp</button>
-          <div class="help">Common PINs: 0000 or 7274 depending on device. If it doesn’t work, your portal may use a custom PIN.</div>
+          <div class="help">Common PINs: 0000 or 7274 depending on device.</div>
         </form>
         <div class="footpad"></div>
       </div>
     </div>
   </div>
 
-  <!-- Subscription Modal -->
   <div id="subscribeModal" class="modal" role="dialog" aria-modal="true" aria-label="Subscribe">
     <div class="modalCard">
-      <div class="modalHead">
-        <strong>Subscribe</strong>
-        <button class="x" data-close="subscribeModal">Close</button>
-      </div>
+      <div class="modalHead"><strong>Subscribe</strong><button class="x" data-close="subscribeModal">Close</button></div>
       <div class="modalBody">
         <form id="subscribeForm" class="grid">
           <input type="hidden" name="plan" id="subPlan">
           <div class="grid two">
-            <div>
-              <label>Full Name</label>
-              <input required name="name" placeholder="Your name">
-            </div>
-            <div>
-              <label>Phone</label>
-              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-            </div>
+            <div><label>Full Name</label><input required name="name" placeholder="Your name"></div>
+            <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
           </div>
           <div class="grid two">
             <div>
               <label>TV Channels</label>
               <select name="channels" required>
-                <option>English</option>
-                <option>Punjabi</option>
-                <option>Hindi</option>
-                <option>Urdu</option>
-                <option>French</option>
-                <option>Arabic</option>
-                <option>Korean</option>
-                <option>Gujarati</option>
-                <option>Others</option>
+                <option>English</option><option>Punjabi</option><option>Hindi</option><option>Urdu</option>
+                <option>French</option><option>Arabic</option><option>Korean</option><option>Gujarati</option><option>Others</option>
               </select>
             </div>
             <div>
               <label>VOD Category</label>
               <select name="vod" required>
-                <option>English</option>
-                <option>Panjabi</option>
-                <option>Hindi</option>
-                <option>Urdu</option>
-                <option>French</option>
-                <option>Action</option>
-                <option>Drama</option>
-                <option>Comedy</option>
-                <option>Kids</option>
-                <option>Documentary</option>
-                <option>Others</option>
-                <option>Adult</option>
+                <option>English</option><option>Panjabi</option><option>Hindi</option><option>Urdu</option>
+                <option>French</option><option>Action</option><option>Drama</option><option>Comedy</option>
+                <option>Kids</option><option>Documentary</option><option>Others</option><option>Adult</option>
               </select>
             </div>
           </div>
-          <div>
-            <label>Notes</label>
-            <textarea name="note" rows="3" placeholder="Anything else we should know?"></textarea>
-          </div>
+          <div><label>Notes</label><textarea name="note" rows="3" placeholder="Anything else we should know?"></textarea></div>
           <button class="btn whats" type="submit">Send on WhatsApp</button>
         </form>
         <div class="footpad"></div>
@@ -558,7 +384,7 @@
   <!-- Firebase + Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
@@ -572,9 +398,8 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Config
-    const USE_FIRESTORE_FOR_PLANS = true;
-    const WHATSAPP_NUMBER = "16476961656"; // no '+'
+    // Defaults
+    let WHATSAPP_NUMBER = "16476961656";
 
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -593,312 +418,229 @@
     const menuBtn = document.getElementById('menuBtn');
     const menuSheet = document.getElementById('menuSheet');
     menuBtn.addEventListener('click', () => menuSheet.classList.add('open'));
-    menuSheet.addEventListener('click', e => {
-      if (e.target.dataset.close === 'menuSheet' || e.target === menuSheet) menuSheet.classList.remove('open');
-    });
-    menuSheet.querySelectorAll('[data-open]').forEach(a=>{
-      a.addEventListener('click', ()=>{
-        menuSheet.classList.remove('open');
-        openModal(a.dataset.open);
-      });
-    });
+    menuSheet.addEventListener('click', e => { if (e.target.dataset.close === 'menuSheet' || e.target === menuSheet) menuSheet.classList.remove('open'); });
+    menuSheet.querySelectorAll('[data-open]').forEach(a=> a.addEventListener('click', ()=>{ menuSheet.classList.remove('open'); openModal(a.dataset.open); }));
 
     // Modal helpers
     function openModal(id){ document.getElementById(id)?.classList.add('open'); }
     function closeModal(id){ document.getElementById(id)?.classList.remove('open'); }
     document.querySelectorAll('.modal').forEach(m=>{
       m.addEventListener('click', e=>{ if (e.target === m) m.classList.remove('open'); });
-      m.querySelectorAll('[data-close]').forEach(b=>{
-        b.addEventListener('click', ()=> closeModal(b.dataset.close || m.id));
-      });
+      m.querySelectorAll('[data-close]').forEach(b=> b.addEventListener('click', ()=> closeModal(b.dataset.close || m.id)));
     });
-    document.querySelectorAll('[data-open]').forEach(b=>{ b.addEventListener('click', ()=> openModal(b.dataset.open)); });
+    document.querySelectorAll('[data-open]').forEach(b=> b.addEventListener('click', ()=> openModal(b.dataset.open)));
 
     // Banner auto-slide
-    (()=>{ 
-      const track=document.getElementById('bannerTrack'); if(!track) return;
+    let bannerTimer = null;
+    function startBanner(track){
       let i=0; const slides=track.children.length;
-      setInterval(()=>{ i=(i+1)%slides; track.style.transform=`translateX(-${i*100}%)`; }, 4500);
-    })();
+      if (bannerTimer) clearInterval(bannerTimer);
+      if (!slides) return;
+      bannerTimer = setInterval(()=>{ i=(i+1)%slides; track.style.transform=`translateX(-${i*100}%)`; }, 4500);
+    }
 
-    // WhatsApp helpers
-    function toWA(text){
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank');
-    }
-    function formToKV(form){
-      const data = new FormData(form);
-      const kv = {};
-      data.forEach((v,k)=> kv[k]=v);
-      return kv;
-    }
+    // WA helpers
+    function toWA(text){ window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,'_blank'); }
+    function formToKV(form){ const data=new FormData(form); const kv={}; data.forEach((v,k)=>kv[k]=v); return kv; }
     function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
     function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
 
-    // Plans
+    // Forms -> WA
+    document.getElementById('subscribeForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      toWA([`New Subscription Request`,`Plan: ${kv.plan}`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,`Channels: ${kv.channels}`,`VOD: ${kv.vod}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\\n'));
+    });
+    document.getElementById('ownPlanForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      toWA([`Custom Plan Request`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,kv.email?`Email: ${kv.email}`:null,`Preferred Channels: ${kv.channels}`,`VOD: ${kv.vod}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\\n'));
+    });
+    document.getElementById('rechargeForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      toWA([`Renewal Request`,`Email: ${kv.email}`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,`MAC: ${kv.mac}`,`Duration: ${kv.duration} month(s)`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\\n'));
+    });
+    document.getElementById('supportForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      toWA([`Support Request`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,`Issue: ${kv.issue}`].join('\\n'));
+    });
+
+    // PIN brand mapping
+    function pinForBrand(brand){ const b=(brand||'').toLowerCase(); return (b.includes('mag')||b.includes('stalker')) ? '7274' : '0000'; }
+    const brandSel=document.getElementById('pinBrand'); const pinOut=document.getElementById('pinOutput');
+    if (brandSel && pinOut){ brandSel.addEventListener('change', ()=>{ pinOut.value=pinForBrand(brandSel.value); }); }
+    document.getElementById('pinForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      const resolvedPin=pinForBrand(kv.brand);
+      toWA([`Parental PIN Request`,`MAC: ${kv.mac}`,`Email: ${kv.email}`,`Brand: ${kv.brand||'N/A'}`,`Suggested PIN: ${resolvedPin}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\\n'));
+    });
+
+    // DOM refs
     const plansGrid = document.getElementById('plansGrid');
     const refreshBtn = document.getElementById('refreshPlans');
+    const bannerTrack = document.getElementById('bannerTrack');
+    const postersRail = document.getElementById('postersRail');
+    const boxesGrid = document.getElementById('boxesGrid');
 
-    const localPlans = [
+    /* ===== Firestore loaders with graceful fallback ===== */
+
+    async function loadSettings(){
+      try{
+        const sDoc = await getDoc(doc(db,'settings','main'));
+        if (sDoc.exists()){
+          const s = sDoc.data();
+          if (!localStorage.getItem('theme') && s.themeDefault) document.documentElement.setAttribute('data-theme', s.themeDefault);
+          if (s.whatsappNumber) WHATSAPP_NUMBER = s.whatsappNumber;
+          if (s.heroSubtitle) document.getElementById('heroSubtitle').textContent = s.heroSubtitle;
+          if (s.heroTitle) document.getElementById('heroTitle').textContent = s.heroTitle;
+          if (s.heroSubline) document.getElementById('heroSubline').textContent = s.heroSubline;
+          if (Array.isArray(s.ctaLabels)){
+            ['cta0','cta1','cta2','cta3'].forEach((id,i)=>{ if (s.ctaLabels[i]) document.getElementById(id).textContent = s.ctaLabels[i]; });
+          }
+          const feats = Array.isArray(s.features) && s.features.length ? s.features : ["🇨🇦 Proudly Canadian","Zero Latency Streams","24/7 Support","Multi-Device"];
+          document.getElementById('featureTicker').innerHTML = feats.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
+          return;
+        }
+      }catch(e){}
+      // Fallback ticker if no settings found
+      document.getElementById('featureTicker').innerHTML = `<span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>`;
+    }
+
+    async function loadBanners(){
+      bannerTrack.innerHTML = '';
+      try{
+        const snap = await getDocs(collection(db,'banners'));
+        const arr = [];
+        snap.forEach(d=>{
+          const x=d.data();
+          if(x.active!==false && Array.isArray(x.images)) arr.push(...x.images.map(u=>({sort:x.sort||0,url:u})));
+        });
+        arr.sort((a,b)=>a.sort-b.sort);
+        const imgs = arr.map(o=>o.url);
+        const list = imgs.length ? imgs : [
+          "https://via.placeholder.com/1280x720?text=Banner+1",
+          "https://via.placeholder.com/1280x720?text=Banner+2"
+        ];
+        bannerTrack.innerHTML = list.map(u=>`<div class="bannerSlide"><img src="${u}" alt=""></div>`).join('');
+      }catch(e){
+        bannerTrack.innerHTML = `
+          <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+1" alt=""></div>
+          <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+2" alt=""></div>`;
+      }
+      startBanner(bannerTrack);
+    }
+
+    async function loadPosters(){
+      postersRail.innerHTML = '';
+      try{
+        const snap = await getDocs(collection(db,'posters'));
+        const arr=[]; snap.forEach(d=>{ const x=d.data(); if(x.active!==false && x.image) arr.push(x); });
+        arr.sort((a,b)=> (a.sort||0)-(b.sort||0));
+        const imgs = arr.map(x=>x.image);
+        const list = imgs.length ? imgs : [
+          "https://via.placeholder.com/300x450?text=Poster+1",
+          "https://via.placeholder.com/300x450?text=Poster+2",
+          "https://via.placeholder.com/300x450?text=Poster+3"
+        ];
+        postersRail.innerHTML = list.map(u=>`<img src="${u}" loading="lazy" alt="">`).join('');
+      }catch(e){
+        postersRail.innerHTML = `<img src="https://via.placeholder.com/300x450?text=Poster+1"><img src="https://via.placeholder.com/300x450?text=Poster+2">`;
+      }
+    }
+
+    const demoPlans = [
       { id:'p1', name:"Starter HD", price:"CA$60", months:6, benefit:"+1 month free", tag:"Popular", desc:"HD focus • Core channels" },
-      { id:'p2', name:"Family FHD", price:"CA$100", months:12, benefit:"+2 months free", tag:"Best Value", desc:"Full HD • Family packs" },
-      { id:'p3', name:"4K Select", price:"CA$120", months:12, benefit:"+1 month free", tag:"", desc:"4K where available • Sports" },
-      { id:'p4', name:"Max Ultra", price:"CA$180", months:24, benefit:"+3 months free", tag:"", desc:"4K + PPV focus" }
+      { id:'p2', name:"Family FHD", price:"CA$100", months:12, benefit:"+2 months free", tag:"Best Value", desc:"Full HD • Family packs" }
     ];
 
     async function loadPlans(){
       plansGrid.innerHTML = '<div class="muted">Loading plans…</div>';
-      let items = localPlans;
-      if (USE_FIRESTORE_FOR_PLANS){
-        try{
-          const snap = await getDocs(collection(db,'plans'));
-          const arr = [];
-          snap.forEach(doc=>{
-            const d = doc.data();
-            if (d?.name && d?.price){
-              arr.push({
-                id: doc.id,
-                name: d.name, price: d.price,
-                months: d.months || '',
-                benefit: d.benefit || '',
-                tag: d.tag || '',
-                desc: d.desc || ''
-              });
-            }
-          });
-          if (arr.length) items = arr;
-        }catch(e){
-          console.warn('Firestore plans failed, using fallback', e);
-        }
-      }
+      let items = [];
+      try{
+        const snap = await getDocs(collection(db,'plans'));
+        snap.forEach(doc=>{ const d=doc.data(); if(d?.name && d?.price && d.active!==false) items.push({id:doc.id,...d}); });
+        items.sort((a,b)=> (a.sort||0)-(b.sort||0));
+      }catch(e){}
+      if (!items.length) items = demoPlans;
       renderPlans(items);
     }
-
     function renderPlans(items){
       plansGrid.innerHTML = '';
       items.forEach(p=>{
-        const tag = p.tag ? `<div class="tag">${escapeHtml(p.tag)}</div>` : '';
-        const benefit = p.benefit ? `<div class="benefit">${escapeHtml(p.benefit)}</div>` : '';
-        const months = p.months ? `<div class="muted">${escapeHtml(p.months + ' months')}</div>` : '';
         const el = document.createElement('div');
         el.className = 'card';
         el.innerHTML = `
-          ${tag}
+          ${p.tag ? `<div class="tag">${escapeHtml(p.tag)}</div>` : ''}
           <div class="cardHead">
             <h3>${escapeHtml(p.name)}</h3>
-            <div class="price priceRight">${escapeHtml(p.price)}</div>
+            <div class="priceRight">${escapeHtml(p.price)}</div>
           </div>
-          ${months}
-          ${benefit}
-          <div class="muted" style="margin:8px 0 12px">${escapeHtml(p.desc || 'Inclusive of Live Channels, Movies, Series, PPV (where available)')}</div>
+          ${p.months ? `<div class="muted">${escapeHtml(p.months + ' months')}</div>` : ''}
+          ${p.benefit ? `<div class="benefit">${escapeHtml(p.benefit)}</div>` : ''}
+          <div class="muted" style="margin:10px 0 14px">${escapeHtml(p.desc || 'Inclusive of Live Channels, Movies, Series, PPV (where available)')}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn whats" data-subscribe="${escapeAttr(p.name)}">Subscribe</button>
             <button class="btn" data-info="${escapeAttr(p.name)}">Info</button>
-          </div>
-        `;
+          </div>`;
         plansGrid.appendChild(el);
       });
-      plansGrid.querySelectorAll('[data-info]').forEach(b=>{
-        b.addEventListener('click', ()=> showInfo(b.dataset.info));
-      });
-      plansGrid.querySelectorAll('[data-subscribe]').forEach(b=>{
-        b.addEventListener('click', ()=>{
-          document.getElementById('subPlan').value = b.dataset.subscribe;
-          openModal('subscribeModal');
-        });
-      });
+      plansGrid.querySelectorAll('[data-info]').forEach(b=> b.addEventListener('click', ()=> alert('Includes channels in English, Punjabi, Hindi, Urdu, Gujarati, Arabic, Korean and more. 4K where available.')));
+      plansGrid.querySelectorAll('[data-subscribe]').forEach(b=> b.addEventListener('click', ()=>{
+        document.getElementById('subPlan').value = b.dataset.subscribe; openModal('subscribeModal');
+      }));
     }
+    document.getElementById('refreshPlans').addEventListener('click', loadPlans);
 
-    function showInfo(planName){
-      const categories = [
-        "English, Punjabi, Hindi, Pakistani, Gujarati, Arabic, Korean and more",
-        "Full HD & 4K where available",
-        "Latest + Old Movies & Series",
-        "Sports, News, Kids, Documentaries",
-        "PPV availability varies by event"
-      ];
-      alert(`${planName}\n\nIncludes:\n- ` + categories.join('\n- '));
+    async function loadBoxes(){
+      boxesGrid.innerHTML = '<div class="muted">Loading boxes…</div>';
+      let items=[];
+      try{
+        const snap = await getDocs(collection(db,'boxes'));
+        snap.forEach(d=>{ const x=d.data(); if(x.active!==false) items.push({id:d.id,...x}); });
+        items.sort((a,b)=> (a.sort||0)-(b.sort||0));
+      }catch(e){}
+      renderBoxes(items);
     }
-
-    refreshBtn.addEventListener('click', loadPlans);
-    loadPlans();
-
-    // Boxes (local)
-    const boxesGrid = document.getElementById('boxesGrid');
-    const localBoxes = [
-      {
-        id:'basic',
-        tier:'Basic Box',
-        name:'X-100',
-        images:[
-          'https://via.placeholder.com/1280x720?text=Basic+1',
-          'https://via.placeholder.com/1280x720?text=Basic+2'
-        ],
-        boxPrice:'CA$120',
-        combo:{ planMonths:12, extra:'+1 month free', price:'CA$199' },
-        desc:'Entry-level STB, smooth UI'
-      },
-      {
-        id:'good',
-        tier:'Good Box',
-        name:'Z-200',
-        images:[
-          'https://via.placeholder.com/1280x720?text=Good+1',
-          'https://via.placeholder.com/1280x720?text=Good+2',
-          'https://via.placeholder.com/1280x720?text=Good+3'
-        ],
-        boxPrice:'CA$160',
-        combo:{ planMonths:12, extra:'+1 month free', price:'CA$239' },
-        desc:'Snappy performance, dual-band Wi-Fi'
-      }
-    ];
-
     function renderBoxes(items){
-      if(!boxesGrid) return;
       boxesGrid.innerHTML = '';
+      if(!items.length){ boxesGrid.innerHTML = '<div class="muted">Boxes coming soon.</div>'; return; }
       items.forEach(b=>{
         const card = document.createElement('div'); card.className='card';
+        const images = Array.isArray(b.images) && b.images.length ? b.images : ["https://via.placeholder.com/1280x720?text=Box"];
         card.innerHTML = `
-          <div class="boxSlider" id="slider-${b.id}">
-            <div class="boxTrack">
-              ${b.images.map(u=>`<div class="boxSlide"><img src="${u}" alt=""></div>`).join('')}
-            </div>
-          </div>
-          <div class="boxDots">${b.images.map((_,i)=>`<div class="boxDot ${i===0?'active':''}"></div>`).join('')}</div>
+          <div class="boxSlider"><div class="boxTrack">${images.map(u=>`<div class="boxSlide"><img src="${u}" alt=""></div>`).join('')}</div></div>
+          <div class="boxDots">${images.map((_,i)=>`<div class="boxDot ${i===0?'active':''}"></div>`).join('')}</div>
 
-          <span class="miniTag">${escapeHtml(b.tier)}</span>
-          <div class="boxMeta">
-            <h3 class="boxName">${escapeHtml(b.name)}</h3>
-            <div class="boxPrice">${escapeHtml(b.boxPrice)}</div>
-          </div>
+          ${b.tier ? `<span class="miniTag">${escapeHtml(b.tier)}</span>` : ''}
+          <div class="boxMeta"><h3 class="boxName">${escapeHtml(b.name||'')}</h3><div class="boxPrice">${escapeHtml(b.boxPrice||'')}</div></div>
 
-          <div class="comboCallout">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <strong>Combo Plan</strong>
-              <strong>${escapeHtml(b.combo.price)}</strong>
-            </div>
-            <div class="muted">${b.combo.planMonths} months • ${escapeHtml(b.combo.extra)}</div>
-          </div>
+          ${b.combo ? `<div class="comboCallout"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Combo Plan</strong><strong>${escapeHtml(b.combo.price||'')}</strong></div><div class="muted">${b.combo.planMonths||12} months • ${escapeHtml(b.combo.extra||'')}</div></div>` : ''}
 
-          <div class="muted" style="line-height:1.5;margin:6px 0 10px">${escapeHtml(b.desc||'')}</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn whats" data-box="${escapeAttr(b.name)}">Get Box</button>
-            <button class="btn" data-boxinfo="${escapeAttr(b.name)}">Info</button>
-          </div>
-        `;
+          <div class="muted" style="line-height:1.5;margin:8px 0 12px">${escapeHtml(b.desc||'')}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn whats" data-box="${escapeAttr(b.name||'')}">Get Box</button><button class="btn" data-boxinfo="${escapeAttr(b.name||'')}">Info</button></div>`;
         boxesGrid.appendChild(card);
 
-        // slider
-        const track = card.querySelector('.boxSlider .boxTrack');
+        const track = card.querySelector('.boxTrack');
         const dots = Array.from(card.querySelectorAll('.boxDot'));
-        let idx = 0;
-        function go(i){
-          idx = (i + b.images.length) % b.images.length;
-          track.style.transform = `translateX(-${idx*100}%)`;
-          dots.forEach((d,k)=> d.classList.toggle('active', k===idx));
-        }
-        let timer = setInterval(()=>go(idx+1), 3500);
+        let idx = 0; const go=i=>{ idx=(i+images.length)%images.length; track.style.transform=`translateX(-${idx*100}%)`; dots.forEach((d,k)=>d.classList.toggle('active',k===idx)); };
+        let timer=setInterval(()=>go(idx+1),3500);
         card.addEventListener('mouseenter', ()=>clearInterval(timer));
-        card.addEventListener('mouseleave', ()=>timer = setInterval(()=>go(idx+1), 3500));
+        card.addEventListener('mouseleave', ()=>timer=setInterval(()=>go(idx+1),3500));
         dots.forEach((d,k)=> d.addEventListener('click', ()=>go(k)));
       });
 
       boxesGrid.querySelectorAll('[data-box]').forEach(b=>{
-        b.addEventListener('click', ()=> toWA(`Box Request\nBox: ${b.dataset.box}\nPrefer combo? ${items.find(x=>x.name===b.dataset.box)?.combo?.planMonths||12} months (+1 month free)\nName:\nPhone:\nNote:`));
+        b.addEventListener('click', ()=> toWA(`Box Request\\nBox: ${b.dataset.box}\\nPrefer combo? yes/no\\nName:\\nPhone:\\nNote:`));
       });
-      boxesGrid.querySelectorAll('[data-boxinfo]').forEach(b=>{
-        b.addEventListener('click', ()=> alert(`${b.dataset.box}\nIncludes HDMI, power adapter, supports our portal.\nAsk for combo to save.`));
-      });
-    }
-    renderBoxes(localBoxes);
-
-    // Forms -> WhatsApp
-    document.getElementById('subscribeForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `New Subscription Request`,
-        `Plan: ${kv.plan}`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        `Channels: ${kv.channels}`,
-        `VOD: ${kv.vod}`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
-    });
-
-    document.getElementById('ownPlanForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `Custom Plan Request`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        kv.email ? `Email: ${kv.email}` : null,
-        `Preferred Channels: ${kv.channels}`,
-        `VOD: ${kv.vod}`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
-    });
-
-    document.getElementById('rechargeForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `Renewal Request`,
-        `Email: ${kv.email}`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        `MAC: ${kv.mac}`,
-        `Duration: ${kv.duration} month(s)`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
-    });
-
-    document.getElementById('supportForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `Support Request`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        `Issue: ${kv.issue}`
-      ].join('\n');
-      toWA(msg);
-    });
-
-    // PIN brand -> PIN mapping (0000 or 7274)
-    function pinForBrand(brand){
-      const b = (brand||'').toLowerCase();
-      if (b.includes('mag') || b.includes('stalker')) return '7274';
-      return '0000';
-    }
-    const brandSel = document.getElementById('pinBrand');
-    const pinOut = document.getElementById('pinOutput');
-    if (brandSel && pinOut){
-      brandSel.addEventListener('change', ()=>{
-        pinOut.value = pinForBrand(brandSel.value);
-      });
+      boxesGrid.querySelectorAll('[data-boxinfo]').forEach(b=> b.addEventListener('click', ()=> alert(`${b.dataset.box}\\nIncludes HDMI, power adapter, supports our portal.`)));
     }
 
-    document.getElementById('pinForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const resolvedPin = pinForBrand(kv.brand);
-      const msg = [
-        `Parental PIN Request`,
-        `MAC: ${kv.mac}`,
-        `Email: ${kv.email}`,
-        `Brand: ${kv.brand || 'N/A'}`,
-        `Suggested PIN: ${resolvedPin}`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
-    });
-
+    // Boot
+    (async()=>{
+      await loadSettings();
+      await loadBanners();
+      await loadPosters();
+      await loadPlans();
+      await loadBoxes();
+    })();
   </script>
 </body>
 </html>
