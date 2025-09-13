@@ -1,143 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1">
-<title>net+TV Admin</title>
+<title>net+TV Admin / Setup</title>
 <meta name="theme-color" content="#0b1020">
 <style>
-  :root{
-    --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
-    --g1:#6a11cb;--g2:#2575fc;--tap:44px;--safe-top: env(safe-area-inset-top,0px);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:#0b1020;color:var(--ink);-webkit-font-smoothing:antialiased}
+  :root{--bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;--g1:#6a11cb;--g2:#2575fc;--tap:44px}
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink)}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1100px;margin:0 auto;padding:16px}
-
-  .topbar{position:sticky;top:0;z-index:100;background:rgba(11,16,32,.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
-  .bar{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:10px 16px;padding-top:calc(10px + var(--safe-top))}
+  .top{position:sticky;top:0;z-index:10;background:rgba(11,16,32,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .bar{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:12px 14px}
   .brand{display:flex;gap:10px;align-items:center;font-weight:900}
   .badge{background:linear-gradient(135deg,var(--g1),var(--g2));padding:6px 10px;border-radius:10px;font-weight:900}
-  .auth{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-  .chip{border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#0f1732}
-  .btn{border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:12px 14px;font-weight:800;background:#0f1732;color:var(--ink);cursor:pointer;min-height:var(--tap)}
+  .wrap{max-width:1100px;margin:0 auto;padding:14px}
+  .btn{border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:10px 12px;background:#0f1732;color:var(--ink);font-weight:800;cursor:pointer;min-height:var(--tap)}
   .btn.primary{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff}
-  .btn.warn{background:#2d1d00;border-color:#5f3f00}
-  .input{background:#0b122a;border:1px solid #22305a;border-radius:12px;padding:12px 14px;color:#e9edff;min-height:var(--tap);width:100%}
+  .btn.ghost{background:transparent}
+  .btn.warn{background:#2a1200;border-color:#5b2a00}
+  .chip{border:1px solid var(--line);border-radius:999px;padding:7px 10px;background:#0f1732}
+  .input{width:100%;background:#0b122a;border:1px solid #22305a;border-radius:12px;padding:12px 14px;color:#e9edff;min-height:var(--tap)}
   textarea.input{min-height:120px}
-
-  .tools{display:flex;gap:10px;flex-wrap:wrap;margin:10px 16px}
-  .tbtn{padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#0f1732;font-weight:800}
-  .tbtn.active{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff}
-
-  .section{padding:16px}
-  .sub{color:#a9b5e6;font-size:13px}
-  .cards{display:grid;gap:12px}
-  @media(min-width:900px){.cards{grid-template-columns:repeat(4,1fr)}}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .tab{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1732;font-weight:800;cursor:pointer}
+  .tab.active{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent}
+  .panel{display:none}.panel.active{display:block}
+  .cards{display:grid;gap:12px}@media(min-width:900px){.cards{grid-template-columns:repeat(4,1fr)}}
   .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
-  .kpi-val{font-size:28px;font-weight:900;line-height:1.1;margin-top:6px}
-
-  .panel{display:none}
-  .panel.active{display:block}
-
-  .grid2{display:grid;gap:10px}
-  @media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
-  .grid3{display:grid;gap:10px}
-  @media(min-width:900px){.grid3{grid-template-columns:repeat(3,1fr)}}
-
+  .grid2{display:grid;gap:10px}@media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
+  .grid3{display:grid;gap:10px}@media(min-width:1000px){.grid3{grid-template-columns:repeat(3,1fr)}}
   .rows{display:grid;gap:8px;margin-top:10px}
   .row{display:grid;gap:8px;background:#0f1732;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px}
-  @media(min-width:860px){.row{grid-template-columns:2fr 1fr 1fr auto}}
-  .badge2{display:inline-block;background:#0f1732;border:1px solid var(--line);border-radius:8px;padding:4px 8px;font-size:12px}
-  .actions{display:flex;gap:8px;align-items:center;justify-content:flex-end}
+  @media(min-width:900px){.row{grid-template-columns:2fr 1fr 1fr auto}}
+  .sub{color:var(--muted);font-size:13px}
+  .k{font-weight:900;margin-bottom:6px}
+  .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .pill{display:inline-block;margin:4px 6px 0 0;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#0f1732;font-size:12px}
+  code.small{font-size:12px;padding:2px 6px;border-radius:6px;background:#0f1732;border:1px solid var(--line)}
 </style>
 </head>
 <body>
-
-<!-- Topbar -->
-<div class="topbar">
+<!-- Header -->
+<div class="top">
   <div class="bar">
-    <div class="brand"><span class="badge">net+TV</span> <span>Admin</span></div>
-
-    <div class="auth" id="authArea">
-      <input id="email" class="input" placeholder="Admin email" autocomplete="username" inputmode="email" style="width:220px">
-      <input id="password" class="input" placeholder="Password" type="password" autocomplete="current-password" style="width:180px">
+    <div class="brand"><span class="badge">net+TV</span> <span>Admin / Setup</span></div>
+    <div class="actions" id="authBox">
+      <input id="email" class="input" placeholder="Admin email" style="width:220px" autocomplete="username">
+      <input id="password" class="input" placeholder="Password" type="password" style="width:180px" autocomplete="current-password">
       <button class="btn primary" id="btnSignIn">Sign In</button>
     </div>
-    <div class="auth" id="whoami" style="display:none">
+    <div class="actions" id="whoami" style="display:none">
       <span id="whoamiText" class="chip"></span>
       <button class="btn" id="btnSignOut">Sign Out</button>
     </div>
   </div>
-
-  <div class="tools" id="navTabs">
-    <button class="tbtn active" data-panel="home">Home</button>
-    <button class="tbtn" data-panel="banners">Banners</button>
-    <span class="chip">Site Settings (Firestore doc: <code>site_settings/public</code>)</span>
-    <button class="tbtn" data-panel="general">General</button>
-    <button class="tbtn" data-panel="plans">Plans</button>
-    <button class="tbtn" data-panel="boxes">Boxes</button>
-    <button class="tbtn" data-panel="gallery">Gallery</button>
-    <button class="tbtn" data-panel="importExport">Import/Export</button>
-  </div>
 </div>
 
 <div class="wrap">
+  <!-- Nav -->
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-panel="general">General</button>
+    <button class="tab" data-panel="plans">Plans</button>
+    <button class="tab" data-panel="boxes">Boxes</button>
+    <button class="tab" data-panel="gallery">Gallery</button>
+    <button class="tab" data-panel="banners">Banners</button>
+    <button class="tab" data-panel="backup">Import/Export</button>
+    <button class="tab" data-panel="publish">Save to Firestore</button>
+  </div>
 
-  <!-- HOME -->
-  <section id="panel-home" class="panel active section">
-    <div class="sub">Signed in editors can push settings used by the public site.</div>
-    <div class="grid2" style="margin-top:12px">
+  <!-- Panels -->
+  <section id="panel-general" class="panel active">
+    <div class="cards">
       <div class="card">
-        <div class="sub">Sync</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-          <button class="btn" id="btnLoadFS">Load from Firestore</button>
-          <button class="btn primary" id="btnSaveFS">Save to Firestore</button>
-        </div>
-        <div id="syncStatus" class="sub" style="margin-top:8px"></div>
-      </div>
-      <div class="card">
-        <div class="sub">Quick Links</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-          <a class="btn" href="index.html" target="_blank" rel="noopener">Open Site</a>
-          <a class="btn" href="https://console.firebase.google.com/" target="_blank" rel="noopener">Firebase Console</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BANNERS -->
-  <section id="panel-banners" class="panel section">
-    <h3 style="margin:0 0 8px 0">Swipe Banners (collection)</h3>
-    <div class="sub">Path: <code>site_settings/banners/items</code>. Only enabled, valid-date banners show on site.</div>
-    <div class="grid3" style="margin-top:12px">
-      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="bnEnabled" checked> <span class="sub">Enabled</span></label>
-      <input class="input" id="bnTitle" placeholder="Title">
-      <input class="input" id="bnText" placeholder="Text">
-      <input class="input" id="bnCtaLabel" placeholder="CTA label">
-      <input class="input" id="bnCtaHref" placeholder="CTA href (https:// or #)">
-      <input class="input" id="bnImageUrl" placeholder="Image URL (optional)">
-      <input class="input" id="bnValidFrom" type="date" placeholder="Valid from">
-      <input class="input" id="bnValidTo" type="date" placeholder="Valid to">
-      <input class="input" id="bnOrder" type="number" placeholder="Order (0..N)">
-      <button class="btn primary" id="bnSave">Save New Banner</button>
-      <button class="btn" id="bnClear">Clear</button>
-    </div>
-    <div id="bnStatus" class="sub" style="margin-top:6px"></div>
-    <div id="bannerList" class="rows"></div>
-  </section>
-
-  <!-- GENERAL -->
-  <section id="panel-general" class="panel section">
-    <h3 style="margin:0 0 8px 0">General</h3>
-    <div class="sub">Currency & WhatsApp used site-wide.</div>
-    <div class="grid3" style="margin-top:12px">
-      <div class="card">
-        <div class="sub">Currency</div>
-        <div class="grid2" style="margin-top:8px">
-          <input class="input" id="curSymbol" placeholder="Symbol ($)">
+        <div class="k">Currency</div>
+        <div class="grid2">
+          <input class="input" id="curSymbol" placeholder="Symbol (e.g., $)">
           <select class="input" id="curPos">
             <option value="prefix">Prefix ($100)</option>
             <option value="suffix">Suffix (100$)</option>
@@ -145,105 +83,125 @@
         </div>
       </div>
       <div class="card">
-        <div class="sub">WhatsApp</div>
-        <input class="input" id="waNumber" placeholder="WhatsApp number (digits only)" style="margin-top:8px">
+        <div class="k">WhatsApp</div>
+        <input class="input" id="waNumber" placeholder="Number (digits only)">
+        <div class="sub" style="margin-top:6px">Used across all CTAs on index page.</div>
       </div>
       <div class="card">
-        <div class="sub">Actions</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-          <button class="btn" id="btnGenLoad">Load (working copy)</button>
-          <button class="btn primary" id="btnGenSave">Save (working copy)</button>
+        <div class="k">Actions</div>
+        <div class="actions" style="margin-top:8px">
+          <button class="btn" id="btnLoad">Load current</button>
+          <button class="btn primary" id="btnSaveLocal">Save (local)</button>
+          <button class="btn warn" id="btnReset">Reset defaults</button>
         </div>
-        <div id="genStatus" class="sub" style="margin-top:8px"></div>
+        <div id="statusGeneral" class="sub" style="margin-top:8px"></div>
       </div>
     </div>
   </section>
 
-  <!-- PLANS -->
-  <section id="panel-plans" class="panel section">
-    <h3 style="margin:0 0 8px 0">Plans</h3>
-    <div class="grid3" style="margin-top:12px">
+  <section id="panel-plans" class="panel">
+    <div class="k">Add / Edit Plan</div>
+    <div class="grid3" style="margin-bottom:8px">
       <input class="input" id="plName" placeholder="Name (e.g., 6 Months)">
       <input class="input" id="plMonths" type="number" placeholder="Months (e.g., 6)">
-      <input class="input" id="plPrice" type="number" placeholder="Price (number)">
+      <input class="input" id="plPrice" type="number" placeholder="Price">
       <input class="input" id="plBadge" placeholder="Badge (e.g., Most Picked)">
       <input class="input" id="plNote" placeholder="Note (e.g., +1 month free)">
-      <input class="input" id="plOrder" type="number" placeholder="Order (0..N)">
-      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="plVisible" checked> <span class="sub">Visible</span></label>
+      <input class="input" id="plOrder" type="number" placeholder="Order">
+      <label class="pill"><input type="checkbox" id="plVisible" checked> Visible</label>
       <button class="btn primary" id="plAdd">Add / Save</button>
-      <button class="btn" id="plClear">Clear form</button>
+      <button class="btn" id="plClear">Clear</button>
     </div>
-    <div id="planRows" class="rows"></div>
+    <div class="rows" id="planRows"></div>
   </section>
 
-  <!-- BOXES -->
-  <section id="panel-boxes" class="panel section">
-    <h3 style="margin:0 0 8px 0">Boxes</h3>
-    <div class="sub">Supports photos, specs, and a <strong>bundle</strong> (Box + 1 Year) with free months.</div>
-    <div class="grid3" style="margin-top:12px">
+  <section id="panel-boxes" class="panel">
+    <div class="k">Add / Edit Box</div>
+    <div class="grid3" style="margin-bottom:8px">
       <input class="input" id="bxName" placeholder="Name (e.g., Formular Z11 PRO)">
-      <input class="input" id="bxPrice" type="number" placeholder="Base Price">
+      <input class="input" id="bxPrice" type="number" placeholder="Box price">
+      <input class="input" id="bxBundle" type="number" placeholder="Bundle (Box + 1-Year)">
+      <input class="input" id="bxFree" type="number" placeholder="Free months on bundle">
       <input class="input" id="bxBadge" placeholder="Badge (e.g., Recommended)">
-      <input class="input" id="bxOrder" type="number" placeholder="Order (0..N)">
-      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="bxVisible" checked> <span class="sub">Visible</span></label>
-      <textarea class="input" id="bxSpecs" placeholder="Specs: one per line"></textarea>
-      <textarea class="input" id="bxPhotos" placeholder="Photo URLs: one per line (optional caption with |, e.g. https://...jpg|Front)"></textarea>
-
-      <div class="card" style="grid-column:1/-1">
-        <div class="sub"><strong>Bundle (Box + 1 Year)</strong></div>
-        <div class="grid3" style="margin-top:8px">
-          <input class="input" id="bdlPrice" type="number" placeholder="Bundle Price">
-          <input class="input" id="bdlFree" type="number" placeholder="Free months (0,1,2)">
-          <input class="input" id="bdlNote" placeholder="Bundle note (optional)">
-        </div>
-      </div>
-
+      <input class="input" id="bxOrder" type="number" placeholder="Order">
+      <label class="pill"><input type="checkbox" id="bxVisible" checked> Visible</label>
+      <textarea class="input" id="bxSpecs" placeholder="Specs (one per line)"></textarea>
+      <textarea class="input" id="bxPhotos" placeholder="Photo URLs (one per line). Optional caption with |, e.g. https://...jpg|Front"></textarea>
       <button class="btn primary" id="bxAdd">Add / Save</button>
-      <button class="btn" id="bxClear">Clear form</button>
+      <button class="btn" id="bxClear">Clear</button>
     </div>
-    <div id="boxRows" class="rows"></div>
+    <div class="rows" id="boxRows"></div>
   </section>
 
-  <!-- GALLERY -->
-  <section id="panel-gallery" class="panel section">
-    <h3 style="margin:0 0 8px 0">Gallery</h3>
-    <div class="grid3" style="margin-top:12px">
+  <section id="panel-gallery" class="panel">
+    <div class="k">Gallery</div>
+    <div class="grid3" style="margin-bottom:8px">
       <input class="input" id="glCaption" placeholder="Caption">
       <input class="input" id="glUrl" placeholder="Image URL">
       <input class="input" id="glOrder" type="number" placeholder="Order">
-      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="glVisible" checked> <span class="sub">Visible</span></label>
+      <label class="pill"><input type="checkbox" id="glVisible" checked> Visible</label>
       <button class="btn primary" id="glAdd">Add / Save</button>
-      <button class="btn" id="glClear">Clear form</button>
+      <button class="btn" id="glClear">Clear</button>
     </div>
-    <div id="galRows" class="rows"></div>
+    <div class="rows" id="galRows"></div>
   </section>
 
-  <!-- IMPORT / EXPORT -->
-  <section id="panel-importExport" class="panel section">
-    <h3 style="margin:0 0 8px 0">Import / Export</h3>
-    <div class="grid2" style="margin-top:12px">
+  <section id="panel-banners" class="panel">
+    <div class="k">Banners (Firestore)</div>
+    <div class="grid2" style="margin-bottom:8px">
+      <label class="pill"><input type="checkbox" id="bnEnabled" checked> Enabled</label>
+      <input class="input" id="bnTitle" placeholder="Title">
+      <input class="input" id="bnText" placeholder="Text">
+      <input class="input" id="bnCtaLabel" placeholder="CTA label">
+      <input class="input" id="bnCtaHref" placeholder="CTA href (https:// or #)">
+      <input class="input" id="bnImageUrl" placeholder="Image URL">
+      <input class="input" id="bnValidFrom" type="date" placeholder="Valid from">
+      <input class="input" id="bnValidTo" type="date" placeholder="Valid to">
+      <input class="input" id="bnOrder" type="number" placeholder="Order">
+      <button class="btn primary" id="bnSave">Save New</button>
+    </div>
+    <div id="bnStatus" class="sub"></div>
+    <div class="rows" id="bannerList"></div>
+  </section>
+
+  <section id="panel-backup" class="panel">
+    <div class="cards">
       <div class="card">
-        <div class="sub">Export working copy (JSON)</div>
+        <div class="k">Export JSON</div>
         <button class="btn" id="btnExport">Download settings.json</button>
       </div>
       <div class="card">
-        <div class="sub">Import JSON (replaces working copy only)</div>
+        <div class="k">Import JSON</div>
         <input type="file" id="fileImport" accept="application/json" class="input">
         <button class="btn primary" id="btnImport">Import</button>
       </div>
+      <div class="card">
+        <div class="k">Current payload (preview)</div>
+        <pre id="preview" style="white-space:pre-wrap;font-size:12px;line-height:1.35;background:#0f1732;border:1px solid var(--line);padding:10px;border-radius:12px;max-height:360px;overflow:auto"></pre>
+      </div>
     </div>
-    <div class="sub" id="ieStatus" style="margin-top:8px"></div>
   </section>
 
+  <section id="panel-publish" class="panel">
+    <div class="card">
+      <div class="k">Publish to Firestore</div>
+      <div class="sub">Writes the entire object to <code class="small">site_settings / public</code>. The index page reads this.</div>
+      <div class="actions" style="margin-top:10px">
+        <button class="btn primary" id="btnPublish">Save to Firestore</button>
+        <button class="btn" id="btnReloadCloud">Reload from Firestore</button>
+      </div>
+      <div id="pubStatus" class="sub" style="margin-top:8px"></div>
+    </div>
+  </section>
 </div>
 
 <script type="module">
-/* Firebase */
+/* ===== Firebase ===== */
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   getFirestore, collection, query, orderBy, getDocs,
-  doc, addDoc, setDoc, getDoc, deleteDoc, serverTimestamp
+  doc, getDoc, setDoc, addDoc, deleteDoc, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -258,81 +216,74 @@ const app = getApps().length? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
-/* DOM helpers */
+/* ===== UI helpers ===== */
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
-function toast(el,msg){ el.textContent=msg; setTimeout(()=>{el.textContent='';},1800); }
-function n(v){ return Number(v||0); }
+const LS_KEY = 'netplus.settings.v1.public';
+
+function toast(el,msg){ const n=$(el); if(!n) return; n.textContent = msg; setTimeout(()=>n.textContent='',1800); }
+function fmt(n){ return Number(n||0); }
 function parseLines(v){ return v.split('\n').map(s=>s.trim()).filter(Boolean); }
 
-/* Nav */
-function showPanel(name){
-  $$('#navTabs .tbtn').forEach(b=>b.classList.toggle('active', b.dataset.panel===name));
-  ['home','banners','general','plans','boxes','gallery','importExport'].forEach(nm=>{
-    $('#panel-'+nm).classList.toggle('active', nm===name);
+/* ===== Tabs ===== */
+$('#tabs').addEventListener('click', e=>{
+  const b=e.target.closest('button[data-panel]'); if(!b) return;
+  $$('#tabs .tab').forEach(t=>t.classList.toggle('active', t===b));
+  const name=b.dataset.panel;
+  ['general','plans','boxes','gallery','banners','backup','publish'].forEach(p=>{
+    $('#panel-'+p).classList.toggle('active', p===name);
   });
   window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ===== Defaults / Local store ===== */
+function defaults(){
+  return {
+    currency:{symbol:'$', position:'prefix'},
+    whatsapp:{number:'16476961656'},
+    plans:[
+      {id:crypto.randomUUID(), name:'1 Month', months:1, price:15, badge:'Starter', order:0, visible:true, note:'Full features'},
+      {id:crypto.randomUUID(), name:'3 Months', months:3, price:40, badge:'Popular', order:1, visible:true, note:'Save vs monthly'},
+      {id:crypto.randomUUID(), name:'6 Months', months:6, price:65, badge:'Most Picked', order:2, visible:true},
+      {id:crypto.randomUUID(), name:'12 Months (+1 free)', months:12, price:100, badge:'Best Value', order:3, visible:true, note:'+1 month free'}
+    ],
+    boxes:[],
+    gallery:[]
+  };
 }
-$('#navTabs').addEventListener('click', e=>{
-  const b=e.target.closest('button[data-panel]'); if(!b) return;
-  showPanel(b.dataset.panel);
-});
-window.showPanel=showPanel;
+function getSite(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)||'null'); }catch(_){ return null; } }
+function setSite(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj)); refreshPreview(); }
 
-/* Auth */
-$('#btnSignIn').addEventListener('click', async ()=>{
-  const email=$('#email').value.trim(), pass=$('#password').value;
-  if(!email||!pass) return alert('Enter email and password');
-  try{ await signInWithEmailAndPassword(auth,email,pass); }catch(e){ alert('Sign in failed: '+(e?.message||e)); }
-});
-$('#btnSignOut').addEventListener('click',()=>signOut(auth));
-
-onAuthStateChanged(auth, async (user)=>{
-  if(user){
-    $('#authArea').style.display='none';
-    $('#whoami').style.display='flex';
-    $('#whoamiText').textContent = user.email || '';
-    await refreshAll();
-  }else{
-    $('#authArea').style.display='flex';
-    $('#whoami').style.display='none';
-    $('#bannerList').innerHTML='';
-  }
-});
-
-/* ================= Working Copy (in-memory) ================= */
-let WORK = {
-  currency:{symbol:'$', position:'prefix'},
-  whatsapp:{number:'16476961656'},
-  plans:[],
-  boxes:[],
-  gallery:[]
-};
-const DOC_PATH = ['site_settings','public']; // doc(db,'site_settings','public')
-
-/* ========= General ========= */
+/* ===== General ===== */
 function loadGeneral(){
-  $('#curSymbol').value = WORK.currency?.symbol || '$';
-  $('#curPos').value = WORK.currency?.position || 'prefix';
-  $('#waNumber').value = WORK.whatsapp?.number || '';
+  const s = getSite() || defaults();
+  $('#curSymbol').value = s.currency?.symbol || '$';
+  $('#curPos').value    = s.currency?.position || 'prefix';
+  $('#waNumber').value  = s.whatsapp?.number || '';
 }
-$('#btnGenLoad').addEventListener('click', loadGeneral);
-$('#btnGenSave').addEventListener('click', ()=>{
-  WORK.currency = {symbol: $('#curSymbol').value || '$', position: $('#curPos').value || 'prefix'};
-  WORK.whatsapp = {number: ($('#waNumber').value||'').replace(/[^\d]/g,'')};
-  toast($('#genStatus'), 'Saved to working copy ✔');
+$('#btnLoad').addEventListener('click', loadGeneral);
+$('#btnSaveLocal').addEventListener('click', ()=>{
+  const s = getSite() || defaults();
+  s.currency = {symbol: $('#curSymbol').value || '$', position: $('#curPos').value || 'prefix'};
+  s.whatsapp = {number: ($('#waNumber').value||'').replace(/[^\d]/g,'')};
+  setSite(s); toast('#statusGeneral','Saved (local) ✔');
+});
+$('#btnReset').addEventListener('click', ()=>{
+  if(!confirm('Reset all to defaults?')) return;
+  setSite(defaults()); loadAllLocal(); toast('#statusGeneral','Reset ✔');
 });
 
-/* ========= Plans CRUD ========= */
+/* ===== Plans CRUD ===== */
 let editingPlanId=null;
 function renderPlans(){
+  const s = getSite() || defaults();
   const rows = $('#planRows'); rows.innerHTML='';
-  const list = [...(WORK.plans||[])].sort((a,b)=>(a.order||0)-(b.order||0));
+  const list = [...(s.plans||[])].sort((a,b)=>(a.order||0)-(b.order||0));
   list.forEach(p=>{
-    const row=document.createElement('div'); row.className='row';
-    row.innerHTML=`
-      <div><strong>${p.name||''}</strong> <span class="sub">(${p.months||''} months)</span> ${p.badge? `<span class="badge2">${p.badge}</span>`:''} ${p.note? `<span class="sub">• ${p.note}</span>`:''}</div>
-      <div>${Number(p.price)}</div>
+    const row = document.createElement('div'); row.className='row';
+    row.innerHTML = `
+      <div><strong>${p.name}</strong> <span class="sub">(${p.months??'—'} mo)</span> ${p.badge? `<span class="pill">${p.badge}</span>`:''} ${p.note? `<span class="sub">• ${p.note}</span>`:''}</div>
+      <div>$${Number(p.price)}</div>
       <div class="sub">Order: ${p.order??0} • ${p.visible===false?'Hidden':'Visible'}</div>
       <div class="actions">
         <button class="btn" data-ed="${p.id}">Edit</button>
@@ -342,66 +293,60 @@ function renderPlans(){
   });
   rows.querySelectorAll('button[data-ed]').forEach(b=>{
     b.onclick=()=>{
-      const p=WORK.plans.find(x=>x.id===b.dataset.ed); if(!p) return;
+      const s=getSite(); const p=s.plans.find(x=>x.id===b.dataset.ed); if(!p) return;
       editingPlanId=p.id;
       $('#plName').value=p.name||''; $('#plMonths').value=p.months||''; $('#plPrice').value=p.price||'';
-      $('#plBadge').value=p.badge||''; $('#plNote').value=p.note||''; $('#plOrder').value=p.order||0;
-      $('#plVisible').checked=p.visible!==false;
-      $('#plAdd').textContent='Save Changes';
-      window.scrollTo({top:0,behavior:'smooth'});
+      $('#plBadge').value=p.badge||''; $('#plNote').value=p.note||''; $('#plOrder').value=p.order||0; $('#plVisible').checked=p.visible!==false;
+      $('#plAdd').textContent='Save Changes'; window.scrollTo({top:0,behavior:'smooth'});
     };
   });
   rows.querySelectorAll('button[data-del]').forEach(b=>{
     b.onclick=()=>{
       if(!confirm('Delete this plan?')) return;
-      WORK.plans = WORK.plans.filter(x=>x.id!==b.dataset.del);
-      renderPlans();
+      const s=getSite(); s.plans=s.plans.filter(x=>x.id!==b.dataset.del); setSite(s); renderPlans();
     };
   });
 }
 $('#plAdd').addEventListener('click', ()=>{
+  const s=getSite()||defaults();
   const payload = {
     id: editingPlanId || crypto.randomUUID(),
     name: $('#plName').value.trim() || 'Plan',
-    months: n($('#plMonths').value) || null,
-    price: n($('#plPrice').value) || 0,
-    badge: $('#plBadge').value.trim() || null,
-    note: $('#plNote').value.trim() || null,
-    order: n($('#plOrder').value) || 0,
+    months: fmt($('#plMonths').value) || null,
+    price: fmt($('#plPrice').value) || 0,
+    badge: ($('#plBadge').value||'').trim() || null,
+    note:  ($('#plNote').value||'').trim() || null,
+    order: fmt($('#plOrder').value) || 0,
     visible: $('#plVisible').checked
   };
   if(editingPlanId){
-    const i=WORK.plans.findIndex(x=>x.id===editingPlanId);
-    if(i>-1) WORK.plans[i]=payload;
+    const i=s.plans.findIndex(x=>x.id===editingPlanId);
+    if(i>-1) s.plans[i]=payload;
     editingPlanId=null; $('#plAdd').textContent='Add / Save';
   }else{
-    WORK.plans.push(payload);
+    s.plans.push(payload);
   }
-  renderPlans(); $('#plClear').click();
+  setSite(s); renderPlans(); $('#plClear').click();
 });
 $('#plClear').addEventListener('click', ()=>{
   editingPlanId=null; $('#plAdd').textContent='Add / Save';
-  ['plName','plMonths','plPrice','plBadge','plNote','plOrder'].forEach(id=>$('#'+id).value='');
-  $('#plVisible').checked=true;
+  ['plName','plMonths','plPrice','plBadge','plNote','plOrder'].forEach(id=>$('#'+id).value=''); $('#plVisible').checked=true;
 });
 
-/* ========= Boxes CRUD ========= */
+/* ===== Boxes CRUD ===== */
 let editingBoxId=null;
 function renderBoxes(){
-  const rows=$('#boxRows'); rows.innerHTML='';
-  const list=[...(WORK.boxes||[])].sort((a,b)=>(a.order||0)-(b.order||0));
+  const s = getSite() || defaults();
+  const rows = $('#boxRows'); rows.innerHTML='';
+  const list = [...(s.boxes||[])].sort((a,b)=>(a.order||0)-(b.order||0));
   list.forEach(bx=>{
     const photosCount = Array.isArray(bx.images)? bx.images.length : 0;
-    const specsCount = Array.isArray(bx.specs)? bx.specs.length : 0;
-    const bdl = bx.bundle;
-    const bdlTxt = (bdl && (bdl.price||bdl.freeMonths||bdl.note))
-      ? `Bundle: ${bdl.price||0} ${bdl.freeMonths? `(+${bdl.freeMonths}m free)` : ''} ${bdl.note? `— ${bdl.note}`:''}`
-      : 'No bundle';
+    const specsCount  = Array.isArray(bx.specs)? bx.specs.length  : 0;
     const row=document.createElement('div'); row.className='row';
     row.innerHTML=`
-      <div><strong>${bx.name||''}</strong> ${bx.badge? `<span class="badge2">${bx.badge}</span>`:''} <span class="sub">photos:${photosCount} • specs:${specsCount}</span></div>
-      <div>${Number(bx.price)}</div>
-      <div class="sub">Order: ${bx.order??0} • ${bx.visible===false?'Hidden':'Visible'} • ${bdlTxt}</div>
+      <div><strong>${bx.name}</strong> ${bx.badge? `<span class="pill">${bx.badge}</span>`:''} <span class="sub">photos:${photosCount} • specs:${specsCount}</span></div>
+      <div>$${Number(bx.price)}</div>
+      <div class="sub">Order: ${bx.order??0} • ${bx.visible===false?'Hidden':'Visible'}</div>
       <div class="actions">
         <button class="btn" data-ed="${bx.id}">Edit</button>
         <button class="btn" data-del="${bx.id}">Delete</button>
@@ -410,62 +355,60 @@ function renderBoxes(){
   });
   rows.querySelectorAll('button[data-ed]').forEach(b=>{
     b.onclick=()=>{
-      const bx=WORK.boxes.find(x=>x.id===b.dataset.ed); if(!bx) return;
+      const s=getSite(); const bx=s.boxes.find(x=>x.id===b.dataset.ed); if(!bx) return;
       editingBoxId=bx.id;
-      $('#bxName').value=bx.name||''; $('#bxPrice').value=bx.price||''; $('#bxBadge').value=bx.badge||'';
-      $('#bxOrder').value=bx.order||0; $('#bxVisible').checked=bx.visible!==false;
+      $('#bxName').value=bx.name||''; $('#bxPrice').value=bx.price||''; $('#bxBundle').value=bx.bundle||''; $('#bxFree').value=bx.bundleFreeMonths||'';
+      $('#bxBadge').value=bx.badge||''; $('#bxOrder').value=bx.order||0; $('#bxVisible').checked=bx.visible!==false;
       $('#bxSpecs').value=(bx.specs||[]).join('\n');
-      $('#bxPhotos').value=(bx.images||[]).map(i=>i.url + (i.alt? `|${i.alt}`:'')).join('\n');
-      $('#bdlPrice').value=bx.bundle?.price||''; $('#bdlFree').value=bx.bundle?.freeMonths||''; $('#bdlNote').value=bx.bundle?.note||'';
-      $('#bxAdd').textContent='Save Changes';
-      window.scrollTo({top:0,behavior:'smooth'});
+      $('#bxPhotos').value=(bx.images||[]).map(i=>i.url+(i.alt?`|${i.alt}`:'')).join('\n');
+      $('#bxAdd').textContent='Save Changes'; window.scrollTo({top:0,behavior:'smooth'});
     };
   });
   rows.querySelectorAll('button[data-del]').forEach(b=>{
     b.onclick=()=>{
       if(!confirm('Delete this box?')) return;
-      WORK.boxes = WORK.boxes.filter(x=>x.id!==b.dataset.del); renderBoxes();
+      const s=getSite(); s.boxes=s.boxes.filter(x=>x.id!==b.dataset.del); setSite(s); renderBoxes();
     };
   });
 }
 $('#bxAdd').addEventListener('click', ()=>{
+  const s=getSite()||defaults();
   const imgs = parseLines($('#bxPhotos').value).map(line=>{
     const [url, alt] = line.split('|'); return {url:url?.trim(), alt:(alt||'').trim()};
   }).filter(i=>i.url);
   const specs = parseLines($('#bxSpecs').value);
-  const bundle = ( $('#bdlPrice').value || $('#bdlFree').value || $('#bdlNote').value )
-    ? { price: n($('#bdlPrice').value)||0, freeMonths: n($('#bdlFree').value)||0, note: ($('#bdlNote').value||'').trim() || null }
-    : null;
   const payload = {
     id: editingBoxId || crypto.randomUUID(),
     name: $('#bxName').value.trim() || 'Box',
-    price: n($('#bxPrice').value)||0,
+    price: fmt($('#bxPrice').value)||0,
+    bundle: $('#bxBundle').value? fmt($('#bxBundle').value) : null,
+    bundleFreeMonths: $('#bxFree').value? fmt($('#bxFree').value) : null,
     badge: $('#bxBadge').value.trim() || null,
-    order: n($('#bxOrder').value)||0,
+    order: fmt($('#bxOrder').value)||0,
     visible: $('#bxVisible').checked,
     images: imgs,
-    specs: specs,
-    bundle: bundle
+    specs: specs
   };
   if(editingBoxId){
-    const i=WORK.boxes.findIndex(x=>x.id===editingBoxId); if(i>-1) WORK.boxes[i]=payload;
+    const i=s.boxes.findIndex(x=>x.id===editingBoxId);
+    if(i>-1) s.boxes[i]=payload;
     editingBoxId=null; $('#bxAdd').textContent='Add / Save';
   }else{
-    WORK.boxes.push(payload);
+    s.boxes.push(payload);
   }
-  renderBoxes(); $('#bxClear').click();
+  setSite(s); renderBoxes(); $('#bxClear').click();
 });
 $('#bxClear').addEventListener('click', ()=>{
   editingBoxId=null; $('#bxAdd').textContent='Add / Save';
-  ['bxName','bxPrice','bxBadge','bxOrder','bxSpecs','bxPhotos','bdlPrice','bdlFree','bdlNote'].forEach(id=>$('#'+id).value='');
-  $('#bxVisible').checked=true;
+  ['bxName','bxPrice','bxBundle','bxFree','bxBadge','bxOrder','bxSpecs','bxPhotos'].forEach(id=>$('#'+id).value=''); $('#bxVisible').checked=true;
 });
 
-/* ========= Gallery CRUD ========= */
+/* ===== Gallery CRUD ===== */
 let editingGalId=null;
 function renderGallery(){
+  const s=getSite()||defaults();
   const rows=$('#galRows'); rows.innerHTML='';
-  const list=[...(WORK.gallery||[])].sort((a,b)=>(a.order||0)-(b.order||0));
+  const list=[...(s.gallery||[])].sort((a,b)=>(a.order||0)-(b.order||0));
   list.forEach(g=>{
     const row=document.createElement('div'); row.className='row';
     row.innerHTML=`
@@ -480,110 +423,129 @@ function renderGallery(){
   });
   rows.querySelectorAll('button[data-ed]').forEach(b=>{
     b.onclick=()=>{
-      const g=WORK.gallery.find(x=>x.id===b.dataset.ed); if(!g) return;
+      const s=getSite(); const g=s.gallery.find(x=>x.id===b.dataset.ed); if(!g) return;
       editingGalId=g.id;
       $('#glCaption').value=g.caption||''; $('#glUrl').value=g.url||''; $('#glOrder').value=g.order||0; $('#glVisible').checked=g.visible!==false;
-      $('#glAdd').textContent='Save Changes';
-      window.scrollTo({top:0,behavior:'smooth'});
+      $('#glAdd').textContent='Save Changes'; window.scrollTo({top:0,behavior:'smooth'});
     };
   });
   rows.querySelectorAll('button[data-del]').forEach(b=>{
     b.onclick=()=>{
-      if(!confirm('Delete image?')) return;
-      WORK.gallery = WORK.gallery.filter(x=>x.id!==b.dataset.del); renderGallery();
+      if(!confirm('Delete this image?')) return;
+      const s=getSite(); s.gallery=s.gallery.filter(x=>x.id!==b.dataset.del); setSite(s); renderGallery();
     };
   });
 }
 $('#glAdd').addEventListener('click', ()=>{
-  const payload={
-    id: editingGalId || crypto.randomUUID(),
-    caption: $('#glCaption').value.trim() || '',
-    url: $('#glUrl').value.trim(),
-    order: n($('#glOrder').value)||0,
-    visible: $('#glVisible').checked
-  };
+  const s=getSite()||defaults();
+  const payload={ id:editingGalId||crypto.randomUUID(), caption:$('#glCaption').value.trim()||'', url:$('#glUrl').value.trim(), order:fmt($('#glOrder').value)||0, visible:$('#glVisible').checked };
   if(!payload.url){ alert('Image URL required'); return; }
   if(editingGalId){
-    const i=WORK.gallery.findIndex(x=>x.id===editingGalId); if(i>-1) WORK.gallery[i]=payload;
+    const i=s.gallery.findIndex(x=>x.id===editingGalId); if(i>-1) s.gallery[i]=payload;
     editingGalId=null; $('#glAdd').textContent='Add / Save';
   }else{
-    WORK.gallery.push(payload);
+    s.gallery.push(payload);
   }
-  renderGallery(); $('#glClear').click();
+  setSite(s); renderGallery(); $('#glClear').click();
 });
 $('#glClear').addEventListener('click', ()=>{
   editingGalId=null; $('#glAdd').textContent='Add / Save';
-  ['glCaption','glUrl','glOrder'].forEach(id=>$('#'+id).value='');
-  $('#glVisible').checked=true;
+  ['glCaption','glUrl','glOrder'].forEach(id=>$('#'+id).value=''); $('#glVisible').checked=true;
 });
 
-/* ========= Import / Export ========= */
+/* ===== Import / Export + Preview ===== */
+function refreshPreview(){ $('#preview').textContent = JSON.stringify(getSite()||defaults(), null, 2); }
 $('#btnExport').addEventListener('click', ()=>{
-  const blob = new Blob([JSON.stringify(WORK,null,2)], {type:'application/json'});
+  const blob = new Blob([localStorage.getItem(LS_KEY)||'{}'], {type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='settings.json'; a.click();
 });
 $('#btnImport').addEventListener('click', ()=>{
-  const f=$('#fileImport').files?.[0]; if(!f){ toast($('#ieStatus'),'Choose a JSON file first'); return; }
-  const r=new FileReader();
-  r.onload=()=>{
-    try{
-      const obj=JSON.parse(r.result);
-      if(!obj || typeof obj!=='object') throw new Error('Invalid JSON');
-      WORK = normalize(obj);
-      loadGeneral(); renderPlans(); renderBoxes(); renderGallery();
-      toast($('#ieStatus'),'Imported ✔ (working copy only)');
-    }catch(e){ toast($('#ieStatus'),'Invalid JSON'); }
-  };
-  r.readAsText(f);
+  const f=$('#fileImport').files?.[0]; if(!f){ alert('Choose a JSON file first'); return; }
+  const r=new FileReader(); r.onload=()=>{ try{ const obj=JSON.parse(r.result); setSite(obj); loadAllLocal(); }catch(e){ alert('Invalid JSON'); } }; r.readAsText(f);
 });
 
-/* ========= Firestore Banners ========= */
+/* ===== Firestore: publish / read public settings ===== */
+async function publishToFirestore(){
+  const payload = getSite() || defaults();
+  try{
+    await setDoc(doc(db,'site_settings','public'), {...payload, updatedAt: serverTimestamp()},{merge:true});
+    toast('#pubStatus','Saved to Firestore ✔ (site_settings/public)');
+  }catch(e){
+    toast('#pubStatus','Save failed: '+(e?.message||e));
+  }
+}
+async function reloadFromFirestore(){
+  try{
+    const snap = await getDoc(doc(db,'site_settings','public'));
+    if(snap.exists()){
+      const d=snap.data()||{};
+      const norm = {
+        currency: d.currency || {symbol:'$', position:'prefix'},
+        whatsapp: d.whatsapp || {number:'16476961656'},
+        plans: Array.isArray(d.plans)? d.plans : [],
+        boxes: Array.isArray(d.boxes)? d.boxes : [],
+        gallery: Array.isArray(d.gallery)? d.gallery : []
+      };
+      setSite(norm); loadAllLocal(); toast('#pubStatus','Loaded from Firestore ✔');
+    }else{
+      toast('#pubStatus','Doc not found, created defaults locally.');
+      setSite(defaults()); loadAllLocal();
+    }
+  }catch(e){
+    toast('#pubStatus','Load failed: '+(e?.message||e));
+  }
+}
+$('#btnPublish').addEventListener('click', publishToFirestore);
+$('#btnReloadCloud').addEventListener('click', reloadFromFirestore);
+
+/* ===== Firestore: Banners CRUD ===== */
 async function loadBanners(){
-  const snap = await getDocs(query(collection(db,'site_settings','banners','items'), orderBy('order','asc')));
-  const list = $('#bannerList'); list.innerHTML='';
-  snap.forEach(docSnap=>{
-    const b = { id: docSnap.id, ...docSnap.data() };
-    const row = document.createElement('div'); row.className='row'; row.innerHTML = `
-      <div><strong>${b.title||'(no title)'} ${b.enabled? '' : '<span class="sub">[disabled]</span>'}</strong>
-        <div class="sub">${b.text||''}</div>
-        <div class="sub">CTA: ${b.ctaLabel||''} → ${(b.ctaHref||'').slice(0,80)}</div>
-        <div class="sub">Order: ${b.order??0} | Valid: ${(b.validFrom||'')||'—'} → ${(b.validTo||'')||'—'}</div>
-        <div class="sub">${b.imageUrl? 'Image: '+b.imageUrl : ''}</div>
-      </div>
-      <div class="actions">
-        <button class="btn" data-act="toggle" data-id="${b.id}">${b.enabled? 'Disable' : 'Enable'}</button>
-        <button class="btn" data-act="edit" data-id="${b.id}">Edit</button>
-        <button class="btn" data-act="del" data-id="${b.id}">Delete</button>
-      </div>
-    `;
-    list.appendChild(row);
-  });
-  list.querySelectorAll('button[data-act]').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      const id = btn.dataset.id, act = btn.dataset.act;
-      const ref = doc(db,'site_settings','banners','items',id);
-      if(act==='toggle'){
-        const snap = await getDoc(ref); const cur = snap.data();
-        await setDoc(ref,{enabled:!cur.enabled, updatedAt:serverTimestamp()},{merge:true});
-      }else if(act==='edit'){
-        const snap = await getDoc(ref); const b = snap.data();
-        $('#bnEnabled').checked = !!b.enabled;
-        $('#bnTitle').value = b.title||''; $('#bnText').value=b.text||'';
-        $('#bnCtaLabel').value=b.ctaLabel||''; $('#bnCtaHref').value=b.ctaHref||'';
-        $('#bnImageUrl').value=b.imageUrl||''; $('#bnValidFrom').value=b.validFrom||''; $('#bnValidTo').value=b.validTo||'';
-        $('#bnOrder').value=b.order??0;
-        $('#bnSave').dataset.editId = id; $('#bnSave').textContent='Save Changes';
-        toast($('#bnStatus'),'Loaded for editing');
-        window.scrollTo({top:0,behavior:'smooth'});
-      }else if(act==='del'){
-        if(confirm('Delete this banner?')){ await deleteDoc(ref); }
-      }
-      await loadBanners();
+  const list=$('#bannerList'); list.innerHTML='';
+  try{
+    const snap = await getDocs(query(collection(db,'site_settings','banners','items'), orderBy('order','asc')));
+    snap.forEach(docSnap=>{
+      const b={id:docSnap.id,...docSnap.data()};
+      const row=document.createElement('div'); row.className='row';
+      row.innerHTML=`
+        <div><strong>${b.title||'(no title)'}</strong> ${b.enabled? '':'<span class="pill">disabled</span>'}
+          <div class="sub">${b.text||''}</div>
+          <div class="sub">CTA: ${b.ctaLabel||''} → ${(b.ctaHref||'').slice(0,80)}</div>
+          <div class="sub">Order: ${b.order??0} • Valid: ${(b.validFrom||'')||'—'} → ${(b.validTo||'')||'—'}</div>
+        </div>
+        <div class="sub">${b.imageUrl? 'img ✓':''}</div>
+        <div></div>
+        <div class="actions">
+          <button class="btn" data-act="toggle" data-id="${b.id}">${b.enabled? 'Disable':'Enable'}</button>
+          <button class="btn" data-act="edit" data-id="${b.id}">Edit</button>
+          <button class="btn" data-act="del" data-id="${b.id}">Delete</button>
+        </div>`;
+      list.appendChild(row);
     });
-  });
+    list.querySelectorAll('button[data-act]').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        const id=btn.dataset.id, act=btn.dataset.act;
+        const ref=doc(db,'site_settings','banners','items',id);
+        if(act==='toggle'){
+          const s=await getDoc(ref); const cur=s.data(); await setDoc(ref,{enabled:!cur.enabled, updatedAt:serverTimestamp()},{merge:true});
+        }else if(act==='edit'){
+          const s=await getDoc(ref); const b=s.data();
+          $('#bnEnabled').checked=!!b.enabled; $('#bnTitle').value=b.title||''; $('#bnText').value=b.text||'';
+          $('#bnCtaLabel').value=b.ctaLabel||''; $('#bnCtaHref').value=b.ctaHref||''; $('#bnImageUrl').value=b.imageUrl||'';
+          $('#bnValidFrom').value=b.validFrom||''; $('#bnValidTo').value=b.validTo||''; $('#bnOrder').value=b.order||0;
+          $('#bnSave').dataset.editId=id; $('#bnSave').textContent='Save Changes'; toast('#bnStatus','Loaded for editing');
+          window.scrollTo({top:0,behavior:'smooth'});
+        }else if(act==='del'){
+          if(confirm('Delete this banner?')) await deleteDoc(ref);
+        }
+        await loadBanners();
+      });
+    });
+  }catch(e){
+    $('#bannerList').innerHTML = `<div class="sub">Failed to load banners: ${(e?.message||e)}</div>`;
+  }
 }
 $('#bnSave').addEventListener('click', async ()=>{
-  const payload = {
+  const payload={
     enabled: $('#bnEnabled').checked,
     title: $('#bnTitle').value.trim(),
     text: $('#bnText').value.trim(),
@@ -592,114 +554,51 @@ $('#bnSave').addEventListener('click', async ()=>{
     imageUrl: $('#bnImageUrl').value.trim() || null,
     validFrom: $('#bnValidFrom').value || null,
     validTo: $('#bnValidTo').value || null,
-    order: n($('#bnOrder').value||0),
+    order: fmt($('#bnOrder').value)||0,
     updatedAt: serverTimestamp()
   };
   const editId = $('#bnSave').dataset.editId;
-  if(editId){
-    await setDoc(doc(db,'site_settings','banners','items',editId), payload, {merge:true});
-    $('#bnSave').textContent='Save New Banner';
-    delete $('#bnSave').dataset.editId;
-    toast($('#bnStatus'),'Saved ✔');
-  }else{
-    payload.createdAt = serverTimestamp();
-    await addDoc(collection(db,'site_settings','banners','items'), payload);
-    toast($('#bnStatus'),'Created ✔');
+  try{
+    if(editId){
+      await setDoc(doc(db,'site_settings','banners','items',editId), payload, {merge:true});
+      $('#bnSave').textContent='Save New'; delete $('#bnSave').dataset.editId;
+      toast('#bnStatus','Saved ✔');
+    }else{
+      payload.createdAt=serverTimestamp();
+      await addDoc(collection(db,'site_settings','banners','items'), payload);
+      toast('#bnStatus','Created ✔');
+    }
+    ['bnTitle','bnText','bnCtaLabel','bnCtaHref','bnImageUrl','bnOrder'].forEach(id=>$('#'+id).value='');
+    await loadBanners();
+  }catch(e){
+    toast('#bnStatus','Save failed: '+(e?.message||e));
   }
-  ['bnTitle','bnText','bnCtaLabel','bnCtaHref','bnImageUrl','bnOrder'].forEach(id=>$('#'+id).value='');
-  await loadBanners();
-});
-$('#bnClear').addEventListener('click', ()=>{
-  delete $('#bnSave').dataset?.editId;
-  $('#bnSave').textContent='Save New Banner';
-  ['bnEnabled','bnTitle','bnText','bnCtaLabel','bnCtaHref','bnImageUrl','bnValidFrom','bnValidTo','bnOrder'].forEach(id=>{
-    const el=$('#'+id); if(!el) return;
-    if(el.type==='checkbox') el.checked=true; else el.value='';
-  });
 });
 
-/* ========= Normalize schema (for safety) ========= */
-function normalize(obj){
-  const out = {
-    currency:{symbol: obj?.currency?.symbol || '$', position: (obj?.currency?.position==='suffix'?'suffix':'prefix')},
-    whatsapp:{number: (obj?.whatsapp?.number||'16476961656').replace(/[^\d]/g,'')},
-    plans: Array.isArray(obj?.plans)? obj.plans.map(p=>({
-      id: p.id || crypto.randomUUID(),
-      name: p.name || 'Plan',
-      months: typeof p.months==='number'? p.months : null,
-      price: Number(p.price||0),
-      badge: p.badge || null,
-      note: p.note || null,
-      order: Number(p.order||0),
-      visible: p.visible!==false
-    })) : [],
-    boxes: Array.isArray(obj?.boxes)? obj.boxes.map(b=>({
-      id: b.id || crypto.randomUUID(),
-      name: b.name || 'Box',
-      price: Number(b.price||0),
-      badge: b.badge || null,
-      order: Number(b.order||0),
-      visible: b.visible!==false,
-      images: Array.isArray(b.images)? b.images.filter(i=>i?.url).map(i=>({url:String(i.url), alt:i.alt? String(i.alt):''})) : [],
-      specs: Array.isArray(b.specs)? b.specs.map(String) : [],
-      bundle: b.bundle && (b.bundle.price||b.bundle.freeMonths||b.bundle.note) ? {
-        price: Number(b.bundle.price||0),
-        freeMonths: Number(b.bundle.freeMonths||0),
-        note: b.bundle.note || null
-      } : null
-    })) : [],
-    gallery: Array.isArray(obj?.gallery)? obj.gallery.map(g=>({
-      id: g.id || crypto.randomUUID(),
-      caption: g.caption || '',
-      url: g.url || '',
-      order: Number(g.order||0),
-      visible: g.visible!==false
-    })) : []
-  };
-  return out;
-}
+/* ===== Auth ===== */
+$('#btnSignIn').addEventListener('click', async ()=>{
+  const email=$('#email').value.trim(), pass=$('#password').value;
+  if(!email||!pass){ alert('Enter email & password'); return; }
+  try{ await signInWithEmailAndPassword(auth,email,pass); }catch(e){ alert('Sign in failed: '+(e?.message||e)); }
+});
+$('#btnSignOut').addEventListener('click',()=>signOut(auth));
 
-/* ========= Firestore Sync for site_settings/public ========= */
-async function loadFromFirestore(){
-  const ref = doc(db, DOC_PATH[0], DOC_PATH[1]);
-  const snap = await getDoc(ref);
-  if(snap.exists()){
-    WORK = normalize(snap.data());
+onAuthStateChanged(auth, async (user)=>{
+  if(user){
+    $('#authBox').style.display='none'; $('#whoami').style.display='flex';
+    $('#whoamiText').textContent=user.email||'';
+    await reloadFromFirestore(); // prime from cloud if exists
+    await loadBanners();
   }else{
-    // seed minimal defaults if missing
-    WORK = normalize({
-      currency:{symbol:'$', position:'prefix'},
-      whatsapp:{number:'16476961656'},
-      plans:[
-        {name:'1 Month', months:1, price:15, badge:'Starter', order:0, visible:true, note:'Full features'},
-        {name:'3 Months', months:3, price:40, badge:'Popular', order:1, visible:true, note:'Save vs monthly'},
-        {name:'6 Months', months:6, price:65, badge:'Most Picked', order:2, visible:true},
-        {name:'12 Months (+1 free)', months:12, price:100, badge:'Best Value', order:3, visible:true, note:'+1 month free'}
-      ],
-      boxes:[],
-      gallery:[]
-    });
+    $('#authBox').style.display='flex'; $('#whoami').style.display='none';
+    $('#bannerList').innerHTML='';
   }
-  loadGeneral(); renderPlans(); renderBoxes(); renderGallery();
-}
-async function saveToFirestore(){
-  const ref = doc(db, DOC_PATH[0], DOC_PATH[1]);
-  await setDoc(ref, normalize(WORK), {merge:false});
-}
-
-/* Buttons */
-$('#btnLoadFS').addEventListener('click', async ()=>{
-  try{ await loadFromFirestore(); toast($('#syncStatus'),'Loaded from Firestore ✔'); }catch(e){ toast($('#syncStatus'),'Load failed'); }
-});
-$('#btnSaveFS').addEventListener('click', async ()=>{
-  try{ await saveToFirestore(); toast($('#syncStatus'),'Saved to Firestore ✔'); }catch(e){ toast($('#syncStatus'),'Save failed'); }
 });
 
-/* Orchestration */
-async function refreshAll(){
-  await loadBanners();
-  await loadFromFirestore();
-}
+/* ===== Orchestration ===== */
+function loadAllLocal(){ loadGeneral(); renderPlans(); renderBoxes(); renderGallery(); refreshPreview(); }
+if(!getSite()) setSite(defaults());
+loadAllLocal();
 </script>
 </body>
 </html>
