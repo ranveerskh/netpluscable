@@ -6,648 +6,243 @@
 <title>net+TV — Home</title>
 <meta name="theme-color" content="#0b1020" />
 <style>
-  :root{
+  :root[data-theme="dark"]{
     --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
-    --g1:#6a11cb;--g2:#2575fc;--ok:#32d296;--warn:#f8b84a;--whats:#25D366;
-    --safe-top: env(safe-area-inset-top,0px);--safe-bottom: env(safe-area-inset-bottom,0px);
+    --g1:#6a11cb;--g2:#2575fc;--whats:#25D366;
+  }
+  :root[data-theme="light"]{
+    --bg:#ffffff;--ink:#0b1020;--muted:#333;--card:#f4f4f4;--line:#ddd;
+    --g1:#2575fc;--g2:#6a11cb;--whats:#25D366;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink)}
   a{color:inherit;text-decoration:none}
-  button{font:inherit}
-  .wrap{max-width:1100px;margin:0 auto;padding:16px}
-  .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:calc(8px + var(--safe-top)) 16px 8px}
-  .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .logo{display:flex;align-items:center;gap:10px}
-  .dot{width:10px;height:10px;border-radius:50%;background:conic-gradient(from 180deg,var(--g1),var(--g2))}
-  .brand{font-weight:800;letter-spacing:.3px}
-  .badge{font-size:12px;color:var(--muted)}
-  .menuBtn{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px 12px;border-radius:14px}
-  .hero{
-    position:relative;overflow:hidden;border-bottom:1px solid var(--line);
-    background:
-      radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
-      radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 50%);
-  }
-  .heroInner{padding:40px 16px 24px}
-  .title{font-size:28px;line-height:1.2;font-weight:800;margin:6px 0 8px}
-  .subtitle{color:var(--muted)}
-  .features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:20px 0}
-  .chip{border:1px solid var(--line);background:rgba(255,255,255,.03);padding:10px 12px;border-radius:12px;font-size:14px}
-  .ctaRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:8px 0 18px}
-  .bigBtn{height:64px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg, rgba(106,17,203,.18), rgba(37,117,252,.18));display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:700}
-  .section{padding:18px 16px;border-top:1px solid var(--line)}
-  .hidden{display:none}
-  /* Menu sheet */
-  .sheet{position:fixed;inset:auto 0 0 0;background:rgba(18,24,49,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(100%);transition:transform .25s ease;z-index:70;max-height:80vh;display:flex;flex-direction:column}
-  .sheet.open{transform:translateY(0)}
-  .sheetHead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-  .sheetBody{padding:10px 16px;overflow:auto}
-  .menuList{display:grid;gap:10px}
-  .menuItem{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.03)}
-  /* Modal (for forms, info) */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:90}
-  .modal.open{display:flex}
-  .modalCard{margin:auto;max-width:720px;width:100%;height:90vh;background:var(--card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column}
-  .modalHead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-  .modalBody{padding:12px 14px;overflow:auto}
-  .x{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
-  /* Plans grid */
-  .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-  .card{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:16px;padding:14px}
-  .card h3{margin:0 0 8px;font-size:18px}
-  .price{font-weight:800;font-size:22px}
-  .muted{color:var(--muted)}
-  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px 12px}
-  .btn.whats{background:var(--whats);border-color:#1fa851;color:#08210e;font-weight:800}
-  .btn.ghost{background:rgba(255,255,255,.04)}
+  img{display:block;max-width:100%}
+  button{font:inherit;cursor:pointer}
+
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+  .logo{font-weight:800}
+  .bulb{font-size:20px}
+
+  /* Banner carousel */
+  .bannerCarousel{position:relative;overflow:hidden}
+  .bannerTrack{display:flex;transition:transform .5s}
+  .bannerSlide{min-width:100%;aspect-ratio:16/9;overflow:hidden}
+  .bannerSlide img{width:100%;height:100%;object-fit:cover}
+
+  /* Scrolling ticker */
+  .ticker{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--card)}
+  .tickerInner{display:inline-block;white-space:nowrap;animation:ticker 20s linear infinite}
+  .tickerInner span{display:inline-block;padding:0 2rem}
+  @keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+  /* Section */
+  .section{padding:20px 16px;border-bottom:1px solid var(--line)}
+  .section h2{margin:0 0 10px}
+
+  /* Plans */
+  .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+  .tag{font-size:12px;font-weight:700;color:#fff;padding:2px 6px;border-radius:6px;background:linear-gradient(135deg,var(--g1),var(--g2));align-self:flex-start}
+  .benefit{font-size:12px;color:var(--whats);font-weight:700}
+  .price{font-size:20px;font-weight:800}
+  .btnRow{margin-top:auto;display:flex;gap:8px}
+  .btn{flex:1;padding:10px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink);text-align:center}
+  .btn.whats{background:var(--whats);color:#000;font-weight:700}
+
+  /* Boxes */
+  .boxCarousel{position:relative;overflow:hidden}
+  .boxTrack{display:flex;transition:transform .5s}
+  .boxSlide{min-width:100%;aspect-ratio:16/9}
+  .boxSlide img{width:100%;height:100%;object-fit:cover}
+
+  /* Posters rail */
+  .posters{display:flex;overflow-x:auto;gap:10px;scroll-snap-type:x mandatory;padding-bottom:10px}
+  .posters img{flex:0 0 auto;scroll-snap-align:start;width:200px;height:300px;object-fit:cover;border-radius:8px}
+
   /* Forms */
-  .grid{display:grid;gap:10px}
-  .two{grid-template-columns:1fr 1fr}
-  input,select,textarea{width:100%;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff}
-  label{font-size:13px;color:var(--muted)}
-  .help{font-size:12px;color:var(--muted)}
-  .footpad{height:calc(24px + var(--safe-bottom))}
-  /* Info list scroll */
-  .list{display:grid;gap:10px}
-  .pill{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)}
-  /* Sticky hint to scroll back up to reveal buttons */
-  .hint{position:sticky;top:0;padding:10px 16px;background:rgba(11,16,32,.9);border-bottom:1px solid var(--line);backdrop-filter:blur(8px);font-size:13px;color:var(--muted)}
-  /* Footer */
-  .footer{padding:16px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
+  form{display:grid;gap:10px}
+  input,select,textarea{padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+  .footpad{height:20px}
 </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="row">
-      <div class="logo">
-        <div class="dot"></div>
-        <div>
-          <div class="brand">net+<span style="margin-left:3px">TV</span></div>
-          <div class="badge">Full HD • 4K • PPV</div>
-        </div>
-      </div>
-      <button id="menuBtn" class="menuBtn">Menu ▾</button>
-    </div>
+<div class="topbar">
+  <div class="logo">net+TV</div>
+  <button class="bulb" id="themeToggle">💡</button>
+</div>
+
+<!-- Banners -->
+<div class="bannerCarousel">
+  <div class="bannerTrack" id="bannerTrack">
+    <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+1"></div>
+    <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+2"></div>
+    <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+3"></div>
   </div>
+</div>
 
-  <!-- HERO FIRST -->
-  <section class="hero">
-    <div class="heroInner wrap">
-      <div class="subtitle">Quick Activation</div>
-      <h1 class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
-      <p class="subtitle">Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech</p>
+<!-- Ticker -->
+<div class="ticker"><div class="tickerInner">
+  <span>Proudly Canadian</span>
+  <span>Zero Latency Streams</span>
+  <span>24/7 Support</span>
+  <span>Multi-Device</span>
+</div></div>
 
-      <div class="features">
-        <div class="chip">🇨🇦 Canada Friendly</div>
-        <div class="chip">24/7 Support</div>
-        <div class="chip">Low-Latency Streams</div>
-        <div class="chip">Multi-Device</div>
-      </div>
+<!-- Our Plans -->
+<section class="section">
+  <h2>Our Plans</h2>
+  <div class="plans" id="plansGrid"></div>
+</section>
 
-      <div class="ctaRow" id="actionButtons">
-        <button class="bigBtn" data-open="plansModal">New Set-Top Box Plans</button>
-        <button class="bigBtn" data-open="ownPlanModal">Your Own Plan</button>
-        <button class="bigBtn" data-open="rechargeModal">Recharge</button>
-        <button class="bigBtn" data-open="supportModal">Contact Support</button>
-      </div>
+<!-- New Boxes -->
+<section class="section">
+  <h2>New Boxes</h2>
+  <div class="plans" id="boxesGrid"></div>
+</section>
 
-      <div class="hint">Scroll for more. Scroll back up any time to use the big buttons.</div>
-    </div>
-  </section>
+<!-- Recharge -->
+<section class="section">
+  <h2>Recharge</h2>
+  <form id="rechargeForm">
+    <input name="email" type="email" placeholder="Email" required>
+    <input name="name" placeholder="Name" required>
+    <input name="phone" placeholder="Phone" required>
+    <input name="mac" placeholder="MAC Address" required>
+    <select name="duration" required>
+      <option value="1">1 month</option>
+      <option value="3">3 months</option>
+      <option value="6">6 months</option>
+      <option value="12">12 months</option>
+    </select>
+    <textarea name="note" placeholder="Optional note"></textarea>
+    <button class="btn whats" type="submit">Renew via WhatsApp</button>
+  </form>
+</section>
 
-  <!-- SECTION: Why net+TV -->
-  <section class="section wrap">
-    <h2 style="margin:0 0 8px">Why net+TV</h2>
-    <p class="muted" style="margin:0">Stable quality, solid support, and no drama. Except in the shows. Obviously.</p>
-    <div class="list" style="margin-top:12px">
-      <div class="pill">Fast activation with WhatsApp confirmation</div>
-      <div class="pill">No-nonsense plans, real 4K content where available</div>
-      <div class="pill">Works on popular STBs, smart TVs, mobile and laptops</div>
-    </div>
-  </section>
+<!-- Contact Support -->
+<section class="section">
+  <h2>Contact Support</h2>
+  <form id="supportForm">
+    <input name="name" placeholder="Name" required>
+    <input name="phone" placeholder="Phone" required>
+    <textarea name="issue" placeholder="Describe your issue" required></textarea>
+    <button class="btn whats" type="submit">Send via WhatsApp</button>
+  </form>
+</section>
 
-  <footer class="footer">
-    © <span id="year"></span> net+TV. All rights reserved.
-  </footer>
-
-  <!-- MENU SHEET -->
-  <div id="menuSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Main menu">
-    <div class="sheetHead">
-      <div style="font-weight:800">Menu</div>
-      <button class="x" data-close="menuSheet">Close</button>
-    </div>
-    <div class="sheetBody">
-      <div class="menuList">
-        <a class="menuItem" data-open="plansModal">New Set-Top Box Plans</a>
-        <a class="menuItem" data-open="ownPlanModal">Your Own Set-Top Box Plan</a>
-        <a class="menuItem" data-open="rechargeModal">Recharge</a>
-        <a class="menuItem" data-open="supportModal">Contact Support</a>
-        <a class="menuItem" data-open="faqModal">FAQ</a>
-        <a class="menuItem" data-open="aboutModal">About Us</a>
-        <a class="menuItem" data-open="pinModal">Know Your Parental PIN</a>
-      </div>
-      <div class="footpad"></div>
-    </div>
+<!-- Posters -->
+<section class="section">
+  <h2>Latest Movies & Series</h2>
+  <div class="posters" id="postersRail">
+    <img src="https://via.placeholder.com/200x300?text=Poster+1">
+    <img src="https://via.placeholder.com/200x300?text=Poster+2">
+    <img src="https://via.placeholder.com/200x300?text=Poster+3">
+    <img src="https://via.placeholder.com/200x300?text=Poster+4">
   </div>
+</section>
 
-  <!-- MODALS -->
-  <!-- Plans Modal -->
-  <div id="plansModal" class="modal" role="dialog" aria-modal="true" aria-label="Plans">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Plans</strong>
-        <div style="display:flex;gap:8px">
-          <button class="btn ghost" id="refreshPlans">Refresh</button>
-          <button class="x" data-close="plansModal">Close</button>
-        </div>
-      </div>
-      <div class="modalBody">
-        <p class="muted">All plans include: Quick Activation, 20,000+ Live Channels, All Shows/Movies/PPV, Latest & Old Series, Full HD & SD Channels, Anti-Freeze Technology.</p>
-        <div id="plansGrid" class="plans"></div>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
+<div class="footpad"></div>
 
-  <!-- Own Plan Modal -->
-  <div id="ownPlanModal" class="modal" role="dialog" aria-modal="true" aria-label="Build your plan">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Your Own Plan</strong>
-        <button class="x" data-close="ownPlanModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <form id="ownPlanForm" class="grid">
-          <div class="grid two">
-            <div>
-              <label>Full Name</label>
-              <input required name="name" placeholder="Your name">
-            </div>
-            <div>
-              <label>Phone</label>
-              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-            </div>
-          </div>
-          <div>
-            <label>Email (optional)</label>
-            <input name="email" type="email" placeholder="you@example.com">
-          </div>
-          <div>
-            <label>Preferred Channels</label>
-            <select name="channels" required>
-              <option>English</option>
-              <option>Punjabi</option>
-              <option>Hindi</option>
-              <option>Urdu</option>
-              <option>French</option>
-              <option>Arabic</option>
-              <option>Korean</option>
-              <option>Gujarati</option>
-              <option>Others</option>
-            </select>
-            <div class="help">You’ll get Full HD and 4K where available.</div>
-          </div>
-          <div>
-            <label>VOD Category</label>
-            <select name="vod" required>
-              <option>English</option>
-              <option>Panjabi</option>
-              <option>Hindi</option>
-              <option>Urdu</option>
-              <option>French</option>
-              <option>Action</option>
-              <option>Drama</option>
-              <option>Comedy</option>
-              <option>Kids</option>
-              <option>Documentary</option>
-              <option>Others</option>
-              <option>Adult</option>
-            </select>
-            <div class="help">“Adult” stays at the bottom where it belongs.</div>
-          </div>
-          <div>
-            <label>Notes</label>
-            <textarea name="note" rows="3" placeholder="Any specific channel packs, devices, or timing?"></textarea>
-          </div>
-          <button class="btn whats" type="submit">Send Request on WhatsApp</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
+<!-- Scripts -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
-  <!-- Recharge Modal -->
-  <div id="rechargeModal" class="modal" role="dialog" aria-modal="true" aria-label="Recharge">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Recharge</strong>
-        <button class="x" data-close="rechargeModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <form id="rechargeForm" class="grid two">
-          <div>
-            <label>Registered Name</label>
-            <input required name="name" placeholder="Account name">
-          </div>
-          <div>
-            <label>Phone</label>
-            <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-          </div>
-          <div>
-            <label>Plan Duration</label>
-            <select name="duration" required>
-              <option value="1">1 month</option>
-              <option value="3">3 months</option>
-              <option value="6">6 months</option>
-              <option value="12">12 months</option>
-            </select>
-          </div>
-          <div>
-            <label>Notes</label>
-            <input name="note" placeholder="Optional note">
-          </div>
-          <button class="btn whats" type="submit">Request Recharge</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
+const firebaseConfig = {
+  apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
+  authDomain: "netplus-site-4ff04.firebaseapp.com",
+  projectId: "netplus-site-4ff04",
+  storageBucket: "netplus-site-4ff04.firebasestorage.app",
+  messagingSenderId: "49095160110",
+  appId: "1:49095160110:web:5431d5c9f8ca45c4d70abf",
+  measurementId: "G-PYWFFDZ0RR"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  <!-- Support Modal -->
-  <div id="supportModal" class="modal" role="dialog" aria-modal="true" aria-label="Support">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Contact Support</strong>
-        <button class="x" data-close="supportModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <form id="supportForm" class="grid">
-          <div class="grid two">
-            <div>
-              <label>Name</label>
-              <input required name="name" placeholder="Your name">
-            </div>
-            <div>
-              <label>Phone</label>
-              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-            </div>
-          </div>
-          <div>
-            <label>Issue</label>
-            <textarea required name="issue" rows="4" placeholder="Describe the problem..."></textarea>
-          </div>
-          <button class="btn whats" type="submit">Send on WhatsApp</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
+const WHATSAPP_NUMBER = "16476961656"; // without '+'
 
-  <!-- FAQ Modal -->
-  <div id="faqModal" class="modal" role="dialog" aria-modal="true" aria-label="FAQ">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>FAQ</strong>
-        <button class="x" data-close="faqModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <div class="list">
-          <div class="pill"><strong>Q:</strong> Do all channels stream in 4K?<br><span class="muted">A:</span> 4K where available. Otherwise Full HD or SD. We write it like adults, not marketers.</div>
-          <div class="pill"><strong>Q:</strong> What devices are supported?<br><span class="muted">A:</span> Popular STBs, Android TV, Fire TV, smart TVs, phones, tablets, and web players.</div>
-          <div class="pill"><strong>Q:</strong> Activation time?<br><span class="muted">A:</span> Usually minutes after WhatsApp confirmation.</div>
-        </div>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
+// Theme toggle
+const themeToggle=document.getElementById('themeToggle');
+function setTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('theme',t);}
+setTheme(localStorage.getItem('theme')|| (window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+themeToggle.onclick=()=>{setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark')};
 
-  <!-- About Modal -->
-  <div id="aboutModal" class="modal" role="dialog" aria-modal="true" aria-label="About">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>About Us</strong>
-        <button class="x" data-close="aboutModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <p>net+TV is built for stability and clarity. We focus on consistent quality and straight answers. If something isn’t true, we don’t print it on banners.</p>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
+// WhatsApp helper
+function toWA(msg){window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,'_blank');}
 
-  <!-- PIN Modal -->
-  <div id="pinModal" class="modal" role="dialog" aria-modal="true" aria-label="Know Your Parental PIN">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Know Your Parental PIN</strong>
-        <button class="x" data-close="pinModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <form id="pinForm" class="grid">
-          <div class="grid two">
-            <div>
-              <label>MAC Address</label>
-              <input required name="mac" placeholder="00:1A:79:xx:xx:xx">
-            </div>
-            <div>
-              <label>Email</label>
-              <input required name="email" type="email" placeholder="you@example.com">
-            </div>
-          </div>
-          <div>
-            <label>Notes</label>
-            <input name="note" placeholder="Optional note">
-          </div>
-          <button class="btn whats" type="submit">Request PIN on WhatsApp</button>
-          <div class="help">We’ll verify your account and send the PIN. No wild goose chases.</div>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
+// Plans
+const plansGrid=document.getElementById('plansGrid');
+const localPlans=[
+  {id:'1',name:"Starter HD",months:6,benefit:"+1 mo free",price:"CA$60",tag:"Popular",desc:"HD focus • Core channels"},
+  {id:'2',name:"Family FHD",months:12,benefit:"+2 mo free",price:"CA$100",tag:"Best Value",desc:"Full HD • Family packs"},
+];
+async function loadPlans(){
+  let items=localPlans;
+  try{const snap=await getDocs(collection(db,'plans'));const arr=[];snap.forEach(d=>arr.push({...d.data(),id:d.id}));if(arr.length)items=arr}catch(e){console.warn(e);}
+  renderPlans(items);
+}
+function renderPlans(items){
+  plansGrid.innerHTML='';
+  items.forEach(p=>{
+    const el=document.createElement('div');el.className='card';el.dataset.type='plan';el.dataset.id=p.id;
+    el.innerHTML=`
+      ${p.tag?`<div class="tag">${p.tag}</div>`:''}
+      <div class="price">${p.price}</div>
+      <div>${p.months} months</div>
+      ${p.benefit?`<div class="benefit">${p.benefit}</div>`:''}
+      <div>${p.desc||''}</div>
+      <div class="btnRow">
+        <button class="btn whats">Subscribe</button>
+        <button class="btn">Info</button>
+      </div>`;
+    el.querySelector('.whats').onclick=()=>toWA(`New Subscription\nPlan: ${p.name}\nMonths: ${p.months}\nBenefit: ${p.benefit}`);
+    el.querySelectorAll('.btn')[1].onclick=()=>alert(`${p.name}\nIncludes: 20k+ Live Channels, Movies, Series, PPV`);
+    plansGrid.appendChild(el);
+  });
+}
+loadPlans();
 
-  <!-- Subscription Modal (reused from Plans) -->
-  <div id="subscribeModal" class="modal" role="dialog" aria-modal="true" aria-label="Subscribe">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Subscribe</strong>
-        <button class="x" data-close="subscribeModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <form id="subscribeForm" class="grid">
-          <input type="hidden" name="plan" id="subPlan">
-          <div class="grid two">
-            <div>
-              <label>Full Name</label>
-              <input required name="name" placeholder="Your name">
-            </div>
-            <div>
-              <label>Phone</label>
-              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-            </div>
-          </div>
-          <div class="grid two">
-            <div>
-              <label>TV Channels</label>
-              <select name="channels" required>
-                <option>English</option>
-                <option>Punjabi</option>
-                <option>Hindi</option>
-                <option>Urdu</option>
-                <option>French</option>
-                <option>Arabic</option>
-                <option>Korean</option>
-                <option>Gujarati</option>
-                <option>Others</option>
-              </select>
-            </div>
-            <div>
-              <label>VOD Category</label>
-              <select name="vod" required>
-                <option>English</option>
-                <option>Panjabi</option>
-                <option>Hindi</option>
-                <option>Urdu</option>
-                <option>French</option>
-                <option>Action</option>
-                <option>Drama</option>
-                <option>Comedy</option>
-                <option>Kids</option>
-                <option>Documentary</option>
-                <option>Others</option>
-                <option>Adult</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label>Notes</label>
-            <textarea name="note" rows="3" placeholder="Anything else we should know?"></textarea>
-          </div>
-          <button class="btn whats" type="submit">Send on WhatsApp</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
+// Boxes
+const boxesGrid=document.getElementById('boxesGrid');
+const localBoxes=[
+  {id:'b1',name:"Basic Box",images:["https://via.placeholder.com/1280x720?text=Box1a","https://via.placeholder.com/1280x720?text=Box1b"],boxPrice:"CA$120",combo:{planMonths:12,extra:"+1 mo free",price:"CA$199"},desc:"Entry-level STB"}
+];
+function renderBoxes(items){
+  boxesGrid.innerHTML='';
+  items.forEach(b=>{
+    const el=document.createElement('div');el.className='card';el.dataset.type='box';el.dataset.id=b.id;
+    el.innerHTML=`
+      <div class="boxCarousel"><div class="boxTrack">${b.images.map(u=>`<div class="boxSlide"><img src="${u}"></div>`).join('')}</div></div>
+      <div><strong>${b.name}</strong></div>
+      <div>Box Price: ${b.boxPrice}</div>
+      <div>Combo: ${b.combo.price} (${b.combo.planMonths} mo, ${b.combo.extra})</div>
+      <div>${b.desc||''}</div>
+      <div class="btnRow"><button class="btn whats">Get Box</button><button class="btn">Info</button></div>`;
+    el.querySelector('.whats').onclick=()=>toWA(`Box Request\nBox: ${b.name}\nCombo: ${b.combo.planMonths} mo ${b.combo.extra}\nPrice: ${b.combo.price}`);
+    el.querySelectorAll('.btn')[1].onclick=()=>alert(`${b.name}\n${b.desc}`);
+    boxesGrid.appendChild(el);
+  });
+}
+renderBoxes(localBoxes);
 
-  <!-- Firebase SDKs -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+// Recharge
+document.getElementById('rechargeForm').onsubmit=e=>{
+  e.preventDefault();
+  const f=new FormData(e.target);const kv=Object.fromEntries(f.entries());
+  const msg=`Recharge Request\nEmail: ${kv.email}\nName: ${kv.name}\nPhone: ${kv.phone}\nMAC: ${kv.mac}\nDuration: ${kv.duration} mo\nNote: ${kv.note||''}`;
+  toWA(msg);
+};
 
-    // 1) Your Firebase config (you said Step 1 done; leaving your values here)
-    const firebaseConfig = {
-      apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
-      authDomain: "netplus-site-4ff04.firebaseapp.com",
-      projectId: "netplus-site-4ff04",
-      storageBucket: "netplus-site-4ff04.firebasestorage.app",
-      messagingSenderId: "49095160110",
-      appId: "1:49095160110:web:5431d5c9f8ca45c4d70abf",
-      measurementId: "G-PYWFFDZ0RR"
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // 2) Config
-    const USE_FIRESTORE_FOR_PLANS = true; // flip to false to use local fallback
-    const WHATSAPP_NUMBER = "15551234567"; // <= replace with your full international number, no '+'.
-
-    // 3) Elements
-    const yearEl = document.getElementById('year');
-    yearEl.textContent = new Date().getFullYear();
-
-    // Menu open/close
-    const menuBtn = document.getElementById('menuBtn');
-    const menuSheet = document.getElementById('menuSheet');
-    menuBtn.addEventListener('click', () => menuSheet.classList.add('open'));
-    menuSheet.addEventListener('click', e => {
-      if (e.target.dataset.close === 'menuSheet' || e.target === menuSheet) menuSheet.classList.remove('open');
-    });
-    menuSheet.querySelectorAll('[data-open]').forEach(a=>{
-      a.addEventListener('click', ()=>{
-        menuSheet.classList.remove('open');
-        openModal(a.dataset.open);
-      });
-    });
-
-    // Modal helpers
-    function openModal(id){
-      document.getElementById(id)?.classList.add('open');
-    }
-    function closeModal(id){
-      document.getElementById(id)?.classList.remove('open');
-    }
-    document.querySelectorAll('.modal').forEach(m=>{
-      m.addEventListener('click', e=>{
-        if (e.target === m) m.classList.remove('open');
-      });
-      m.querySelectorAll('[data-close]').forEach(b=>{
-        b.addEventListener('click', ()=> closeModal(b.dataset.close || m.id));
-      });
-    });
-    // Big buttons open modals
-    document.querySelectorAll('[data-open]').forEach(b=>{
-      b.addEventListener('click', ()=> openModal(b.dataset.open));
-    });
-
-    // Plans
-    const plansGrid = document.getElementById('plansGrid');
-    const refreshBtn = document.getElementById('refreshPlans');
-
-    const localPlans = [
-      { name:"Starter HD", price:"$60 / 6 mo", desc:"HD focus • Core channels", months:6 },
-      { name:"Family FHD", price:"$100 / 12 mo", desc:"Full HD • Family packs", months:12 },
-      { name:"4K Select", price:"$120 / 12 mo", desc:"4K where available • Sports", months:12 },
-      { name:"Max Ultra", price:"$180 / 24 mo", desc:"Best value • 4K + PPV focus", months:24 }
-    ];
-
-    async function loadPlans(){
-      plansGrid.innerHTML = '<div class="muted">Loading plans…</div>';
-      let items = localPlans;
-      if (USE_FIRESTORE_FOR_PLANS){
-        try{
-          const snap = await getDocs(collection(db,'plans'));
-          const arr = [];
-          snap.forEach(doc=>{
-            const d = doc.data();
-            if (d?.name && d?.price) arr.push({ name:d.name, price:d.price, desc:d.desc || '', months:d.months || '' });
-          });
-          if (arr.length) items = arr;
-        }catch(e){
-          console.warn('Firestore plans failed, using fallback', e);
-        }
-      }
-      renderPlans(items);
-    }
-
-    function renderPlans(items){
-      plansGrid.innerHTML = '';
-      items.forEach(p=>{
-        const el = document.createElement('div');
-        el.className = 'card';
-        el.innerHTML = `
-          <h3>${escapeHtml(p.name)}</h3>
-          <div class="price">${escapeHtml(p.price)}</div>
-          <div class="muted" style="margin:6px 0 10px">${escapeHtml(p.desc || 'Inclusive of Quick Activation, 20k+ Live Channels, PPV, Series')}</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn" data-info="${escapeAttr(p.name)}">Info</button>
-            <button class="btn whats" data-subscribe="${escapeAttr(p.name)}">Subscribe</button>
-          </div>
-        `;
-        plansGrid.appendChild(el);
-      });
-      // Attach handlers
-      plansGrid.querySelectorAll('[data-info]').forEach(b=>{
-        b.addEventListener('click', ()=> showInfo(b.dataset.info));
-      });
-      plansGrid.querySelectorAll('[data-subscribe]').forEach(b=>{
-        b.addEventListener('click', ()=>{
-          document.getElementById('subPlan').value = b.dataset.subscribe;
-          openModal('subscribeModal');
-        });
-      });
-    }
-
-    function showInfo(planName){
-      // Simple info modal using the Subscribe modal body as host? No. We'll just alert a list.
-      // If you want a full modal with categories, you can extend this.
-      const categories = [
-        "All English, Punjabi, Hindi, Pakistani, Gujarati, Arabic, Korean and more",
-        "Full HD & 4K content where available",
-        "Latest + Old Movies & Series",
-        "Sports, News, Kids, Documentaries",
-        "PPV availability varies by event"
-      ];
-      alert(`${planName}\n\nIncludes:\n- ` + categories.join('\n- '));
-    }
-
-    refreshBtn.addEventListener('click', loadPlans);
-    loadPlans();
-
-    // Forms -> WhatsApp
-    function toWA(text){
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank');
-    }
-    function formToKV(form){
-      const data = new FormData(form);
-      const kv = {};
-      data.forEach((v,k)=> kv[k]=v);
-      return kv;
-    }
-
-    document.getElementById('subscribeForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `New Subscription Request`,
-        `Plan: ${kv.plan}`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        `Channels: ${kv.channels}`,
-        `VOD: ${kv.vod}`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
-    });
-
-    document.getElementById('ownPlanForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `Custom Plan Request`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        kv.email ? `Email: ${kv.email}` : null,
-        `Preferred Channels: ${kv.channels}`,
-        `VOD: ${kv.vod}`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
-    });
-
-    document.getElementById('rechargeForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `Recharge Request`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        `Duration: ${kv.duration} month(s)`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
-    });
-
-    document.getElementById('supportForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `Support Request`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        `Issue: ${kv.issue}`
-      ].join('\n');
-      toWA(msg);
-    });
-
-    document.getElementById('pinForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `Parental PIN Request`,
-        `MAC: ${kv.mac}`,
-        `Email: ${kv.email}`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
-    });
-
-    // Sanitize helpers
-    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-    function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
-  </script>
+// Support
+document.getElementById('supportForm').onsubmit=e=>{
+  e.preventDefault();
+  const f=new FormData(e.target);const kv=Object.fromEntries(f.entries());
+  const msg=`Support Request\nName: ${kv.name}\nPhone: ${kv.phone}\nIssue: ${kv.issue}`;
+  toWA(msg);
+};
+</script>
 </body>
 </html>
