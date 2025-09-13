@@ -1,859 +1,653 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>net+TV</title>
-<meta name="theme-color" content="#6a11cb" />
+<meta charset="utf-8" />
+<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1" />
+<title>net+TV — Home</title>
+<meta name="theme-color" content="#0b1020" />
 <style>
   :root{
-    --bg:#0b1020;--ink:#e9edff;--muted:#9aa7d9;--card:#121831;--line:#23305b;
-    --accent1:#6a11cb;--accent2:#2575fc;--ok:#32d296;--whats:#25D366;--warn:#f8b84a;
+    --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
+    --g1:#6a11cb;--g2:#2575fc;--ok:#32d296;--warn:#f8b84a;--whats:#25D366;
+    --safe-top: env(safe-area-inset-top,0px);--safe-bottom: env(safe-area-inset-bottom,0px);
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{
-    margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-    background:
-      radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.14),transparent 60%),
-      radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 55%),
-      linear-gradient(180deg,#0b1020,#0b1020);
-    color:var(--ink);
-    padding-bottom: calc(88px + env(safe-area-inset-bottom));
-  }
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1100px;margin:0 auto;padding:14px}
-
-  /* Swipe Promo Carousel (sticky) */
-  .promo{
-    position:sticky;top:0;z-index:1000;background:transparent;padding:8px 0 4px;
-    animation:bannerSlide .5s ease-out;
+  button{font:inherit}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px}
+  .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:calc(8px + var(--safe-top)) 16px 8px}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .logo{display:flex;align-items:center;gap:10px}
+  .dot{width:10px;height:10px;border-radius:50%;background:conic-gradient(from 180deg,var(--g1),var(--g2))}
+  .brand{font-weight:800;letter-spacing:.3px}
+  .badge{font-size:12px;color:var(--muted)}
+  .menuBtn{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px 12px;border-radius:14px}
+  .hero{
+    position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+    background:
+      radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
+      radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 50%);
   }
-  #promoTrack{display:flex;gap:10px;overflow:auto;scroll-snap-type:x mandatory;padding:0 14px}
-  .slide{
-    scroll-snap-align:center;min-width:92%;
-    background:linear-gradient(135deg,var(--accent1),var(--accent2));
-    color:#fff;border-radius:14px;padding:12px 14px;position:relative;
-    box-shadow:0 6px 20px rgba(0,0,0,.25);
-  }
-  .slide .t{font-weight:900}
-  .slide .x{position:absolute;right:8px;top:8px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.45);border-radius:10px;padding:4px 8px;font-weight:900;cursor:pointer}
-  .slide a{font-weight:900;text-decoration:underline}
-  @keyframes bannerSlide{from{transform:translateY(-100%);opacity:0}to{transform:translateY(0);opacity:1}}
-
-  /* Header */
-  .top{
-    position:sticky;top:0;z-index:900;backdrop-filter: blur(8px);
-    background:rgba(11,16,32,.6);border-bottom:1px solid rgba(255,255,255,.06);
-    display:flex;align-items:center;justify-content:space-between;padding:12px 14px;
-  }
-  .logo{display:flex;align-items:center;gap:4px;color:var(--ink);font-weight:800}
-  .logo svg{height:26px;width:auto}
-  .menu-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--ink);
-    padding:6px 10px;border-radius:10px}
-
-  /* Hero */
-  .hero{padding:10px 14px 8px;text-align:center}
-  .hero h1{font-size:24px;letter-spacing:.5px;margin:6px 0 10px}
-  .badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-  .badge{font-size:12px;color:#cbd5ff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:6px 8px;border-radius:999px}
-
-  /* Tabs */
-  .tabs{display:flex;gap:8px;margin:14px 0 8px}
-  .tab{flex:1;text-align:center;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:12px;border-radius:12px;font-weight:800}
-  .tab.active{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
-
-  /* Panels */
-  .panel{display:none}
-  .panel.active{display:block}
-
-  /* Cards grid */
-  .grid{display:grid;gap:12px}
-  @media(min-width:680px){.grid{grid-template-columns: repeat(2,1fr)}}
-  @media(min-width:1024px){.grid{grid-template-columns: repeat(3,1fr)}}
-  .card{
-    background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;
-    box-shadow:0 10px 30px rgba(0,0,0,.25);
-  }
-  .mark{display:inline-block;font-size:11px;margin-bottom:6px;padding:4px 8px;border-radius:999px;background:#0e1a3d;border:1px solid rgba(255,255,255,.12);color:#bcd0ff;font-weight:800}
-  .mark.rec{background:#14224f;border-color:#3e5cdf;color:#cfe2ff}
-  .mark.dur{background:#10311f;border-color:#2f7d55;color:#c9f6e4}
-  .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .title{font-weight:900;font-size:18px}
-  .price{font-weight:900;font-size:18px;background:rgba(255,255,255,.06);padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12)}
-  ul.features{list-style:none;padding:0;margin:10px 0 0}
-  ul.features li{margin:6px 0;font-size:13px;color:#cfdbff}
-  .btns{display:flex;gap:8px;margin-top:12px}
-  .btn{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);color:var(--ink);background:transparent;font-weight:800;cursor:pointer}
-  .btn.primary{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
-  .btn.whats{background:var(--whats);border-color:transparent;color:#fff}
-  .note{font-size:12px;color:#ffdca1;margin-top:6px}
-
-  /* Combo chip */
-  .combo{
-    display:inline-block;margin-top:8px;padding:7px 12px;border-radius:10px;font-weight:900;font-size:13px;color:#fff;
-    background:linear-gradient(135deg,#6a11cb,#2575fc);box-shadow:0 6px 16px rgba(37,117,252,.25)
-  }
-
-  /* Table */
-  .table{margin-top:12px;overflow:auto;border:1px solid var(--line);border-radius:12px}
-  table{width:100%;border-collapse:collapse}
-  th,td{padding:12px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
-  thead th{background:#0e1836;color:#cfe0ff;text-align:left}
-
-  /* Bottom Dock (single) */
-  .dock{
-    position:sticky;bottom:0;z-index:40;background:rgba(11,16,32,.92);backdrop-filter: blur(10px);
-    border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
-    padding:8px 8px calc(8px + env(safe-area-inset-bottom));
-  }
-  .dbtn{color:var(--ink);text-align:center;padding:10px 6px;border:1px solid rgba(255,255,255,.12);border-radius:12px}
-  .dactive{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
-
-  /* Modals / Sheets */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;z-index:9999}
-  .sheet{
-    background:#0d142d;border-top:1px solid var(--line);width:100%;
-    max-height:90vh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
-    border-radius:16px 16px 0 0;padding:16px 14px calc(24px + env(safe-area-inset-bottom));
-    color:#e9edff
-  }
-  .field{display:flex;flex-direction:column;gap:6px;margin:10px 0}
-  .input,select,textarea{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:12px;color:#e9edff}
-  .chips{display:flex;gap:6px;flex-wrap:wrap}
-  .chip{background:#0b122a;border:1px solid #22305a;color:#cfe0ff;padding:6px 10px;border-radius:999px;font-size:12px}
-  .x{float:right;background:transparent;border:1px solid rgba(255,255,255,.15);color:#cfe0ff;border-radius:10px;padding:6px 10px}
-  .help{font-size:12px;color:#b6c7ff}
-  .cols{display:grid;gap:12px;margin-top:8px}
-  @media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
-  .h{font-weight:900;margin-top:8px}
-  .catlist{margin:6px 0 0;padding-left:18px}
-  .catlist li{margin:6px 0}
-
-  /* Gallery grid */
-  .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
-  @media(min-width:700px){.gallery{grid-template-columns:repeat(4,1fr)}}
-  .gitem{background:#0b122a;border:1px solid #22305a;border-radius:12px;overflow:hidden}
-  .gitem img{width:100%;height:120px;object-fit:cover;display:block}
-  .gcap{padding:8px;font-size:12px;color:#cfe0ff;text-align:center}
-
-  /* Lock page scroll when a modal is open (iOS friendly) */
-  body.modal-open{overflow:hidden;position:fixed;width:100%}
+  .heroInner{padding:40px 16px 24px}
+  .title{font-size:28px;line-height:1.2;font-weight:800;margin:6px 0 8px}
+  .subtitle{color:var(--muted)}
+  .features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:20px 0}
+  .chip{border:1px solid var(--line);background:rgba(255,255,255,.03);padding:10px 12px;border-radius:12px;font-size:14px}
+  .ctaRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:8px 0 18px}
+  .bigBtn{height:64px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg, rgba(106,17,203,.18), rgba(37,117,252,.18));display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:700}
+  .section{padding:18px 16px;border-top:1px solid var(--line)}
+  .hidden{display:none}
+  /* Menu sheet */
+  .sheet{position:fixed;inset:auto 0 0 0;background:rgba(18,24,49,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(100%);transition:transform .25s ease;z-index:70;max-height:80vh;display:flex;flex-direction:column}
+  .sheet.open{transform:translateY(0)}
+  .sheetHead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .sheetBody{padding:10px 16px;overflow:auto}
+  .menuList{display:grid;gap:10px}
+  .menuItem{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.03)}
+  /* Modal (for forms, info) */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:90}
+  .modal.open{display:flex}
+  .modalCard{margin:auto;max-width:720px;width:100%;height:90vh;background:var(--card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column}
+  .modalHead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .modalBody{padding:12px 14px;overflow:auto}
+  .x{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
+  /* Plans grid */
+  .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+  .card{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .card h3{margin:0 0 8px;font-size:18px}
+  .price{font-weight:800;font-size:22px}
+  .muted{color:var(--muted)}
+  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px 12px}
+  .btn.whats{background:var(--whats);border-color:#1fa851;color:#08210e;font-weight:800}
+  .btn.ghost{background:rgba(255,255,255,.04)}
+  /* Forms */
+  .grid{display:grid;gap:10px}
+  .two{grid-template-columns:1fr 1fr}
+  input,select,textarea{width:100%;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff}
+  label{font-size:13px;color:var(--muted)}
+  .help{font-size:12px;color:var(--muted)}
+  .footpad{height:calc(24px + var(--safe-bottom))}
+  /* Info list scroll */
+  .list{display:grid;gap:10px}
+  .pill{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)}
+  /* Sticky hint to scroll back up to reveal buttons */
+  .hint{position:sticky;top:0;padding:10px 16px;background:rgba(11,16,32,.9);border-bottom:1px solid var(--line);backdrop-filter:blur(8px);font-size:13px;color:var(--muted)}
+  /* Footer */
+  .footer{padding:16px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
-
-<!-- Swipe Promo (from Admin banners) -->
-<section id="promoCarousel" class="promo" role="region" aria-label="Offers" style="display:none">
-  <div id="promoTrack"></div>
-</section>
-
-<!-- Header -->
-<header class="top">
-  <div class="logo" aria-label="net+TV">
-    <svg viewBox="0 0 180 36" role="img" aria-label="net+TV logo">
-      <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6a11cb"/><stop offset="1" stop-color="#2575fc"/></linearGradient></defs>
-      <text x="0" y="25" font-size="24" font-weight="800" fill="#ffffff">net</text>
-      <rect x="52" y="6" width="24" height="24" rx="6" fill="url(#g)"/>
-      <rect x="62" y="10" width="4" height="16" fill="#fff"/><rect x="56" y="16" width="16" height="4" fill="#fff"/>
-      <text x="90" y="25" font-size="24" font-weight="900" fill="#e9edff">TV</text>
-    </svg>
-  </div>
-  <button class="menu-btn" onclick="openSheet('menu')">Menu</button>
-</header>
-
-<!-- Hero -->
-<section class="hero wrap">
-  <h1>All TV. All VOD.</h1>
-  <div class="badges">
-    <span class="badge">10,000+ Channels</span>
-    <span class="badge">Movies • Sports • Series</span>
-    <span class="badge">Full HD & 4K</span>
-    <span class="badge">24/7 Support</span>
-  </div>
-
-  <div class="tabs" role="tablist" aria-label="Primary sections">
-    <button class="tab active" id="tab-plans" onclick="showPanel('plans')">Plans</button>
-    <button class="tab" id="tab-boxes" onclick="showPanel('boxes')">Boxes</button>
-    <button class="tab" id="tab-recharge" onclick="showPanel('recharge')">Recharge</button>
-    <button class="tab" id="tab-support" onclick="showPanel('support')">Support</button>
-  </div>
-</section>
-
-<!-- Main -->
-<main class="wrap">
-
-  <!-- Plans -->
-  <div class="panel active" id="panel-plans">
-    <div class="grid">
-      <!-- 2 Days Free Trial -->
-<div class="card" style="margin-top:12px">
-  <span class="mark">Try First</span>
-  <div class="row"><div class="title">2 Days Free Trial</div><div class="price">$0</div></div>
-  <ul class="features">
-    <li>⚡ Instant activation (no credit card)</li>
-    <li>📺 Access to Live TV + VOD (trial tier)</li>
-    <li>🧑‍💻 Works on Android / Fire TV / Smart TV / Box</li>
-    <li>💬 Support on WhatsApp</li>
-  </ul>
-
-  <div class="field" style="margin-top:12px">
-    <label>Name</label>
-    <input class="input" id="trialName" placeholder="Full Name">
-  </div>
-  <div class="field">
-    <label>Email</label>
-    <input class="input" id="trialEmail" placeholder="email@example.com" type="email">
-  </div>
-  <div class="field">
-    <label>Device MAC / ID (optional)</label>
-    <input class="input" id="trialMac" placeholder="e.g., 00:1A:79:xx:xx:xx or Player ID">
-  </div>
-
-  <div class="btns">
-    <button class="btn whats" onclick="waStartTrial()">Request Trial on WhatsApp</button>
-    <button class="btn" onclick="openSheet('info')">What's Included</button>
-  </div>
-  <div class="help">No payment needed. We’ll send trial credentials on WhatsApp.</div>
-</div>
-      <!-- 1M -->
-      <div class="card">
-        <span class="mark">Starter</span>
-        <div class="row"><div class="title">1 Month</div><div class="price">$15</div></div>
-        <ul class="features">
-          <li>⚡ Quick Activation</li>
-          <li>📡 20,000+ Live Channels</li>
-          <li>🎬 All Shows, Movies & PPV</li>
-          <li>📚 Latest & Classic Series/Movies</li>
-          <li>🖥️ Full HD & SD Channels</li>
-          <li>❄️ AntiFreeze Technology</li>
-          <li>💬 24/7 WhatsApp Support</li>
-        </ul>
-        <div class="btns">
-          <button class="btn primary whats" onclick="subscribePlan('1 Month',15)">Subscribe</button>
-          <button class="btn" onclick="openSheet('info')">Info</button>
-        </div>
-      </div>
-
-      <!-- 3M -->
-      <div class="card">
-        <span class="mark">Popular</span>
-        <div class="row"><div class="title">3 Months</div><div class="price">$40</div></div>
-        <ul class="features">
-          <li>⚡ Quick Activation</li>
-          <li>📡 20,000+ Live Channels</li>
-          <li>🎬 All Shows, Movies & PPV</li>
-          <li>📚 Latest & Classic Series/Movies</li>
-          <li>🖥️ Full HD & SD Channels</li>
-          <li>❄️ AntiFreeze Technology</li>
-          <li>💬 24/7 WhatsApp Support</li>
-        </ul>
-        <div class="btns">
-          <button class="btn primary whats" onclick="subscribePlan('3 Months',40)">Subscribe</button>
-          <button class="btn" onclick="openSheet('info')">Info</button>
-        </div>
-      </div>
-
-      <!-- 6M -->
-      <div class="card">
-        <span class="mark">Most Picked</span>
-        <div class="row"><div class="title">6 Months</div><div class="price">$60</div></div>
-        <ul class="features">
-          <li>⚡ Quick Activation</li>
-          <li>📡 20,000+ Live Channels</li>
-          <li>🎬 All Shows, Movies & PPV</li>
-          <li>📚 Latest & Classic Series/Movies</li>
-          <li>🖥️ Full HD & SD Channels</li>
-          <li>❄️ AntiFreeze Technology</li>
-          <li>💬 24/7 WhatsApp Support</li>
-        </ul>
-        <div class="btns">
-          <button class="btn primary whats" onclick="subscribePlan('6 Months',65)">Subscribe</button>
-          <button class="btn" onclick="openSheet('info')">Info</button>
-        </div>
-      </div>
-
-      <!-- 12M -->
-      <div class="card">
-        <span class="mark">Best Value</span>
-        <div class="row"><div class="title">12 Months</div><div class="price">$100</div></div>
-        <div class="note">+ 1 extra month free (13 total)</div>
-        <ul class="features">
-          <li>⚡ Quick Activation</li>
-          <li>📡 20,000+ Live Channels</li>
-          <li>🎬 All Shows, Movies & PPV</li>
-          <li>📚 Latest & Classic Series/Movies</li>
-          <li>🖥️ Full HD & SD Channels</li>
-          <li>❄️ AntiFreeze Technology</li>
-          <li>💬 24/7 WhatsApp Support</li>
-        </ul>
-        <div class="btns">
-          <button class="btn primary whats" onclick="subscribePlan('12 Months (+1 free)',100)">Subscribe</button>
-          <button class="btn" onclick="openSheet('info')">Info</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- WhatsApp Registration for +1 month with 1‑Year -->
-    <div class="card" style="margin-top:12px">
-      <div class="title">Get +1 month with 1‑Year plan</div>
-      <div class="sub" style="color:var(--muted)">Register via WhatsApp (we’ll apply the offer when you subscribe)</div>
-
-      <div class="field"><label>Name</label><input class="input" id="waName" placeholder="Full Name"></div>
-      <div class="field"><label>Email</label><input class="input" id="waEmail" placeholder="email@example.com" type="email"></div>
-
-      <button class="btn whats" onclick="waRegisterOffer()">Register on WhatsApp</button>
-      <div class="help">Refer a friend who buys a 1‑Year plan and get +1 month free (details below).</div>
-    </div>
-
-    <!-- NEW: Referral Form -->
-    <div class="card" style="margin-top:12px">
-      <div class="title">Referral — Get +2 Months Free</div>
-      <div class="sub" style="color:var(--muted)">If your friend buys a 1‑Year plan, you get 2 months free.</div>
-
-      <div class="cols">
+  <div class="topbar">
+    <div class="row">
+      <div class="logo">
+        <div class="dot"></div>
         <div>
-          <div class="h">Your Details</div>
-          <div class="field"><label>Your Name</label><input class="input" id="refYourName" placeholder="Full Name"></div>
-          <div class="field"><label>Your Email</label><input class="input" id="refYourEmail" placeholder="email@example.com" type="email"></div>
-          <div class="field"><label>Your Phone (WhatsApp)</label><input class="input" id="refYourPhone" placeholder="+1 ..."></div>
-          <div class="field"><label>Your Device MAC</label><input class="input" id="refYourMac" placeholder="e.g., 00:1A:79:xx:xx:xx"></div>
-        </div>
-        <div>
-          <div class="h">Friend’s Details</div>
-          <div class="field"><label>Friend’s Name</label><input class="input" id="refFriendName" placeholder="Full Name"></div>
-          <div class="field"><label>Friend’s Email</label><input class="input" id="refFriendEmail" placeholder="email@example.com" type="email"></div>
-          <div class="field"><label>Friend’s Phone (WhatsApp)</label><input class="input" id="refFriendPhone" placeholder="+1 ..."></div>
+          <div class="brand">net+<span style="margin-left:3px">TV</span></div>
+          <div class="badge">Full HD • 4K • PPV</div>
         </div>
       </div>
-
-      <button class="btn whats" onclick="waReferral()">Submit Referral on WhatsApp</button>
-      <div class="help">We’ll verify when your friend subscribes for 1‑Year and add +2 months to your account.</div>
-    </div>
-
-    <div class="table">
-      <table aria-label="Plan comparison">
-        <thead><tr><th>Plan</th><th>Duration</th><th>Price</th><th>Note</th></tr></thead>
-        <tbody>
-          <tr><td>1 Month</td><td>30 days</td><td>$15</td><td>Full features</td></tr>
-          <tr><td>3 Months</td><td>90 days</td><td>$40</td><td>Save vs monthly</td></tr>
-          <tr><td>6 Months</td><td>180 days</td><td>$65</td><td>Most picked</td></tr>
-          <tr><td>12 Months</td><td>365 + 30 days</td><td>$100</td><td><strong>+1 month free</strong></td></tr>
-        </tbody>
-      </table>
+      <button id="menuBtn" class="menuBtn">Menu ▾</button>
     </div>
   </div>
 
-  <!-- Boxes -->
-  <div class="panel" id="panel-boxes">
-    <div class="grid">
-      <div class="card">
-        <span class="mark">Not Recommended</span>
-        <div class="row"><div class="title">Android FULL HD Box</div><div class="price">$50</div></div>
-        <div class="combo">Box + 1‑Year: $140</div>
-        <ul class="features">
-          <li>ARM Cortex Quad‑Core • Mali‑G31</li>
-          <li>2GB DDR3 • 8GB eMMC</li>
-          <li>Wi‑Fi 2.4/5.8 • BT 5.2</li>
-          <li>Lemon TV App• Netflix • YouTube • Disney+ • Play</li>
-          <li>Bluetooth voice remote</li>
-          <li>Full HD output</li>
-        </ul>
-        <div class="btns">
-          <button class="btn" onclick="buyBox('Android FULL HD Box',50)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Android FULL HD Box',140)">Box + 1‑Year</button>
-        </div>
+  <!-- HERO FIRST -->
+  <section class="hero">
+    <div class="heroInner wrap">
+      <div class="subtitle">Quick Activation</div>
+      <h1 class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
+      <p class="subtitle">Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech</p>
+
+      <div class="features">
+        <div class="chip">🇨🇦 Canada Friendly</div>
+        <div class="chip">24/7 Support</div>
+        <div class="chip">Low-Latency Streams</div>
+        <div class="chip">Multi-Device</div>
       </div>
 
-      <div class="card">
-        <span class="mark">Good</span>
-        <div class="row"><div class="title">Sword+ 4K Box</div><div class="price">$100</div></div>
-        <div class="combo">Box + 1‑Year: $180</div>
-        <ul class="features">
-          <li>Android 11 • TV ONAIR • 4K 60FPS</li>
-          <li>2GB DDR3 • 16GB eMMC</li>
-          <li>Wi‑Fi 2.4/5.8</li>
-        </ul>
-        <div class="btns">
-          <button class="btn" onclick="buyBox('Sword+ 4K Box',100)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Sword+ 4K Box',180)">Box + 1‑Year</button>
-        </div>
+      <div class="ctaRow" id="actionButtons">
+        <button class="bigBtn" data-open="plansModal">New Set-Top Box Plans</button>
+        <button class="bigBtn" data-open="ownPlanModal">Your Own Plan</button>
+        <button class="bigBtn" data-open="rechargeModal">Recharge</button>
+        <button class="bigBtn" data-open="supportModal">Contact Support</button>
       </div>
 
-      <div class="card">
-        <span class="mark">Value for Money</span>
-        <div class="row"><div class="title">Sheild Ultimate 4K Box</div><div class="price">$120</div></div>
-        <div class="combo">Box + 1‑Year: $200</div>
-        <ul class="features">
-          <li>Android 9 • TV ONAIR • 4K 60FPS</li>
-          <li>4GB DDR3 • 32GB eMMC</li>
-          <li>Wi‑Fi 2.4/5.8</li>
-        </ul>
-        <div class="btns">
-          <button class="btn" onclick="buyBox('Sheild Ultimate 4K Box',120)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Sheild Ultimate 4K Box',200)">Box + 1‑Year</button>
+      <div class="hint">Scroll for more. Scroll back up any time to use the big buttons.</div>
+    </div>
+  </section>
+
+  <!-- SECTION: Why net+TV -->
+  <section class="section wrap">
+    <h2 style="margin:0 0 8px">Why net+TV</h2>
+    <p class="muted" style="margin:0">Stable quality, solid support, and no drama. Except in the shows. Obviously.</p>
+    <div class="list" style="margin-top:12px">
+      <div class="pill">Fast activation with WhatsApp confirmation</div>
+      <div class="pill">No-nonsense plans, real 4K content where available</div>
+      <div class="pill">Works on popular STBs, smart TVs, mobile and laptops</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    © <span id="year"></span> net+TV. All rights reserved.
+  </footer>
+
+  <!-- MENU SHEET -->
+  <div id="menuSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Main menu">
+    <div class="sheetHead">
+      <div style="font-weight:800">Menu</div>
+      <button class="x" data-close="menuSheet">Close</button>
+    </div>
+    <div class="sheetBody">
+      <div class="menuList">
+        <a class="menuItem" data-open="plansModal">New Set-Top Box Plans</a>
+        <a class="menuItem" data-open="ownPlanModal">Your Own Set-Top Box Plan</a>
+        <a class="menuItem" data-open="rechargeModal">Recharge</a>
+        <a class="menuItem" data-open="supportModal">Contact Support</a>
+        <a class="menuItem" data-open="faqModal">FAQ</a>
+        <a class="menuItem" data-open="aboutModal">About Us</a>
+        <a class="menuItem" data-open="pinModal">Know Your Parental PIN</a>
+      </div>
+      <div class="footpad"></div>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <!-- Plans Modal -->
+  <div id="plansModal" class="modal" role="dialog" aria-modal="true" aria-label="Plans">
+    <div class="modalCard">
+      <div class="modalHead">
+        <strong>Plans</strong>
+        <div style="display:flex;gap:8px">
+          <button class="btn ghost" id="refreshPlans">Refresh</button>
+          <button class="x" data-close="plansModal">Close</button>
         </div>
       </div>
-
-
-      <div class="card">
-        <span class="mark rec">Recommended</span>
-        <div class="row"><div class="title">Formular Z10 Box</div><div class="price">$130</div></div>
-        <div class="combo">Box + 1‑Year: $210</div>
-        <ul class="features">
-          <li>Android 10 • TV ONAIR • 4K 60FPS • HDR10*</li>
-          <li>2GB DDR3 • 8GB eMMC • Wi‑Fi 2.4/5.8</li>
-        </ul>
-        <div class="btns">
-          <button class="btn" onclick="buyBox('Formular Z10 Box',130)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Formular Z10 Box',210)">Box + 1‑Year</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <span class="mark dur">Durable</span>
-        <div class="row"><div class="title">Mag544 4K Linux Box</div><div class="price">$120</div></div>
-        <div class="combo">Box + 1‑Year: $210</div>
-        <ul class="features">
-          <li>Linux OS • 4K • Durable build</li>
-          <li>1GB RAM • 4GB Flash</li>
-        </ul>
-        <div class="btns">
-          <button class="btn" onclick="buyBox('Mag544 4K Linux Box',120)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Mag544 4K Linux Box',210)">Box + 1‑Year</button>
-        </div>
-      </div>
-
-       <div class="card">
-        <span class="mark rec">Powerful</span>
-        <div class="row"><div class="title">Formular Z11 PRO</div><div class="price">$180</div></div>
-        <div class="combo">Box + 1‑Year: $260</div>
-        <ul class="features">
-          <li>Android 11 • TV ONAIR • 4K 60FPS • HDR10*</li>
-          <li>2GB DDR4 • 16GB eMMC • Wi‑Fi 5</li>
-        </ul>
-        <div class="btns">
-          <button class="btn" onclick="buyBox('Formular Z11 PRO',180)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Formular Z11 PRO',260)">Box + 1‑Year</button>
-        </div>
-      </div>
-
-       <div class="card">
-        <span class="mark rec">High End</span>
-        <div class="row"><div class="title">Formular Z11 PRO MAX</div><div class="price">$220</div></div>
-        <div class="combo">Box + 1‑Year: $300</div>
-        <ul class="features">
-          <li>Android 11 • TV ONAIR • 4K ULTRA • HDR10*</li>
-          <li>4GB DDR3 • 32GB eMMC • Wi‑Fi 6</li>
-        </ul>
-        <div class="btns">
-          <button class="btn" onclick="buyBox('Formular Z11 PRO MAX',220)">Box Only</button>
-          <button class="btn whats" onclick="buyBoxBundle('Formular Z11 PRO MAX',300)">Box + 1‑Year</button>
-        </div>
+      <div class="modalBody">
+        <p class="muted">All plans include: Quick Activation, 20,000+ Live Channels, All Shows/Movies/PPV, Latest & Old Series, Full HD & SD Channels, Anti-Freeze Technology.</p>
+        <div id="plansGrid" class="plans"></div>
+        <div class="footpad"></div>
       </div>
     </div>
   </div>
 
-  <!-- Recharge -->
-  <div class="panel" id="panel-recharge">
-    <div class="card">
-      <div class="title">Recharge</div>
-      <div class="sub" style="color:var(--muted)">Fast renewal via WhatsApp</div>
-
-      <div class="field"><label>Name</label><input class="input" id="rcName" placeholder="Full Name"></div>
-      <div class="field"><label>User ID</label><input class="input" id="rcUser" placeholder="e.g., STB MAC / ID"></div>
-      <div class="field"><label>Email</label><input class="input" id="rcEmail" placeholder="email@example.com" type="email"></div>
-
-      <div class="field">
-        <label>Plan</label>
-        <select id="rcPlan" class="input">
-          <option value="">Choose a plan</option>
-          <option>1 Month - $15</option>
-          <option>3 Months - $40</option>
-          <option>6 Months - $65</option>
-          <option>12 Months - $100 (+1 month free)</option>
-        </select>
+  <!-- Own Plan Modal -->
+  <div id="ownPlanModal" class="modal" role="dialog" aria-modal="true" aria-label="Build your plan">
+    <div class="modalCard">
+      <div class="modalHead">
+        <strong>Your Own Plan</strong>
+        <button class="x" data-close="ownPlanModal">Close</button>
       </div>
-
-      <button class="btn whats" onclick="sendRecharge()">Recharge via WhatsApp</button>
-      <div class="help">We reply quickly.</div>
-    </div>
-  </div>
-
-  <!-- Support -->
-  <div class="panel" id="panel-support">
-    <div class="card">
-      <div class="title">We’re here 24/7</div>
-      <div class="sub" style="color:var(--muted)">Install • Issues • Upgrades</div>
-      <div class="btns">
-        <a class="btn whats" href="https://wa.me/16476961656?text=Hi%2C+I+need+help+with+net%2BTV." target="_blank" rel="noopener">Chat on WhatsApp</a>
-      </div>
-      <ul class="features" style="margin-top:8px">
-        <li>📦 Quick activation after payment</li>
-        <li>🛠 Remote setup help</li>
-        <li>🔒 No hidden charges</li>
-      </ul>
-    </div>
-
-    <!-- General Request -->
-    <div class="card" style="margin-top:12px">
-      <div class="title">General Request</div>
-      <div class="sub" style="color:var(--muted)">Tell us what you need — we’ll reply on WhatsApp</div>
-
-      <div class="field"><label>Name</label><input class="input" id="reqName" placeholder="Full Name"></div>
-      <div class="field"><label>Phone (WhatsApp)</label><input class="input" id="reqPhone" placeholder="+1 ..."></div>
-      <div class="field"><label>Email</label><input class="input" id="reqEmail" placeholder="email@example.com" type="email"></div>
-      <div class="field"><label>Details</label><textarea class="input" id="reqNote" placeholder="Write your request..." rows="3"></textarea></div>
-
-      <button class="btn whats" onclick="sendRequest()">Send Request via WhatsApp</button>
-      <div class="help">We usually respond within minutes.</div>
-    </div>
-
-    <!-- Parental PIN -->
-    <div class="card" style="margin-top:12px">
-      <div class="title">Parental PIN Request</div>
-      <div class="sub" style="color:var(--muted)">Enter your device MAC and email</div>
-
-      <div class="field"><label>Device MAC Address</label><input class="input" id="pinMac" placeholder="e.g., 00:1A:79:xx:xx:xx"></div>
-      <div class="field"><label>Email</label><input class="input" id="pinEmail" placeholder="email@example.com" type="email"></div>
-      <div class="field"><label>Note (optional)</label><input class="input" id="pinNote" placeholder="Any extra info..."></div>
-
-      <button class="btn whats" onclick="sendPin()">Request PIN via WhatsApp</button>
-      <div class="help">We’ll verify the device and send your PIN.</div>
-    </div>
-  </div>
-</main>
-
-<!-- ===== Bottom Dock (single instance) ===== -->
-<nav class="dock wrap" aria-label="Quick navigation">
-  <a class="dbtn dactive" href="#plans" onclick="showPanel('plans')">Plans</a>
-  <a class="dbtn" href="#boxes" onclick="showPanel('boxes')">Boxes</a>
-  <a class="dbtn" href="#recharge" onclick="showPanel('recharge')">Recharge</a>
-  <a class="dbtn" href="#support" onclick="showPanel('support')">Support</a>
-</nav>
-
-<!-- ===== Sheets / Modals ===== -->
-
-<!-- Menu -->
-<div class="modal" id="sheet-menu" aria-hidden="true">
-  <div class="sheet">
-    <button class="x" onclick="closeSheet('menu')">Close</button>
-    <h3>Menu</h3>
-    <div class="chips" style="margin:8px 0 12px">
-      <span class="chip" onclick="showPanel('plans');closeSheet('menu')">Plans</span>
-      <span class="chip" onclick="showPanel('boxes');closeSheet('menu')">Boxes</span>
-      <span class="chip" onclick="showPanel('recharge');closeSheet('menu')">Recharge</span>
-      <span class="chip" onclick="showPanel('support');closeSheet('menu')">Support</span>
-      <span class="chip" onclick="openSheet('gallery')">Gallery</span>
-    </div>
-    <p class="help">All TV. All VOD. One app. Full HD & 4K where available.</p>
-    <div class="btns">
-      <a class="btn whats" href="https://wa.me/16476961656?text=Hi%2C+I+want+to+subscribe+to+net%2BTV." target="_blank" rel="noopener">Subscribe on WhatsApp</a>
-    </div>
-  </div>
-</div>
-
-<!-- What's Included / Categories -->
-<div class="modal" id="sheet-info" aria-hidden="true">
-  <div class="sheet">
-    <button class="x" onclick="closeSheet('info')">Close</button>
-    <h3>What you get with every plan</h3>
-    <div class="chips">
-      <span class="chip">20,000+ Live Channels</span>
-      <span class="chip">All Movies & Series</span>
-      <span class="chip">PPV & Major Sports</span>
-      <span class="chip">Full HD & SD</span>
-      <span class="chip">AntiFreeze Technology</span>
-      <span class="chip">Quick Activation</span>
-      <span class="chip">24/7 Support</span>
-    </div>
-
-    <div class="cols">
-      <div>
-        <div class="h">Live TV Categories</div>
-        <ul class="catlist">
-          <li>AFGHAN | PERSIAN</li>
-          <li>AFRICAN | AFRICA</li>
-          <li>ARABIC | MID-EAST</li>
-          <li>ASSAM | INDIA</li>
-          <li>BANGLA | INDIA</li>
-          <li>BEIN / DAZN / FUBO</li>
-          <li>BHOJPURI | INDIA</li>
-          <li>DUTCH | BELGIUM / NETHERLAND</li>
-          <li>ENGLISH 24/7 • UK • USA • CANADA • AUSTRALIA • CARIBBEAN</li>
-          <li>ENGLISH | KIDS • MOVIES • MUSIC • NEWS • SPORTS</li>
-          <li>EX‑YUGO | ALBANIAN</li>
-          <li>FILIPINO | PHILIPPINES</li>
-          <li>FRENCH | CANADA • FRANCE</li>
-          <li>GERMAN | GREEK | ITALIAN</li>
-          <li>GUJARATI | HINDI 24/7 | HINDI | KANNADA | MALAYALAM | MARATHI | ODIA | TAMIL | TELUGU</li>
-          <li>HUNGARY | KOREAN | MANDARIN | NEPALI | POLISH | PORTUGUESE | BRAZIL</li>
-          <li>PPV | ESPN+ | NFL | NBA | NHL | MLB | SOCCER | MLS</li>
-          <li>PUNJABI | INDIA • URDU | PAKISTAN</li>
-          <li>ROMANIAN | RUSSIAN | TURKISH | UKRAINE | VIETNAMESE</li>
-          <li>SINHALA | SRI LANKA</li>
-          <li>SOUTH AMERICA • SPANISH (Mexico/Spain) • LATINO USA</li>
-          <li>SPORTS | CRICKET</li>
-          <li>SWEDEN | NORWAY | FINLAND</li>
-          <li>LOCAL USA | RADIO</li>
-          <li><strong>LIVE‑ADULT</strong></li>
-        </ul>
-      </div>
-      <div>
-        <div class="h">VOD Categories</div>
-        <ul class="catlist">
-          <li>VOD - English</li>
-          <li>VOD - Punjabi/Urdu</li>
-          <li>VOD - Hindi</li>
-          <li>VOD - Middle East</li>
-          <li>VOD - Italian</li>
-          <li>VOD - Polish</li>
-          <li>VOD - Portuguese/Brazalian</li>
-          <li>VOD - Spanish</li>
-          <li>VOD - Tamil/Telugu/Kannada/Sinhala/Malayalam</li>
-          <li>VOD - Gujarati/Marathi/Bengali</li>
-          <li>VOD - VOD ALL • with & without 18+</li>
-          <li><strong>VOD - ADULT</strong></li>
-          <!-- Extras -->
-          <li>Kids 24/7 • Animated Movies</li>
-          <li>Documentaries • Reality TV</li>
-          <li>Classic Movies & Series</li>
-          <li>New Releases (daily updates)</li>
-          <li>Music Videos • Concerts</li>
-          <li>Stand‑up Comedy</li>
-        </ul>
+      <div class="modalBody">
+        <form id="ownPlanForm" class="grid">
+          <div class="grid two">
+            <div>
+              <label>Full Name</label>
+              <input required name="name" placeholder="Your name">
+            </div>
+            <div>
+              <label>Phone</label>
+              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
+            </div>
+          </div>
+          <div>
+            <label>Email (optional)</label>
+            <input name="email" type="email" placeholder="you@example.com">
+          </div>
+          <div>
+            <label>Preferred Channels</label>
+            <select name="channels" required>
+              <option>English</option>
+              <option>Punjabi</option>
+              <option>Hindi</option>
+              <option>Urdu</option>
+              <option>French</option>
+              <option>Arabic</option>
+              <option>Korean</option>
+              <option>Gujarati</option>
+              <option>Others</option>
+            </select>
+            <div class="help">You’ll get Full HD and 4K where available.</div>
+          </div>
+          <div>
+            <label>VOD Category</label>
+            <select name="vod" required>
+              <option>English</option>
+              <option>Panjabi</option>
+              <option>Hindi</option>
+              <option>Urdu</option>
+              <option>French</option>
+              <option>Action</option>
+              <option>Drama</option>
+              <option>Comedy</option>
+              <option>Kids</option>
+              <option>Documentary</option>
+              <option>Others</option>
+              <option>Adult</option>
+            </select>
+            <div class="help">“Adult” stays at the bottom where it belongs.</div>
+          </div>
+          <div>
+            <label>Notes</label>
+            <textarea name="note" rows="3" placeholder="Any specific channel packs, devices, or timing?"></textarea>
+          </div>
+          <button class="btn whats" type="submit">Send Request on WhatsApp</button>
+        </form>
+        <div class="footpad"></div>
       </div>
     </div>
-
-    <p class="help">Availability varies by region/device. Full HD / 4K where available.</p>
   </div>
-</div>
 
-<!-- Gallery -->
-<div class="modal" id="sheet-gallery" aria-hidden="true">
-  <div class="sheet">
-    <button class="x" onclick="closeSheet('gallery')">Close</button>
-    <h3>Gallery</h3>
-    <p class="help">Curated by admin. Tap to view.</p>
-    <div id="galleryGrid" class="gallery"></div>
+  <!-- Recharge Modal -->
+  <div id="rechargeModal" class="modal" role="dialog" aria-modal="true" aria-label="Recharge">
+    <div class="modalCard">
+      <div class="modalHead">
+        <strong>Recharge</strong>
+        <button class="x" data-close="rechargeModal">Close</button>
+      </div>
+      <div class="modalBody">
+        <form id="rechargeForm" class="grid two">
+          <div>
+            <label>Registered Name</label>
+            <input required name="name" placeholder="Account name">
+          </div>
+          <div>
+            <label>Phone</label>
+            <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
+          </div>
+          <div>
+            <label>Plan Duration</label>
+            <select name="duration" required>
+              <option value="1">1 month</option>
+              <option value="3">3 months</option>
+              <option value="6">6 months</option>
+              <option value="12">12 months</option>
+            </select>
+          </div>
+          <div>
+            <label>Notes</label>
+            <input name="note" placeholder="Optional note">
+          </div>
+          <button class="btn whats" type="submit">Request Recharge</button>
+        </form>
+        <div class="footpad"></div>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- Subscribe sheet -->
-<div class="modal" id="sheet-subscribe" aria-hidden="true">
-  <div class="sheet">
-    <button class="x" onclick="closeSheet('subscribe')">Close</button>
-    <h3>Subscribe</h3>
-    <div class="field"><label>Name</label><input class="input" id="sName" placeholder="Full Name"></div>
-    <div class="field"><label>Phone</label><input class="input" id="sPhone" placeholder="+1 ..."></div>
-    <div class="field"><label>Email</label><input class="input" id="sEmail" placeholder="email@example.com" type="email"></div>
-    <div class="field"><label>Plan</label><input class="input" id="sPlan" placeholder="Selected plan" readonly></div>
-    <button class="btn whats" onclick="sendSubscribe()">Send via WhatsApp</button>
-    <div class="help">Minimal info, quick activation.</div>
+  <!-- Support Modal -->
+  <div id="supportModal" class="modal" role="dialog" aria-modal="true" aria-label="Support">
+    <div class="modalCard">
+      <div class="modalHead">
+        <strong>Contact Support</strong>
+        <button class="x" data-close="supportModal">Close</button>
+      </div>
+      <div class="modalBody">
+        <form id="supportForm" class="grid">
+          <div class="grid two">
+            <div>
+              <label>Name</label>
+              <input required name="name" placeholder="Your name">
+            </div>
+            <div>
+              <label>Phone</label>
+              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
+            </div>
+          </div>
+          <div>
+            <label>Issue</label>
+            <textarea required name="issue" rows="4" placeholder="Describe the problem..."></textarea>
+          </div>
+          <button class="btn whats" type="submit">Send on WhatsApp</button>
+        </form>
+        <div class="footpad"></div>
+      </div>
+    </div>
   </div>
-</div>
 
-<script type="module">
-  /* ===== Firebase (CDN) ===== */
-  import { getApps, initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, query, orderBy, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  <!-- FAQ Modal -->
+  <div id="faqModal" class="modal" role="dialog" aria-modal="true" aria-label="FAQ">
+    <div class="modalCard">
+      <div class="modalHead">
+        <strong>FAQ</strong>
+        <button class="x" data-close="faqModal">Close</button>
+      </div>
+      <div class="modalBody">
+        <div class="list">
+          <div class="pill"><strong>Q:</strong> Do all channels stream in 4K?<br><span class="muted">A:</span> 4K where available. Otherwise Full HD or SD. We write it like adults, not marketers.</div>
+          <div class="pill"><strong>Q:</strong> What devices are supported?<br><span class="muted">A:</span> Popular STBs, Android TV, Fire TV, smart TVs, phones, tablets, and web players.</div>
+          <div class="pill"><strong>Q:</strong> Activation time?<br><span class="muted">A:</span> Usually minutes after WhatsApp confirmation.</div>
+        </div>
+        <div class="footpad"></div>
+      </div>
+    </div>
+  </div>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
-    authDomain: "netplustv-90b29.firebaseapp.com",
-    projectId: "netplustv-90b29",
-    storageBucket: "netplustv-90b29.firebasestorage.app",
-    messagingSenderId: "639722274355",
-    appId: "1:639722274355:web:ebe34fdf093f8191da2d46"
-  };
-  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
+  <!-- About Modal -->
+  <div id="aboutModal" class="modal" role="dialog" aria-modal="true" aria-label="About">
+    <div class="modalCard">
+      <div class="modalHead">
+        <strong>About Us</strong>
+        <button class="x" data-close="aboutModal">Close</button>
+      </div>
+      <div class="modalBody">
+        <p>net+TV is built for stability and clarity. We focus on consistent quality and straight answers. If something isn’t true, we don’t print it on banners.</p>
+        <div class="footpad"></div>
+      </div>
+    </div>
+  </div>
 
-  /* ===== Promo banners from Firestore ===== */
-  async function loadBanners(){
-    const wrap = document.getElementById('promoCarousel');
-    const track = document.getElementById('promoTrack');
-    track.innerHTML='';
-    const snap = await getDocs(query(collection(db,'site_settings','banners','items'), orderBy('order','asc')));
-    const nowStr = new Date().toISOString().slice(0,10);
-    const items = [];
-    snap.forEach(d=>{
-      const b = d.data();
-      if(b.enabled===false) return;
-      if(b.validFrom && nowStr < b.validFrom) return;
-      if(b.validTo && nowStr > b.validTo) return;
-      items.push({id:d.id,...b});
+  <!-- PIN Modal -->
+  <div id="pinModal" class="modal" role="dialog" aria-modal="true" aria-label="Know Your Parental PIN">
+    <div class="modalCard">
+      <div class="modalHead">
+        <strong>Know Your Parental PIN</strong>
+        <button class="x" data-close="pinModal">Close</button>
+      </div>
+      <div class="modalBody">
+        <form id="pinForm" class="grid">
+          <div class="grid two">
+            <div>
+              <label>MAC Address</label>
+              <input required name="mac" placeholder="00:1A:79:xx:xx:xx">
+            </div>
+            <div>
+              <label>Email</label>
+              <input required name="email" type="email" placeholder="you@example.com">
+            </div>
+          </div>
+          <div>
+            <label>Notes</label>
+            <input name="note" placeholder="Optional note">
+          </div>
+          <button class="btn whats" type="submit">Request PIN on WhatsApp</button>
+          <div class="help">We’ll verify your account and send the PIN. No wild goose chases.</div>
+        </form>
+        <div class="footpad"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subscription Modal (reused from Plans) -->
+  <div id="subscribeModal" class="modal" role="dialog" aria-modal="true" aria-label="Subscribe">
+    <div class="modalCard">
+      <div class="modalHead">
+        <strong>Subscribe</strong>
+        <button class="x" data-close="subscribeModal">Close</button>
+      </div>
+      <div class="modalBody">
+        <form id="subscribeForm" class="grid">
+          <input type="hidden" name="plan" id="subPlan">
+          <div class="grid two">
+            <div>
+              <label>Full Name</label>
+              <input required name="name" placeholder="Your name">
+            </div>
+            <div>
+              <label>Phone</label>
+              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
+            </div>
+          </div>
+          <div class="grid two">
+            <div>
+              <label>TV Channels</label>
+              <select name="channels" required>
+                <option>English</option>
+                <option>Punjabi</option>
+                <option>Hindi</option>
+                <option>Urdu</option>
+                <option>French</option>
+                <option>Arabic</option>
+                <option>Korean</option>
+                <option>Gujarati</option>
+                <option>Others</option>
+              </select>
+            </div>
+            <div>
+              <label>VOD Category</label>
+              <select name="vod" required>
+                <option>English</option>
+                <option>Panjabi</option>
+                <option>Hindi</option>
+                <option>Urdu</option>
+                <option>French</option>
+                <option>Action</option>
+                <option>Drama</option>
+                <option>Comedy</option>
+                <option>Kids</option>
+                <option>Documentary</option>
+                <option>Others</option>
+                <option>Adult</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label>Notes</label>
+            <textarea name="note" rows="3" placeholder="Anything else we should know?"></textarea>
+          </div>
+          <button class="btn whats" type="submit">Send on WhatsApp</button>
+        </form>
+        <div class="footpad"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+
+    // 1) Your Firebase config (you said Step 1 done; leaving your values here)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
+      authDomain: "netplus-site-4ff04.firebaseapp.com",
+      projectId: "netplus-site-4ff04",
+      storageBucket: "netplus-site-4ff04.firebasestorage.app",
+      messagingSenderId: "49095160110",
+      appId: "1:49095160110:web:5431d5c9f8ca45c4d70abf",
+      measurementId: "G-PYWFFDZ0RR"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 2) Config
+    const USE_FIRESTORE_FOR_PLANS = true; // flip to false to use local fallback
+    const WHATSAPP_NUMBER = "15551234567"; // <= replace with your full international number, no '+'.
+
+    // 3) Elements
+    const yearEl = document.getElementById('year');
+    yearEl.textContent = new Date().getFullYear();
+
+    // Menu open/close
+    const menuBtn = document.getElementById('menuBtn');
+    const menuSheet = document.getElementById('menuSheet');
+    menuBtn.addEventListener('click', () => menuSheet.classList.add('open'));
+    menuSheet.addEventListener('click', e => {
+      if (e.target.dataset.close === 'menuSheet' || e.target === menuSheet) menuSheet.classList.remove('open');
     });
-    if(!items.length){ wrap.style.display='none'; return; }
-    wrap.style.display='block';
-    for(const b of items){
-      const el = document.createElement('div');
-      el.className='slide';
-      el.innerHTML = `
-        <button class="x" aria-label="Close" onclick="this.closest('.slide').remove()">&times;</button>
-        <div class="t">${b.title||''}</div>
-        <div style="margin:6px 0">${b.text||''}</div>
-        ${b.ctaLabel? `<a href="${b.ctaHref||'#'}">${b.ctaLabel}</a>`:''}
-        ${b.imageUrl? `<img src="${b.imageUrl}" alt="" style="position:absolute;right:10px;bottom:10px;max-height:42px;border-radius:8px">`:''}
-      `;
-      track.appendChild(el);
-    }
-  }
-
-  /* ===== Gallery from Firestore ===== */
-  async function loadGallery(){
-    const grid = document.getElementById('galleryGrid');
-    if(!grid) return;
-    grid.innerHTML = '';
-    const snap = await getDocs(query(collection(db,'site_settings','gallery','items'), orderBy('order','asc')));
-    snap.forEach(d=>{
-      const g = d.data();
-      const item = document.createElement('div');
-      item.className = 'gitem';
-      item.innerHTML = `
-        <img src="${g.imageUrl||''}" alt="${g.name||''}" loading="lazy" />
-        <div class="gcap">${g.name||''}</div>
-      `;
-      item.onclick = ()=>{ if(g.imageUrl) window.open(g.imageUrl,'_blank'); };
-      grid.appendChild(item);
-    });
-  }
-  // expose for non-module caller
-  window.loadGallery = loadGallery;
-  async function ping(){
-    try{
-      await addDoc(collection(db,'analytics_visitors'),{
-        createdAt: serverTimestamp(),
-        page: location.pathname,
-        ua: navigator.userAgent
+    menuSheet.querySelectorAll('[data-open]').forEach(a=>{
+      a.addEventListener('click', ()=>{
+        menuSheet.classList.remove('open');
+        openModal(a.dataset.open);
       });
-    }catch(_){}
-  }
-  setInterval(ping,15000);
+    });
 
-
-  // init
-  loadBanners();
-</script>
-
-<script>
-  /* ===== Tabs / Panels ===== */
-  function showPanel(name){
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    document.querySelector('#panel-'+name).classList.add('active');
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    document.querySelector('#tab-'+name).classList.add('active');
-    document.querySelectorAll('.dbtn').forEach(b=>b.classList.remove('dactive'));
-    const idx={plans:0,boxes:1,recharge:2,support:3}[name];document.querySelectorAll('.dbtn')[idx].classList.add('dactive');
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
-
-  /* ===== Modal open/close with background scroll lock ===== */
-  let _scrollY = 0;
-  function openSheet(key){
-    _scrollY = window.scrollY || window.pageYOffset;
-    document.body.classList.add('modal-open');
-    document.body.style.top = `-${_scrollY}px`;
-    const el = document.getElementById('sheet-'+key);
-    el.style.display = 'flex';
-    el.addEventListener('click', backdropCloser);
-    const sheetEl = el.querySelector('.sheet');
-    if (sheetEl) sheetEl.addEventListener('click', e => e.stopPropagation());
-
-    if(key==='gallery'){ if(window.loadGallery) window.loadGallery(); }
-  }
-  function backdropCloser(e){
-    if(e.target.classList.contains('modal')){
-      const id = e.currentTarget.id.replace('sheet-','');
-      closeSheet(id);
+    // Modal helpers
+    function openModal(id){
+      document.getElementById(id)?.classList.add('open');
     }
-  }
-  function closeSheet(key){
-    const el = document.getElementById('sheet-'+key);
-    if(!el) return;
-    el.style.display = 'none';
-    el.removeEventListener('click', backdropCloser);
-    document.body.classList.remove('modal-open');
-    document.body.style.top = '';
-    window.scrollTo(0, _scrollY);
-  }
+    function closeModal(id){
+      document.getElementById(id)?.classList.remove('open');
+    }
+    document.querySelectorAll('.modal').forEach(m=>{
+      m.addEventListener('click', e=>{
+        if (e.target === m) m.classList.remove('open');
+      });
+      m.querySelectorAll('[data-close]').forEach(b=>{
+        b.addEventListener('click', ()=> closeModal(b.dataset.close || m.id));
+      });
+    });
+    // Big buttons open modals
+    document.querySelectorAll('[data-open]').forEach(b=>{
+      b.addEventListener('click', ()=> openModal(b.dataset.open));
+    });
 
-  /* ===== WhatsApp helper & CTAs ===== */
-  function waSend(msg){
-    const url = "https://wa.me/16476961656?text=" + encodeURIComponent(msg.trim());
-    window.open(url,'_blank');
-  }
+    // Plans
+    const plansGrid = document.getElementById('plansGrid');
+    const refreshBtn = document.getElementById('refreshPlans');
 
-  // Offer registration
-  function waRegisterOffer(){
-    const name=(document.getElementById('waName').value||'').trim();
-    const email=(document.getElementById('waEmail').value||'').trim();
-    const msg = `Offer Registration (+1 month)\nPlan: 1-Year\nName: ${name}\nEmail: ${email}\nSource: website`;
-    waSend(msg);
-  }
+    const localPlans = [
+      { name:"Starter HD", price:"$60 / 6 mo", desc:"HD focus • Core channels", months:6 },
+      { name:"Family FHD", price:"$100 / 12 mo", desc:"Full HD • Family packs", months:12 },
+      { name:"4K Select", price:"$120 / 12 mo", desc:"4K where available • Sports", months:12 },
+      { name:"Max Ultra", price:"$180 / 24 mo", desc:"Best value • 4K + PPV focus", months:24 }
+    ];
 
-  // Referral form
-  function waReferral(){
-    const yn  =(document.getElementById('refYourName').value||'').trim();
-    const ye  =(document.getElementById('refYourEmail').value||'').trim();
-    const yp  =(document.getElementById('refYourPhone').value||'').trim();
-    const ymac=(document.getElementById('refYourMac').value||'').trim();
+    async function loadPlans(){
+      plansGrid.innerHTML = '<div class="muted">Loading plans…</div>';
+      let items = localPlans;
+      if (USE_FIRESTORE_FOR_PLANS){
+        try{
+          const snap = await getDocs(collection(db,'plans'));
+          const arr = [];
+          snap.forEach(doc=>{
+            const d = doc.data();
+            if (d?.name && d?.price) arr.push({ name:d.name, price:d.price, desc:d.desc || '', months:d.months || '' });
+          });
+          if (arr.length) items = arr;
+        }catch(e){
+          console.warn('Firestore plans failed, using fallback', e);
+        }
+      }
+      renderPlans(items);
+    }
 
-    const fn  =(document.getElementById('refFriendName').value||'').trim();
-    const fe  =(document.getElementById('refFriendEmail').value||'').trim();
-    const fp  =(document.getElementById('refFriendPhone').value||'').trim();
+    function renderPlans(items){
+      plansGrid.innerHTML = '';
+      items.forEach(p=>{
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.innerHTML = `
+          <h3>${escapeHtml(p.name)}</h3>
+          <div class="price">${escapeHtml(p.price)}</div>
+          <div class="muted" style="margin:6px 0 10px">${escapeHtml(p.desc || 'Inclusive of Quick Activation, 20k+ Live Channels, PPV, Series')}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" data-info="${escapeAttr(p.name)}">Info</button>
+            <button class="btn whats" data-subscribe="${escapeAttr(p.name)}">Subscribe</button>
+          </div>
+        `;
+        plansGrid.appendChild(el);
+      });
+      // Attach handlers
+      plansGrid.querySelectorAll('[data-info]').forEach(b=>{
+        b.addEventListener('click', ()=> showInfo(b.dataset.info));
+      });
+      plansGrid.querySelectorAll('[data-subscribe]').forEach(b=>{
+        b.addEventListener('click', ()=>{
+          document.getElementById('subPlan').value = b.dataset.subscribe;
+          openModal('subscribeModal');
+        });
+      });
+    }
 
-    const msg = `Referral: +2 Months Request\nYour Name: ${yn}\nYour Email: ${ye}\nYour Phone: ${yp}\nYour Device MAC: ${ymac}\nFriend Name: ${fn}\nFriend Email: ${fe}\nFriend Phone: ${fp}\nNote: Friend will purchase 1-Year plan.`;
-    waSend(msg);
-  }
+    function showInfo(planName){
+      // Simple info modal using the Subscribe modal body as host? No. We'll just alert a list.
+      // If you want a full modal with categories, you can extend this.
+      const categories = [
+        "All English, Punjabi, Hindi, Pakistani, Gujarati, Arabic, Korean and more",
+        "Full HD & 4K content where available",
+        "Latest + Old Movies & Series",
+        "Sports, News, Kids, Documentaries",
+        "PPV availability varies by event"
+      ];
+      alert(`${planName}\n\nIncludes:\n- ` + categories.join('\n- '));
+    }
 
-  function subscribePlan(label,price){
-    document.getElementById('sPlan').value = label + " - $" + price;
-    openSheet('subscribe');
-  }
-  function sendSubscribe(){
-    const n=(document.getElementById('sName').value||'').trim();
-    const ph=(document.getElementById('sPhone').value||'').trim();
-    const e=(document.getElementById('sEmail').value||'').trim();
-    const plan=document.getElementById('sPlan').value||'';
-    waSend(`New Subscription\nPlan: ${plan}\nName: ${n}\nPhone: ${ph}\nEmail: ${e}`);
-  }
-  function buyBox(name,price){
-    waSend(`I'm interested in: Box Only\nModel: ${name}\nPrice: $${price}\nPlease guide me with purchase & setup.`);
-  }
-  function buyBoxBundle(name,price){
-    waSend(`I'm interested in: ${name} + 12‑Month Plan\nBundle Price: $${price}\nPlease guide me with activation & setup.`);
-  }
+    refreshBtn.addEventListener('click', loadPlans);
+    loadPlans();
 
-  /* ===== Recharge ===== */
-  function sendRecharge(){
-    const n=(document.getElementById('rcName').value||'').trim();
-    const u=(document.getElementById('rcUser').value||'').trim();
-    const e=(document.getElementById('rcEmail').value||'').trim();
-    const p=document.getElementById('rcPlan').value||'';
-    waSend(`Recharge Request\nName: ${n}\nUser ID: ${u}\nEmail: ${e}\nPlan: ${p}`);
-  }
+    // Forms -> WhatsApp
+    function toWA(text){
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+    function formToKV(form){
+      const data = new FormData(form);
+      const kv = {};
+      data.forEach((v,k)=> kv[k]=v);
+      return kv;
+    }
 
-  /* ===== Support forms ===== */
-  function sendRequest(){
-    const n=(document.getElementById('reqName').value||'').trim();
-    const ph=(document.getElementById('reqPhone').value||'').trim();
-    const e=(document.getElementById('reqEmail').value||'').trim();
-    const note=(document.getElementById('reqNote').value||'').trim();
-    waSend(`General Request\nName: ${n}\nPhone: ${ph}\nEmail: ${e}\nDetails: ${note}`);
-  }
-  function sendPin(){
-    const mac=(document.getElementById('pinMac').value||'').trim();
-    const e=(document.getElementById('pinEmail').value||'').trim();
-    const note=(document.getElementById('pinNote').value||'').trim();
-    waSend(`Parental PIN Request\nMAC: ${mac}\nEmail: ${e}\nNote: ${note}`);
-  }
+    document.getElementById('subscribeForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const kv = formToKV(e.target);
+      const msg = [
+        `New Subscription Request`,
+        `Plan: ${kv.plan}`,
+        `Name: ${kv.name}`,
+        `Phone: ${kv.phone}`,
+        `Channels: ${kv.channels}`,
+        `VOD: ${kv.vod}`,
+        kv.note ? `Note: ${kv.note}` : null
+      ].filter(Boolean).join('\n');
+      toWA(msg);
+    });
 
-  // expose for inline handlers
-  window.openSheet=openSheet; window.closeSheet=closeSheet;
-  window.showPanel=showPanel; window.sendRecharge=sendRecharge;
-  window.sendRequest=sendRequest; window.sendPin=sendPin;
-  window.subscribePlan=subscribePlan; window.waRegisterOffer=waRegisterOffer; window.waReferral=waReferral;
-</script>
+    document.getElementById('ownPlanForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const kv = formToKV(e.target);
+      const msg = [
+        `Custom Plan Request`,
+        `Name: ${kv.name}`,
+        `Phone: ${kv.phone}`,
+        kv.email ? `Email: ${kv.email}` : null,
+        `Preferred Channels: ${kv.channels}`,
+        `VOD: ${kv.vod}`,
+        kv.note ? `Note: ${kv.note}` : null
+      ].filter(Boolean).join('\n');
+      toWA(msg);
+    });
+
+    document.getElementById('rechargeForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const kv = formToKV(e.target);
+      const msg = [
+        `Recharge Request`,
+        `Name: ${kv.name}`,
+        `Phone: ${kv.phone}`,
+        `Duration: ${kv.duration} month(s)`,
+        kv.note ? `Note: ${kv.note}` : null
+      ].filter(Boolean).join('\n');
+      toWA(msg);
+    });
+
+    document.getElementById('supportForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const kv = formToKV(e.target);
+      const msg = [
+        `Support Request`,
+        `Name: ${kv.name}`,
+        `Phone: ${kv.phone}`,
+        `Issue: ${kv.issue}`
+      ].join('\n');
+      toWA(msg);
+    });
+
+    document.getElementById('pinForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const kv = formToKV(e.target);
+      const msg = [
+        `Parental PIN Request`,
+        `MAC: ${kv.mac}`,
+        `Email: ${kv.email}`,
+        kv.note ? `Note: ${kv.note}` : null
+      ].filter(Boolean).join('\n');
+      toWA(msg);
+    });
+
+    // Sanitize helpers
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+  </script>
 </body>
 </html>
