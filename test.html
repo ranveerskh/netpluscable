@@ -6,14 +6,14 @@
 <title>net+TV — Admin</title>
 <meta name="theme-color" content="#0b1020" />
 <style>
-  :root{--bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;--g1:#6a11cb;--g2:#2575fc;--ok:#31d296;--bad:#ff7b7b}
+  :root{--bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;--g1:#6a11cb;--g2:#2575fc;--ok:#31d296;--bad:#ff7b7b;--shadow:0 10px 30px rgba(0,0,0,.35)}
   *{box-sizing:border-box}
   body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink)}
   a{color:inherit}
   .top{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(8px)}
   .wrap{max-width:1200px;margin:0 auto;padding:16px}
   .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .btn{padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.05);cursor:pointer}
+  .btn{padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.06);cursor:pointer}
   .btn.primary{background:linear-gradient(135deg, rgba(106,17,203,.45), rgba(37,117,252,.45));border-color:#3b4f8f}
   .btn.link{background:linear-gradient(135deg, rgba(106,17,203,.25), rgba(37,117,252,.25))}
   .muted{color:var(--muted);font-size:12px}
@@ -21,11 +21,11 @@
   .grid{display:grid;gap:12px}
   .two{grid-template-columns:1fr 1fr} .three{grid-template-columns:1fr 1fr 1fr}
   label{font-size:12px;color:var(--muted)}
-  input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#0f1430;color:#fff}
+  input,select,textarea{width:100%;padding:11px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff}
   textarea{min-height:86px}
-  .card{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03);padding:14px}
+  .card{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.04);padding:16px;box-shadow:var(--shadow)}
   .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-  .tab{padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);cursor:pointer}
+  .tab{padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.06);cursor:pointer}
   .tab.active{background:linear-gradient(135deg,rgba(106,17,203,.18),rgba(37,117,252,.18))}
   .list{display:grid;gap:10px}
   .item{border:1px dashed var(--line);border-radius:12px;padding:10px}
@@ -35,15 +35,16 @@
   .tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:999px;background:linear-gradient(135deg,var(--g1),var(--g2))}
   .imgRow{display:flex;gap:8px;flex-wrap:wrap}
   .thumb{width:120px;height:68px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#000}
-  .authCard{position:absolute;right:0;top:42px;width:300px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,.35);display:none;z-index:40}
+  .authCard{position:absolute;right:0;top:42px;width:300px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:var(--shadow);display:none;z-index:40}
   .authCard.open{display:block}
+  .hidden{display:none}
 </style>
 </head>
 <body>
   <div class="top">
     <div class="row">
       <strong>net+TV Admin</strong>
-      <span class="muted mini">| Firestore (URL images) • Anyone signed in can edit</span>
+      <span class="muted mini">| Anyone signed in can edit</span>
     </div>
     <div class="row">
       <a class="btn link" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glo TV</a>
@@ -70,7 +71,7 @@
       </div>
 
       <span id="userInfo" class="muted mini">Not signed in</span>
-      <button id="signOutBtn" class="btn" style="display:none">Sign out</button>
+      <button id="signOutBtn" class="btn hidden">Sign out</button>
     </div>
   </div>
 
@@ -87,8 +88,8 @@
       <!-- SETTINGS & TEXT -->
       <section id="tab-settings" class="grid" style="margin-top:12px">
         <div class="card">
-          <h3>Homepage Text</h3>
-          <div class="grid three">
+          <div class="split"><h3 style="margin:0">Homepage Text</h3><button id="seedBtn" class="btn">Seed sample data</button></div>
+          <div class="grid three" style="margin-top:8px">
             <div><label>Hero Subtitle</label><input id="set-hero-subtitle" placeholder="Quick Activation"></div>
             <div><label>Hero Title</label><input id="set-hero-title" placeholder="20,000+ Live Channels, All Shows, Movies & PPV"></div>
             <div><label>Hero Subline</label><input id="set-hero-subline" placeholder="Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech"></div>
@@ -119,11 +120,7 @@
             <button id="saveSettings" class="btn primary">Save Settings</button>
             <div id="settingsMsg" class="muted"></div>
           </div>
-        </div>
-
-        <div class="card">
-          <h3>Help</h3>
-          <div class="muted">All images are URLs. Banners must be 1280×720. Box images 16:9. Posters 2:3 or 16:9. If you paste potato-quality images, customers will see potato-quality images.</div>
+          <div class="muted" style="margin-top:8px">Tip: After saving, refresh your homepage tab. If you seeded, you should instantly see banners, posters, plans and a sample box.</div>
         </div>
       </section>
 
@@ -264,7 +261,7 @@ https://.../banner-2-1280x720.jpg"></textarea>
 
     <div id="locked" class="card">
       <h3>Sign in to edit</h3>
-      <p class="muted">Anyone who can sign in can edit. Yes, really. Try not to share the login with your chatty cousin.</p>
+      <p class="muted">Anyone who can sign in can edit. Try not to hand out the login like festival flyers.</p>
     </div>
   </div>
 
@@ -313,13 +310,13 @@ https://.../banner-2-1280x720.jpg"></textarea>
     const editor = $('#editor'), locked = $('#locked');
     if(!user){
       userInfo.textContent = "Not signed in";
-      signOutBtn.style.display = 'none';
+      signOutBtn.classList.add('hidden');
       editor.classList.add('hidden');
       locked.classList.remove('hidden');
       return;
     }
     userInfo.textContent = user.displayName || user.email || user.uid;
-    signOutBtn.style.display = 'inline-flex';
+    signOutBtn.classList.remove('hidden');
     editor.classList.remove('hidden');
     locked.classList.add('hidden');
 
@@ -371,6 +368,42 @@ https://.../banner-2-1280x720.jpg"></textarea>
     };
     await setDoc(doc(db,'settings','main'), body, {merge:true});
     msg($('#settingsMsg'),'Saved.');
+  };
+
+  // Seed sample content fast so homepage shows data immediately
+  $('#seedBtn').onclick = async()=>{
+    if(!confirm('Seed demo content? This will add sample banners, posters, a box and 2 plans.')) return;
+    // settings
+    await setDoc(doc(db,'settings','main'), {
+      themeDefault:'dark',
+      whatsappNumber:'16476961656',
+      features:['🇨🇦 Proudly Canadian','Zero Latency Streams','24/7 Support','Multi-Device'],
+      heroSubtitle:'Quick Activation',
+      heroTitle:'20,000+ Live Channels, All Shows, Movies & PPV',
+      heroSubline:'Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech',
+      ctaLabels:['Our Plans','New Boxes','Renew Plan','Contact Support'],
+      updatedAt: serverTimestamp()
+    }, {merge:true});
+    // banners
+    await addDoc(collection(db,'banners'), { title:'Welcome', sort:10, active:true, images:[
+      'https://via.placeholder.com/1280x720?text=net%2BTV+Banner+1',
+      'https://via.placeholder.com/1280x720?text=net%2BTV+Banner+2'
+    ], updatedAt:serverTimestamp()});
+    // posters
+    await addDoc(collection(db,'posters'), { title:'Sample Poster 1', ratio:'2:3', sort:10, active:true, image:'https://via.placeholder.com/300x450?text=Poster+1', updatedAt:serverTimestamp()});
+    await addDoc(collection(db,'posters'), { title:'Sample Poster 2', ratio:'2:3', sort:20, active:true, image:'https://via.placeholder.com/300x450?text=Poster+2', updatedAt:serverTimestamp()});
+    // plans
+    await addDoc(collection(db,'plans'), { name:'Starter HD', price:'CA$60', months:6, benefit:'+1 month free', tag:'Popular', desc:'HD focus • Core channels', sort:10, active:true, updatedAt:serverTimestamp()});
+    await addDoc(collection(db,'plans'), { name:'Family FHD', price:'CA$100', months:12, benefit:'+2 months free', tag:'Best Value', desc:'Full HD • Family packs', sort:20, active:true, updatedAt:serverTimestamp()});
+    // box
+    await addDoc(collection(db,'boxes'), {
+      tier:'Basic Box', name:'X-100', sort:10, boxPrice:'CA$120', active:true,
+      combo:{price:'CA$199', planMonths:12, extra:'+1 month free'},
+      desc:'Fast setup. Supports our portal.',
+      images:['https://via.placeholder.com/1280x720?text=Box+Front','https://via.placeholder.com/1280x720?text=Box+UI'],
+      updatedAt:serverTimestamp()
+    });
+    alert('Seeded. Open your homepage and refresh.');
   };
 
   /* PLANS */
@@ -448,7 +481,7 @@ https://.../banner-2-1280x720.jpg"></textarea>
         $('#b-id').value=x.id; $('#b-tier').value=x.tier||''; $('#b-name').value=x.name||'';
         $('#b-sort').value=x.sort||0; $('#b-boxPrice').value=x.boxPrice||''; $('#b-active').value=String(x.active!==false);
         $('#b-c-price').value=x.combo?.price||''; $('#b-c-months').value=x.combo?.planMonths||12; $('#b-c-extra').value=x.combo?.extra||'';
-        $('#b-desc').value=x.desc||''; $('#b-img-urls').value=(x.images||[]).join('\n'); renderThumbs('#b-images', x.images||[]);
+        $('#b-desc').value=x.desc||''; $('#b-img-urls').value=(x.images||[]).join('\\n'); renderThumbs('#b-images', x.images||[]);
       };
     });
   }
@@ -499,7 +532,7 @@ https://.../banner-2-1280x720.jpg"></textarea>
       b.onclick=()=>{
         const x=bannersCache.find(z=>z.id===b.dataset.edit);
         $('#bn-id').value=x.id; $('#bn-title').value=x.title||''; $('#bn-sort').value=x.sort||0; $('#bn-active').value=String(x.active!==false);
-        $('#bn-img-urls').value=(x.images||[]).join('\n'); renderThumbs('#bn-images', x.images||[]);
+        $('#bn-img-urls').value=(x.images||[]).join('\\n'); renderThumbs('#bn-images', x.images||[]);
       };
     });
   }
