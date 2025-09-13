@@ -6,14 +6,15 @@
 <title>net+TV — Admin (URL mode)</title>
 <meta name="theme-color" content="#0b1020" />
 <style>
-  :root{--bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;--g1:#6a11cb;--g2:#2575fc}
+  :root{--bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;--g1:#6a11cb;--g2:#2575fc;--ok:#31d296;--bad:#ff7b7b}
   body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink)}
   a{color:inherit}
-  .top{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(8px)}
+  .top{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(8px)}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .tabs{display:flex;gap:8px;flex-wrap:wrap}
   .tab{padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);cursor:pointer}
   .tab.active{background:linear-gradient(135deg,rgba(106,17,203,.18),rgba(37,117,252,.18))}
-  .wrap{max-width:1100px;margin:0 auto;padding:16px}
   .grid{display:grid;gap:12px}
   .two{grid-template-columns:1fr 1fr}
   .three{grid-template-columns:1fr 1fr 1fr}
@@ -22,14 +23,14 @@
   input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#0f1430;color:#fff}
   textarea{min-height:86px}
   button{font:inherit;cursor:pointer}
-  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .btn{padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.05)}
   .btn.primary{background:linear-gradient(135deg, rgba(106,17,203,.45), rgba(37,117,252,.45));border-color:#3b4f8f}
+  .btn.link{background:linear-gradient(135deg, rgba(106,17,203,.25), rgba(37,117,252,.25))}
   .list{display:grid;gap:10px}
   .item{border:1px dashed var(--line);border-radius:12px;padding:10px}
   .muted{color:var(--muted);font-size:12px}
-  .danger{color:#ff7b7b}
-  .success{color:#31d296}
+  .success{color:var(--ok)}
+  .danger{color:var(--bad)}
   .split{display:flex;justify-content:space-between;align-items:center;gap:8px}
   .right{display:flex;gap:6px;align-items:center}
   .mini{font-size:12px}
@@ -37,209 +38,260 @@
   .imgRow{display:flex;gap:8px;flex-wrap:wrap}
   .thumb{width:120px;height:68px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#000}
   .hidden{display:none}
-  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:12px}
+
+  /* Auth dropdown */
+  .authWrap{position:relative}
+  .authCard{position:absolute;right:0;top:42px;width:300px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,.35);display:none;z-index:30}
+  .authCard.open{display:block}
+  .authRow{display:grid;gap:8px}
+  .note{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body>
   <div class="top">
-    <div><strong>net+TV Admin</strong> <span class="muted mini">| Firestore only (URL images)</span></div>
-    <div class="right">
+    <div class="row">
+      <strong>net+TV Admin</strong>
+      <span class="muted mini">| Firestore only (URL images)</span>
+    </div>
+    <div class="row">
+      <!-- Quick Links in header too, because you’ll click them 500 times a day -->
+      <a class="btn link" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glo TV</a>
+      <a class="btn link" href="https://bill.spicetv.cc/login" target="_blank" rel="noopener">Spice4K</a>
+      <a class="btn link" href="https://fast4k.cc/login" target="_blank" rel="noopener">Smart 4K</a>
+      <a class="btn link" href="data.html" target="_blank" rel="noopener">Users Data</a>
+      <a class="btn link" href="https://postimages.org" target="_blank" rel="noopener">Upload Images</a>
+
+      <div class="authWrap">
+        <button id="authToggle" class="btn">Sign in</button>
+        <div id="authCard" class="authCard">
+          <div class="authRow">
+            <div class="muted mini">Firebase Email/Password</div>
+            <input id="authEmail" placeholder="you@example.com" type="email">
+            <input id="authPass" placeholder="password" type="password">
+            <div class="row">
+              <button id="emailSignIn" class="btn primary">Sign in</button>
+              <button id="emailRegister" class="btn">Register</button>
+            </div>
+            <div class="note">After registering, the owner must add your UID to <code>admins</code> to unlock editing.</div>
+            <hr style="border:0;border-top:1px solid var(--line)">
+            <button id="googleSignIn" class="btn">Sign in with Google</button>
+            <div id="authMsg" class="muted"></div>
+          </div>
+        </div>
+      </div>
+
       <span id="userInfo" class="muted mini">Not signed in</span>
-      <button id="signInBtn" class="btn">Sign in with Google</button>
       <button id="signOutBtn" class="btn hidden">Sign out</button>
     </div>
   </div>
 
   <div class="wrap">
-    <div class="tabs">
-      <button class="tab active" data-tab="settings">Settings</button>
-      <button class="tab" data-tab="plans">Plans</button>
-      <button class="tab" data-tab="boxes">Boxes</button>
-      <button class="tab" data-tab="banners">Banners</button>
-      <button class="tab" data-tab="posters">Posters</button>
+    <!-- Big Quick Links card as well (nice big targets). Always visible. -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="split">
+        <h3 style="margin:0">Quick Links</h3>
+        <span class="muted mini">Opens in a new tab</span>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <a class="btn link" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glo TV</a>
+        <a class="btn link" href="https://bill.spicetv.cc/login" target="_blank" rel="noopener">Spice4K</a>
+        <a class="btn link" href="https://fast4k.cc/login" target="_blank" rel="noopener">Smart 4K</a>
+        <a class="btn link" href="data.html" target="_blank" rel="noopener">Users Data</a>
+        <a class="btn link" href="https://postimages.org" target="_blank" rel="noopener">Upload Images</a>
+      </div>
     </div>
 
-    <!-- SETTINGS -->
-    <section id="tab-settings" class="grid" style="margin-top:12px">
-      <div class="card">
-        <h3>Site Settings</h3>
-        <div class="grid two">
-          <div>
-            <label>Default Theme</label>
-            <select id="set-theme">
-              <option>dark</option>
-              <option>light</option>
-            </select>
+    <!-- Editor area gets hidden if not admin -->
+    <div id="editor">
+      <div class="tabs">
+        <button class="tab active" data-tab="settings">Settings</button>
+        <button class="tab" data-tab="plans">Plans</button>
+        <button class="tab" data-tab="boxes">Boxes</button>
+        <button class="tab" data-tab="banners">Banners</button>
+        <button class="tab" data-tab="posters">Posters</button>
+      </div>
+
+      <!-- SETTINGS -->
+      <section id="tab-settings" class="grid" style="margin-top:12px">
+        <div class="card">
+          <h3>Site Settings</h3>
+          <div class="grid two">
+            <div>
+              <label>Default Theme</label>
+              <select id="set-theme">
+                <option>dark</option>
+                <option>light</option>
+              </select>
+            </div>
+            <div>
+              <label>WhatsApp Number (no +)</label>
+              <input id="set-wa" placeholder="16476961656" />
+            </div>
           </div>
           <div>
-            <label>WhatsApp Number (no +)</label>
-            <input id="set-wa" placeholder="16476961656" />
+            <label>Feature Ticker (comma separated)</label>
+            <input id="set-features" placeholder="Proudly Canadian, Zero Latency Streams, 24/7 Support, Multi-Device" />
+          </div>
+          <div class="row">
+            <button id="saveSettings" class="btn primary">Save Settings</button>
+            <div id="settingsMsg" class="muted"></div>
           </div>
         </div>
-        <div>
-          <label>Feature Ticker (comma separated)</label>
-          <input id="set-features" placeholder="Proudly Canadian, Zero Latency Streams, 24/7 Support, Multi-Device" />
+        <div class="card">
+          <h3>Notes</h3>
+          <div class="muted">Images are URLs only. Banner images should be exactly 1280×720. Boxes: 1–3 images, 16:9. Posters: 2:3 or 16:9. Yes, pixels matter.</div>
         </div>
-        <div class="row">
-          <button id="saveSettings" class="btn primary">Save Settings</button>
-          <div id="settingsMsg" class="muted"></div>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Notes</h3>
-        <div class="muted">Images are provided as URLs. Keep banner images exactly 1280×720, and box images 16:9. Posters can be 2:3 or 16:9. Thrilling stuff.</div>
-      </div>
-    </section>
+      </section>
 
-    <!-- PLANS -->
-    <section id="tab-plans" class="grid hidden" style="margin-top:12px">
-      <div class="card">
-        <h3>New / Edit Plan</h3>
-        <div class="grid three">
-          <div><label>Name</label><input id="p-name"></div>
-          <div><label>Price (e.g., CA$100)</label><input id="p-price"></div>
-          <div><label>Months</label><input id="p-months" type="number" min="1"></div>
-        </div>
-        <div class="grid three">
-          <div><label>Benefit</label><input id="p-benefit" placeholder="+1 month free"></div>
-          <div><label>Tag</label><input id="p-tag" placeholder="Popular / Best Value"></div>
-          <div><label>Sort</label><input id="p-sort" type="number" value="10"></div>
-        </div>
-        <div class="grid two">
-          <div><label>Description</label><input id="p-desc" placeholder="Short description"></div>
-          <div>
-            <label>Active</label>
-            <select id="p-active"><option>true</option><option>false</option></select>
+      <!-- PLANS -->
+      <section id="tab-plans" class="grid hidden" style="margin-top:12px">
+        <div class="card">
+          <h3>New / Edit Plan</h3>
+          <div class="grid three">
+            <div><label>Name</label><input id="p-name"></div>
+            <div><label>Price (e.g., CA$100)</label><input id="p-price"></div>
+            <div><label>Months</label><input id="p-months" type="number" min="1"></div>
           </div>
+          <div class="grid three">
+            <div><label>Benefit</label><input id="p-benefit" placeholder="+1 month free"></div>
+            <div><label>Tag</label><input id="p-tag" placeholder="Popular / Best Value"></div>
+            <div><label>Sort</label><input id="p-sort" type="number" value="10"></div>
+          </div>
+          <div class="grid two">
+            <div><label>Description</label><input id="p-desc" placeholder="Short description"></div>
+            <div>
+              <label>Active</label>
+              <select id="p-active"><option>true</option><option>false</option></select>
+            </div>
+          </div>
+          <div class="row">
+            <button id="planSave" class="btn primary">Save</button>
+            <button id="planNew" class="btn">New</button>
+            <button id="planDelete" class="btn">Delete</button>
+            <div id="planMsg" class="muted"></div>
+          </div>
+          <input id="p-id" type="hidden">
         </div>
-        <div class="row">
-          <button id="planSave" class="btn primary">Save</button>
-          <button id="planNew" class="btn">New</button>
-          <button id="planDelete" class="btn danger">Delete</button>
-          <div id="planMsg" class="muted"></div>
-        </div>
-        <input id="p-id" type="hidden">
-      </div>
 
-      <div class="card">
-        <div class="split"><h3>Plans</h3><button id="plansReload" class="btn">Reload</button></div>
-        <div id="plansList" class="list"></div>
-      </div>
-    </section>
+        <div class="card">
+          <div class="split"><h3>Plans</h3><button id="plansReload" class="btn">Reload</button></div>
+          <div id="plansList" class="list"></div>
+        </div>
+      </section>
 
-    <!-- BOXES -->
-    <section id="tab-boxes" class="grid hidden" style="margin-top:12px">
-      <div class="card">
-        <h3>New / Edit Box</h3>
-        <div class="grid three">
-          <div><label>Tier badge</label><input id="b-tier" placeholder="Basic Box / Good Box"></div>
-          <div><label>Model name</label><input id="b-name" placeholder="X-100"></div>
-          <div><label>Sort</label><input id="b-sort" type="number" value="10"></div>
-        </div>
-        <div class="grid two">
-          <div><label>Box Price</label><input id="b-boxPrice" placeholder="CA$120"></div>
-          <div><label>Active</label><select id="b-active"><option>true</option><option>false</option></select></div>
-        </div>
-        <div class="grid three">
-          <div><label>Combo Price</label><input id="b-c-price" placeholder="CA$199"></div>
-          <div><label>Combo Months</label><input id="b-c-months" type="number" value="12"></div>
-          <div><label>Combo Extra</label><input id="b-c-extra" placeholder="+1 month free"></div>
-        </div>
-        <div><label>Description</label><input id="b-desc" placeholder="Short description"></div>
+      <!-- BOXES -->
+      <section id="tab-boxes" class="grid hidden" style="margin-top:12px">
+        <div class="card">
+          <h3>New / Edit Box</h3>
+          <div class="grid three">
+            <div><label>Tier badge</label><input id="b-tier" placeholder="Basic Box / Good Box"></div>
+            <div><label>Model name</label><input id="b-name" placeholder="X-100"></div>
+            <div><label>Sort</label><input id="b-sort" type="number" value="10"></div>
+          </div>
+          <div class="grid two">
+            <div><label>Box Price</label><input id="b-boxPrice" placeholder="CA$120"></div>
+            <div><label>Active</label><select id="b-active"><option>true</option><option>false</option></select></div>
+          </div>
+          <div class="grid three">
+            <div><label>Combo Price</label><input id="b-c-price" placeholder="CA$199"></div>
+            <div><label>Combo Months</label><input id="b-c-months" type="number" value="12"></div>
+            <div><label>Combo Extra</label><input id="b-c-extra" placeholder="+1 month free"></div>
+          </div>
+          <div><label>Description</label><input id="b-desc" placeholder="Short description"></div>
 
-        <div class="grid">
-          <label>Image URLs (1–3, one per line)</label>
-          <textarea id="b-img-urls" placeholder="https://.../1280x720-1.jpg
+          <div class="grid">
+            <label>Image URLs (1–3, one per line)</label>
+            <textarea id="b-img-urls" placeholder="https://.../1280x720-1.jpg
 https://.../1280x720-2.jpg"></textarea>
-          <div id="b-images" class="imgRow"></div>
-          <div class="row"><span class="pill">Tip</span><span class="muted">We’ll take the first 3 lines. Use 16:9.</span></div>
+            <div id="b-images" class="imgRow"></div>
+          </div>
+
+          <div class="row">
+            <button id="boxSave" class="btn primary">Save</button>
+            <button id="boxNew" class="btn">New</button>
+            <button id="boxDelete" class="btn">Delete</button>
+            <div id="boxMsg" class="muted"></div>
+          </div>
+          <input id="b-id" type="hidden">
         </div>
 
-        <div class="row">
-          <button id="boxSave" class="btn primary">Save</button>
-          <button id="boxNew" class="btn">New</button>
-          <button id="boxDelete" class="btn danger">Delete</button>
-          <div id="boxMsg" class="muted"></div>
+        <div class="card">
+          <div class="split"><h3>Boxes</h3><button id="boxesReload" class="btn">Reload</button></div>
+          <div id="boxesList" class="list"></div>
         </div>
-        <input id="b-id" type="hidden">
-      </div>
+      </section>
 
-      <div class="card">
-        <div class="split"><h3>Boxes</h3><button id="boxesReload" class="btn">Reload</button></div>
-        <div id="boxesList" class="list"></div>
-      </div>
-    </section>
-
-    <!-- BANNERS -->
-    <section id="tab-banners" class="grid hidden" style="margin-top:12px">
-      <div class="card">
-        <h3>New / Edit Banner</h3>
-        <div class="grid two">
-          <div><label>Title</label><input id="bn-title" placeholder="Promo title"></div>
-          <div><label>Sort</label><input id="bn-sort" type="number" value="10"></div>
-        </div>
-        <div class="grid two">
-          <div><label>Active</label><select id="bn-active"><option>true</option><option>false</option></select></div>
-          <div><label>Image URLs (one per line, 1280×720)</label></div>
-        </div>
-        <textarea id="bn-img-urls" placeholder="https://.../banner-1-1280x720.jpg
+      <!-- BANNERS -->
+      <section id="tab-banners" class="grid hidden" style="margin-top:12px">
+        <div class="card">
+          <h3>New / Edit Banner</h3>
+          <div class="grid two">
+            <div><label>Title</label><input id="bn-title" placeholder="Promo title"></div>
+            <div><label>Sort</label><input id="bn-sort" type="number" value="10"></div>
+          </div>
+          <div class="grid two">
+            <div><label>Active</label><select id="bn-active"><option>true</option><option>false</option></select></div>
+            <div><label>Image URLs (one per line, 1280×720)</label></div>
+          </div>
+          <textarea id="bn-img-urls" placeholder="https://.../banner-1-1280x720.jpg
 https://.../banner-2-1280x720.jpg"></textarea>
-        <div id="bn-images" class="imgRow" style="margin-top:6px"></div>
-        <div class="row">
-          <button id="bnSave" class="btn primary">Save</button>
-          <button id="bnNew" class="btn">New</button>
-          <button id="bnDelete" class="btn danger">Delete</button>
-          <div id="bnMsg" class="muted"></div>
+          <div id="bn-images" class="imgRow" style="margin-top:6px"></div>
+          <div class="row">
+            <button id="bnSave" class="btn primary">Save</button>
+            <button id="bnNew" class="btn">New</button>
+            <button id="bnDelete" class="btn">Delete</button>
+            <div id="bnMsg" class="muted"></div>
+          </div>
+          <input id="bn-id" type="hidden">
         </div>
-        <input id="bn-id" type="hidden">
-      </div>
 
-      <div class="card">
-        <div class="split"><h3>Banners</h3><button id="bnReload" class="btn">Reload</button></div>
-        <div id="bannersList" class="list"></div>
-      </div>
-    </section>
+        <div class="card">
+          <div class="split"><h3>Banners</h3><button id="bnReload" class="btn">Reload</button></div>
+          <div id="bannersList" class="list"></div>
+        </div>
+      </section>
 
-    <!-- POSTERS -->
-    <section id="tab-posters" class="grid hidden" style="margin-top:12px">
-      <div class="card">
-        <h3>New / Edit Poster</h3>
-        <div class="grid three">
-          <div><label>Title</label><input id="ps-title" placeholder="Movie / Series title"></div>
-          <div><label>Aspect ratio</label><select id="ps-ratio"><option>2:3</option><option>16:9</option></select></div>
-          <div><label>Sort</label><input id="ps-sort" type="number" value="10"></div>
+      <!-- POSTERS -->
+      <section id="tab-posters" class="grid hidden" style="margin-top:12px">
+        <div class="card">
+          <h3>New / Edit Poster</h3>
+          <div class="grid three">
+            <div><label>Title</label><input id="ps-title" placeholder="Movie / Series title"></div>
+            <div><label>Aspect ratio</label><select id="ps-ratio"><option>2:3</option><option>16:9</option></select></div>
+            <div><label>Sort</label><input id="ps-sort" type="number" value="10"></div>
+          </div>
+          <div class="grid two">
+            <div><label>Active</label><select id="ps-active"><option>true</option><option>false</option></select></div>
+            <div><label>Image URL</label><input id="ps-url" placeholder="https://.../poster.jpg"></div>
+          </div>
+          <div class="row"><img id="ps-thumb" class="thumb hidden" alt=""></div>
+          <div class="row">
+            <button id="psSave" class="btn primary">Save</button>
+            <button id="psNew" class="btn">New</button>
+            <button id="psDelete" class="btn">Delete</button>
+            <div id="psMsg" class="muted"></div>
+          </div>
+          <input id="ps-id" type="hidden">
         </div>
-        <div class="grid two">
-          <div><label>Active</label><select id="ps-active"><option>true</option><option>false</option></select></div>
-          <div><label>Image URL</label><input id="ps-url" placeholder="https://.../poster.jpg"></div>
-        </div>
-        <div class="row">
-          <img id="ps-thumb" class="thumb hidden" alt="">
-        </div>
-        <div class="row">
-          <button id="psSave" class="btn primary">Save</button>
-          <button id="psNew" class="btn">New</button>
-          <button id="psDelete" class="btn danger">Delete</button>
-          <div id="psMsg" class="muted"></div>
-        </div>
-        <input id="ps-id" type="hidden">
-      </div>
 
-      <div class="card">
-        <div class="split"><h3>Posters</h3><button id="psReload" class="btn">Reload</button></div>
-        <div id="postersList" class="list"></div>
-      </div>
-    </section>
+        <div class="card">
+          <div class="split"><h3>Posters</h3><button id="psReload" class="btn">Reload</button></div>
+          <div id="postersList" class="list"></div>
+        </div>
+      </section>
+    </div>
 
-    <div class="muted" style="margin:18px 0">
-      Public page note: your current <code>index.html</code> already reads <strong>plans</strong> from Firestore. If you want Boxes, Banners, and Posters live there too, we can wire those reads the same way.
+    <div id="notAdmin" class="card hidden">
+      <h3>Limited access</h3>
+      <p class="muted">You’re signed in but not an admin. Ask the owner to add your UID to the <code>admins</code> collection.</p>
     </div>
   </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-  import { getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, updateDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut,
+           createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
   // Firebase (same as site)
   const firebaseConfig = {
@@ -259,46 +311,77 @@ https://.../banner-2-1280x720.jpg"></textarea>
   // Helpers
   const $ = s => document.querySelector(s);
   const $$ = s => Array.from(document.querySelectorAll(s));
-  const splitUrls = raw => (raw||"").split(/\r?\n|,/) // newline or comma
-    .map(s=>s.trim()).filter(Boolean);
-  function msg(el, text, ok=true){ el.textContent = text; el.className = ok ? "muted success" : "muted danger"; setTimeout(()=>{el.textContent=""; el.className="muted";}, 2500); }
+  const splitUrls = raw => (raw||"").split(/\r?\n|,/).map(s=>s.trim()).filter(Boolean);
+  function msg(el, text, ok=true){ el.textContent = text; el.className = ok ? "muted success" : "muted danger"; setTimeout(()=>{el.textContent=""; el.className="muted";}, 3000); }
   function ensure(val, fallback){ return (val===undefined || val===null) ? fallback : val; }
   function renderThumbs(hostSel, urls){
     const host = $(hostSel); host.innerHTML = '';
-    urls.forEach((u,i)=>{
+    urls.forEach(u=>{
       const wrap = document.createElement('div'); wrap.className='right';
-      wrap.innerHTML = `<img src="${u}" class="thumb"><button class="btn mini" data-del="${i}">Remove</button>`;
+      wrap.innerHTML = `<img src="${u}" class="thumb">`;
       host.appendChild(wrap);
     });
   }
 
-  // Auth + admin gate
-  const userInfo = $('#userInfo'), signInBtn = $('#signInBtn'), signOutBtn = $('#signOutBtn');
-  let currentUser = null, isAdmin = false;
-  signInBtn.onclick = async()=>{ await signInWithPopup(auth, provider); };
+  // Auth UI
+  const userInfo = $('#userInfo'), signOutBtn = $('#signOutBtn');
+  const authToggle = $('#authToggle'), authCard = $('#authCard');
+  const emailIn = $('#authEmail'), passIn = $('#authPass'), authMsg = $('#authMsg');
+
+  authToggle.onclick = ()=> authCard.classList.toggle('open');
+  document.addEventListener('click', e=>{
+    if (!authCard.contains(e.target) && !authToggle.contains(e.target)) authCard.classList.remove('open');
+  });
+
+  $('#googleSignIn').onclick = async()=>{
+    try{
+      await signInWithPopup(auth, provider);
+      authCard.classList.remove('open');
+    }catch(e){ msg(authMsg, e.message || 'Google sign-in failed', false); }
+  };
+  $('#emailSignIn').onclick = async()=>{
+    try{
+      await signInWithEmailAndPassword(auth, emailIn.value.trim(), passIn.value);
+      authCard.classList.remove('open');
+    }catch(e){ msg(authMsg, e.message || 'Sign-in failed', false); }
+  };
+  $('#emailRegister').onclick = async()=>{
+    try{
+      const cred = await createUserWithEmailAndPassword(auth, emailIn.value.trim(), passIn.value);
+      msg(authMsg, 'Registered. Ask owner to add your UID to admins: ' + cred.user.uid, true);
+    }catch(e){ msg(authMsg, e.message || 'Registration failed', false); }
+  };
   signOutBtn.onclick = async()=>{ await signOut(auth); };
 
+  // Admin gate
   onAuthStateChanged(auth, async user=>{
-    currentUser = user || null;
+    const editor = $('#editor'), notAdmin = $('#notAdmin');
     if(!user){
       userInfo.textContent = "Not signed in";
-      signInBtn.classList.remove('hidden');
       signOutBtn.classList.add('hidden');
+      editor.classList.add('hidden');
+      notAdmin.classList.add('hidden'); // not signed in: no editor, no nag
       return;
     }
-    userInfo.textContent = `${user.displayName || user.email}`;
-    signInBtn.classList.add('hidden');
+    userInfo.textContent = user.displayName || user.email || user.uid;
     signOutBtn.classList.remove('hidden');
 
-    const aDoc = await getDoc(doc(db,'admins',user.uid));
-    isAdmin = aDoc.exists();
-    if(!isAdmin){
-      alert("Signed in, not an admin. Add your UID to 'admins' collection.");
-      document.querySelector('.wrap').innerHTML = '<div class="card"><h3>Access denied</h3><p class="muted">Your account is not in admins.</p></div>';
-      return;
+    // check admins collection
+    let isAdmin = false;
+    try{
+      const aDoc = await getDoc(doc(db,'admins',user.uid));
+      isAdmin = aDoc.exists();
+    }catch(e){ /* if Firestore borks, fail closed */ }
+
+    if(isAdmin){
+      editor.classList.remove('hidden');
+      notAdmin.classList.add('hidden');
+      // load everything
+      loadSettings(); loadPlans(); loadBoxes(); loadBanners(); loadPosters();
+    }else{
+      editor.classList.add('hidden');
+      notAdmin.classList.remove('hidden');
     }
-    // Load initial
-    loadSettings(); loadPlans(); loadBoxes(); loadBanners(); loadPosters();
   });
 
   // Tabs
@@ -436,12 +519,7 @@ https://.../banner-2-1280x720.jpg"></textarea>
       };
     });
   }
-  // remove single preview image from textarea sync
-  document.addEventListener('click', e=>{
-    const del = e.target.closest('[data-del]'); // not used here; we sync by editing textarea
-  });
   $('#b-img-urls').addEventListener('input', ()=> renderThumbs('#b-images', splitUrls($('#b-img-urls').value).slice(0,3)) );
-
   $('#boxNew').onclick = ()=>{ ['b-id','b-tier','b-name','b-sort','b-boxPrice','b-c-price','b-c-months','b-c-extra','b-desc','b-img-urls'].forEach(i=>$('#'+i).value=''); $('#b-active').value='true'; $('#b-images').innerHTML=''; };
   $('#boxSave').onclick = async()=>{
     const id = $('#b-id').value.trim();
@@ -525,7 +603,7 @@ https://.../banner-2-1280x720.jpg"></textarea>
   };
   $('#bnDelete').onclick = async()=>{
     const id = $('#bn-id').value.trim(); if(!id) return;
-    if(confirm('Delete this banner?')){ await deleteDoc(doc(db,'banners',id)); await loadBanners(); msg($('#bnMsg'],'Deleted.'); }
+    if(confirm('Delete this banner?')){ await deleteDoc(doc(db,'banners',id)); await loadBanners(); msg($('#bnMsg'),'Deleted.'); }
   };
   $('#bnReload').onclick = loadBanners;
 
