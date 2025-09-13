@@ -3,902 +3,587 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1" />
-<title>net+TV — Home</title>
+<title>net+TV — Admin (URL mode)</title>
 <meta name="theme-color" content="#0b1020" />
 <style>
-  :root{
-    --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
-    --g1:#6a11cb;--g2:#2575fc;--ok:#32d296;--warn:#f8b84a;--whats:#25D366;
-    --safe-top: env(safe-area-inset-top,0px);--safe-bottom: env(safe-area-inset-bottom,0px);
-  }
-  :root[data-theme="light"]{
-    --bg:#ffffff;--ink:#0b1020;--muted:#36415f;--card:#f5f7ff;--line:#d9e0ff;
-    --g1:#2575fc;--g2:#6a11cb;--ok:#15a37a;--warn:#e59f2a;--whats:#25D366;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
-  a{color:inherit;text-decoration:none}
-  button{font:inherit;cursor:pointer}
+  :root{--bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;--g1:#6a11cb;--g2:#2575fc}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink)}
+  a{color:inherit}
+  .top{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(8px)}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .tab{padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);cursor:pointer}
+  .tab.active{background:linear-gradient(135deg,rgba(106,17,203,.18),rgba(37,117,252,.18))}
   .wrap{max-width:1100px;margin:0 auto;padding:16px}
-
-  .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:calc(8px + var(--safe-top)) 16px 8px}
-  :root[data-theme="light"] .topbar{background:#ffffffcc;border-bottom:1px solid #d9e0ff;backdrop-filter:saturate(1.2) blur(8px)}
-  .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .logo{display:flex;align-items:center;gap:10px}
-  .dot{width:10px;height:10px;border-radius:50%;background:conic-gradient(from 180deg,var(--g1),var(--g2))}
-  .brand{font-weight:800;letter-spacing:.3px}
-  .badge{font-size:12px;color:var(--muted)}
-  .menuBtn{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px 12px;border-radius:14px}
-  :root[data-theme="light"] .menuBtn{background:#eff3ff;border-color:#d9e0ff;color:#0b1020}
-
-  .hero{
-    position:relative;overflow:hidden;border-bottom:1px solid var(--line);
-    background:
-      radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
-      radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 50%);
-  }
-  :root[data-theme="light"] .hero{background:linear-gradient(180deg,#f6f8ff,transparent)}
-  .heroInner{padding:40px 16px 24px}
-  .title{font-size:28px;line-height:1.2;font-weight:800;margin:6px 0 8px}
-  .subtitle{color:var(--muted)}
-
-  /* Banner carousel (16:9, 1280x720 friendly) */
-  .banner{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:14px;margin-bottom:14px}
-  .banner::before{content:"";display:block;aspect-ratio:16/9}
-  .bannerTrack{display:flex;transform:translateX(0);transition:transform .4s ease}
-  .bannerSlide{min-width:100%;position:relative}
-  .bannerSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
-
-  /* Moving ticker */
-  .ticker{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03);margin-top:12px}
-  :root[data-theme="light"] .ticker{background:#eef2ff}
-  .tickerInner{display:inline-block;white-space:nowrap;animation:tickerMove 18s linear infinite}
-  .tickerInner span{display:inline-block;padding:8px 18px}
-  @keyframes tickerMove{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
-
-  .ctaRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:8px 0 18px}
-  .bigBtn{height:64px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg, rgba(106,17,203,.18), rgba(37,117,252,.18));display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:700}
-
-  /* Posters rail */
-  .postersRail{margin-top:12px;display:flex;gap:10px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
-  .postersRail img{width:200px;height:300px;object-fit:cover;border-radius:10px;flex:0 0 auto;scroll-snap-align:start;border:1px solid var(--line);background:#000}
-
-  .section{padding:18px 16px;border-top:1px solid var(--line)}
-  .hidden{display:none}
-
-  /* Menu sheet */
-  .sheet{position:fixed;inset:auto 0 0 0;background:rgba(18,24,49,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(100%);transition:transform .25s ease;z-index:70;max-height:80vh;display:flex;flex-direction:column}
-  :root[data-theme="light"] .sheet{background:#ffffff; border-top:1px solid #d9e0ff}
-  .sheet.open{transform:translateY(0)}
-  .sheetHead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-  :root[data-theme="light"] .sheetHead{background:#f6f9ff}
-  .sheetBody{padding:10px 16px;overflow:auto}
-  .menuList{display:grid;gap:10px}
-  .menuItem{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.03)}
-  :root[data-theme="light"] .menuItem{background:#f6f9ff}
-
-  /* Modal */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:90}
-  .modal.open{display:flex}
-  .modalCard{margin:auto;max-width:720px;width:100%;height:90vh;background:var(--card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column}
-  :root[data-theme="light"] .modalCard{background:#ffffff;border-color:#d9e0ff}
-  .modalHead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-  .modalBody{padding:12px 14px;overflow:auto}
-  .x{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
-  :root[data-theme="light"] .x{background:#eef2ff}
-
-  /* Plans + Boxes shared */
-  .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-  .card{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:16px;padding:14px}
-  :root[data-theme="light"] .card{background:#ffffff}
-  .card h3{margin:0 0 6px;font-size:18px;line-height:1.2}
-  .muted{color:var(--muted)}
-  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px 12px}
-  .btn.whats{background:var(--whats);border-color:#1fa851;color:#08210e;font-weight:800}
-  .btn.ghost{background:rgba(255,255,255,.04)}
-  .price{font-weight:800}
-  .cardHead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
-  .priceRight{font-size:18px}
-  .tag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin-bottom:6px}
-  .benefit{font-size:12px;font-weight:800;color:var(--ok);margin-top:4px}
-
-  /* Box mini carousel */
-  .boxSlider{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000}
-  .boxSlider::before{content:"";display:block;aspect-ratio:16/9}
-  .boxTrack{display:flex;transition:transform .35s ease}
-  .boxSlide{min-width:100%;position:relative}
-  .boxSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .boxDots{display:flex;gap:6px;justify-content:center;margin-top:6px}
-  .boxDot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25)}
-  .boxDot.active{background:#fff}
-  .miniTag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin:8px 0 6px}
-  .comboCallout{margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:12px;background:rgba(37,117,252,.08)}
-  :root[data-theme="light"] .comboCallout{background:#eef5ff}
-  .boxMeta{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-  .boxPrice{font-weight:800}
-  .boxName{font-size:18px;font-weight:800;margin:0}
-
-  /* Forms */
-  .grid{display:grid;gap:10px}
+  .grid{display:grid;gap:12px}
   .two{grid-template-columns:1fr 1fr}
-  input,select,textarea{width:100%;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff}
-  :root[data-theme="light"] input, :root[data-theme="light"] select, :root[data-theme="light"] textarea{background:#eaf0ff;color:#0b1020}
-  label{font-size:13px;color:var(--muted)}
-  .help{font-size:12px;color:var(--muted)}
-  .footpad{height:calc(24px + var(--safe-bottom))}
-
-  /* Info list */
+  .three{grid-template-columns:1fr 1fr 1fr}
+  .card{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03);padding:14px}
+  label{font-size:12px;color:var(--muted)}
+  input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#0f1430;color:#fff}
+  textarea{min-height:86px}
+  button{font:inherit;cursor:pointer}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .btn{padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.05)}
+  .btn.primary{background:linear-gradient(135deg, rgba(106,17,203,.45), rgba(37,117,252,.45));border-color:#3b4f8f}
   .list{display:grid;gap:10px}
-  .pill{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)}
-  :root[data-theme="light"] .pill{background:#ffffff}
-
-  /* Footer */
-  .footer{padding:16px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
+  .item{border:1px dashed var(--line);border-radius:12px;padding:10px}
+  .muted{color:var(--muted);font-size:12px}
+  .danger{color:#ff7b7b}
+  .success{color:#31d296}
+  .split{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .right{display:flex;gap:6px;align-items:center}
+  .mini{font-size:12px}
+  .tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:999px;background:linear-gradient(135deg,var(--g1),var(--g2))}
+  .imgRow{display:flex;gap:8px;flex-wrap:wrap}
+  .thumb{width:120px;height:68px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#000}
+  .hidden{display:none}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:12px}
 </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="row">
-      <div class="logo">
-        <div class="dot"></div>
+  <div class="top">
+    <div><strong>net+TV Admin</strong> <span class="muted mini">| Firestore only (URL images)</span></div>
+    <div class="right">
+      <span id="userInfo" class="muted mini">Not signed in</span>
+      <button id="signInBtn" class="btn">Sign in with Google</button>
+      <button id="signOutBtn" class="btn hidden">Sign out</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tab active" data-tab="settings">Settings</button>
+      <button class="tab" data-tab="plans">Plans</button>
+      <button class="tab" data-tab="boxes">Boxes</button>
+      <button class="tab" data-tab="banners">Banners</button>
+      <button class="tab" data-tab="posters">Posters</button>
+    </div>
+
+    <!-- SETTINGS -->
+    <section id="tab-settings" class="grid" style="margin-top:12px">
+      <div class="card">
+        <h3>Site Settings</h3>
+        <div class="grid two">
+          <div>
+            <label>Default Theme</label>
+            <select id="set-theme">
+              <option>dark</option>
+              <option>light</option>
+            </select>
+          </div>
+          <div>
+            <label>WhatsApp Number (no +)</label>
+            <input id="set-wa" placeholder="16476961656" />
+          </div>
+        </div>
         <div>
-          <div class="brand">net+<span style="margin-left:3px">TV</span></div>
-          <div class="badge">Full HD • 4K • PPV</div>
+          <label>Feature Ticker (comma separated)</label>
+          <input id="set-features" placeholder="Proudly Canadian, Zero Latency Streams, 24/7 Support, Multi-Device" />
+        </div>
+        <div class="row">
+          <button id="saveSettings" class="btn primary">Save Settings</button>
+          <div id="settingsMsg" class="muted"></div>
         </div>
       </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button id="themeBtn" class="menuBtn" title="Toggle theme">💡</button>
-        <button id="menuBtn" class="menuBtn">Menu ▾</button>
+      <div class="card">
+        <h3>Notes</h3>
+        <div class="muted">Images are provided as URLs. Keep banner images exactly 1280×720, and box images 16:9. Posters can be 2:3 or 16:9. Thrilling stuff.</div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="heroInner wrap">
-
-      <!-- BANNERS -->
-      <div class="banner" aria-label="Promotions">
-        <div class="bannerTrack" id="bannerTrack">
-          <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+1" alt="Banner 1"></div>
-          <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+2" alt="Banner 2"></div>
-          <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+3" alt="Banner 3"></div>
+    <!-- PLANS -->
+    <section id="tab-plans" class="grid hidden" style="margin-top:12px">
+      <div class="card">
+        <h3>New / Edit Plan</h3>
+        <div class="grid three">
+          <div><label>Name</label><input id="p-name"></div>
+          <div><label>Price (e.g., CA$100)</label><input id="p-price"></div>
+          <div><label>Months</label><input id="p-months" type="number" min="1"></div>
         </div>
-      </div>
-
-      <div class="subtitle">Quick Activation</div>
-      <h1 class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
-      <p class="subtitle">Latest + classic Movies & Series • Full HD & 4K Channels • Anti-Freeze Tech</p>
-
-      <!-- TICKER -->
-      <div class="ticker">
-        <div class="tickerInner" id="featureTicker">
-          <span>🇨🇦 Proudly Canadian</span>
-          <span>Zero Latency Streams</span>
-          <span>24/7 Support</span>
-          <span>Multi-Device</span>
+        <div class="grid three">
+          <div><label>Benefit</label><input id="p-benefit" placeholder="+1 month free"></div>
+          <div><label>Tag</label><input id="p-tag" placeholder="Popular / Best Value"></div>
+          <div><label>Sort</label><input id="p-sort" type="number" value="10"></div>
         </div>
-      </div>
-
-      <div class="ctaRow" id="actionButtons">
-        <button class="bigBtn" data-open="plansModal">Our Plans</button>
-        <button class="bigBtn" data-open="boxesModal">New Boxes</button>
-        <button class="bigBtn" data-open="rechargeModal">Renew Plan</button>
-        <button class="bigBtn" data-open="supportModal">Contact Support</button>
-      </div>
-
-      <!-- Posters -->
-      <div class="postersRail" id="postersRail">
-        <img src="https://via.placeholder.com/300x450?text=Poster+1" loading="lazy" alt="">
-        <img src="https://via.placeholder.com/300x450?text=Poster+2" loading="lazy" alt="">
-        <img src="https://via.placeholder.com/300x450?text=Poster+3" loading="lazy" alt="">
-        <img src="https://via.placeholder.com/300x450?text=Poster+4" loading="lazy" alt="">
-      </div>
-    </div>
-  </section>
-
-  <!-- Why -->
-  <section class="section wrap">
-    <h2 style="margin:0 0 8px">Why net+TV</h2>
-    <p class="muted" style="margin:0">Stable quality, solid support, and no drama. Except in the shows.</p>
-    <div class="list" style="margin-top:12px">
-      <div class="pill">Fast activation with WhatsApp confirmation</div>
-      <div class="pill">No-nonsense plans, real 4K where available</div>
-      <div class="pill">Works on STBs, smart TVs, mobile and laptops</div>
-    </div>
-  </section>
-
-  <footer class="footer">
-    © <span id="year"></span> net+TV. All rights reserved.
-  </footer>
-
-  <!-- MENU SHEET -->
-  <div id="menuSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Main menu">
-    <div class="sheetHead">
-      <div style="font-weight:800">Menu</div>
-      <button class="x" data-close="menuSheet">Close</button>
-    </div>
-    <div class="sheetBody">
-      <div class="menuList">
-        <a class="menuItem" data-open="plansModal">Our Plans</a>
-        <a class="menuItem" data-open="boxesModal">New Boxes</a>
-        <a class="menuItem" data-open="ownPlanModal">Your Own Set-Top Box Plan</a>
-        <a class="menuItem" data-open="rechargeModal">Renew Plan</a>
-        <a class="menuItem" data-open="supportModal">Contact Support</a>
-        <a class="menuItem" data-open="faqModal">FAQ</a>
-        <a class="menuItem" data-open="aboutModal">About Us</a>
-        <a class="menuItem" data-open="pinModal">Know Your Parental PIN</a>
-      </div>
-      <div class="footpad"></div>
-    </div>
-  </div>
-
-  <!-- MODALS -->
-  <!-- Plans Modal -->
-  <div id="plansModal" class="modal" role="dialog" aria-modal="true" aria-label="Plans">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Our Plans</strong>
-        <div style="display:flex;gap:8px">
-          <button class="btn ghost" id="refreshPlans">Refresh</button>
-          <button class="x" data-close="plansModal">Close</button>
+        <div class="grid two">
+          <div><label>Description</label><input id="p-desc" placeholder="Short description"></div>
+          <div>
+            <label>Active</label>
+            <select id="p-active"><option>true</option><option>false</option></select>
+          </div>
         </div>
-      </div>
-      <div class="modalBody">
-        <p class="muted">All plans include: Quick Activation, Live Channels, Movies/Series, PPV (where available), Anti-Freeze Tech.</p>
-        <div id="plansGrid" class="plans"></div>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Boxes Modal -->
-  <div id="boxesModal" class="modal" role="dialog" aria-modal="true" aria-label="New Boxes">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>New Boxes</strong>
-        <button class="x" data-close="boxesModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <div id="boxesGrid" class="plans"></div>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Own Plan Modal -->
-  <div id="ownPlanModal" class="modal" role="dialog" aria-modal="true" aria-label="Build your plan">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Your Own Plan</strong>
-        <button class="x" data-close="ownPlanModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <form id="ownPlanForm" class="grid">
-          <div class="grid two">
-            <div>
-              <label>Full Name</label>
-              <input required name="name" placeholder="Your name">
-            </div>
-            <div>
-              <label>Phone</label>
-              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-            </div>
-          </div>
-          <div>
-            <label>Email (optional)</label>
-            <input name="email" type="email" placeholder="you@example.com">
-          </div>
-          <div>
-            <label>Preferred Channels</label>
-            <select name="channels" required>
-              <option>English</option>
-              <option>Punjabi</option>
-              <option>Hindi</option>
-              <option>Urdu</option>
-              <option>French</option>
-              <option>Arabic</option>
-              <option>Korean</option>
-              <option>Gujarati</option>
-              <option>Others</option>
-            </select>
-            <div class="help">You’ll get Full HD and 4K where available.</div>
-          </div>
-          <div>
-            <label>VOD Category</label>
-            <select name="vod" required>
-              <option>English</option>
-              <option>Panjabi</option>
-              <option>Hindi</option>
-              <option>Urdu</option>
-              <option>French</option>
-              <option>Action</option>
-              <option>Drama</option>
-              <option>Comedy</option>
-              <option>Kids</option>
-              <option>Documentary</option>
-              <option>Others</option>
-              <option>Adult</option>
-            </select>
-            <div class="help">“Adult” stays at the bottom where it belongs.</div>
-          </div>
-          <div>
-            <label>Notes</label>
-            <textarea name="note" rows="3" placeholder="Any specific channel packs, devices, or timing?"></textarea>
-          </div>
-          <button class="btn whats" type="submit">Send Request on WhatsApp</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Renew Plan Modal -->
-  <div id="rechargeModal" class="modal" role="dialog" aria-modal="true" aria-label="Renew Plan">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Renew Plan</strong>
-        <button class="x" data-close="rechargeModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <form id="rechargeForm" class="grid two">
-          <div>
-            <label>Email</label>
-            <input required name="email" type="email" placeholder="you@example.com">
-          </div>
-          <div>
-            <label>Registered Name</label>
-            <input required name="name" placeholder="Account name">
-          </div>
-          <div>
-            <label>Phone</label>
-            <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-          </div>
-          <div>
-            <label>MAC Address</label>
-            <input required name="mac" placeholder="00:1A:79:xx:xx:xx">
-          </div>
-          <div>
-            <label>Plan Duration</label>
-            <select name="duration" required>
-              <option value="1">1 month</option>
-              <option value="3">3 months</option>
-              <option value="6">6 months</option>
-              <option value="12">12 months</option>
-            </select>
-          </div>
-          <div>
-            <label>Notes</label>
-            <input name="note" placeholder="Optional note">
-          </div>
-          <button class="btn whats" type="submit">Request Renewal</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Support Modal -->
-  <div id="supportModal" class="modal" role="dialog" aria-modal="true" aria-label="Support">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Contact Support</strong>
-        <button class="x" data-close="supportModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <form id="supportForm" class="grid">
-          <div class="grid two">
-            <div>
-              <label>Name</label>
-              <input required name="name" placeholder="Your name">
-            </div>
-            <div>
-              <label>Phone</label>
-              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-            </div>
-          </div>
-          <div>
-            <label>Issue</label>
-            <textarea required name="issue" rows="4" placeholder="Describe the problem..."></textarea>
-          </div>
-          <button class="btn whats" type="submit">Send on WhatsApp</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FAQ Modal -->
-  <div id="faqModal" class="modal" role="dialog" aria-modal="true" aria-label="FAQ">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>FAQ</strong>
-        <button class="x" data-close="faqModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <div class="list">
-          <div class="pill"><strong>Q:</strong> Do all channels stream in 4K?<br><span class="muted">A:</span> 4K where available. Otherwise Full HD or SD.</div>
-          <div class="pill"><strong>Q:</strong> What devices are supported?<br><span class="muted">A:</span> Popular STBs, Android TV, Fire TV, smart TVs, phones, tablets, and web players.</div>
-          <div class="pill"><strong>Q:</strong> Activation time?<br><span class="muted">A:</span> Usually minutes after WhatsApp confirmation.</div>
+        <div class="row">
+          <button id="planSave" class="btn primary">Save</button>
+          <button id="planNew" class="btn">New</button>
+          <button id="planDelete" class="btn danger">Delete</button>
+          <div id="planMsg" class="muted"></div>
         </div>
-        <div class="footpad"></div>
+        <input id="p-id" type="hidden">
       </div>
+
+      <div class="card">
+        <div class="split"><h3>Plans</h3><button id="plansReload" class="btn">Reload</button></div>
+        <div id="plansList" class="list"></div>
+      </div>
+    </section>
+
+    <!-- BOXES -->
+    <section id="tab-boxes" class="grid hidden" style="margin-top:12px">
+      <div class="card">
+        <h3>New / Edit Box</h3>
+        <div class="grid three">
+          <div><label>Tier badge</label><input id="b-tier" placeholder="Basic Box / Good Box"></div>
+          <div><label>Model name</label><input id="b-name" placeholder="X-100"></div>
+          <div><label>Sort</label><input id="b-sort" type="number" value="10"></div>
+        </div>
+        <div class="grid two">
+          <div><label>Box Price</label><input id="b-boxPrice" placeholder="CA$120"></div>
+          <div><label>Active</label><select id="b-active"><option>true</option><option>false</option></select></div>
+        </div>
+        <div class="grid three">
+          <div><label>Combo Price</label><input id="b-c-price" placeholder="CA$199"></div>
+          <div><label>Combo Months</label><input id="b-c-months" type="number" value="12"></div>
+          <div><label>Combo Extra</label><input id="b-c-extra" placeholder="+1 month free"></div>
+        </div>
+        <div><label>Description</label><input id="b-desc" placeholder="Short description"></div>
+
+        <div class="grid">
+          <label>Image URLs (1–3, one per line)</label>
+          <textarea id="b-img-urls" placeholder="https://.../1280x720-1.jpg
+https://.../1280x720-2.jpg"></textarea>
+          <div id="b-images" class="imgRow"></div>
+          <div class="row"><span class="pill">Tip</span><span class="muted">We’ll take the first 3 lines. Use 16:9.</span></div>
+        </div>
+
+        <div class="row">
+          <button id="boxSave" class="btn primary">Save</button>
+          <button id="boxNew" class="btn">New</button>
+          <button id="boxDelete" class="btn danger">Delete</button>
+          <div id="boxMsg" class="muted"></div>
+        </div>
+        <input id="b-id" type="hidden">
+      </div>
+
+      <div class="card">
+        <div class="split"><h3>Boxes</h3><button id="boxesReload" class="btn">Reload</button></div>
+        <div id="boxesList" class="list"></div>
+      </div>
+    </section>
+
+    <!-- BANNERS -->
+    <section id="tab-banners" class="grid hidden" style="margin-top:12px">
+      <div class="card">
+        <h3>New / Edit Banner</h3>
+        <div class="grid two">
+          <div><label>Title</label><input id="bn-title" placeholder="Promo title"></div>
+          <div><label>Sort</label><input id="bn-sort" type="number" value="10"></div>
+        </div>
+        <div class="grid two">
+          <div><label>Active</label><select id="bn-active"><option>true</option><option>false</option></select></div>
+          <div><label>Image URLs (one per line, 1280×720)</label></div>
+        </div>
+        <textarea id="bn-img-urls" placeholder="https://.../banner-1-1280x720.jpg
+https://.../banner-2-1280x720.jpg"></textarea>
+        <div id="bn-images" class="imgRow" style="margin-top:6px"></div>
+        <div class="row">
+          <button id="bnSave" class="btn primary">Save</button>
+          <button id="bnNew" class="btn">New</button>
+          <button id="bnDelete" class="btn danger">Delete</button>
+          <div id="bnMsg" class="muted"></div>
+        </div>
+        <input id="bn-id" type="hidden">
+      </div>
+
+      <div class="card">
+        <div class="split"><h3>Banners</h3><button id="bnReload" class="btn">Reload</button></div>
+        <div id="bannersList" class="list"></div>
+      </div>
+    </section>
+
+    <!-- POSTERS -->
+    <section id="tab-posters" class="grid hidden" style="margin-top:12px">
+      <div class="card">
+        <h3>New / Edit Poster</h3>
+        <div class="grid three">
+          <div><label>Title</label><input id="ps-title" placeholder="Movie / Series title"></div>
+          <div><label>Aspect ratio</label><select id="ps-ratio"><option>2:3</option><option>16:9</option></select></div>
+          <div><label>Sort</label><input id="ps-sort" type="number" value="10"></div>
+        </div>
+        <div class="grid two">
+          <div><label>Active</label><select id="ps-active"><option>true</option><option>false</option></select></div>
+          <div><label>Image URL</label><input id="ps-url" placeholder="https://.../poster.jpg"></div>
+        </div>
+        <div class="row">
+          <img id="ps-thumb" class="thumb hidden" alt="">
+        </div>
+        <div class="row">
+          <button id="psSave" class="btn primary">Save</button>
+          <button id="psNew" class="btn">New</button>
+          <button id="psDelete" class="btn danger">Delete</button>
+          <div id="psMsg" class="muted"></div>
+        </div>
+        <input id="ps-id" type="hidden">
+      </div>
+
+      <div class="card">
+        <div class="split"><h3>Posters</h3><button id="psReload" class="btn">Reload</button></div>
+        <div id="postersList" class="list"></div>
+      </div>
+    </section>
+
+    <div class="muted" style="margin:18px 0">
+      Public page note: your current <code>index.html</code> already reads <strong>plans</strong> from Firestore. If you want Boxes, Banners, and Posters live there too, we can wire those reads the same way.
     </div>
   </div>
 
-  <!-- About Modal -->
-  <div id="aboutModal" class="modal" role="dialog" aria-modal="true" aria-label="About">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>About Us</strong>
-        <button class="x" data-close="aboutModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <p>net+TV is built for stability and clarity. We focus on consistent quality and straight answers.</p>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, updateDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
-  <!-- PIN Modal -->
-  <div id="pinModal" class="modal" role="dialog" aria-modal="true" aria-label="Know Your Parental PIN">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Know Your Parental PIN</strong>
-        <button class="x" data-close="pinModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <form id="pinForm" class="grid">
-          <div class="grid two">
-            <div>
-              <label>MAC Address</label>
-              <input required name="mac" placeholder="00:1A:79:xx:xx:xx">
-            </div>
-            <div>
-              <label>Email</label>
-              <input required name="email" type="email" placeholder="you@example.com">
-            </div>
-          </div>
+  // Firebase (same as site)
+  const firebaseConfig = {
+    apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
+    authDomain: "netplus-site-4ff04.firebaseapp.com",
+    projectId: "netplus-site-4ff04",
+    storageBucket: "netplus-site-4ff04.firebasestorage.app",
+    messagingSenderId: "49095160110",
+    appId: "1:49095160110:web:5431d5c9f8ca45c4d70abf",
+    measurementId: "G-PYWFFDZ0RR"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-          <div class="grid two">
-            <div>
-              <label>Set-top Box Brand</label>
-              <select id="pinBrand" name="brand" required>
-                <option value="">Select</option>
-                <option>MAG / Stalker</option>
-                <option>Formuler</option>
-                <option>Buzztv</option>
-                <option>Dreamlink</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div>
-              <label>PIN</label>
-              <input id="pinOutput" readonly placeholder="Will show after brand" />
-            </div>
-          </div>
+  // Helpers
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const splitUrls = raw => (raw||"").split(/\r?\n|,/) // newline or comma
+    .map(s=>s.trim()).filter(Boolean);
+  function msg(el, text, ok=true){ el.textContent = text; el.className = ok ? "muted success" : "muted danger"; setTimeout(()=>{el.textContent=""; el.className="muted";}, 2500); }
+  function ensure(val, fallback){ return (val===undefined || val===null) ? fallback : val; }
+  function renderThumbs(hostSel, urls){
+    const host = $(hostSel); host.innerHTML = '';
+    urls.forEach((u,i)=>{
+      const wrap = document.createElement('div'); wrap.className='right';
+      wrap.innerHTML = `<img src="${u}" class="thumb"><button class="btn mini" data-del="${i}">Remove</button>`;
+      host.appendChild(wrap);
+    });
+  }
 
-          <div>
-            <label>Notes</label>
-            <input name="note" placeholder="Optional note">
-          </div>
-          <button class="btn whats" type="submit">Request PIN on WhatsApp</button>
-          <div class="help">Common PINs: 0000 or 7274 depending on device. If it doesn’t work, your portal may use a custom PIN.</div>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
+  // Auth + admin gate
+  const userInfo = $('#userInfo'), signInBtn = $('#signInBtn'), signOutBtn = $('#signOutBtn');
+  let currentUser = null, isAdmin = false;
+  signInBtn.onclick = async()=>{ await signInWithPopup(auth, provider); };
+  signOutBtn.onclick = async()=>{ await signOut(auth); };
 
-  <!-- Subscription Modal -->
-  <div id="subscribeModal" class="modal" role="dialog" aria-modal="true" aria-label="Subscribe">
-    <div class="modalCard">
-      <div class="modalHead">
-        <strong>Subscribe</strong>
-        <button class="x" data-close="subscribeModal">Close</button>
-      </div>
-      <div class="modalBody">
-        <form id="subscribeForm" class="grid">
-          <input type="hidden" name="plan" id="subPlan">
-          <div class="grid two">
-            <div>
-              <label>Full Name</label>
-              <input required name="name" placeholder="Your name">
-            </div>
-            <div>
-              <label>Phone</label>
-              <input required name="phone" placeholder="+1 555-000-0000" inputmode="tel">
-            </div>
-          </div>
-          <div class="grid two">
-            <div>
-              <label>TV Channels</label>
-              <select name="channels" required>
-                <option>English</option>
-                <option>Punjabi</option>
-                <option>Hindi</option>
-                <option>Urdu</option>
-                <option>French</option>
-                <option>Arabic</option>
-                <option>Korean</option>
-                <option>Gujarati</option>
-                <option>Others</option>
-              </select>
-            </div>
-            <div>
-              <label>VOD Category</label>
-              <select name="vod" required>
-                <option>English</option>
-                <option>Panjabi</option>
-                <option>Hindi</option>
-                <option>Urdu</option>
-                <option>French</option>
-                <option>Action</option>
-                <option>Drama</option>
-                <option>Comedy</option>
-                <option>Kids</option>
-                <option>Documentary</option>
-                <option>Others</option>
-                <option>Adult</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label>Notes</label>
-            <textarea name="note" rows="3" placeholder="Anything else we should know?"></textarea>
-          </div>
-          <button class="btn whats" type="submit">Send on WhatsApp</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
+  onAuthStateChanged(auth, async user=>{
+    currentUser = user || null;
+    if(!user){
+      userInfo.textContent = "Not signed in";
+      signInBtn.classList.remove('hidden');
+      signOutBtn.classList.add('hidden');
+      return;
+    }
+    userInfo.textContent = `${user.displayName || user.email}`;
+    signInBtn.classList.add('hidden');
+    signOutBtn.classList.remove('hidden');
 
-  <!-- Firebase + Scripts -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+    const aDoc = await getDoc(doc(db,'admins',user.uid));
+    isAdmin = aDoc.exists();
+    if(!isAdmin){
+      alert("Signed in, not an admin. Add your UID to 'admins' collection.");
+      document.querySelector('.wrap').innerHTML = '<div class="card"><h3>Access denied</h3><p class="muted">Your account is not in admins.</p></div>';
+      return;
+    }
+    // Load initial
+    loadSettings(); loadPlans(); loadBoxes(); loadBanners(); loadPosters();
+  });
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
-      authDomain: "netplus-site-4ff04.firebaseapp.com",
-      projectId: "netplus-site-4ff04",
-      storageBucket: "netplus-site-4ff04.firebasestorage.app",
-      messagingSenderId: "49095160110",
-      appId: "1:49095160110:web:5431d5c9f8ca45c4d70abf",
-      measurementId: "G-PYWFFDZ0RR"
+  // Tabs
+  $$('.tab').forEach(t=>{
+    t.onclick = ()=>{
+      $$('.tab').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      const id = t.dataset.tab;
+      ['settings','plans','boxes','banners','posters'].forEach(key=>{
+        $('#tab-'+key).classList.toggle('hidden', key!==id);
+      });
     };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  });
 
-    // Config
-    const USE_FIRESTORE_FOR_PLANS = true;
-    const WHATSAPP_NUMBER = "16476961656"; // no '+'
-
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Theme init + toggle
-    const themeBtn = document.getElementById('themeBtn');
-    const preferred = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', preferred);
-    themeBtn.addEventListener('click', ()=>{
-      const now = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', now);
-      localStorage.setItem('theme', now);
-    });
-
-    // Menu
-    const menuBtn = document.getElementById('menuBtn');
-    const menuSheet = document.getElementById('menuSheet');
-    menuBtn.addEventListener('click', () => menuSheet.classList.add('open'));
-    menuSheet.addEventListener('click', e => {
-      if (e.target.dataset.close === 'menuSheet' || e.target === menuSheet) menuSheet.classList.remove('open');
-    });
-    menuSheet.querySelectorAll('[data-open]').forEach(a=>{
-      a.addEventListener('click', ()=>{
-        menuSheet.classList.remove('open');
-        openModal(a.dataset.open);
-      });
-    });
-
-    // Modal helpers
-    function openModal(id){ document.getElementById(id)?.classList.add('open'); }
-    function closeModal(id){ document.getElementById(id)?.classList.remove('open'); }
-    document.querySelectorAll('.modal').forEach(m=>{
-      m.addEventListener('click', e=>{ if (e.target === m) m.classList.remove('open'); });
-      m.querySelectorAll('[data-close]').forEach(b=>{
-        b.addEventListener('click', ()=> closeModal(b.dataset.close || m.id));
-      });
-    });
-    document.querySelectorAll('[data-open]').forEach(b=>{ b.addEventListener('click', ()=> openModal(b.dataset.open)); });
-
-    // Banner auto-slide
-    (()=>{ 
-      const track=document.getElementById('bannerTrack'); if(!track) return;
-      let i=0; const slides=track.children.length;
-      setInterval(()=>{ i=(i+1)%slides; track.style.transform=`translateX(-${i*100}%)`; }, 4500);
-    })();
-
-    // WhatsApp helpers
-    function toWA(text){
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank');
+  // SETTINGS
+  async function loadSettings(){
+    const sDoc = await getDoc(doc(db,'settings','main'));
+    if(sDoc.exists()){
+      const s = sDoc.data();
+      $('#set-theme').value = ensure(s.themeDefault,'dark');
+      $('#set-wa').value = ensure(s.whatsappNumber,'16476961656');
+      $('#set-features').value = ensure((s.features||[]).join(', '),'Proudly Canadian, Zero Latency Streams, 24/7 Support, Multi-Device');
     }
-    function formToKV(form){
-      const data = new FormData(form);
-      const kv = {};
-      data.forEach((v,k)=> kv[k]=v);
-      return kv;
-    }
-    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-    function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+  }
+  $('#saveSettings').onclick = async()=>{
+    const body = {
+      themeDefault: $('#set-theme').value || 'dark',
+      whatsappNumber: $('#set-wa').value || '16476961656',
+      features: ($('#set-features').value||'').split(',').map(s=>s.trim()).filter(Boolean),
+      updatedAt: serverTimestamp()
+    };
+    await setDoc(doc(db,'settings','main'), body, {merge:true});
+    msg($('#settingsMsg'), 'Saved.');
+  };
 
-    // Plans
-    const plansGrid = document.getElementById('plansGrid');
-    const refreshBtn = document.getElementById('refreshPlans');
-
-    const localPlans = [
-      { id:'p1', name:"Starter HD", price:"CA$60", months:6, benefit:"+1 month free", tag:"Popular", desc:"HD focus • Core channels" },
-      { id:'p2', name:"Family FHD", price:"CA$100", months:12, benefit:"+2 months free", tag:"Best Value", desc:"Full HD • Family packs" },
-      { id:'p3', name:"4K Select", price:"CA$120", months:12, benefit:"+1 month free", tag:"", desc:"4K where available • Sports" },
-      { id:'p4', name:"Max Ultra", price:"CA$180", months:24, benefit:"+3 months free", tag:"", desc:"4K + PPV focus" }
-    ];
-
-    async function loadPlans(){
-      plansGrid.innerHTML = '<div class="muted">Loading plans…</div>';
-      let items = localPlans;
-      if (USE_FIRESTORE_FOR_PLANS){
-        try{
-          const snap = await getDocs(collection(db,'plans'));
-          const arr = [];
-          snap.forEach(doc=>{
-            const d = doc.data();
-            if (d?.name && d?.price){
-              arr.push({
-                id: doc.id,
-                name: d.name, price: d.price,
-                months: d.months || '',
-                benefit: d.benefit || '',
-                tag: d.tag || '',
-                desc: d.desc || ''
-              });
-            }
-          });
-          if (arr.length) items = arr;
-        }catch(e){
-          console.warn('Firestore plans failed, using fallback', e);
-        }
-      }
-      renderPlans(items);
-    }
-
-    function renderPlans(items){
-      plansGrid.innerHTML = '';
-      items.forEach(p=>{
-        const tag = p.tag ? `<div class="tag">${escapeHtml(p.tag)}</div>` : '';
-        const benefit = p.benefit ? `<div class="benefit">${escapeHtml(p.benefit)}</div>` : '';
-        const months = p.months ? `<div class="muted">${escapeHtml(p.months + ' months')}</div>` : '';
-        const el = document.createElement('div');
-        el.className = 'card';
-        el.innerHTML = `
-          ${tag}
-          <div class="cardHead">
-            <h3>${escapeHtml(p.name)}</h3>
-            <div class="price priceRight">${escapeHtml(p.price)}</div>
+  // PLANS
+  let plansCache = [];
+  async function loadPlans(){
+    const snap = await getDocs(collection(db,'plans'));
+    plansCache = []; snap.forEach(d=> plansCache.push({id:d.id, ...d.data()}));
+    plansCache.sort((a,b)=> (a.sort||0)-(b.sort||0));
+    renderPlansList();
+  }
+  function renderPlansList(){
+    const list = $('#plansList'); list.innerHTML = '';
+    plansCache.forEach(p=>{
+      const div = document.createElement('div');
+      div.className='item';
+      div.innerHTML = `
+        <div class="split">
+          <div><span class="tag mini">${p.tag||''}</span> <strong>${p.name||''}</strong> <span class="muted">(${p.months||''} mo)</span></div>
+          <div class="right"><strong>${p.price||''}</strong> <span class="muted">sort:${p.sort||0}</span> <span class="muted">${p.active===false?'inactive':'active'}</span>
+            <button class="btn mini" data-edit="${p.id}">Edit</button>
           </div>
-          ${months}
-          ${benefit}
-          <div class="muted" style="margin:8px 0 12px">${escapeHtml(p.desc || 'Inclusive of Live Channels, Movies, Series, PPV (where available)')}</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn whats" data-subscribe="${escapeAttr(p.name)}">Subscribe</button>
-            <button class="btn" data-info="${escapeAttr(p.name)}">Info</button>
+        </div>`;
+      list.appendChild(div);
+    });
+    list.querySelectorAll('[data-edit]').forEach(b=>{
+      b.onclick = ()=>{
+        const p = plansCache.find(x=>x.id===b.dataset.edit);
+        $('#p-id').value = p.id;
+        $('#p-name').value = p.name||'';
+        $('#p-price').value = p.price||'';
+        $('#p-months').value = p.months||'';
+        $('#p-benefit').value = p.benefit||'';
+        $('#p-tag').value = p.tag||'';
+        $('#p-desc').value = p.desc||'';
+        $('#p-sort').value = p.sort||0;
+        $('#p-active').value = String(p.active!==false);
+      };
+    });
+  }
+  $('#planNew').onclick = ()=> { ['p-id','p-name','p-price','p-months','p-benefit','p-tag','p-desc','p-sort'].forEach(id=>$('#'+id).value=''); $('#p-active').value='true'; };
+  $('#planSave').onclick = async()=>{
+    const id = $('#p-id').value.trim();
+    const body = {
+      name: $('#p-name').value.trim(),
+      price: $('#p-price').value.trim(),
+      months: Number($('#p-months').value||0),
+      benefit: $('#p-benefit').value.trim(),
+      tag: $('#p-tag').value.trim(),
+      desc: $('#p-desc').value.trim(),
+      sort: Number($('#p-sort').value||0),
+      active: $('#p-active').value==='true',
+      updatedAt: serverTimestamp()
+    };
+    if(!body.name || !body.price){ msg($('#planMsg'), 'Name and Price required', false); return; }
+    if(id){ await setDoc(doc(db,'plans',id), body, {merge:true}); } else { await addDoc(collection(db,'plans'), body); }
+    await loadPlans(); msg($('#planMsg'),'Saved.');
+  };
+  $('#planDelete').onclick = async()=>{
+    const id = $('#p-id').value.trim(); if(!id) return;
+    if(confirm('Delete this plan?')){ await deleteDoc(doc(db,'plans',id)); await loadPlans(); msg($('#planMsg'),'Deleted.'); }
+  };
+  $('#plansReload').onclick = loadPlans;
+
+  // BOXES
+  let boxesCache = [];
+  async function loadBoxes(){
+    const snap = await getDocs(collection(db,'boxes'));
+    boxesCache = []; snap.forEach(d=> boxesCache.push({id:d.id, ...d.data()}));
+    boxesCache.sort((a,b)=> (a.sort||0)-(b.sort||0));
+    renderBoxesList();
+  }
+  function renderBoxesList(){
+    const list = $('#boxesList'); list.innerHTML = '';
+    boxesCache.forEach(bx=>{
+      const div = document.createElement('div'); div.className='item';
+      const imgs = (bx.images||[]).map(u=>`<img class="thumb" src="${u}">`).join('');
+      div.innerHTML = `
+        <div class="split">
+          <div><span class="tag mini">${bx.tier||''}</span> <strong>${bx.name||''}</strong> <span class="muted">(${(bx.images||[]).length} img)</span></div>
+          <div class="right"><strong>${bx.boxPrice||''}</strong> <span class="muted">sort:${bx.sort||0}</span> <span class="muted">${bx.active===false?'inactive':'active'}</span>
+            <button class="btn mini" data-edit="${bx.id}">Edit</button>
           </div>
-        `;
-        plansGrid.appendChild(el);
-      });
-      plansGrid.querySelectorAll('[data-info]').forEach(b=>{
-        b.addEventListener('click', ()=> showInfo(b.dataset.info));
-      });
-      plansGrid.querySelectorAll('[data-subscribe]').forEach(b=>{
-        b.addEventListener('click', ()=>{
-          document.getElementById('subPlan').value = b.dataset.subscribe;
-          openModal('subscribeModal');
-        });
-      });
-    }
+        </div>
+        <div class="imgRow" style="margin-top:6px">${imgs}</div>`;
+      list.appendChild(div);
+    });
+    list.querySelectorAll('[data-edit]').forEach(b=>{
+      b.onclick = ()=>{
+        const x = boxesCache.find(z=>z.id===b.dataset.edit);
+        $('#b-id').value = x.id;
+        $('#b-tier').value = x.tier||'';
+        $('#b-name').value = x.name||'';
+        $('#b-sort').value = x.sort||0;
+        $('#b-boxPrice').value = x.boxPrice||'';
+        $('#b-active').value = String(x.active!==false);
+        $('#b-c-price').value = x.combo?.price || '';
+        $('#b-c-months').value = x.combo?.planMonths || 12;
+        $('#b-c-extra').value = x.combo?.extra || '';
+        $('#b-desc').value = x.desc || '';
+        $('#b-img-urls').value = (x.images||[]).join('\n');
+        renderThumbs('#b-images', x.images||[]);
+      };
+    });
+  }
+  // remove single preview image from textarea sync
+  document.addEventListener('click', e=>{
+    const del = e.target.closest('[data-del]'); // not used here; we sync by editing textarea
+  });
+  $('#b-img-urls').addEventListener('input', ()=> renderThumbs('#b-images', splitUrls($('#b-img-urls').value).slice(0,3)) );
 
-    function showInfo(planName){
-      const categories = [
-        "English, Punjabi, Hindi, Pakistani, Gujarati, Arabic, Korean and more",
-        "Full HD & 4K where available",
-        "Latest + Old Movies & Series",
-        "Sports, News, Kids, Documentaries",
-        "PPV availability varies by event"
-      ];
-      alert(`${planName}\n\nIncludes:\n- ` + categories.join('\n- '));
-    }
-
-    refreshBtn.addEventListener('click', loadPlans);
-    loadPlans();
-
-    // Boxes (local)
-    const boxesGrid = document.getElementById('boxesGrid');
-    const localBoxes = [
-      {
-        id:'basic',
-        tier:'Basic Box',
-        name:'X-100',
-        images:[
-          'https://via.placeholder.com/1280x720?text=Basic+1',
-          'https://via.placeholder.com/1280x720?text=Basic+2'
-        ],
-        boxPrice:'CA$120',
-        combo:{ planMonths:12, extra:'+1 month free', price:'CA$199' },
-        desc:'Entry-level STB, smooth UI'
+  $('#boxNew').onclick = ()=>{ ['b-id','b-tier','b-name','b-sort','b-boxPrice','b-c-price','b-c-months','b-c-extra','b-desc','b-img-urls'].forEach(i=>$('#'+i).value=''); $('#b-active').value='true'; $('#b-images').innerHTML=''; };
+  $('#boxSave').onclick = async()=>{
+    const id = $('#b-id').value.trim();
+    const images = splitUrls($('#b-img-urls').value).slice(0,3);
+    const body = {
+      tier: $('#b-tier').value.trim(),
+      name: $('#b-name').value.trim(),
+      sort: Number($('#b-sort').value||0),
+      boxPrice: $('#b-boxPrice').value.trim(),
+      active: $('#b-active').value==='true',
+      combo: {
+        price: $('#b-c-price').value.trim(),
+        planMonths: Number($('#b-c-months').value||12),
+        extra: $('#b-c-extra').value.trim()
       },
-      {
-        id:'good',
-        tier:'Good Box',
-        name:'Z-200',
-        images:[
-          'https://via.placeholder.com/1280x720?text=Good+1',
-          'https://via.placeholder.com/1280x720?text=Good+2',
-          'https://via.placeholder.com/1280x720?text=Good+3'
-        ],
-        boxPrice:'CA$160',
-        combo:{ planMonths:12, extra:'+1 month free', price:'CA$239' },
-        desc:'Snappy performance, dual-band Wi-Fi'
-      }
-    ];
+      desc: $('#b-desc').value.trim(),
+      images,
+      updatedAt: serverTimestamp()
+    };
+    if(!body.name){ msg($('#boxMsg'),'Model name required', false); return; }
+    if(images.length===0){ msg($('#boxMsg'),'At least 1 image URL', false); return; }
+    if(id){ await setDoc(doc(db,'boxes',id), body, {merge:true}); } else { await addDoc(collection(db,'boxes'), body); }
+    await loadBoxes(); msg($('#boxMsg'),'Saved.');
+  };
+  $('#boxDelete').onclick = async()=>{
+    const id = $('#b-id').value.trim(); if(!id) return;
+    if(confirm('Delete this box?')){ await deleteDoc(doc(db,'boxes',id)); await loadBoxes(); msg($('#boxMsg'),'Deleted.'); }
+  };
+  $('#boxesReload').onclick = loadBoxes;
 
-    function renderBoxes(items){
-      if(!boxesGrid) return;
-      boxesGrid.innerHTML = '';
-      items.forEach(b=>{
-        const card = document.createElement('div'); card.className='card';
-        card.innerHTML = `
-          <div class="boxSlider" id="slider-${b.id}">
-            <div class="boxTrack">
-              ${b.images.map(u=>`<div class="boxSlide"><img src="${u}" alt=""></div>`).join('')}
-            </div>
+  // BANNERS
+  let bannersCache = [];
+  async function loadBanners(){
+    const snap = await getDocs(collection(db,'banners'));
+    bannersCache = []; snap.forEach(d=> bannersCache.push({id:d.id, ...d.data()}));
+    bannersCache.sort((a,b)=> (a.sort||0)-(b.sort||0));
+    renderBannersList();
+  }
+  function renderBannersList(){
+    const list = $('#bannersList'); list.innerHTML = '';
+    bannersCache.forEach(bn=>{
+      const imgs = (bn.images||[]).map(u=>`<img class="thumb" src="${u}">`).join('');
+      const div = document.createElement('div'); div.className='item';
+      div.innerHTML = `
+        <div class="split">
+          <div><strong>${bn.title||''}</strong> <span class="muted">(${(bn.images||[]).length} img)</span></div>
+          <div class="right"><span class="muted">sort:${bn.sort||0}</span> <span class="muted">${bn.active===false?'inactive':'active'}</span>
+            <button class="btn mini" data-edit="${bn.id}">Edit</button>
           </div>
-          <div class="boxDots">${b.images.map((_,i)=>`<div class="boxDot ${i===0?'active':''}"></div>`).join('')}</div>
+        </div>
+        <div class="imgRow" style="margin-top:6px">${imgs}</div>`;
+      list.appendChild(div);
+    });
+    list.querySelectorAll('[data-edit]').forEach(b=>{
+      b.onclick = ()=>{
+        const x = bannersCache.find(z=>z.id===b.dataset.edit);
+        $('#bn-id').value = x.id;
+        $('#bn-title').value = x.title||'';
+        $('#bn-sort').value = x.sort||0;
+        $('#bn-active').value = String(x.active!==false);
+        $('#bn-img-urls').value = (x.images||[]).join('\n');
+        renderThumbs('#bn-images', x.images||[]);
+      };
+    });
+  }
+  $('#bnNew').onclick = ()=>{ ['bn-id','bn-title','bn-sort','bn-img-urls'].forEach(i=>$('#'+i).value=''); $('#bn-active').value='true'; $('#bn-images').innerHTML=''; };
+  $('#bn-img-urls').addEventListener('input', ()=> renderThumbs('#bn-images', splitUrls($('#bn-img-urls').value)) );
+  $('#bnSave').onclick = async()=>{
+    const id = $('#bn-id').value.trim();
+    const images = splitUrls($('#bn-img-urls').value);
+    const body = {
+      title: $('#bn-title').value.trim(),
+      sort: Number($('#bn-sort').value||0),
+      active: $('#bn-active').value==='true',
+      images,
+      updatedAt: serverTimestamp()
+    };
+    if(!images.length){ msg($('#bnMsg'),'At least one image URL', false); return; }
+    if(id){ await setDoc(doc(db,'banners',id), body, {merge:true}); } else { await addDoc(collection(db,'banners'), body); }
+    await loadBanners(); msg($('#bnMsg'),'Saved.');
+  };
+  $('#bnDelete').onclick = async()=>{
+    const id = $('#bn-id').value.trim(); if(!id) return;
+    if(confirm('Delete this banner?')){ await deleteDoc(doc(db,'banners',id)); await loadBanners(); msg($('#bnMsg'],'Deleted.'); }
+  };
+  $('#bnReload').onclick = loadBanners;
 
-          <span class="miniTag">${escapeHtml(b.tier)}</span>
-          <div class="boxMeta">
-            <h3 class="boxName">${escapeHtml(b.name)}</h3>
-            <div class="boxPrice">${escapeHtml(b.boxPrice)}</div>
+  // POSTERS
+  let postersCache = [];
+  async function loadPosters(){
+    const snap = await getDocs(collection(db,'posters'));
+    postersCache = []; snap.forEach(d=> postersCache.push({id:d.id, ...d.data()}));
+    postersCache.sort((a,b)=> (a.sort||0)-(b.sort||0));
+    renderPostersList();
+  }
+  function renderPostersList(){
+    const list = $('#postersList'); list.innerHTML = '';
+    postersCache.forEach(ps=>{
+      const div = document.createElement('div'); div.className='item';
+      div.innerHTML = `
+        <div class="split">
+          <div><strong>${ps.title||''}</strong> <span class="muted">${ps.ratio||''}</span></div>
+          <div class="right"><span class="muted">sort:${ps.sort||0}</span> <span class="muted">${ps.active===false?'inactive':'active'}</span>
+            <button class="btn mini" data-edit="${ps.id}">Edit</button>
           </div>
-
-          <div class="comboCallout">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <strong>Combo Plan</strong>
-              <strong>${escapeHtml(b.combo.price)}</strong>
-            </div>
-            <div class="muted">${b.combo.planMonths} months • ${escapeHtml(b.combo.extra)}</div>
-          </div>
-
-          <div class="muted" style="line-height:1.5;margin:6px 0 10px">${escapeHtml(b.desc||'')}</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn whats" data-box="${escapeAttr(b.name)}">Get Box</button>
-            <button class="btn" data-boxinfo="${escapeAttr(b.name)}">Info</button>
-          </div>
-        `;
-        boxesGrid.appendChild(card);
-
-        // slider
-        const track = card.querySelector('.boxSlider .boxTrack');
-        const dots = Array.from(card.querySelectorAll('.boxDot'));
-        let idx = 0;
-        function go(i){
-          idx = (i + b.images.length) % b.images.length;
-          track.style.transform = `translateX(-${idx*100}%)`;
-          dots.forEach((d,k)=> d.classList.toggle('active', k===idx));
-        }
-        let timer = setInterval(()=>go(idx+1), 3500);
-        card.addEventListener('mouseenter', ()=>clearInterval(timer));
-        card.addEventListener('mouseleave', ()=>timer = setInterval(()=>go(idx+1), 3500));
-        dots.forEach((d,k)=> d.addEventListener('click', ()=>go(k)));
-      });
-
-      boxesGrid.querySelectorAll('[data-box]').forEach(b=>{
-        b.addEventListener('click', ()=> toWA(`Box Request\nBox: ${b.dataset.box}\nPrefer combo? ${items.find(x=>x.name===b.dataset.box)?.combo?.planMonths||12} months (+1 month free)\nName:\nPhone:\nNote:`));
-      });
-      boxesGrid.querySelectorAll('[data-boxinfo]').forEach(b=>{
-        b.addEventListener('click', ()=> alert(`${b.dataset.box}\nIncludes HDMI, power adapter, supports our portal.\nAsk for combo to save.`));
-      });
-    }
-    renderBoxes(localBoxes);
-
-    // Forms -> WhatsApp
-    document.getElementById('subscribeForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `New Subscription Request`,
-        `Plan: ${kv.plan}`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        `Channels: ${kv.channels}`,
-        `VOD: ${kv.vod}`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
+        </div>
+        ${ps.image ? `<img class="thumb" src="${ps.image}" style="margin-top:6px">` : ''}`;
+      list.appendChild(div);
     });
-
-    document.getElementById('ownPlanForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `Custom Plan Request`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        kv.email ? `Email: ${kv.email}` : null,
-        `Preferred Channels: ${kv.channels}`,
-        `VOD: ${kv.vod}`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
+    list.querySelectorAll('[data-edit]').forEach(b=>{
+      b.onclick = ()=>{
+        const x = postersCache.find(z=>z.id===b.dataset.edit);
+        $('#ps-id').value = x.id;
+        $('#ps-title').value = x.title||'';
+        $('#ps-ratio').value = x.ratio||'2:3';
+        $('#ps-sort').value = x.sort||0;
+        $('#ps-active').value = String(x.active!==false);
+        $('#ps-url').value = x.image||'';
+        const th = $('#ps-thumb'); if(x.image){ th.src = x.image; th.classList.remove('hidden'); } else { th.classList.add('hidden'); }
+      };
     });
-
-    document.getElementById('rechargeForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `Renewal Request`,
-        `Email: ${kv.email}`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        `MAC: ${kv.mac}`,
-        `Duration: ${kv.duration} month(s)`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
-    });
-
-    document.getElementById('supportForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const msg = [
-        `Support Request`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        `Issue: ${kv.issue}`
-      ].join('\n');
-      toWA(msg);
-    });
-
-    // PIN brand -> PIN mapping (0000 or 7274)
-    function pinForBrand(brand){
-      const b = (brand||'').toLowerCase();
-      if (b.includes('mag') || b.includes('stalker')) return '7274';
-      return '0000';
-    }
-    const brandSel = document.getElementById('pinBrand');
-    const pinOut = document.getElementById('pinOutput');
-    if (brandSel && pinOut){
-      brandSel.addEventListener('change', ()=>{
-        pinOut.value = pinForBrand(brandSel.value);
-      });
-    }
-
-    document.getElementById('pinForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const resolvedPin = pinForBrand(kv.brand);
-      const msg = [
-        `Parental PIN Request`,
-        `MAC: ${kv.mac}`,
-        `Email: ${kv.email}`,
-        `Brand: ${kv.brand || 'N/A'}`,
-        `Suggested PIN: ${resolvedPin}`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
-    });
-
-  </script>
+  }
+  $('#psNew').onclick = ()=>{ ['ps-id','ps-title','ps-sort','ps-url'].forEach(i=>$('#'+i).value=''); $('#ps-active').value='true'; $('#ps-ratio').value='2:3'; $('#ps-thumb').classList.add('hidden'); };
+  $('#psSave').onclick = async()=>{
+    const id = $('#ps-id').value.trim();
+    const body = {
+      title: $('#ps-title').value.trim(),
+      ratio: $('#ps-ratio').value,
+      sort: Number($('#ps-sort').value||0),
+      active: $('#ps-active').value==='true',
+      image: $('#ps-url').value || '',
+      updatedAt: serverTimestamp()
+    };
+    if(!body.title || !body.image){ msg($('#psMsg'),'Title and image URL required', false); return; }
+    if(id){ await setDoc(doc(db,'posters',id), body, {merge:true}); } else { await addDoc(collection(db,'posters'), body); }
+    await loadPosters(); msg($('#psMsg'),'Saved.');
+  };
+  $('#psDelete').onclick = async()=>{
+    const id = $('#ps-id').value.trim(); if(!id) return;
+    if(confirm('Delete this poster?')){ await deleteDoc(doc(db,'posters',id)); await loadPosters(); msg($('#psMsg'),'Deleted.'); }
+  };
+  $('#psReload').onclick = loadPosters;
+</script>
 </body>
 </html>
