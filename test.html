@@ -19,16 +19,18 @@
   html,body{height:100%}
   body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
-  button{font:inherit}
+  button{font:inherit;cursor:pointer}
   .wrap{max-width:1100px;margin:0 auto;padding:16px}
 
   .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:calc(8px + var(--safe-top)) 16px 8px}
+  :root[data-theme="light"] .topbar{background:#ffffffcc;border-bottom:1px solid #d9e0ff;backdrop-filter:saturate(1.2) blur(8px)}
   .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .logo{display:flex;align-items:center;gap:10px}
   .dot{width:10px;height:10px;border-radius:50%;background:conic-gradient(from 180deg,var(--g1),var(--g2))}
   .brand{font-weight:800;letter-spacing:.3px}
   .badge{font-size:12px;color:var(--muted)}
   .menuBtn{border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px 12px;border-radius:14px}
+  :root[data-theme="light"] .menuBtn{background:#eff3ff;border-color:#d9e0ff;color:#0b1020}
 
   .hero{
     position:relative;overflow:hidden;border-bottom:1px solid var(--line);
@@ -36,19 +38,21 @@
       radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
       radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 50%);
   }
+  :root[data-theme="light"] .hero{background:linear-gradient(180deg,#f6f8ff,transparent)}
   .heroInner{padding:40px 16px 24px}
   .title{font-size:28px;line-height:1.2;font-weight:800;margin:6px 0 8px}
   .subtitle{color:var(--muted)}
 
-  /* Banner carousel (exact 16:9, 1280x720 friendly) */
+  /* Banner carousel (16:9, 1280x720 friendly) */
   .banner{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:14px;margin-bottom:14px}
   .banner::before{content:"";display:block;aspect-ratio:16/9}
   .bannerTrack{display:flex;transform:translateX(0);transition:transform .4s ease}
   .bannerSlide{min-width:100%;position:relative}
   .bannerSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
 
-  /* Replaces chips: one-line moving ticker */
+  /* Moving ticker */
   .ticker{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03);margin-top:12px}
+  :root[data-theme="light"] .ticker{background:#eef2ff}
   .tickerInner{display:inline-block;white-space:nowrap;animation:tickerMove 18s linear infinite}
   .tickerInner span{display:inline-block;padding:8px 18px}
   @keyframes tickerMove{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
@@ -56,7 +60,7 @@
   .ctaRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:8px 0 18px}
   .bigBtn{height:64px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg, rgba(106,17,203,.18), rgba(37,117,252,.18));display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:700}
 
-  /* Posters rail under hero */
+  /* Posters rail */
   .postersRail{margin-top:12px;display:flex;gap:10px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
   .postersRail img{width:200px;height:300px;object-fit:cover;border-radius:10px;flex:0 0 auto;scroll-snap-align:start;border:1px solid var(--line);background:#000}
 
@@ -65,31 +69,39 @@
 
   /* Menu sheet */
   .sheet{position:fixed;inset:auto 0 0 0;background:rgba(18,24,49,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(100%);transition:transform .25s ease;z-index:70;max-height:80vh;display:flex;flex-direction:column}
+  :root[data-theme="light"] .sheet{background:#ffffff; border-top:1px solid #d9e0ff}
   .sheet.open{transform:translateY(0)}
   .sheetHead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  :root[data-theme="light"] .sheetHead{background:#f6f9ff}
   .sheetBody{padding:10px 16px;overflow:auto}
   .menuList{display:grid;gap:10px}
   .menuItem{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.03)}
+  :root[data-theme="light"] .menuItem{background:#f6f9ff}
 
-  /* Modal (for forms, info) */
+  /* Modal */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:90}
   .modal.open{display:flex}
   .modalCard{margin:auto;max-width:720px;width:100%;height:90vh;background:var(--card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column}
+  :root[data-theme="light"] .modalCard{background:#ffffff;border-color:#d9e0ff}
   .modalHead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
   .modalBody{padding:12px 14px;overflow:auto}
   .x{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
+  :root[data-theme="light"] .x{background:#eef2ff}
 
-  /* Plans grid */
+  /* Plans + Boxes shared */
   .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
   .card{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:16px;padding:14px}
-  .card h3{margin:0 0 8px;font-size:18px}
-  .price{font-weight:800;font-size:22px}
+  :root[data-theme="light"] .card{background:#ffffff}
+  .card h3{margin:0 0 6px;font-size:18px;line-height:1.2}
   .muted{color:var(--muted)}
   .btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.04);padding:10px 12px}
   .btn.whats{background:var(--whats);border-color:#1fa851;color:#08210e;font-weight:800}
   .btn.ghost{background:rgba(255,255,255,.04)}
+  .price{font-weight:800}
+  .cardHead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+  .priceRight{font-size:18px}
   .tag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin-bottom:6px}
-  .benefit{font-size:12px;font-weight:800;color:var(--ok)}
+  .benefit{font-size:12px;font-weight:800;color:var(--ok);margin-top:4px}
 
   /* Box mini carousel */
   .boxSlider{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000}
@@ -100,6 +112,12 @@
   .boxDots{display:flex;gap:6px;justify-content:center;margin-top:6px}
   .boxDot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25)}
   .boxDot.active{background:#fff}
+  .miniTag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin:8px 0 6px}
+  .comboCallout{margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:12px;background:rgba(37,117,252,.08)}
+  :root[data-theme="light"] .comboCallout{background:#eef5ff}
+  .boxMeta{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .boxPrice{font-weight:800}
+  .boxName{font-size:18px;font-weight:800;margin:0}
 
   /* Forms */
   .grid{display:grid;gap:10px}
@@ -113,6 +131,7 @@
   /* Info list */
   .list{display:grid;gap:10px}
   .pill{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03)}
+  :root[data-theme="light"] .pill{background:#ffffff}
 
   /* Footer */
   .footer{padding:16px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
@@ -135,11 +154,11 @@
     </div>
   </div>
 
-  <!-- HERO FIRST -->
+  <!-- HERO -->
   <section class="hero">
     <div class="heroInner wrap">
 
-      <!-- BANNERS (16:9, exact) -->
+      <!-- BANNERS -->
       <div class="banner" aria-label="Promotions">
         <div class="bannerTrack" id="bannerTrack">
           <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+1" alt="Banner 1"></div>
@@ -150,9 +169,9 @@
 
       <div class="subtitle">Quick Activation</div>
       <h1 class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
-      <p class="subtitle">Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech</p>
+      <p class="subtitle">Latest + classic Movies & Series • Full HD & 4K Channels • Anti-Freeze Tech</p>
 
-      <!-- MOVING TICKER (replaces chips) -->
+      <!-- TICKER -->
       <div class="ticker">
         <div class="tickerInner" id="featureTicker">
           <span>🇨🇦 Proudly Canadian</span>
@@ -163,13 +182,13 @@
       </div>
 
       <div class="ctaRow" id="actionButtons">
-        <button class="bigBtn" data-open="plansModal">New Set-Top Box Plans</button>
+        <button class="bigBtn" data-open="plansModal">Our Plans</button>
         <button class="bigBtn" data-open="boxesModal">New Boxes</button>
-        <button class="bigBtn" data-open="rechargeModal">Recharge</button>
+        <button class="bigBtn" data-open="rechargeModal">Renew Plan</button>
         <button class="bigBtn" data-open="supportModal">Contact Support</button>
       </div>
 
-      <!-- Posters rail instead of the scroll hint -->
+      <!-- Posters -->
       <div class="postersRail" id="postersRail">
         <img src="https://via.placeholder.com/300x450?text=Poster+1" loading="lazy" alt="">
         <img src="https://via.placeholder.com/300x450?text=Poster+2" loading="lazy" alt="">
@@ -179,14 +198,14 @@
     </div>
   </section>
 
-  <!-- SECTION: Why net+TV -->
+  <!-- Why -->
   <section class="section wrap">
     <h2 style="margin:0 0 8px">Why net+TV</h2>
-    <p class="muted" style="margin:0">Stable quality, solid support, and no drama. Except in the shows. Obviously.</p>
+    <p class="muted" style="margin:0">Stable quality, solid support, and no drama. Except in the shows.</p>
     <div class="list" style="margin-top:12px">
       <div class="pill">Fast activation with WhatsApp confirmation</div>
-      <div class="pill">No-nonsense plans, real 4K content where available</div>
-      <div class="pill">Works on popular STBs, smart TVs, mobile and laptops</div>
+      <div class="pill">No-nonsense plans, real 4K where available</div>
+      <div class="pill">Works on STBs, smart TVs, mobile and laptops</div>
     </div>
   </section>
 
@@ -202,10 +221,10 @@
     </div>
     <div class="sheetBody">
       <div class="menuList">
-        <a class="menuItem" data-open="plansModal">New Set-Top Box Plans</a>
+        <a class="menuItem" data-open="plansModal">Our Plans</a>
         <a class="menuItem" data-open="boxesModal">New Boxes</a>
         <a class="menuItem" data-open="ownPlanModal">Your Own Set-Top Box Plan</a>
-        <a class="menuItem" data-open="rechargeModal">Recharge</a>
+        <a class="menuItem" data-open="rechargeModal">Renew Plan</a>
         <a class="menuItem" data-open="supportModal">Contact Support</a>
         <a class="menuItem" data-open="faqModal">FAQ</a>
         <a class="menuItem" data-open="aboutModal">About Us</a>
@@ -220,14 +239,14 @@
   <div id="plansModal" class="modal" role="dialog" aria-modal="true" aria-label="Plans">
     <div class="modalCard">
       <div class="modalHead">
-        <strong>Plans</strong>
+        <strong>Our Plans</strong>
         <div style="display:flex;gap:8px">
           <button class="btn ghost" id="refreshPlans">Refresh</button>
           <button class="x" data-close="plansModal">Close</button>
         </div>
       </div>
       <div class="modalBody">
-        <p class="muted">All plans include: Quick Activation, 20,000+ Live Channels, All Shows/Movies/PPV, Latest & Old Series, Full HD & SD Channels, Anti-Freeze Technology.</p>
+        <p class="muted">All plans include: Quick Activation, Live Channels, Movies/Series, PPV (where available), Anti-Freeze Tech.</p>
         <div id="plansGrid" class="plans"></div>
         <div class="footpad"></div>
       </div>
@@ -315,11 +334,11 @@
     </div>
   </div>
 
-  <!-- Recharge Modal -->
-  <div id="rechargeModal" class="modal" role="dialog" aria-modal="true" aria-label="Recharge">
+  <!-- Renew Plan Modal -->
+  <div id="rechargeModal" class="modal" role="dialog" aria-modal="true" aria-label="Renew Plan">
     <div class="modalCard">
       <div class="modalHead">
-        <strong>Recharge</strong>
+        <strong>Renew Plan</strong>
         <button class="x" data-close="rechargeModal">Close</button>
       </div>
       <div class="modalBody">
@@ -353,7 +372,7 @@
             <label>Notes</label>
             <input name="note" placeholder="Optional note">
           </div>
-          <button class="btn whats" type="submit">Request Recharge</button>
+          <button class="btn whats" type="submit">Request Renewal</button>
         </form>
         <div class="footpad"></div>
       </div>
@@ -472,7 +491,7 @@
     </div>
   </div>
 
-  <!-- Subscription Modal (reused from Plans) -->
+  <!-- Subscription Modal -->
   <div id="subscribeModal" class="modal" role="dialog" aria-modal="true" aria-label="Subscribe">
     <div class="modalCard">
       <div class="modalHead">
@@ -541,7 +560,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
     import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
-    // Firebase config (yours)
     const firebaseConfig = {
       apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
       authDomain: "netplus-site-4ff04.firebaseapp.com",
@@ -555,7 +573,7 @@
     const db = getFirestore(app);
 
     // Config
-    const USE_FIRESTORE_FOR_PLANS = true; // flip to false to use local fallback
+    const USE_FIRESTORE_FOR_PLANS = true;
     const WHATSAPP_NUMBER = "16476961656"; // no '+'
 
     // Year
@@ -571,7 +589,7 @@
       localStorage.setItem('theme', now);
     });
 
-    // Menu open/close
+    // Menu
     const menuBtn = document.getElementById('menuBtn');
     const menuSheet = document.getElementById('menuSheet');
     menuBtn.addEventListener('click', () => menuSheet.classList.add('open'));
@@ -594,7 +612,6 @@
         b.addEventListener('click', ()=> closeModal(b.dataset.close || m.id));
       });
     });
-    // Big buttons open modals
     document.querySelectorAll('[data-open]').forEach(b=>{ b.addEventListener('click', ()=> openModal(b.dataset.open)); });
 
     // Banner auto-slide
@@ -626,7 +643,7 @@
       { id:'p1', name:"Starter HD", price:"CA$60", months:6, benefit:"+1 month free", tag:"Popular", desc:"HD focus • Core channels" },
       { id:'p2', name:"Family FHD", price:"CA$100", months:12, benefit:"+2 months free", tag:"Best Value", desc:"Full HD • Family packs" },
       { id:'p3', name:"4K Select", price:"CA$120", months:12, benefit:"+1 month free", tag:"", desc:"4K where available • Sports" },
-      { id:'p4', name:"Max Ultra", price:"CA$180", months:24, benefit:"+3 months free", tag:"", desc:"Best value • 4K + PPV focus" }
+      { id:'p4', name:"Max Ultra", price:"CA$180", months:24, benefit:"+3 months free", tag:"", desc:"4K + PPV focus" }
     ];
 
     async function loadPlans(){
@@ -667,11 +684,13 @@
         el.className = 'card';
         el.innerHTML = `
           ${tag}
-          <h3>${escapeHtml(p.name)}</h3>
-          <div class="price">${escapeHtml(p.price)}</div>
+          <div class="cardHead">
+            <h3>${escapeHtml(p.name)}</h3>
+            <div class="price priceRight">${escapeHtml(p.price)}</div>
+          </div>
           ${months}
           ${benefit}
-          <div class="muted" style="margin:6px 0 10px">${escapeHtml(p.desc || 'Inclusive of Quick Activation, 20k+ Live Channels, PPV, Series')}</div>
+          <div class="muted" style="margin:8px 0 12px">${escapeHtml(p.desc || 'Inclusive of Live Channels, Movies, Series, PPV (where available)')}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn whats" data-subscribe="${escapeAttr(p.name)}">Subscribe</button>
             <button class="btn" data-info="${escapeAttr(p.name)}">Info</button>
@@ -679,7 +698,6 @@
         `;
         plansGrid.appendChild(el);
       });
-      // handlers
       plansGrid.querySelectorAll('[data-info]').forEach(b=>{
         b.addEventListener('click', ()=> showInfo(b.dataset.info));
       });
@@ -693,8 +711,8 @@
 
     function showInfo(planName){
       const categories = [
-        "All English, Punjabi, Hindi, Pakistani, Gujarati, Arabic, Korean and more",
-        "Full HD & 4K content where available",
+        "English, Punjabi, Hindi, Pakistani, Gujarati, Arabic, Korean and more",
+        "Full HD & 4K where available",
         "Latest + Old Movies & Series",
         "Sports, News, Kids, Documentaries",
         "PPV availability varies by event"
@@ -705,12 +723,13 @@
     refreshBtn.addEventListener('click', loadPlans);
     loadPlans();
 
-    // Boxes (local fallback; later you can fetch from Firestore)
+    // Boxes (local)
     const boxesGrid = document.getElementById('boxesGrid');
     const localBoxes = [
       {
         id:'basic',
-        name:'Basic Box',
+        tier:'Basic Box',
+        name:'X-100',
         images:[
           'https://via.placeholder.com/1280x720?text=Basic+1',
           'https://via.placeholder.com/1280x720?text=Basic+2'
@@ -721,7 +740,8 @@
       },
       {
         id:'good',
-        name:'Good Box',
+        tier:'Good Box',
+        name:'Z-200',
         images:[
           'https://via.placeholder.com/1280x720?text=Good+1',
           'https://via.placeholder.com/1280x720?text=Good+2',
@@ -745,10 +765,22 @@
             </div>
           </div>
           <div class="boxDots">${b.images.map((_,i)=>`<div class="boxDot ${i===0?'active':''}"></div>`).join('')}</div>
-          <h3>${escapeHtml(b.name)}</h3>
-          <div><strong>Box:</strong> ${escapeHtml(b.boxPrice)}</div>
-          <div><strong>Combo:</strong> ${escapeHtml(b.combo.price)} (${b.combo.planMonths} months, ${escapeHtml(b.combo.extra)})</div>
-          <div class="muted">${escapeHtml(b.desc||'')}</div>
+
+          <span class="miniTag">${escapeHtml(b.tier)}</span>
+          <div class="boxMeta">
+            <h3 class="boxName">${escapeHtml(b.name)}</h3>
+            <div class="boxPrice">${escapeHtml(b.boxPrice)}</div>
+          </div>
+
+          <div class="comboCallout">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong>Combo Plan</strong>
+              <strong>${escapeHtml(b.combo.price)}</strong>
+            </div>
+            <div class="muted">${b.combo.planMonths} months • ${escapeHtml(b.combo.extra)}</div>
+          </div>
+
+          <div class="muted" style="line-height:1.5;margin:6px 0 10px">${escapeHtml(b.desc||'')}</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn whats" data-box="${escapeAttr(b.name)}">Get Box</button>
             <button class="btn" data-boxinfo="${escapeAttr(b.name)}">Info</button>
@@ -756,7 +788,7 @@
         `;
         boxesGrid.appendChild(card);
 
-        // simple slider
+        // slider
         const track = card.querySelector('.boxSlider .boxTrack');
         const dots = Array.from(card.querySelectorAll('.boxDot'));
         let idx = 0;
@@ -772,10 +804,10 @@
       });
 
       boxesGrid.querySelectorAll('[data-box]').forEach(b=>{
-        b.addEventListener('click', ()=> toWA(`Box Request\nBox: ${b.dataset.box}\nPrefer combo? 12 months (+1 month free)\nName:\nPhone:\nNote:`));
+        b.addEventListener('click', ()=> toWA(`Box Request\nBox: ${b.dataset.box}\nPrefer combo? ${items.find(x=>x.name===b.dataset.box)?.combo?.planMonths||12} months (+1 month free)\nName:\nPhone:\nNote:`));
       });
       boxesGrid.querySelectorAll('[data-boxinfo]').forEach(b=>{
-        b.addEventListener('click', ()=> alert(`${b.dataset.box}\nIncludes HDMI cable, power adapter, supports our portal.\nAsk for combo to save.`));
+        b.addEventListener('click', ()=> alert(`${b.dataset.box}\nIncludes HDMI, power adapter, supports our portal.\nAsk for combo to save.`));
       });
     }
     renderBoxes(localBoxes);
@@ -815,7 +847,7 @@
       e.preventDefault();
       const kv = formToKV(e.target);
       const msg = [
-        `Recharge Request`,
+        `Renewal Request`,
         `Email: ${kv.email}`,
         `Name: ${kv.name}`,
         `Phone: ${kv.phone}`,
