@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -10,6 +10,12 @@
     --bg:#0b1020;--ink:#e9edff;--muted:#9aa7d9;--card:#121831;--line:#23305b;
     --accent1:#6a11cb;--accent2:#2575fc;--ok:#32d296;--whats:#25D366;--warn:#f8b84a;
   }
+  /* Light theme overrides */
+  html[data-theme="light"]{
+    --bg:#f6f8ff;--ink:#0c1330;--muted:#4b5a8a;--card:#ffffff;--line:#e4e8fb;
+    --accent1:#6a11cb;--accent2:#2575fc;--ok:#199b70;--whats:#25D366;--warn:#b07900;
+  }
+
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
@@ -17,9 +23,10 @@
     background:
       radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.14),transparent 60%),
       radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 55%),
-      linear-gradient(180deg,#0b1020,#0b1020);
+      linear-gradient(180deg,var(--bg),var(--bg));
     color:var(--ink);
     padding-bottom: calc(88px + env(safe-area-inset-bottom));
+    transition: background-color .25s ease, color .25s ease;
   }
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1100px;margin:0 auto;padding:14px}
@@ -44,24 +51,34 @@
   /* Header */
   .top{
     position:sticky;top:0;z-index:900;backdrop-filter: blur(8px);
-    background:rgba(11,16,32,.6);border-bottom:1px solid rgba(255,255,255,.06);
+    background:color-mix(in oklab, var(--bg) 75%, transparent);
+    border-bottom:1px solid color-mix(in oklab, var(--ink) 10%, transparent);
     display:flex;align-items:center;justify-content:space-between;padding:12px 14px;
   }
   .logo{display:flex;align-items:center;gap:4px;color:var(--ink);font-weight:800}
   .logo svg{height:26px;width:auto}
-  .menu-btn{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--ink);
-    padding:6px 10px;border-radius:10px}
+  .hdr-actions{display:flex;gap:8px;align-items:center}
+  .menu-btn,.bulb{
+    background:transparent;border:1px solid rgba(0,0,0,0);
+    color:var(--ink);padding:6px 10px;border-radius:10px;
+  }
+  .bulb{
+    border:1px solid color-mix(in oklab, var(--ink) 15%, transparent);
+    cursor:pointer;display:flex;align-items:center;gap:6px;font-weight:800;
+  }
 
   /* Hero */
   .hero{padding:10px 14px 8px;text-align:center}
   .hero h1{font-size:24px;letter-spacing:.5px;margin:6px 0 10px}
   .badges{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-  .badge{font-size:12px;color:#cbd5ff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:6px 8px;border-radius:999px}
+  .badge{font-size:12px;color:var(--muted);background:rgba(0,0,0,.06);border:1px solid rgba(0,0,0,.08);padding:6px 8px;border-radius:999px}
+  html[data-theme="light"] .badge{background:#eef2ff;border-color:#e3e8ff;color:#405089}
 
   /* Tabs */
   .tabs{display:flex;gap:8px;margin:14px 0 8px}
   .tab{flex:1;text-align:center;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:12px;border-radius:12px;font-weight:800}
-  .tab.active{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
+  html[data-theme="light"] .tab{background:#fff;border-color:#e4e8fb}
+  .tab.active{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent;color:#fff}
 
   /* Panels */
   .panel{display:none}
@@ -73,7 +90,7 @@
   @media(min-width:1024px){.grid{grid-template-columns: repeat(3,1fr)}}
   .card{
     background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;
-    box-shadow:0 10px 30px rgba(0,0,0,.25);
+    box-shadow:0 10px 30px rgba(0,0,0,.12);transition:background-color .25s ease, border-color .25s ease;
   }
   .mark{display:inline-block;font-size:11px;margin-bottom:6px;padding:4px 8px;border-radius:999px;background:#0e1a3d;border:1px solid rgba(255,255,255,.12);color:#bcd0ff;font-weight:800}
   .mark.rec{background:#14224f;border-color:#3e5cdf;color:#cfe2ff}
@@ -81,68 +98,73 @@
   .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
   .title{font-weight:900;font-size:18px}
   .price{font-weight:900;font-size:18px;background:rgba(255,255,255,.06);padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.12)}
+  html[data-theme="light"] .price{background:#f4f6ff;border-color:#e1e6ff}
   ul.features{list-style:none;padding:0;margin:10px 0 0}
-  ul.features li{margin:6px 0;font-size:13px;color:#cfdbff}
+  ul.features li{margin:6px 0;font-size:13px;color:color-mix(in oklab, var(--ink) 80%, transparent)}
   .btns{display:flex;gap:8px;margin-top:12px}
   .btn{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);color:var(--ink);background:transparent;font-weight:800;cursor:pointer}
-  .btn.primary{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
+  html[data-theme="light"] .btn{border-color:#e4e8fb}
+  .btn.primary{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent;color:#fff}
   .btn.whats{background:var(--whats);border-color:transparent;color:#fff}
   .note{font-size:12px;color:#ffdca1;margin-top:6px}
 
-  /* Combo chip */
+  /* Combo chip (bundle line) */
   .combo{
     display:inline-block;margin-top:8px;padding:7px 12px;border-radius:10px;font-weight:900;font-size:13px;color:#fff;
     background:linear-gradient(135deg,#6a11cb,#2575fc);box-shadow:0 6px 16px rgba(37,117,252,.25)
   }
+  .freeTag{display:inline-block;margin-left:8px;background:#0b7a3c;padding:4px 8px;border-radius:999px;font-weight:900;font-size:11px}
 
   /* Table */
   .table{margin-top:12px;overflow:auto;border:1px solid var(--line);border-radius:12px}
-  table{width:100%;border-collapse:collapse}
+  table{width:100%;border-collapse:collapse;background:var(--card)}
   th,td{padding:12px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px}
   thead th{background:#0e1836;color:#cfe0ff;text-align:left}
+  html[data-theme="light"] thead th{background:#eef2ff;color:#38476f}
+  html[data-theme="light"] th, html[data-theme="light"] td{border-bottom:1px solid #eef1ff}
 
-  /* Bottom Dock (now 5 tabs incl. Gallery) */
+  /* Bottom Dock (5 tabs incl. Gallery) */
   .dock{
     position:sticky;bottom:0;z-index:40;background:rgba(11,16,32,.92);backdrop-filter: blur(10px);
     border-top:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(5,1fr);gap:8px;
     padding:8px 8px calc(8px + env(safe-area-inset-bottom));
   }
-  .dbtn{color:var(--ink);text-align:center;padding:10px 6px;border:1px solid rgba(255,255,255,.12);border-radius:12px}
-  .dactive{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent}
+  html[data-theme="light"] .dock{background:rgba(246,248,255,.92);border-top:1px solid #dde3ff}
+  .dbtn{color:var(--ink);text-align:center;padding:10px 6px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:var(--card)}
+  html[data-theme="light"] .dbtn{border-color:#e4e8fb}
+  .dactive{background:linear-gradient(135deg,var(--accent1),var(--accent2));border-color:transparent;color:#fff}
 
   /* Modals / Sheets */
   .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;z-index:9999}
   .sheet{
-    background:#0d142d;border-top:1px solid var(--line);width:100%;
+    background:var(--card);border-top:1px solid var(--line);width:100%;
     max-height:90vh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
     border-radius:16px 16px 0 0;padding:16px 14px calc(24px + env(safe-area-inset-bottom));
-    color:#e9edff
+    color:var(--ink)
   }
   .field{display:flex;flex-direction:column;gap:6px;margin:10px 0}
   .input,select,textarea{background:#0b122a;border:1px solid #22305a;border-radius:10px;padding:12px;color:#e9edff}
+  html[data-theme="light"] .input, html[data-theme="light"] select, html[data-theme="light"] textarea{background:#fff;border-color:#e4e8fb;color:#0c1330}
   .chips{display:flex;gap:6px;flex-wrap:wrap}
   .chip{background:#0b122a;border:1px solid #22305a;color:#cfe0ff;padding:6px 10px;border-radius:999px;font-size:12px}
+  html[data-theme="light"] .chip{background:#fff;border-color:#e4e8fb;color:#405089}
   .x{float:right;background:transparent;border:1px solid rgba(255,255,255,.15);color:#cfe0ff;border-radius:10px;padding:6px 10px}
-  .help{font-size:12px;color:#b6c7ff}
+  html[data-theme="light"] .x{border-color:#e4e8fb;color:#0c1330}
+  .help{font-size:12px;color:var(--muted)}
   .cols{display:grid;gap:12px;margin-top:8px}
   @media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
   .h{font-weight:900;margin-top:8px}
-  .catlist{margin:6px 0 0;padding-left:18px}
-  .catlist li{margin:6px 0}
 
   /* Gallery grid */
   .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
   @media(min-width:700px){.gallery{grid-template-columns:repeat(4,1fr)}}
-  .gitem{background:#0b122a;border:1px solid #22305a;border-radius:12px;overflow:hidden}
+  .gitem{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
   .gitem img{width:100%;height:120px;object-fit:cover;display:block}
-  .gcap{padding:8px;font-size:12px;color:#cfe0ff;text-align:center}
+  .gcap{padding:8px;font-size:12px;color:var(--muted);text-align:center}
 
   /* Simple photo scroller inside cards */
   .photoTrack{display:flex;gap:8px;overflow:auto;scroll-snap-type:x mandatory;margin:8px 0}
   .photoTrack img{height:140px;width:auto;border-radius:10px;scroll-snap-align:center;display:block}
-  .photoDots{display:flex;gap:4px;margin-top:4px}
-  .dot{width:6px;height:6px;border-radius:999px;background:#2a335e}
-  .dot.on{background:#8ea2ff}
 
   /* Lock page scroll when a modal is open (iOS friendly) */
   body.modal-open{overflow:hidden;position:fixed;width:100%}
@@ -150,7 +172,7 @@
 </head>
 <body>
 
-<!-- Swipe Promo (from Admin banners via Firestore) -->
+<!-- Swipe Promo (Firestore banners) -->
 <section id="promoCarousel" class="promo" role="region" aria-label="Offers" style="display:none">
   <div id="promoTrack"></div>
 </section>
@@ -166,7 +188,10 @@
       <text x="90" y="25" font-size="24" font-weight="900" fill="#e9edff">TV</text>
     </svg>
   </div>
-  <button class="menu-btn" onclick="openSheet('menu')">Menu</button>
+  <div class="hdr-actions">
+    <button class="bulb" id="themeToggle" aria-label="Toggle theme">💡 Theme</button>
+    <button class="menu-btn" onclick="openSheet('menu')">Menu</button>
+  </div>
 </header>
 
 <!-- Hero -->
@@ -312,10 +337,10 @@
   </div>
 </div>
 
+<!-- Firebase (banners + site settings read) -->
 <script type="module">
-  /* ===== Firebase (CDN) for banners only ===== */
   import { getApps, initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, doc, getDoc, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
@@ -327,6 +352,45 @@
   };
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
   const db  = getFirestore(app);
+
+  /* ===== Theme: bulb toggle (persist) ===== */
+  const THEME_KEY = 'netplus.theme';
+  function applyTheme(t){
+    document.documentElement.setAttribute('data-theme', t==='light'?'light':'dark');
+    localStorage.setItem(THEME_KEY, t);
+    // meta theme-color for mobile status bar
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if(meta) meta.setAttribute('content', t==='light' ? '#ffffff' : '#0b1020');
+  }
+  document.getElementById('themeToggle').addEventListener('click', ()=>{
+    const cur = document.documentElement.getAttribute('data-theme');
+    applyTheme(cur==='light'?'dark':'light');
+  });
+  // init theme
+  applyTheme(localStorage.getItem(THEME_KEY)||'dark');
+
+  /* ===== Bullet-proof SETTINGS loader (Firestore → local fallback) ===== */
+  const KEY = 'netplus.settings.v1.public';
+  function defaultSettings(){
+    return {
+      currency:{symbol:'$', position:'prefix'},
+      whatsapp:{number:'16476961656'},
+      plans:[
+        {id:'p1', name:'1 Month', months:1, price:15, badge:'Starter', order:0, visible:true, note:'Full features'},
+        {id:'p3', name:'3 Months', months:3, price:40, badge:'Popular', order:1, visible:true, note:'Save vs monthly'},
+        {id:'p6', name:'6 Months', months:6, price:65, badge:'Most Picked', order:2, visible:true},
+        {id:'p12', name:'12 Months (+1 free)', months:12, price:100, badge:'Best Value', order:3, visible:true, note:'+1 month free'}
+      ],
+      boxes:[],
+      gallery:[]
+    };
+  }
+  function loadLocalSettings(){
+    try{ return JSON.parse(localStorage.getItem(KEY)||'null'); }catch(_){ return null; }
+  }
+  function saveLocalSettings(s){
+    try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch(_){}
+  }
 
   /* ===== Banners from Firestore ===== */
   async function loadBanners(){
@@ -362,119 +426,64 @@
       wrap.style.display='none';
     }
   }
-  loadBanners();
-</script>
 
-<script>
-  /* ===== Bullet-proof SETTINGS loader with migration ===== */
-  const KEY = 'netplus.settings.v1.public';
-  const CANDIDATES = [
-    'netplus.settings.v1.public',
-    'netplus.settings.v1',
-    'netplus.settings'
-  ];
-  function defaultSettings(){
-    return {
-      currency:{symbol:'$', position:'prefix'},
-      whatsapp:{number:'16476961656'},
-      plans:[
-        {id:'p1', name:'1 Month', months:1, price:15, badge:'Starter', order:0, visible:true, note:'Full features'},
-        {id:'p3', name:'3 Months', months:3, price:40, badge:'Popular', order:1, visible:true, note:'Save vs monthly'},
-        {id:'p6', name:'6 Months', months:6, price:65, badge:'Most Picked', order:2, visible:true},
-        {id:'p12', name:'12 Months (+1 free)', months:12, price:100, badge:'Best Value', order:3, visible:true, note:'+1 month free'}
-      ],
-      boxes:[],
-      gallery:[]
-    };
-  }
-  function loadSettings(){
-    let obj=null;
-    for(const k of CANDIDATES){
-      const raw = localStorage.getItem(k);
-      if(raw){ try{ obj = JSON.parse(raw); if(obj) break; }catch(_){/*ignore*/} }
+  /* ===== Read site_settings/public doc ===== */
+  async function fetchPublicSettings(){
+    try{
+      const ref = doc(db, 'site_settings', 'public');
+      const snap = await getDoc(ref);
+      if(snap.exists()){
+        const d = snap.data()||{};
+        // Normalize minimal schema
+        const settings = {
+          currency: d.currency || {symbol:'$', position:'prefix'},
+          whatsapp: d.whatsapp || {number:'16476961656'},
+          plans: Array.isArray(d.plans)? d.plans : [],
+          boxes: Array.isArray(d.boxes)? d.boxes : [],
+          gallery: Array.isArray(d.gallery)? d.gallery : []
+        };
+        saveLocalSettings(settings);
+        return settings;
+      }
+      // if doc missing: return local or default
+      return loadLocalSettings() || defaultSettings();
+    }catch(_){
+      // offline or error: local or default
+      return loadLocalSettings() || defaultSettings();
     }
-    if(!obj || typeof obj!=='object') obj = defaultSettings();
-
-    // minimal schema healing
-    obj.currency = obj.currency || {symbol:'$', position:'prefix'};
-    obj.whatsapp = obj.whatsapp || {number:'16476961656'};
-    obj.plans = Array.isArray(obj.plans)? obj.plans : [];
-    obj.boxes = Array.isArray(obj.boxes)? obj.boxes : [];
-    obj.gallery = Array.isArray(obj.gallery)? obj.gallery : [];
-
-    // persist to canonical key so admin/index stay in sync
-    localStorage.setItem(KEY, JSON.stringify(obj));
-    return obj;
   }
-  let SITE = loadSettings();
 
-  /* ===== Helpers ===== */
+  /* ===== Render helpers ===== */
+  let SITE = await fetchPublicSettings();
+
   function money(n){
     const s = SITE.currency?.symbol || '$';
     const suf = SITE.currency?.position === 'suffix';
     const val = Number(n||0);
-    return suf ? `${val}${s}` : `${s}${val}`;
+    return isFinite(val) ? (suf ? `${val}${s}` : `${s}${val}`) : (suf ? `0${s}` : `${s}0`);
   }
   function waLink(text){
     const num = (SITE.whatsapp?.number||'16476961656').replace(/[^\d]/g,'');
     return `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
   }
 
-  /* ===== Panels / tabs ===== */
-  function showPanel(name){
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    document.querySelector('#panel-'+name).classList.add('active');
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    const tId = {plans:'tab-plans',boxes:'tab-boxes',gallery:'tab-gallery',recharge:'tab-recharge',support:'tab-support'}[name];
-    if(tId) document.getElementById(tId).classList.add('active');
-    document.querySelectorAll('.dbtn').forEach(b=>b.classList.remove('dactive'));
-    const idx={plans:0,boxes:1,gallery:2,recharge:3,support:4}[name];document.querySelectorAll('.dbtn')[idx].classList.add('dactive');
-    window.scrollTo({top:0,behavior:'smooth'});
+  function wireWhatsAppLinks(){
+    const subHref = waLink('Hi, I want to subscribe to net+TV.');
+    const supHref = waLink('Hi, I need help with net+TV.');
+    const $menu = document.getElementById('waSubscribeMenu');
+    const $sup  = document.getElementById('waSupport');
+    if($menu) $menu.href = subHref;
+    if($sup)  $sup.href  = supHref;
   }
-  window.showPanel = showPanel;
 
-  /* ===== Modals ===== */
-  let _scrollY = 0;
-  function openSheet(key){
-    _scrollY = window.scrollY || window.pageYOffset;
-    document.body.classList.add('modal-open');
-    document.body.style.top = `-${_scrollY}px`;
-    const el = document.getElementById('sheet-'+key);
-    el.style.display = 'flex';
-    el.addEventListener('click', backdropCloser);
-    const sheetEl = el.querySelector('.sheet');
-    if (sheetEl) sheetEl.addEventListener('click', e => e.stopPropagation());
-  }
-  function backdropCloser(e){
-    if(e.target.classList.contains('modal')){
-      const id = e.currentTarget.id.replace('sheet-','');
-      closeSheet(id);
-    }
-  }
-  function closeSheet(key){
-    const el = document.getElementById('sheet-'+key);
-    if(!el) return;
-    el.style.display = 'none';
-    el.removeEventListener('click', backdropCloser);
-    document.body.classList.remove('modal-open');
-    document.body.style.top = '';
-    window.scrollTo(0, _scrollY);
-  }
-  window.openSheet=openSheet; window.closeSheet=closeSheet;
-
-  /* ===== WhatsApp helpers ===== */
-  function waSend(msg){ window.open(waLink(msg),'_blank'); }
-  window.waSend = waSend;
-
-  /* ===== Render: Plans ===== */
   function renderPlans(){
     const grid = document.getElementById('plansGrid');
     const tbody = document.getElementById('plansTableBody');
     const rcSel = document.getElementById('rcPlan');
     grid.innerHTML=''; tbody.innerHTML=''; rcSel.innerHTML='<option value="">Choose a plan</option>';
+    const list = [...(SITE.plans||[])].filter(p=>p.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
 
-    const list = [...SITE.plans].filter(p=>p.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
-    for(const p of list){
+    list.forEach(p=>{
       const card = document.createElement('div');
       card.className='card';
       card.innerHTML = `
@@ -498,127 +507,150 @@
       card.querySelector('.whats').onclick = ()=>subscribePlan(p.name, p.price);
       grid.appendChild(card);
 
-      const days = p.months ? (p.months*30) : (p.name||'').toLowerCase().includes('trial')? 2 : '';
+      const days = p.months ? (p.months*30) : ((p.name||'').toLowerCase().includes('trial')? 2 : '');
       const tr = document.createElement('tr');
       tr.innerHTML = `<td>${p.name||''}</td><td>${days? `${days} days`:'—'}</td><td>${money(p.price)}</td><td>${p.note||''}</td>`;
       tbody.appendChild(tr);
 
       const opt = document.createElement('option');
-      opt.value = p.name; opt.textContent = `${p.name} - ${money(p.price)}`;
+      opt.value = `${p.name} - ${money(p.price)}`;
+      opt.textContent = `${p.name} - ${money(p.price)}`;
       rcSel.appendChild(opt);
-    }
+    });
   }
 
-  /* ===== Render: Boxes ===== */
   function renderBoxes(){
     const grid = document.getElementById('boxesGrid'); grid.innerHTML='';
-    const list = [...SITE.boxes].filter(b=>b.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
-    for(const b of list){
+    const list = [...(SITE.boxes||[])].filter(b=>b.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+    list.forEach(b=>{
       const card = document.createElement('div'); card.className='card';
+      const hasPhotos = Array.isArray(b.images) && b.images.length;
 
-      // photos
-      let photosHTML = '';
-      if(Array.isArray(b.images) && b.images.length){
-        const pid = 'p'+Math.random().toString(36).slice(2);
-        photosHTML = `
-          <div id="${pid}" class="photoTrack" aria-label="Photos">
-            ${b.images.map(i=>`<img src="${i.url}" alt="${i.alt||''}" loading="lazy">`).join('')}
-          </div>
-        `;
+      // bundle strip with free months tag if present
+      let bundleHTML = '';
+      if(b.bundle){
+        const free = b.bundleFreeMonths && Number(b.bundleFreeMonths)>0 ? `<span class="freeTag">+${Number(b.bundleFreeMonths)} month${Number(b.bundleFreeMonths)>1?'s':''} free</span>` : '';
+        bundleHTML = `<div class="combo">Box + 1-Year: ${money(b.bundle)} ${free}</div>`;
       }
 
       card.innerHTML = `
         ${b.badge? `<span class="mark">${b.badge}</span>`:''}
         <div class="row"><div class="title">${b.name||''}</div><div class="price">${money(b.price)}</div></div>
-        ${b.bundle? `<div class="combo">Box + 1-Year: ${money(b.bundle)}</div>`:''}
-        ${photosHTML}
+        ${bundleHTML}
+        ${hasPhotos ? `<div class="photoTrack">${b.images.map(i=>`<img src="${i.url}" alt="${i.alt||b.name||'photo'}" loading="lazy">`).join('')}</div>`:''}
         <ul class="features">
           ${(b.specs||[]).map(s=>`<li>${s}</li>`).join('')}
         </ul>
         <div class="btns">
-          <button class="btn" onclick="buyBox('${(b.name||'').replace(/'/g,'\\\'')}',${Number(b.price)||0})">Box Only</button>
-          <button class="btn whats" ${b.bundle? '' : 'disabled'} onclick="buyBoxBundle('${(b.name||'').replace(/'/g,'\\\'')}',${Number(b.bundle)||0})">Box + 1-Year</button>
+          <button class="btn" onclick="buyBox('${(b.name||'').replace(/'/g,"\\'")}',${Number(b.price)||0})">Box Only</button>
+          <button class="btn whats" ${b.bundle? '' : 'disabled'} onclick="buyBoxBundle('${(b.name||'').replace(/'/g,"\\'")}',${Number(b.bundle)||0})">Box + 1-Year</button>
         </div>
       `;
       grid.appendChild(card);
-    }
+    });
   }
 
-  /* ===== Render: Gallery ===== */
   function renderGallery(){
     const grid = document.getElementById('galleryGrid'); grid.innerHTML='';
-    const list = [...SITE.gallery].filter(g=>g.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+    const list = [...(SITE.gallery||[])].filter(g=>g.visible!==false).sort((a,b)=>(a.order||0)-(b.order||0));
     if(!list.length){
       grid.innerHTML = `<div class="help">No images yet.</div>`;
       return;
     }
-    for(const g of list){
+    list.forEach(g=>{
       const item = document.createElement('div');
       item.className = 'gitem';
       item.innerHTML = `
-        <img src="${g.url}" alt="${g.caption||''}" loading="lazy" />
+        <img src="${g.url}" alt="${g.caption||'gallery image'}" loading="lazy" />
         <div class="gcap">${g.caption||''}</div>
       `;
       item.onclick = ()=>{ if(g.url) window.open(g.url,'_blank'); };
       grid.appendChild(item);
-    }
+    });
   }
 
-  /* ===== CTAs using WA number from settings ===== */
-  function wireWhatsAppLinks(){
-    const subHref = waLink('Hi, I want to subscribe to net+TV.');
-    document.getElementById('waSubscribeMenu').href = subHref;
-    document.getElementById('waSupport').href = waLink('Hi, I need help with net+TV.');
-  }
-
-  /* ===== Existing CTA helpers ===== */
-  function subscribePlan(label,price){
-    waSend(`New Subscription\nPlan: ${label} - ${money(price)}\nSource: website`);
-  }
-  function buyBox(name,price){
-    waSend(`I'm interested in: Box Only\nModel: ${name}\nPrice: ${money(price)}\nPlease guide me with purchase & setup.`);
-  }
-  function buyBoxBundle(name,price){
-    waSend(`I'm interested in: ${name} + 12-Month Plan\nBundle Price: ${money(price)}\nPlease guide me with activation & setup.`);
-  }
-  function sendRecharge(){
+  /* ===== Existing CTA helpers (global) ===== */
+  window.subscribePlan = (label,price)=>{
+    window.open(waLink(`New Subscription\nPlan: ${label} - ${money(price)}\nSource: website`),'_blank');
+  };
+  window.buyBox = (name,price)=>{
+    window.open(waLink(`I'm interested in: Box Only\nModel: ${name}\nPrice: ${money(price)}\nPlease guide me with purchase & setup.`),'_blank');
+  };
+  window.buyBoxBundle = (name,price)=>{
+    window.open(waLink(`I'm interested in: ${name} + 12-Month Plan\nBundle Price: ${money(price)}\nPlease guide me with activation & setup.`),'_blank');
+  };
+  window.sendRecharge = ()=>{
     const n=(document.getElementById('rcName').value||'').trim();
     const u=(document.getElementById('rcUser').value||'').trim();
     const e=(document.getElementById('rcEmail').value||'').trim();
     const p=document.getElementById('rcPlan').value||'';
-    waSend(`Recharge Request\nName: ${n}\nUser ID: ${u}\nEmail: ${e}\nPlan: ${p}`);
-  }
-  function sendRequest(){
+    window.open(waLink(`Recharge Request\nName: ${n}\nUser ID: ${u}\nEmail: ${e}\nPlan: ${p}`),'_blank');
+  };
+  window.sendRequest = ()=>{
     const n=(document.getElementById('reqName').value||'').trim();
     const ph=(document.getElementById('reqPhone').value||'').trim();
     const e=(document.getElementById('reqEmail').value||'').trim();
     const note=(document.getElementById('reqNote').value||'').trim();
-    waSend(`General Request\nName: ${n}\nPhone: ${ph}\nEmail: ${e}\nDetails: ${note}`);
-  }
-  function sendPin(){
+    window.open(waLink(`General Request\nName: ${n}\nPhone: ${ph}\nEmail: ${e}\nDetails: ${note}`),'_blank');
+  };
+  window.sendPin = ()=>{
     const mac=(document.getElementById('pinMac').value||'').trim();
     const e=(document.getElementById('pinEmail').value||'').trim();
     const note=(document.getElementById('pinNote').value||'').trim();
-    waSend(`Parental PIN Request\nMAC: ${mac}\nEmail: ${e}\nNote: ${note}`);
-  }
-  window.subscribePlan=subscribePlan; window.buyBox=buyBox; window.buyBoxBundle=buyBoxBundle;
-  window.sendRecharge=sendRecharge; window.sendRequest=sendRequest; window.sendPin=sendPin;
+    window.open(waLink(`Parental PIN Request\nMAC: ${mac}\nEmail: ${e}\nNote: ${note}`),'_blank');
+  };
 
-  /* ===== Init render ===== */
+  /* ===== Panels / Modals ===== */
+  window.showPanel = function(name){
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.querySelector('#panel-'+name).classList.add('active');
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    const tId = {plans:'tab-plans',boxes:'tab-boxes',gallery:'tab-gallery',recharge:'tab-recharge',support:'tab-support'}[name];
+    if(tId) document.getElementById(tId).classList.add('active');
+    document.querySelectorAll('.dbtn').forEach(b=>b.classList.remove('dactive'));
+    const idx={plans:0,boxes:1,gallery:2,recharge:3,support:4}[name];document.querySelectorAll('.dbtn')[idx].classList.add('dactive');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  let _scrollY = 0;
+  window.openSheet = function(key){
+    _scrollY = window.scrollY || window.pageYOffset;
+    document.body.classList.add('modal-open');
+    document.body.style.top = `-${_scrollY}px`;
+    const el = document.getElementById('sheet-'+key);
+    el.style.display = 'flex';
+    el.addEventListener('click', backdropCloser);
+    const sheetEl = el.querySelector('.sheet');
+    if (sheetEl) sheetEl.addEventListener('click', e => e.stopPropagation());
+  }
+  function backdropCloser(e){
+    if(e.target.classList.contains('modal')){
+      const id = e.currentTarget.id.replace('sheet-','');
+      closeSheet(id);
+    }
+  }
+  window.closeSheet = function(key){
+    const el = document.getElementById('sheet-'+key);
+    if(!el) return;
+    el.style.display = 'none';
+    el.removeEventListener('click', backdropCloser);
+    document.body.classList.remove('modal-open');
+    document.body.style.top = '';
+    window.scrollTo(0, _scrollY);
+  }
+
+  /* ===== Orchestrate ===== */
   function renderAll(){
-    // reload from canonical key in case admin changed it in another tab
-    try{ SITE = JSON.parse(localStorage.getItem(KEY)) || SITE; }catch(_){}
     renderPlans();
     renderBoxes();
     renderGallery();
     wireWhatsAppLinks();
   }
+
+  await loadBanners();
   renderAll();
 
-  // Optional: react to storage changes from another tab on the same origin
-  window.addEventListener('storage', e=>{
-    if(e.key === KEY){ try{ SITE = JSON.parse(e.newValue); renderAll(); }catch(_){} }
-  });
+  // If admin changes Firestore doc later & you add a listener, you could refresh here.
 </script>
 </body>
 </html>
