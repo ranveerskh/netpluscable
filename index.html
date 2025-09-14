@@ -44,17 +44,16 @@
   .subtitle{color:var(--muted)}
   .hint{font-size:13px;color:var(--muted);margin-top:6px}
 
-  /* Banners 16:9 */
+  /* Banners (simple <img>, no absolute positioning) */
   .banner{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;margin:0 0 14px;box-shadow:var(--shadow);background:#000}
-  .banner::before{content:"";display:block;aspect-ratio:16/9}
-  .bannerTrack{display:flex;transform:translateX(0);transition:transform .5s ease}
-  .bannerSlide{min-width:100%;position:relative}
-  .bannerSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#000}
+  .bannerTrack{display:flex;transition:transform .5s ease;will-change:transform}
+  .bannerSlide{flex:0 0 100%}
+  .bannerSlide img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
 
   /* Ticker */
   .ticker{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);margin-top:12px}
   :root[data-theme="light"] .ticker{background:#eef2ff}
-  .tickerInner{display:inline-block;white-space:nowrap;animation:tickerMove 18s linear infinite}
+  .tickerInner{display:inline-block;white-space:nowrap;animation:tickerMove 18s linear infinite;will-change:transform}
   .tickerInner span{display:inline-block;padding:8px 18px}
   @keyframes tickerMove{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
@@ -106,12 +105,11 @@
   .tag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin-bottom:6px}
   .benefit{font-size:12px;font-weight:800;color:var(--ok);margin-top:4px}
 
-  /* Boxes */
+  /* Boxes (simple <img> slider) */
   .boxSlider{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000}
-  .boxSlider::before{content:"";display:block;aspect-ratio:16/9}
-  .boxTrack{display:flex;transition:transform .35s ease}
-  .boxSlide{min-width:100%;position:relative}
-  .boxSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#000}
+  .boxTrack{display:flex;transition:transform .35s ease;will-change:transform}
+  .boxSlide{flex:0 0 100%}
+  .boxSlide img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
   .boxDots{display:flex;gap:6px;justify-content:center;margin-top:6px}
   .boxDot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25)}
   .boxDot.active{background:#fff}
@@ -127,7 +125,7 @@
   .two{grid-template-columns:1fr 1fr}
   input,select,textarea{width:100%;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff}
   :root[data-theme="light"] input, :root[data-theme="light"] select, :root[data-theme="light"] textarea{background:#f6f8ff;color:#0b1020}
-  .help{font-size:12px;color:var(--muted)}
+  .help{font-size:12px;color:#7d86ad}
   .footpad{height:calc(24px + var(--safe-bottom))}
 
   /* Footer */
@@ -162,8 +160,13 @@
       <h1 id="heroTitle" class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
       <p id="heroSubline" class="subtitle">Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech</p>
 
-      <!-- Smooth one-line ticker (right → left) -->
-      <div class="ticker"><div class="tickerInner" id="featureTicker"></div></div>
+      <!-- One-line ticker that starts immediately -->
+      <div class="ticker">
+        <div class="tickerInner" id="featureTicker">
+          <span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
+          <span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
+        </div>
+      </div>
 
       <div class="ctaRow" id="actionButtons">
         <button class="bigBtn" data-open="plansModal" id="cta0">Our Plans</button>
@@ -263,7 +266,7 @@
     </div>
   </div>
 
-  <!-- RENEW: now lists the same plans with a Renew button -->
+  <!-- RENEW: mirrors plans with Renew button -->
   <div id="rechargeModal" class="modal" role="dialog" aria-modal="true" aria-label="Renew Plan">
     <div class="modalCard">
       <div class="modalHead"><strong>Renew Plan</strong><button class="x" data-close="rechargeModal">Close</button></div>
@@ -406,13 +409,10 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Defaults
     let WHATSAPP_NUMBER = "16476961656";
-
-    // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Theme init + toggle
+    // Theme
     const themeBtn = document.getElementById('themeBtn');
     const preferred = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', preferred);
@@ -422,14 +422,12 @@
       localStorage.setItem('theme', now);
     });
 
-    // Menu
+    // Menu + modals
     const menuBtn = document.getElementById('menuBtn');
     const menuSheet = document.getElementById('menuSheet');
     menuBtn.addEventListener('click', () => menuSheet.classList.add('open'));
     menuSheet.addEventListener('click', e => { if (e.target.dataset.close === 'menuSheet' || e.target === menuSheet) menuSheet.classList.remove('open'); });
     menuSheet.querySelectorAll('[data-open]').forEach(a=> a.addEventListener('click', ()=>{ menuSheet.classList.remove('open'); openModal(a.dataset.open); }));
-
-    // Modal helpers
     function openModal(id){ document.getElementById(id)?.classList.add('open'); }
     function closeModal(id){ document.getElementById(id)?.classList.remove('open'); }
     document.querySelectorAll('.modal').forEach(m=>{
@@ -438,21 +436,16 @@
     });
     document.querySelectorAll('[data-open]').forEach(b=> b.addEventListener('click', ()=> openModal(b.dataset.open)));
 
-    // Banner auto-slide
-    let bannerTimer = null;
-    function startBanner(track){
-      let i=0; const slides=track.children.length;
-      if (bannerTimer) clearInterval(bannerTimer);
-      if (!slides) return;
-      track.style.transform = 'translateX(0)';
-      bannerTimer = setInterval(()=>{ i=(i+1)%slides; track.style.transform=`translateX(-${i*100}%)`; }, 4500);
-    }
-
-    // WA helpers
+    // Helpers
     function toWA(text){ window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,'_blank'); }
     function formToKV(form){ const data=new FormData(form); const kv={}; data.forEach((v,k)=>kv[k]=v); return kv; }
     function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
     function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+    function imgTag(u, ph, attrs=''){
+      // cache-bust + strict referrer + robust fallback on error or naturalWidth=0
+      const src = u ? `${u}${u.includes('?')?'&':'?'}v=${Date.now()}` : ph;
+      return `<img src="${src}" ${attrs} referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${ph}'" onload="if(!this.naturalWidth){this.src='${ph}'}">`;
+    }
 
     // Forms -> WA
     document.getElementById('subscribeForm').addEventListener('submit', e=>{
@@ -486,16 +479,15 @@
     const boxesGrid = document.getElementById('boxesGrid');
     const renewGrid = document.getElementById('renewPlansGrid');
 
-    // Ticker helper (duplicate items to guarantee continuous scroll)
+    // Ticker: starts immediately (already in HTML). When settings load, replace content and keep motion seamless.
     function setTicker(items){
       const host = document.getElementById('featureTicker');
       const line = items.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
       host.innerHTML = line + line; // duplicate for seamless loop
-      // restart animation in case of dynamic update
-      host.style.animation = 'none'; host.offsetHeight; host.style.animation = '';
+      // Do NOT toggle animation; it keeps running
     }
 
-    /* ===== Firestore loaders with graceful fallback ===== */
+    /* ===== Firestore loaders ===== */
 
     async function loadSettings(){
       try{
@@ -510,33 +502,30 @@
           if (Array.isArray(s.ctaLabels)){
             ['cta0','cta1','cta2','cta3'].forEach((id,i)=>{ if (s.ctaLabels[i]) document.getElementById(id).textContent = s.ctaLabels[i]; });
           }
-          const feats = Array.isArray(s.features) && s.features.length ? s.features : ["🇨🇦 Proudly Canadian","Zero Latency Streams","24/7 Support","Multi-Device"];
-          setTicker(feats);
-          return;
+          if (Array.isArray(s.features) && s.features.length) setTicker(s.features);
         }
       }catch(e){}
-      setTicker(["🇨🇦 Proudly Canadian","Zero Latency Streams","24/7 Support","Multi-Device"]);
     }
 
+    // Banners: try /banners then legacy site_content/banners/items
+    let bannerTimer = null;
+    function startBanner(){
+      const track = bannerTrack; if (!track.children.length) return;
+      let i=0; if (bannerTimer) clearInterval(bannerTimer);
+      track.style.transform='translateX(0)';
+      bannerTimer = setInterval(()=>{ i=(i+1)%track.children.length; track.style.transform=`translateX(-${i*100}%)`; }, 4500);
+    }
     async function loadBanners(){
       bannerTrack.innerHTML = '';
       let urls = [];
       try{
-        // Primary path
         const snap = await getDocs(collection(db,'banners'));
-        snap.forEach(d=>{
-          const x=d.data();
-          if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u})));
-        });
+        snap.forEach(d=>{ const x=d.data(); if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u}))); });
       }catch(e){}
       if (!urls.length){
         try{
-          // Legacy optional path: site_content/banners/items
           const snap2 = await getDocs(collection(db,'site_content/banners/items'));
-          snap2.forEach(d=>{
-            const x=d.data();
-            if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u})));
-          });
+          snap2.forEach(d=>{ const x=d.data(); if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u}))); });
         }catch(e){}
       }
       urls.sort((a,b)=>a.sort-b.sort);
@@ -544,13 +533,8 @@
         "https://via.placeholder.com/1280x720?text=Banner+1",
         "https://via.placeholder.com/1280x720?text=Banner+2"
       ];
-      bannerTrack.innerHTML = list.map(u=>`
-        <div class="bannerSlide">
-          <img src="${u}${u.includes('?')?'&':'?'}v=${Date.now()}" alt=""
-               loading="lazy" referrerpolicy="no-referrer"
-               onerror="this.src='https://via.placeholder.com/1280x720?text=Image+not+available'">
-        </div>`).join('');
-      startBanner(bannerTrack);
+      bannerTrack.innerHTML = list.map(u=>`<div class="bannerSlide">${imgTag(u,'https://via.placeholder.com/1280x720?text=Banner','loading="eager" fetchpriority="high"' )}</div>`).join('');
+      startBanner();
     }
 
     async function loadPosters(){
@@ -565,7 +549,7 @@
           "https://via.placeholder.com/300x450?text=Poster+2",
           "https://via.placeholder.com/300x450?text=Poster+3"
         ];
-        postersRail.innerHTML = list.map(u=>`<img src="${u}" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/300x450?text=Poster'">`).join('');
+        postersRail.innerHTML = list.map(u=> imgTag(u,'https://via.placeholder.com/300x450?text=Poster','loading="lazy"') ).join('');
       }catch(e){
         postersRail.innerHTML = `<img src="https://via.placeholder.com/300x450?text=Poster+1"><img src="https://via.placeholder.com/300x450?text=Poster+2">`;
       }
@@ -589,24 +573,27 @@
       renderPlans(plansData);
       renderRenewPlans(plansData);
     }
+
+    function planCardHTML(p, mode){
+      const btn = mode==='renew'
+        ? `<button class="btn whats" data-renew='${escapeAttr(JSON.stringify({name:p.name,months:p.months||""}))}'>Renew</button>`
+        : `<button class="btn whats" data-subscribe="${escapeAttr(p.name)}">Subscribe</button><button class="btn" data-info="${escapeAttr(p.name)}">Info</button>`;
+      return `
+        ${p.tag ? `<div class="tag">${escapeHtml(p.tag)}</div>` : ''}
+        <div class="cardHead">
+          <h3>${escapeHtml(p.name)}</h3>
+          <div class="priceRight">${escapeHtml(p.price)}</div>
+        </div>
+        ${p.months ? `<div class="muted">${escapeHtml(p.months + ' months')}</div>` : ''}
+        ${p.benefit ? `<div class="benefit">${escapeHtml(p.benefit)}</div>` : ''}
+        <div class="muted" style="margin:10px 0 14px">${escapeHtml(p.desc || '')}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">${btn}</div>`;
+    }
+
     function renderPlans(items){
       plansGrid.innerHTML = '';
       items.forEach(p=>{
-        const el = document.createElement('div');
-        el.className = 'card';
-        el.innerHTML = `
-          ${p.tag ? `<div class="tag">${escapeHtml(p.tag)}</div>` : ''}
-          <div class="cardHead">
-            <h3>${escapeHtml(p.name)}</h3>
-            <div class="priceRight">${escapeHtml(p.price)}</div>
-          </div>
-          ${p.months ? `<div class="muted">${escapeHtml(p.months + ' months')}</div>` : ''}
-          ${p.benefit ? `<div class="benefit">${escapeHtml(p.benefit)}</div>` : ''}
-          <div class="muted" style="margin:10px 0 14px">${escapeHtml(p.desc || 'Inclusive of Live Channels, Movies, Series, PPV (where available)')}</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn whats" data-subscribe="${escapeAttr(p.name)}">Subscribe</button>
-            <button class="btn" data-info="${escapeAttr(p.name)}">Info</button>
-          </div>`;
+        const el = document.createElement('div'); el.className='card'; el.innerHTML = planCardHTML(p,'sub');
         plansGrid.appendChild(el);
       });
       plansGrid.querySelectorAll('[data-info]').forEach(b=> b.addEventListener('click', ()=> alert('Includes channels in English, Punjabi, Hindi, Urdu, Gujarati, Arabic, Korean and more. 4K where available.')));
@@ -615,24 +602,10 @@
       }));
     }
 
-    // Same plans in Renew modal, with Renew button
     function renderRenewPlans(items){
       renewGrid.innerHTML = '';
       items.forEach(p=>{
-        const el = document.createElement('div');
-        el.className = 'card';
-        el.innerHTML = `
-          ${p.tag ? `<div class="tag">${escapeHtml(p.tag)}</div>` : ''}
-          <div class="cardHead">
-            <h3>${escapeHtml(p.name)}</h3>
-            <div class="priceRight">${escapeHtml(p.price)}</div>
-          </div>
-          ${p.months ? `<div class="muted">${escapeHtml(p.months + ' months')}</div>` : ''}
-          ${p.benefit ? `<div class="benefit">${escapeHtml(p.benefit)}</div>` : ''}
-          <div class="muted" style="margin:10px 0 14px">${escapeHtml(p.desc || '')}</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn whats" data-renew='${escapeAttr(JSON.stringify({name:p.name,months:p.months||""}))}'>Renew</button>
-          </div>`;
+        const el = document.createElement('div'); el.className='card'; el.innerHTML = planCardHTML(p,'renew');
         renewGrid.appendChild(el);
       });
       renewGrid.querySelectorAll('[data-renew]').forEach(b=>{
@@ -641,27 +614,10 @@
           document.getElementById('renewPlanName').value = name || '';
           document.getElementById('renewPlanMonths').value = months || '';
           if (months) document.getElementById('renewDuration').value = String(months);
-          // jump to form area
           document.getElementById('rechargeForm').scrollIntoView({behavior:'smooth', block:'start'});
         });
       });
     }
-
-    document.getElementById('rechargeForm').addEventListener('submit', e=>{
-      e.preventDefault();
-      const kv = formToKV(e.target);
-      const chosen = kv.planName ? `Plan: ${kv.planName} (${kv.planMonths||kv.duration} months)` : `Duration: ${kv.duration} month(s)`;
-      const msg = [
-        `Renewal Request`,
-        chosen,
-        `Email: ${kv.email}`,
-        `Name: ${kv.name}`,
-        `Phone: ${kv.phone}`,
-        `MAC: ${kv.mac}`,
-        kv.note ? `Note: ${kv.note}` : null
-      ].filter(Boolean).join('\n');
-      toWA(msg);
-    });
 
     async function loadBoxes(){
       boxesGrid.innerHTML = '<div class="muted">Loading boxes…</div>';
@@ -677,12 +633,12 @@
       boxesGrid.innerHTML = '';
       if(!items.length){ boxesGrid.innerHTML = '<div class="muted">Boxes coming soon.</div>'; return; }
       items.forEach(b=>{
-        const card = document.createElement('div'); card.className='card';
         const images = Array.isArray(b.images) && b.images.length ? b.images : ["https://via.placeholder.com/1280x720?text=Box"];
+        const card = document.createElement('div'); card.className='card';
         card.innerHTML = `
           <div class="boxSlider">
             <div class="boxTrack">
-              ${images.map(u=>`<div class="boxSlide"><img src="${u}" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/1280x720?text=Box'"></div>`).join('')}
+              ${images.map(u=>`<div class="boxSlide">${imgTag(u,'https://via.placeholder.com/1280x720?text=Box','loading="lazy"')}</div>`).join('')}
             </div>
           </div>
           <div class="boxDots">${images.map((_,i)=>`<div class="boxDot ${i===0?'active':''}"></div>`).join('')}</div>
@@ -713,12 +669,15 @@
 
     // Boot
     (async()=>{
-      await loadSettings();
-      await loadBanners();
-      await loadPosters();
-      await loadPlans();
-      await loadBoxes();
+      await loadSettings();       // updates ticker text if present
+      await loadBanners();        // new simple <img> slider
+      await loadPosters();        // these were already OK
+      await loadPlans();          // renders plans + renew plans
+      await loadBoxes();          // new simple <img> slider
     })();
+
+    // Manual refresh for plans
+    document.getElementById('refreshPlans')?.addEventListener('click', loadPlans);
   </script>
 </body>
 </html>
