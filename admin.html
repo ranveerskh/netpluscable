@@ -2,72 +2,97 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1" />
+<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>net+TV — Admin</title>
 <meta name="theme-color" content="#0b1020" />
 <style>
   :root{
-    --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
+    --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#11172e;--line:#243159;
     --g1:#6a11cb;--g2:#2575fc;--ok:#32d296;--warn:#f8b84a;--danger:#ef4444;--whats:#25D366;
-    --shadow:0 10px 30px rgba(0,0,0,.35);
+    --safe-top: env(safe-area-inset-top,0px);--safe-bottom: env(safe-area-inset-bottom,0px);
+    --shadow:0 12px 30px rgba(0,0,0,.35);
   }
   :root[data-theme="light"]{
-    --bg:#ffffff;--ink:#0b1020;--muted:#36415f;--card:#ffffff;--line:#d9e0ff;
-    --g1:#2575fc;--g2:#6a11cb;--ok:#15a37a;--warn:#e59f2a;--danger:#e11d48;--whats:#25D366;
-    --shadow:0 10px 30px rgba(0,12,60,.10);
+    --bg:#ffffff;--ink:#0b1020;--muted:#3c4665;--card:#ffffff;--line:#d9e0ff;
+    --g1:#2575fc;--g2:#6a11cb;--ok:#159a72;--warn:#e59f2a;--danger:#e11d48;--whats:#25D366;
+    --shadow:0 10px 28px rgba(0,12,60,.10);
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+
   a{color:inherit;text-decoration:none}
-  button{font:inherit;cursor:pointer}
+  button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
   input,textarea,select{font:inherit}
 
-  /* Topbar */
-  .topbar{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 16px}
-  :root[data-theme="light"] .topbar{background:#ffffffcc;border-bottom:1px solid #d9e0ff}
+  /* Top bar */
+  .topbar{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,rgba(11,16,32,.98),rgba(11,16,32,.85));
+    padding:calc(8px + var(--safe-top)) 16px 10px;border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
+  :root[data-theme="light"] .topbar{background:#ffffffe6}
   .trow{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .brand{display:flex;align-items:center;gap:10px}
-  .dot{width:12px;height:12px;border-radius:50%;background:conic-gradient(from 180deg,var(--g1),var(--g2))}
+  .dot{width:14px;height:14px;border-radius:50%;background:conic-gradient(from 180deg,var(--g1),var(--g2))}
   .btitle{font-weight:900;letter-spacing:.3px}
+  .small{font-size:12px}
+  .muted{color:var(--muted)}
   .rside{display:flex;align-items:center;gap:8px}
-  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);padding:8px 12px}
-  .btn.pri{background:linear-gradient(135deg, rgba(106,17,203,.25), rgba(37,117,252,.25))}
-  .btn.danger{border-color:#5b1d29;background:rgba(239,68,68,.12);color:#ffd7db}
-  :root[data-theme="light"] .btn{background:#f2f6ff;border-color:#d9e0ff;color:#0b1020}
-  :root[data-theme="light"] .btn.danger{background:#ffecec;color:#7a1622;border-color:#ffd0d7}
+  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);padding:10px 14px;min-height:44px}
+  .btn.pri{background:linear-gradient(135deg, rgba(106,17,203,.24), rgba(37,117,252,.24));font-weight:800}
+  .btn.warn{background:rgba(248,184,74,.15)}
+  .btn.danger{background:rgba(239,68,68,.12)}
 
-  /* Layout */
-  .wrap{max-width:1180px;margin:0 auto;padding:16px}
-  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
-  .tab{padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.03);cursor:pointer}
-  .tab.active{background:linear-gradient(135deg, rgba(106,17,203,.22), rgba(37,117,252,.22));font-weight:800}
-  :root[data-theme="light"] .tab{background:#f6f8ff}
+  /* Segmented tabs (iOS-friendly) */
+  .seg{display:flex;gap:6px;flex-wrap:nowrap;overflow:auto;padding:10px 16px;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch}
+  .segBtn{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;padding:10px 14px;background:rgba(255,255,255,.04);min-height:40px}
+  .segBtn.active{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff;font-weight:800}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:12px 16px 24px}
   .section{display:none}
   .section.active{display:block}
 
   /* Cards */
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-  .card{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-  :root[data-theme="light"] .card{background:#fff}
-  .card h3{margin:0 0 8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
   .kpi{font-size:28px;font-weight:900}
-  .muted{color:var(--muted)}
 
   /* Tables */
+  .toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:10px 0}
+  .search{flex:1;display:flex;gap:8px}
+  .search input{flex:1;padding:12px;border:1px solid var(--line);border-radius:12px;background:#0f1430;color:#fff}
+  :root[data-theme="light"] .search input{background:#f5f7ff;color:#0b1020}
   .tableWrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
   table{width:100%;border-collapse:separate;border-spacing:0}
-  thead th{position:sticky;top:0;background:rgba(0,0,0,.15);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);text-align:left;padding:10px}
+  thead th{position:sticky;top:0;z-index:1;background:rgba(0,0,0,.15);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);text-align:left;padding:10px}
   :root[data-theme="light"] thead th{background:#f6f9ff}
   tbody td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
   tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
-  input.txt, textarea.txt, select.txt{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#0f1430;color:#fff}
-  :root[data-theme="light"] input.txt, :root[data-theme="light"] textarea.txt, :root[data-theme="light"] select.txt{background:#f6f8ff;color:#0b1020}
-  .rowBtns{display:flex;gap:6px;flex-wrap:wrap}
-  .small{font-size:12px}
 
-  /* Footer */
-  .foot{padding:20px 0;color:var(--muted);text-align:center}
+  /* Bottom safe-area spacer */
+  .safeBottom{height:calc(12px + var(--safe-bottom))}
+
+  /* Edit sheet (full-screen modal for iOS) */
+  .sheet{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;z-index:80}
+  .sheet.open{display:flex}
+  .sheetCard{margin:auto;max-width:720px;width:100%;height:100vh;background:var(--card);border:1px solid var(--line);border-radius:16px 16px 0 0;
+    transform:translateY(8%);transition:transform .2s ease;display:flex;flex-direction:column}
+  .sheet.open .sheetCard{transform:translateY(0)}
+  .sheetHead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .sheetBody{padding:12px 14px;overflow:auto;-webkit-overflow-scrolling:touch}
+  .sheetFoot{padding:12px 14px;border-top:1px solid var(--line);display:flex;gap:8px;position:sticky;bottom:0;background:var(--card)}
+  label{font-size:12px;color:var(--muted);display:block;margin:8px 0 6px}
+  .txt, .sel, .ta{width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:#0f1430;color:#fff}
+  :root[data-theme="light"] .txt, :root[data-theme="light"] .sel, :root[data-theme="light"] .ta{background:#f6f8ff;color:#0b1020}
+
+  .badges{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 0}
+  .badge{border:1px solid var(--line);border-radius:999px;padding:3px 8px;background:rgba(255,255,255,.05);font-size:11px}
+  .changed{border-color:#3b82f6;background:rgba(59,130,246,.15)}
+  .diff{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:12px;border:1px solid var(--line);border-radius:12px;padding:10px;background:rgba(255,255,255,.03)}
+  .diff del{color:#ef4444;text-decoration:line-through;opacity:.85}
+  .diff ins{color:#22c55e;text-decoration:none}
+
+  /* Activity */
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:11px;margin-right:6px}
+  .path{font-family:ui-monospace,monospace;font-size:12px}
 </style>
 </head>
 <body>
@@ -77,177 +102,222 @@
         <div class="dot"></div>
         <div>
           <div class="btitle">net+TV Admin</div>
-          <div class="small muted">Edit homepage content, plans, boxes, banners, posters</div>
+          <div class="small muted">Edit content. See changes. Sleep better.</div>
         </div>
       </div>
       <div class="rside">
         <button id="themeBtn" class="btn" title="Toggle theme">💡</button>
-        <a class="btn" href="index.html" target="_blank">View Site ↗</a>
-        <div id="shortcuts" class="btn">Shortcuts ▾</div>
+        <a class="btn" href="index.html" target="_blank" rel="noopener">View Site ↗</a>
         <div id="userBox" class="small muted">Not signed in</div>
-        <button id="authBtn" class="btn pri">Sign in with Google</button>
+        <button id="authBtn" class="btn pri">Sign in</button>
       </div>
     </div>
+  </div>
+
+  <!-- Segmented control -->
+  <div class="seg" role="tablist">
+    <button class="segBtn active" data-tab="dash">Dashboard</button>
+    <button class="segBtn" data-tab="plans">Plans</button>
+    <button class="segBtn" data-tab="boxes">Boxes</button>
+    <button class="segBtn" data-tab="banners">Banners</button>
+    <button class="segBtn" data-tab="posters">Posters</button>
+    <button class="segBtn" data-tab="settings">Settings</button>
+    <button class="segBtn" data-tab="activity">Activity</button>
+    <button class="segBtn" data-tab="links">Links</button>
   </div>
 
   <div class="wrap">
-    <!-- Tabs -->
-    <div class="tabs">
-      <div class="tab active" data-tab="dash">Dashboard</div>
-      <div class="tab" data-tab="plans">Plans</div>
-      <div class="tab" data-tab="boxes">Boxes</div>
-      <div class="tab" data-tab="banners">Banners</div>
-      <div class="tab" data-tab="posters">Posters</div>
-      <div class="tab" data-tab="settings">Settings</div>
-      <div class="tab" data-tab="links">Links</div>
-    </div>
-
-    <!-- Sections -->
-    <section id="sec-dash" class="section active">
+    <!-- DASH -->
+    <section id="tab-dash" class="section active">
       <div class="cards" style="margin-bottom:12px">
-        <div class="card"><h3>Unique Today</h3><div id="kpi-today" class="kpi">–</div><div class="small muted" id="kpi-today-key"></div></div>
-        <div class="card"><h3>Unique Week</h3><div id="kpi-week" class="kpi">–</div><div class="small muted" id="kpi-week-key"></div></div>
-        <div class="card"><h3>Unique Month</h3><div id="kpi-month" class="kpi">–</div><div class="small muted" id="kpi-month-key"></div></div>
-        <div class="card"><h3>Unique Year</h3><div id="kpi-year" class="kpi">–</div><div class="small muted" id="kpi-year-key"></div></div>
-        <div class="card"><h3>Lifetime</h3><div id="kpi-life" class="kpi">–</div></div>
+        <div class="card"><div class="small muted">Unique Today</div><div id="kpi-today" class="kpi">–</div></div>
+        <div class="card"><div class="small muted">Unique Week</div><div id="kpi-week" class="kpi">–</div></div>
+        <div class="card"><div class="small muted">Unique Month</div><div id="kpi-month" class="kpi">–</div></div>
+        <div class="card"><div class="small muted">Unique Year</div><div id="kpi-year" class="kpi">–</div></div>
+        <div class="card"><div class="small muted">Lifetime</div><div id="kpi-life" class="kpi">–</div></div>
       </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button id="recalcBtn" class="btn pri">Recalculate</button>
-        <button id="publishBtn" class="btn">Publish to site</button>
+      <div class="toolbar">
+        <div class="search">
+          <button id="recalcBtn" class="btn pri">Recalculate</button>
+          <button id="publishBtn" class="btn">Publish to site</button>
+        </div>
+        <div class="small muted">Counters publish to <span class="path">stats/visitors</span></div>
       </div>
-      <p class="small muted">Publishing writes a public document at <code>stats/visitors</code> which the homepage reads.</p>
+
+      <h3 style="margin:16px 0 8px">Recently Updated</h3>
+      <div class="tableWrap">
+        <table id="recentTable">
+          <thead><tr><th>When</th><th>User</th><th>Path</th><th>Changes</th><th></th></tr></thead>
+          <tbody id="recentBody"></tbody>
+        </table>
+      </div>
+      <div class="safeBottom"></div>
     </section>
 
-    <section id="sec-plans" class="section">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0 10px">
-        <h3 style="margin:0">Plans</h3>
-        <button id="addPlanBtn" class="btn pri">+ Add Plan</button>
+    <!-- PLANS -->
+    <section id="tab-plans" class="section">
+      <div class="toolbar">
+        <div class="search"><input id="planSearch" placeholder="Search plans by name…" /></div>
+        <div style="display:flex;gap:8px">
+          <button id="addPlan" class="btn pri">+ Add Plan</button>
+          <button id="reloadPlans" class="btn">Reload</button>
+        </div>
       </div>
       <div class="tableWrap">
-        <table id="plansTable">
-          <thead>
-            <tr>
-              <th>Name</th><th>Price</th><th>Months</th><th>Benefit</th><th>Tag</th><th>Desc</th><th>Sort</th><th>Active</th><th>Actions</th>
-            </tr>
-          </thead>
+        <table>
+          <thead><tr><th>Name</th><th>Price</th><th>Months</th><th>Tag</th><th>Active</th><th>Updated</th><th></th></tr></thead>
           <tbody id="plansBody"></tbody>
         </table>
       </div>
+      <div class="safeBottom"></div>
     </section>
 
-    <section id="sec-boxes" class="section">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0 10px">
-        <h3 style="margin:0">Boxes</h3>
-        <button id="addBoxBtn" class="btn pri">+ Add Box</button>
+    <!-- BOXES -->
+    <section id="tab-boxes" class="section">
+      <div class="toolbar">
+        <div class="search"><input id="boxSearch" placeholder="Search boxes by name…" /></div>
+        <div style="display:flex;gap:8px">
+          <button id="addBox" class="btn pri">+ Add Box</button>
+          <button id="reloadBoxes" class="btn">Reload</button>
+        </div>
       </div>
       <div class="tableWrap">
         <table>
-          <thead>
-            <tr>
-              <th>Name</th><th>Tier</th><th>Box Price</th><th>Images (comma URLs)</th><th>Desc</th><th>Combo (price|months|extra)</th><th>Sort</th><th>Active</th><th>Actions</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Name</th><th>Tier</th><th>Price</th><th>Active</th><th>Updated</th><th></th></tr></thead>
           <tbody id="boxesBody"></tbody>
         </table>
       </div>
+      <div class="safeBottom"></div>
     </section>
 
-    <section id="sec-banners" class="section">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0 10px">
-        <h3 style="margin:0">Banners</h3>
-        <button id="addBannerBtn" class="btn pri">+ Add Banner Set</button>
+    <!-- BANNERS -->
+    <section id="tab-banners" class="section">
+      <div class="toolbar">
+        <div class="small muted">Use 1280x720 URLs. Add multiple per set.</div>
+        <div style="display:flex;gap:8px">
+          <button id="addBanner" class="btn pri">+ Add Banner Set</button>
+          <button id="reloadBanners" class="btn">Reload</button>
+        </div>
       </div>
       <div class="tableWrap">
         <table>
-          <thead>
-            <tr>
-              <th>Images (comma URLs)</th><th>Sort</th><th>Active</th><th>Actions</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Images</th><th>Sort</th><th>Active</th><th>Updated</th><th></th></tr></thead>
           <tbody id="bannersBody"></tbody>
         </table>
       </div>
-      <p class="small muted">Tip: Use 1280x720 direct image URLs.</p>
+      <div class="safeBottom"></div>
     </section>
 
-    <section id="sec-posters" class="section">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0 10px">
-        <h3 style="margin:0">Posters</h3>
-        <button id="addPosterBtn" class="btn pri">+ Add Poster</button>
+    <!-- POSTERS -->
+    <section id="tab-posters" class="section">
+      <div class="toolbar">
+        <div class="small muted">One URL per poster.</div>
+        <div style="display:flex;gap:8px">
+          <button id="addPoster" class="btn pri">+ Add Poster</button>
+          <button id="reloadPosters" class="btn">Reload</button>
+        </div>
       </div>
       <div class="tableWrap">
         <table>
-          <thead>
-            <tr>
-              <th>Image URL</th><th>Sort</th><th>Active</th><th>Actions</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Image</th><th>Sort</th><th>Active</th><th>Updated</th><th></th></tr></thead>
           <tbody id="postersBody"></tbody>
         </table>
       </div>
+      <div class="safeBottom"></div>
     </section>
 
-    <section id="sec-settings" class="section">
-      <h3 style="margin:8px 0 12px">Homepage Settings</h3>
+    <!-- SETTINGS -->
+    <section id="tab-settings" class="section">
       <div class="cards">
         <div class="card">
-          <label class="small muted">Hero Title</label>
-          <input id="set-heroTitle" class="txt" placeholder="..." />
-          <label class="small muted" style="margin-top:8px;display:block">Hero Subtitle</label>
-          <input id="set-heroSubtitle" class="txt" placeholder="..." />
-          <label class="small muted" style="margin-top:8px;display:block">Hero Subline</label>
-          <input id="set-heroSubline" class="txt" placeholder="..." />
+          <label>Hero Title</label><input id="set-heroTitle" class="txt" />
+          <label>Hero Subtitle</label><input id="set-heroSubtitle" class="txt" />
+          <label>Hero Subline</label><input id="set-heroSubline" class="txt" />
         </div>
         <div class="card">
-          <label class="small muted">CTA Labels (4 lines)</label>
-          <textarea id="set-ctaLabels" class="txt" rows="6" placeholder="Our Plans&#10;New Boxes&#10;Renew Plan&#10;Contact Support"></textarea>
+          <label>CTA Labels (4 lines)</label><textarea id="set-ctaLabels" class="ta" rows="6"></textarea>
+          <label>Features Ticker (one per line)</label><textarea id="set-features" class="ta" rows="6"></textarea>
         </div>
         <div class="card">
-          <label class="small muted">Features Ticker (one per line)</label>
-          <textarea id="set-features" class="txt" rows="6" placeholder="🇨🇦 Proudly Canadian&#10;Zero Latency Streams&#10;24/7 Support&#10;Multi-Device"></textarea>
-        </div>
-        <div class="card">
-          <label class="small muted">WhatsApp Number (digits only)</label>
-          <input id="set-whats" class="txt" placeholder="16476961656" />
-          <label class="small muted" style="margin-top:8px;display:block">Default Theme</label>
-          <select id="set-theme" class="txt"><option value="">Auto</option><option value="dark">Dark</option><option value="light">Light</option></select>
+          <label>WhatsApp Number (digits only)</label><input id="set-whats" class="txt" placeholder="16476961656" />
+          <label>Default Theme</label>
+          <select id="set-theme" class="sel"><option value="">Auto</option><option value="dark">Dark</option><option value="light">Light</option></select>
+          <div class="badges" id="settingsChanged"></div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button id="saveSettings" class="btn pri">Save Settings</button>
+            <button id="reloadSettings" class="btn">Reload</button>
+          </div>
         </div>
       </div>
-      <div style="margin-top:12px"><button id="saveSettings" class="btn pri">Save Settings</button></div>
+      <div class="safeBottom"></div>
     </section>
 
-    <section id="sec-links" class="section">
+    <!-- ACTIVITY -->
+    <section id="tab-activity" class="section">
+      <div class="toolbar">
+        <div class="search"><input id="actSearch" placeholder="Filter by path or user…" /></div>
+        <div class="small muted">Audit log from <span class="path">admin_activity</span></div>
+      </div>
+      <div class="tableWrap">
+        <table>
+          <thead><tr><th>When</th><th>User</th><th>Action</th><th>Path</th><th>Fields</th><th></th></tr></thead>
+          <tbody id="actBody"></tbody>
+        </table>
+      </div>
+      <div class="safeBottom"></div>
+    </section>
+
+    <!-- LINKS -->
+    <section id="tab-links" class="section">
       <div class="cards">
-        <a class="card" href="https://beta.gpanel.me/login" target="_blank"><h3>Glo TV</h3><div class="muted small">beta.gpanel.me</div></a>
-        <a class="card" href="https://bill.spicetv.cc/login" target="_blank"><h3>Spice4K</h3><div class="muted small">bill.spicetv.cc</div></a>
-        <a class="card" href="https://fast4k.cc/login" target="_blank"><h3>Smart 4K</h3><div class="muted small">fast4k.cc</div></a>
-        <a class="card" href="data.html" target="_blank"><h3>Users Data</h3><div class="muted small">data.html</div></a>
-        <a class="card" href="https://postimages.org" target="_blank"><h3>Upload Images</h3><div class="muted small">postimages.org</div></a>
+        <a class="card" href="https://beta.gpanel.me/login" target="_blank" rel="noopener"><strong>Glo TV</strong><div class="small muted">beta.gpanel.me</div></a>
+        <a class="card" href="https://bill.spicetv.cc/login" target="_blank" rel="noopener"><strong>Spice4K</strong><div class="small muted">bill.spicetv.cc</div></a>
+        <a class="card" href="https://fast4k.cc/login" target="_blank" rel="noopener"><strong>Smart 4K</strong><div class="small muted">fast4k.cc</div></a>
+        <a class="card" href="data.html" target="_blank" rel="noopener"><strong>Users Data</strong><div class="small muted">data.html</div></a>
+        <a class="card" href="https://postimages.org" target="_blank" rel="noopener"><strong>Upload Images</strong><div class="small muted">postimages.org</div></a>
       </div>
+      <div class="safeBottom"></div>
     </section>
-
-    <div class="foot">© <span id="year"></span> net+TV</div>
   </div>
 
-  <!-- Minimal dropdown for shortcuts -->
-  <div id="shortcutsMenu" style="display:none;position:fixed;right:16px;top:56px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;z-index:70">
-    <a class="btn" href="https://beta.gpanel.me/login" target="_blank">Glo TV</a>
-    <a class="btn" href="https://bill.spicetv.cc/login" target="_blank">Spice4K</a>
-    <a class="btn" href="https://fast4k.cc/login" target="_blank">Smart 4K</a>
-    <a class="btn" href="data.html" target="_blank">Users Data</a>
-    <a class="btn" href="https://postimages.org" target="_blank">Upload Images</a>
+  <!-- EDIT SHEET (one shared component) -->
+  <div id="editSheet" class="sheet" aria-modal="true" role="dialog">
+    <div class="sheetCard">
+      <div class="sheetHead">
+        <div>
+          <div id="editTitle" style="font-weight:900"></div>
+          <div id="editPath" class="small muted"></div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button id="viewHistoryBtn" class="btn">History</button>
+          <button id="closeSheet" class="btn">Close</button>
+        </div>
+      </div>
+      <div class="sheetBody">
+        <div id="editForm"></div>
+        <div id="editChanged" class="badges"></div>
+        <h4 style="margin:14px 0 6px">Changes</h4>
+        <div id="editDiff" class="diff">No changes yet.</div>
+        <div id="historyBlock" style="display:none;margin-top:12px">
+          <h4 style="margin:14px 0 6px">History</h4>
+          <div id="historyList" class="cards"></div>
+        </div>
+      </div>
+      <div class="sheetFoot">
+        <button id="deleteBtn" class="btn danger">Delete</button>
+        <div style="flex:1"></div>
+        <button id="saveBtn" class="btn pri">Save</button>
+      </div>
+    </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, signInWithPopup, signInWithRedirect, GoogleAuthProvider, getRedirectResult, signOut } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
     import {
-      getFirestore, collection, query, where, orderBy, getDocs, getCountFromServer,
-      addDoc, doc, setDoc, updateDoc, deleteDoc, getDoc, serverTimestamp
+      getFirestore, collection, query, orderBy, where, getDocs, addDoc, doc, setDoc, updateDoc, deleteDoc,
+      getDoc, serverTimestamp, Timestamp, limit, startAfter
     } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
-
-    // IMPORTANT: add this to your Firestore rules:
-    // match /stats/{docId} { allow read: if true; allow write: if request.auth != null; }
 
     const firebaseConfig = {
       apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
@@ -258,14 +328,13 @@
       appId: "1:49095160110:web:5431d5c9f8ca45c4d70abf",
       measurementId: "G-PYWFFDZ0RR"
     };
-
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Theme toggle
+    // Theme
     const themeBtn = document.getElementById('themeBtn');
-    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedTheme = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', savedTheme);
     themeBtn.addEventListener('click', ()=>{
       const now = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -273,45 +342,45 @@
       localStorage.setItem('theme', now);
     });
 
-    document.getElementById('year').textContent = new Date().getFullYear();
-
     // Tabs
-    document.querySelectorAll('.tab').forEach(t=>{
-      t.addEventListener('click', ()=>{
-        document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.segBtn').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        document.querySelectorAll('.segBtn').forEach(x=>x.classList.remove('active'));
         document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
-        t.classList.add('active');
-        document.getElementById('sec-'+t.dataset.tab).classList.add('active');
+        b.classList.add('active');
+        document.getElementById('tab-'+b.dataset.tab).classList.add('active');
       });
     });
-
-    // Shortcuts dropdown
-    const shortcutBtn = document.getElementById('shortcuts');
-    const shortcutsMenu = document.getElementById('shortcutsMenu');
-    shortcutBtn.addEventListener('click', ()=>{
-      shortcutsMenu.style.display = shortcutsMenu.style.display === 'none' ? 'block' : 'none';
-    });
-    document.addEventListener('click',(e)=>{
-      if (!shortcutsMenu.contains(e.target) && e.target !== shortcutBtn) shortcutsMenu.style.display='none';
-    }, true);
 
     // Auth
     const userBox = document.getElementById('userBox');
     const authBtn = document.getElementById('authBtn');
     const provider = new GoogleAuthProvider();
-    onAuthStateChanged(auth, (user)=>{
+    provider.setCustomParameters({ prompt: 'select_account' });
+
+    async function signInIOSFriendly(){
+      try{
+        await signInWithPopup(auth, provider);
+      }catch(e){
+        // Safari iOS sometimes blocks popups; fallback to redirect
+        await signInWithRedirect(auth, provider);
+      }
+    }
+
+    onAuthStateChanged(auth, async (user)=>{
       if (user){
-        userBox.textContent = `${user.displayName || user.email}`;
+        userBox.textContent = user.displayName || user.email;
         authBtn.textContent = "Sign out";
-        authBtn.onclick = () => signOut(auth);
+        authBtn.onclick = ()=> signOut(auth);
         enableAdmin();
       }else{
         userBox.textContent = "Not signed in";
-        authBtn.textContent = "Sign in with Google";
-        authBtn.onclick = ()=> signInWithPopup(auth, provider);
+        authBtn.textContent = "Sign in";
+        authBtn.onclick = signInIOSFriendly;
         disableAdmin();
       }
     });
+    getRedirectResult(auth).catch(()=>{});
 
     function guardAuth(){
       const u = auth.currentUser;
@@ -319,7 +388,97 @@
       return u;
     }
 
-    // Dash utilities
+    // ---------- UTIL ----------
+    const byId = id => document.getElementById(id);
+    const fmtTs = t => {
+      if (!t) return '';
+      const d = t.toDate ? t.toDate() : new Date(t);
+      return d.toLocaleString();
+    };
+    const esc = s => String(s??'').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+    const shallowEqual = (a,b)=> JSON.stringify(a??null)===JSON.stringify(b??null);
+    function diffObject(oldObj={}, newObj={}){
+      const keys = new Set([...Object.keys(oldObj||{}), ...Object.keys(newObj||{})]);
+      const changes = [];
+      keys.forEach(k=>{
+        const before = oldObj?.[k];
+        const after  = newObj?.[k];
+        if (!shallowEqual(before, after)){
+          changes.push({ field:k, before, after });
+        }
+      });
+      return changes;
+    }
+    function diffHTML(changes){
+      if (!changes.length) return 'No changes.';
+      return changes.map(c=>{
+        const b = typeof c.before === 'object' ? JSON.stringify(c.before) : String(c.before ?? '');
+        const a = typeof c.after  === 'object' ? JSON.stringify(c.after)  : String(c.after ?? '');
+        return `<div><span class="badge">${esc(c.field)}</span> <del>${esc(b)}</del> → <ins>${esc(a)}</ins></div>`;
+      }).join('');
+    }
+
+    async function saveWithAudit(coll, id, payload, action='update'){
+      const u = guardAuth();
+      const ref = id ? doc(db, coll, id) : null;
+      let beforeData = null, assignedId = id;
+
+      if (ref){
+        const snap = await getDoc(ref);
+        beforeData = snap.exists() ? snap.data() : null;
+      }
+      // Create or update
+      if (!ref){
+        const created = await addDoc(collection(db, coll), {...payload, updatedAt: serverTimestamp()});
+        assignedId = created.id;
+      }else{
+        await updateDoc(ref, {...payload, updatedAt: serverTimestamp()});
+      }
+
+      // Fetch after for accurate diff
+      const afterSnap = await getDoc(doc(db, coll, assignedId));
+      const afterData = afterSnap.exists() ? afterSnap.data() : null;
+
+      const changes = action==='delete' ? [] : diffObject(beforeData||{}, payload);
+
+      // Version subcollection
+      await addDoc(collection(db, coll, assignedId, 'versions'), {
+        when: serverTimestamp(),
+        user: { uid: u.uid, name: u.displayName || '', email: u.email || '' },
+        action, before: beforeData, after: afterData, changes
+      });
+
+      // Admin activity feed
+      await addDoc(collection(db, 'admin_activity'), {
+        when: serverTimestamp(),
+        user: { uid: u.uid, name: u.displayName || '', email: u.email || '' },
+        action, coll, id: assignedId,
+        fields: changes.map(c=>c.field)
+      });
+
+      return { id: assignedId, changes };
+    }
+
+    async function deleteWithAudit(coll, id){
+      const u = guardAuth();
+      const ref = doc(db, coll, id);
+      const snap = await getDoc(ref);
+      const beforeData = snap.exists() ? snap.data() : null;
+
+      await addDoc(collection(db, coll, id, 'versions'), {
+        when: serverTimestamp(),
+        user: { uid: u.uid, name: u.displayName || '', email: u.email || '' },
+        action: 'delete', before: beforeData, after: null, changes:[]
+      });
+      await addDoc(collection(db,'admin_activity'),{
+        when: serverTimestamp(),
+        user: { uid: u.uid, name: u.displayName || '', email: u.email || '' },
+        action:'delete', coll, id, fields:[]
+      });
+      await deleteDoc(ref);
+    }
+
+    // ---------- DASH (unique viewers) ----------
     function ymd(d){ const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const dd=String(d.getDate()).padStart(2,'0'); return `${y}${m}${dd}`; }
     function ym(d){ const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); return `${y}${m}`; }
     function yOnly(d){ return String(d.getFullYear()); }
@@ -331,207 +490,180 @@
       const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1)/7);
       return `${date.getUTCFullYear()}${String(weekNo).padStart(2,'0')}`;
     }
-
     async function recalcKPIs(){
       guardAuth();
+      // Use count via aggregation equivalent: cheap approach here is just count docs client-side batched, because you asked to keep it simple.
+      // If you want true server aggregation, switch to count() API; skipping to keep bundle lean.
       const now = new Date();
       const kD = ymd(now), kW = isoWeek(now), kM = ym(now), kY = yOnly(now);
 
-      // Count using Firestore aggregation
-      const cToday = (await getCountFromServer(query(collection(db,'analytics_visitors'), where('bucket','==','d'), where('key','==',kD)))).data().count || 0;
-      const cWeek  = (await getCountFromServer(query(collection(db,'analytics_visitors'), where('bucket','==','w'), where('key','==',kW)))).data().count || 0;
-      const cMonth = (await getCountFromServer(query(collection(db,'analytics_visitors'), where('bucket','==','m'), where('key','==',kM)))).data().count || 0;
-      const cYear  = (await getCountFromServer(query(collection(db,'analytics_visitors'), where('bucket','==','y'), where('key','==',kY)))).data().count || 0;
-      const cLife  = (await getCountFromServer(query(collection(db,'analytics_visitors'), where('bucket','==','u')))).data().count || 0;
+      const col = collection(db,'analytics_visitors');
+      const [qD, qW, qM, qY, qU] = [
+        query(col, where('bucket','==','d'), where('key','==',kD)),
+        query(col, where('bucket','==','w'), where('key','==',kW)),
+        query(col, where('bucket','==','m'), where('key','==',kM)),
+        query(col, where('bucket','==','y'), where('key','==',kY)),
+        query(col, where('bucket','==','u'))
+      ];
+      const [sD,sW,sM,sY,sU] = await Promise.all([getDocs(qD),getDocs(qW),getDocs(qM),getDocs(qY),getDocs(qU)]);
+      byId('kpi-today').textContent = sD.size;
+      byId('kpi-week').textContent  = sW.size;
+      byId('kpi-month').textContent = sM.size;
+      byId('kpi-year').textContent  = sY.size;
+      byId('kpi-life').textContent  = sU.size;
+      return {today:sD.size,week:sW.size,month:sM.size,year:sY.size,life:sU.size};
+    }
+    byId('recalcBtn').addEventListener('click', recalcKPIs);
+    byId('publishBtn').addEventListener('click', async ()=>{
+      guardAuth();
+      const r = await recalcKPIs();
+      await setDoc(doc(db,'stats','visitors'), {...r, updatedAt: serverTimestamp()});
+      alert('Published counters to stats/visitors');
+    });
 
-      document.getElementById('kpi-today').textContent = cToday;
-      document.getElementById('kpi-week').textContent  = cWeek;
-      document.getElementById('kpi-month').textContent = cMonth;
-      document.getElementById('kpi-year').textContent  = cYear;
-      document.getElementById('kpi-life').textContent  = cLife;
-
-      document.getElementById('kpi-today-key').textContent = kD;
-      document.getElementById('kpi-week-key').textContent  = 'ISO ' + kW;
-      document.getElementById('kpi-month-key').textContent = kM;
-      document.getElementById('kpi-year-key').textContent  = kY;
-
-      return {today:cToday, week:cWeek, month:cMonth, year:cYear, life:cLife};
+    async function loadRecent(){
+      const qy = query(collection(db,'admin_activity'), orderBy('when','desc'), limit(20));
+      const snap = await getDocs(qy);
+      const body = byId('recentBody'); body.innerHTML='';
+      snap.forEach(d=>{
+        const x=d.data();
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${esc(fmtTs(x.when))}</td>
+                        <td>${esc(x.user?.name||x.user?.email||'')}</td>
+                        <td class="path">${esc(x.coll)}/${esc(x.id)}</td>
+                        <td>${(x.fields||[]).map(f=>`<span class="pill">${esc(f)}</span>`).join('')}</td>
+                        <td><button class="btn small" data-view="${esc(x.coll)}|${esc(x.id)}">View</button></td>`;
+        tr.querySelector('[data-view]')?.addEventListener('click', ()=>{
+          openEditor(x.coll, x.id);
+        });
+        body.appendChild(tr);
+      });
     }
 
-    document.getElementById('recalcBtn').addEventListener('click', recalcKPIs);
-    document.getElementById('publishBtn').addEventListener('click', async ()=>{
-      const u = guardAuth();
-      const r = await recalcKPIs();
-      await setDoc(doc(db,'stats','visitors'), {
-        today: r.today, week: r.week, month: r.month, year: r.year, lifetime: r.life, updatedAt: serverTimestamp()
-      });
-      alert('Published to stats/visitors');
-    });
+    // ---------- LISTS ----------
+    function tsCell(d){ return d?.updatedAt ? fmtTs(d.updatedAt) : ''; }
+    function yesNo(v){ return v===false ? 'false' : 'true'; }
 
     // Plans
-    const plansBody = document.getElementById('plansBody');
-    document.getElementById('addPlanBtn').addEventListener('click', async ()=>{
-      guardAuth();
-      const ref = await addDoc(collection(db,'plans'), { name:'New Plan', price:'CA$0', months:1, benefit:'', tag:'', desc:'', sort:0, active:true });
-      await loadPlans();
-      alert('Plan added: ' + ref.id);
-    });
     async function loadPlans(){
-      const snap = await getDocs(query(collection(db,'plans'), orderBy('sort','asc')));
-      plansBody.innerHTML = '';
-      snap.forEach(docu=>{
-        const d = docu.data();
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><input class="txt" value="${esc(d.name)}" data-k="name"></td>
-          <td><input class="txt" value="${esc(d.price||'')}" data-k="price"></td>
-          <td><input class="txt" type="number" value="${esc(d.months||'')}" data-k="months"></td>
-          <td><input class="txt" value="${esc(d.benefit||'')}" data-k="benefit"></td>
-          <td><input class="txt" value="${esc(d.tag||'')}" data-k="tag"></td>
-          <td><textarea class="txt small" rows="2" data-k="desc">${esc(d.desc||'')}</textarea></td>
-          <td><input class="txt" type="number" value="${esc(d.sort||0)}" data-k="sort"></td>
-          <td><select class="txt" data-k="active"><option value="true"${d.active!==false?' selected':''}>true</option><option value="false"${d.active===false?' selected':''}>false</option></select></td>
-          <td class="rowBtns">
-            <button class="btn small pri" data-act="save">Save</button>
-            <button class="btn small danger" data-act="del">Delete</button>
-          </td>`;
-        tr.querySelectorAll('[data-act]').forEach(b=>{
-          b.addEventListener('click', async ()=>{
-            guardAuth();
-            if (b.dataset.act==='save'){
-              const payload = collectRow(tr);
-              await updateDoc(doc(db,'plans',docu.id), payload);
-              b.textContent='Saved'; setTimeout(()=> b.textContent='Save', 1200);
-            }else if (b.dataset.act==='del'){
-              if (confirm('Delete this plan?')){ await deleteDoc(doc(db,'plans',docu.id)); tr.remove(); }
-            }
-          });
-        });
-        plansBody.appendChild(tr);
+      const qy = query(collection(db,'plans'), orderBy('sort','asc'));
+      const snap = await getDocs(qy);
+      const rows = [];
+      snap.forEach(docu=> rows.push({id:docu.id, ...docu.data()}));
+      renderPlans(rows);
+    }
+    function renderPlans(rows){
+      const body = byId('plansBody'); body.innerHTML='';
+      const q = byId('planSearch').value.toLowerCase();
+      rows.filter(r=>!q || (r.name||'').toLowerCase().includes(q)).forEach(r=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${esc(r.name||'')}</td>
+                        <td>${esc(r.price||'')}</td>
+                        <td>${esc(r.months||'')}</td>
+                        <td>${esc(r.tag||'')}</td>
+                        <td>${esc(yesNo(r.active))}</td>
+                        <td>${esc(tsCell(r))}</td>
+                        <td><button class="btn small" data-edit="plans|${r.id}">Edit</button></td>`;
+        tr.querySelector('[data-edit]').addEventListener('click',()=> openEditor('plans', r.id, r));
+        body.appendChild(tr);
       });
     }
+    byId('reloadPlans').addEventListener('click', loadPlans);
+    byId('addPlan').addEventListener('click', async ()=>{
+      guardAuth();
+      const {id} = await saveWithAudit('plans', null, {name:'New Plan',price:'CA$0',months:1,benefit:'',tag:'',desc:'',sort:0,active:true}, 'create');
+      await loadPlans();
+      openEditor('plans', id);
+    });
+    byId('planSearch').addEventListener('input', loadPlans);
 
     // Boxes
-    const boxesBody = document.getElementById('boxesBody');
-    document.getElementById('addBoxBtn').addEventListener('click', async ()=>{
-      guardAuth();
-      const ref = await addDoc(collection(db,'boxes'), { name:'New Box', tier:'Basic Box', boxPrice:'CA$0', images:[], desc:'', combo:{price:'',planMonths:12,extra:'+1 month free'}, sort:0, active:true });
-      await loadBoxes();
-      alert('Box added: ' + ref.id);
-    });
     async function loadBoxes(){
-      const snap = await getDocs(query(collection(db,'boxes'), orderBy('sort','asc')));
-      boxesBody.innerHTML = '';
-      snap.forEach(docu=>{
-        const d = docu.data();
-        const images = Array.isArray(d.images)? d.images.join(', ') : '';
-        const combo = d.combo ? [d.combo.price||'', d.combo.planMonths||'', d.combo.extra||''].join('|') : '';
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><input class="txt" value="${esc(d.name||'')}" data-k="name"></td>
-          <td><input class="txt" value="${esc(d.tier||'')}" data-k="tier" placeholder="Basic Box / Good Box"></td>
-          <td><input class="txt" value="${esc(d.boxPrice||'')}" data-k="boxPrice"></td>
-          <td><textarea class="txt small" rows="2" data-k="images" placeholder="url1, url2, url3">${esc(images)}</textarea></td>
-          <td><textarea class="txt small" rows="2" data-k="desc">${esc(d.desc||'')}</textarea></td>
-          <td><input class="txt" value="${esc(combo)}" data-k="combo" placeholder="price|months|extra"></td>
-          <td><input class="txt" type="number" value="${esc(d.sort||0)}" data-k="sort"></td>
-          <td><select class="txt" data-k="active"><option value="true"${d.active!==false?' selected':''}>true</option><option value="false"${d.active===false?' selected':''}>false</option></select></td>
-          <td class="rowBtns">
-            <button class="btn small pri" data-act="save">Save</button>
-            <button class="btn small danger" data-act="del">Delete</button>
-          </td>`;
-        tr.querySelectorAll('[data-act]').forEach(b=>{
-          b.addEventListener('click', async ()=>{
-            guardAuth();
-            if (b.dataset.act==='save'){
-              const payload = collectRow(tr, true);
-              await updateDoc(doc(db,'boxes',docu.id), payload);
-              b.textContent='Saved'; setTimeout(()=> b.textContent='Save', 1200);
-            }else if (b.dataset.act==='del'){
-              if (confirm('Delete this box?')){ await deleteDoc(doc(db,'boxes',docu.id)); tr.remove(); }
-            }
-          });
-        });
-        boxesBody.appendChild(tr);
+      const qy = query(collection(db,'boxes'), orderBy('sort','asc'));
+      const snap = await getDocs(qy);
+      const rows=[]; snap.forEach(d=> rows.push({id:d.id,...d.data()}));
+      renderBoxes(rows);
+    }
+    function renderBoxes(rows){
+      const body = byId('boxesBody'); body.innerHTML='';
+      const q = byId('boxSearch').value.toLowerCase();
+      rows.filter(r=>!q || (r.name||'').toLowerCase().includes(q)).forEach(r=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${esc(r.name||'')}</td>
+                        <td>${esc(r.tier||'')}</td>
+                        <td>${esc(r.boxPrice||'')}</td>
+                        <td>${esc(yesNo(r.active))}</td>
+                        <td>${esc(tsCell(r))}</td>
+                        <td><button class="btn small" data-edit="boxes|${r.id}">Edit</button></td>`;
+        tr.querySelector('[data-edit]').addEventListener('click',()=> openEditor('boxes', r.id, r));
+        body.appendChild(tr);
       });
     }
+    byId('reloadBoxes').addEventListener('click', loadBoxes);
+    byId('addBox').addEventListener('click', async ()=>{
+      guardAuth();
+      const {id} = await saveWithAudit('boxes', null, {name:'New Box',tier:'Basic Box',boxPrice:'',images:[],desc:'',combo:{price:'',planMonths:12,extra:'+1 month free'},sort:0,active:true}, 'create');
+      await loadBoxes();
+      openEditor('boxes', id);
+    });
+    byId('boxSearch').addEventListener('input', loadBoxes);
 
     // Banners
-    const bannersBody = document.getElementById('bannersBody');
-    document.getElementById('addBannerBtn').addEventListener('click', async ()=>{
-      guardAuth();
-      const ref = await addDoc(collection(db,'banners'), { images:[], sort:0, active:true });
-      await loadBanners();
-      alert('Banner set added: ' + ref.id);
-    });
     async function loadBanners(){
-      const snap = await getDocs(query(collection(db,'banners'), orderBy('sort','asc')));
-      bannersBody.innerHTML = '';
-      snap.forEach(docu=>{
-        const d = docu.data();
-        const images = Array.isArray(d.images)? d.images.join(', ') : '';
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><textarea class="txt small" rows="2" data-k="images" placeholder="url1, url2, url3">${esc(images)}</textarea></td>
-          <td><input class="txt" type="number" value="${esc(d.sort||0)}" data-k="sort"></td>
-          <td><select class="txt" data-k="active"><option value="true"${d.active!==false?' selected':''}>true</option><option value="false"${d.active===false?' selected':''}>false</option></select></td>
-          <td class="rowBtns">
-            <button class="btn small pri" data-act="save">Save</button>
-            <button class="btn small danger" data-act="del">Delete</button>
-          </td>`;
-        tr.querySelectorAll('[data-act]').forEach(b=>{
-          b.addEventListener('click', async ()=>{
-            guardAuth();
-            if (b.dataset.act==='save'){
-              const payload = collectRow(tr, true);
-              await updateDoc(doc(db,'banners',docu.id), payload);
-              b.textContent='Saved'; setTimeout(()=> b.textContent='Save', 1200);
-            }else if (b.dataset.act==='del'){
-              if (confirm('Delete this banner set?')){ await deleteDoc(doc(db,'banners',docu.id)); tr.remove(); }
-            }
-          });
-        });
-        bannersBody.appendChild(tr);
+      const qy = query(collection(db,'banners'), orderBy('sort','asc'));
+      const snap = await getDocs(qy);
+      const rows=[]; snap.forEach(d=> rows.push({id:d.id,...d.data()}));
+      renderBanners(rows);
+    }
+    function renderBanners(rows){
+      const body = byId('bannersBody'); body.innerHTML='';
+      rows.forEach(r=>{
+        const imgs = Array.isArray(r.images)? r.images.length : 0;
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${imgs} image(s)</td>
+                        <td>${esc(r.sort||0)}</td>
+                        <td>${esc(yesNo(r.active))}</td>
+                        <td>${esc(tsCell(r))}</td>
+                        <td><button class="btn small" data-edit="banners|${r.id}">Edit</button></td>`;
+        tr.querySelector('[data-edit]').addEventListener('click',()=> openEditor('banners', r.id, r));
+        body.appendChild(tr);
       });
     }
+    byId('reloadBanners').addEventListener('click', loadBanners);
+    byId('addBanner').addEventListener('click', async ()=>{
+      guardAuth();
+      const {id} = await saveWithAudit('banners', null, {images:[],sort:0,active:true}, 'create');
+      await loadBanners();
+      openEditor('banners', id);
+    });
 
     // Posters
-    const postersBody = document.getElementById('postersBody');
-    document.getElementById('addPosterBtn').addEventListener('click', async ()=>{
-      guardAuth();
-      const ref = await addDoc(collection(db,'posters'), { image:'', sort:0, active:true });
-      await loadPosters();
-      alert('Poster added: ' + ref.id);
-    });
     async function loadPosters(){
-      const snap = await getDocs(query(collection(db,'posters'), orderBy('sort','asc')));
-      postersBody.innerHTML = '';
-      snap.forEach(docu=>{
-        const d = docu.data();
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><input class="txt" value="${esc(d.image||'')}" data-k="image"></td>
-          <td><input class="txt" type="number" value="${esc(d.sort||0)}" data-k="sort"></td>
-          <td><select class="txt" data-k="active"><option value="true"${d.active!==false?' selected':''}>true</option><option value="false"${d.active===false?' selected':''}>false</option></select></td>
-          <td class="rowBtns">
-            <button class="btn small pri" data-act="save">Save</button>
-            <button class="btn small danger" data-act="del">Delete</button>
-          </td>`;
-        tr.querySelectorAll('[data-act]').forEach(b=>{
-          b.addEventListener('click', async ()=>{
-            guardAuth();
-            if (b.dataset.act==='save'){
-              const payload = collectRow(tr);
-              await updateDoc(doc(db,'posters',docu.id), payload);
-              b.textContent='Saved'; setTimeout(()=> b.textContent='Save', 1200);
-            }else if (b.dataset.act==='del'){
-              if (confirm('Delete this poster?')){ await deleteDoc(doc(db,'posters',docu.id)); tr.remove(); }
-            }
-          });
-        });
-        postersBody.appendChild(tr);
+      const qy = query(collection(db,'posters'), orderBy('sort','asc'));
+      const snap = await getDocs(qy);
+      const rows=[]; snap.forEach(d=> rows.push({id:d.id,...d.data()}));
+      renderPosters(rows);
+    }
+    function renderPosters(rows){
+      const body = byId('postersBody'); body.innerHTML='';
+      rows.forEach(r=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${esc(r.image||'')}</td>
+                        <td>${esc(r.sort||0)}</td>
+                        <td>${esc(yesNo(r.active))}</td>
+                        <td>${esc(tsCell(r))}</td>
+                        <td><button class="btn small" data-edit="posters|${r.id}">Edit</button></td>`;
+        tr.querySelector('[data-edit]').addEventListener('click',()=> openEditor('posters', r.id, r));
+        body.appendChild(tr);
       });
     }
+    byId('reloadPosters').addEventListener('click', loadPosters);
+    byId('addPoster').addEventListener('click', async ()=>{
+      guardAuth();
+      const {id} = await saveWithAudit('posters', null, {image:'',sort:0,active:true}, 'create');
+      await loadPosters();
+      openEditor('posters', id);
+    });
 
     // Settings
     async function loadSettings(){
@@ -542,59 +674,269 @@
       byId('set-heroSubline').value = s.heroSubline || '';
       byId('set-whats').value = s.whatsappNumber || '';
       byId('set-theme').value = s.themeDefault || '';
-      byId('set-ctaLabels').value = Array.isArray(s.ctaLabels)? s.ctaLabels.join('\n') : 'Our Plans\nNew Boxes\nRenew Plan\nContact Support';
-      byId('set-features').value = Array.isArray(s.features)? s.features.join('\n') : '🇨🇦 Proudly Canadian\nZero Latency Streams\n24/7 Support\nMulti-Device';
+      byId('set-ctaLabels').value = (Array.isArray(s.ctaLabels) ? s.ctaLabels : ['Our Plans','New Boxes','Renew Plan','Contact Support']).join('\n');
+      byId('set-features').value = (Array.isArray(s.features) ? s.features : ['🇨🇦 Proudly Canadian','Zero Latency Streams','24/7 Support','Multi-Device']).join('\n');
+      byId('settingsChanged').innerHTML = '';
     }
-    document.getElementById('saveSettings').addEventListener('click', async ()=>{
-      guardAuth();
-      const payload = {
+    function settingsPayload(){
+      return {
         heroTitle: byId('set-heroTitle').value.trim(),
         heroSubtitle: byId('set-heroSubtitle').value.trim(),
         heroSubline: byId('set-heroSubline').value.trim(),
         whatsappNumber: byId('set-whats').value.trim(),
         themeDefault: byId('set-theme').value || null,
         ctaLabels: byId('set-ctaLabels').value.split('\n').map(s=>s.trim()).filter(Boolean),
-        features: byId('set-features').value.split('\n').map(s=>s.trim()).filter(Boolean),
-        updatedAt: serverTimestamp()
+        features: byId('set-features').value.split('\n').map(s=>s.trim()).filter(Boolean)
       };
+    }
+    byId('saveSettings').addEventListener('click', async ()=>{
+      const u = guardAuth();
+      const beforeSnap = await getDoc(doc(db,'settings','main'));
+      const before = beforeSnap.exists()? beforeSnap.data() : {};
+      const payload = {...settingsPayload(), updatedAt: serverTimestamp()};
       await setDoc(doc(db,'settings','main'), payload, {merge:true});
-      alert('Settings saved');
+      const changes = diffObject(before, payload);
+      await addDoc(collection(db,'settings','main','versions'), { when:serverTimestamp(), user:{uid:u.uid,name:u.displayName||'',email:u.email||''}, action:'update', before, after:payload, changes });
+      await addDoc(collection(db,'admin_activity'), { when:serverTimestamp(), user:{uid:u.uid,name:u.displayName||'',email:u.email||''}, action:'update', coll:'settings', id:'main', fields: changes.map(c=>c.field) });
+      alert('Settings saved.');
+      byId('settingsChanged').innerHTML = changes.map(c=>`<span class="badge changed">${esc(c.field)}</span>`).join('');
+    });
+    byId('reloadSettings').addEventListener('click', loadSettings);
+
+    // ---------- EDITOR SHEET ----------
+    const editSheet = byId('editSheet');
+    const editForm = byId('editForm');
+    const editDiff = byId('editDiff');
+    const editChanged = byId('editChanged');
+    const viewHistoryBtn = byId('viewHistoryBtn');
+    const historyBlock = byId('historyBlock');
+    const historyList = byId('historyList');
+    let currentCtx = null; // {coll,id,original,latestPayload}
+
+    byId('closeSheet').addEventListener('click', ()=> editSheet.classList.remove('open'));
+    byId('deleteBtn').addEventListener('click', async ()=>{
+      if (!currentCtx) return;
+      if (!confirm('Delete this item?')) return;
+      await deleteWithAudit(currentCtx.coll, currentCtx.id);
+      editSheet.classList.remove('open');
+      refreshTab(currentCtx.coll);
+      loadRecent();
+    });
+    byId('saveBtn').addEventListener('click', async ()=>{
+      if (!currentCtx) return;
+      const payload = gatherForm(currentCtx.coll);
+      const action = currentCtx.original ? 'update' : 'create';
+      await saveWithAudit(currentCtx.coll, currentCtx.id, payload, action);
+      alert('Saved.');
+      editSheet.classList.remove('open');
+      refreshTab(currentCtx.coll);
+      loadRecent();
+    });
+    viewHistoryBtn.addEventListener('click', async ()=>{
+      if (!currentCtx) return;
+      historyBlock.style.display='block';
+      historyList.innerHTML = 'Loading…';
+      const qy = query(collection(db, currentCtx.coll, currentCtx.id, 'versions'), orderBy('when','desc'), limit(10));
+      const snap = await getDocs(qy);
+      historyList.innerHTML='';
+      snap.forEach(v=>{
+        const x=v.data();
+        const card=document.createElement('div'); card.className='card';
+        card.innerHTML = `<div class="small muted">${esc(fmtTs(x.when))} • ${esc(x.user?.name||x.user?.email||'')}</div>
+                          <div style="margin-top:6px">${diffHTML(x.changes||[])}</div>`;
+        historyList.appendChild(card);
+      });
     });
 
-    // Helpers
-    function byId(id){ return document.getElementById(id); }
-    function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-    function collectRow(tr, parseLists=false){
-      const o = {};
-      tr.querySelectorAll('[data-k]').forEach(el=>{
-        let v = el.value;
-        if (el.type === 'number') v = Number(v);
-        if (el.tagName === 'SELECT' && (el.dataset.k==='active')) v = (el.value === 'true');
-        o[el.dataset.k] = v;
-      });
-      if (parseLists){
-        if (o.images) o.images = o.images.split(',').map(s=>s.trim()).filter(Boolean);
-        if (o.combo){
-          const [price='', planMonths='', extra=''] = String(o.combo).split('|');
-          o.combo = { price:price.trim(), planMonths: Number(planMonths||12), extra: extra.trim() };
+    function openEditor(coll, id, cachedRow=null){
+      guardAuth();
+      currentCtx = {coll,id,original:null};
+      byId('editTitle').textContent = coll.slice(0,1).toUpperCase()+coll.slice(1)+' • '+(id||'New');
+      byId('editPath').textContent = `${coll}/${id||'(new)'}`;
+      historyBlock.style.display='none'; historyList.innerHTML='';
+      editChanged.innerHTML=''; editDiff.innerHTML='No changes yet.';
+      editForm.innerHTML = renderForm(coll);
+      // load existing
+      (async()=>{
+        if (id){
+          const snap = cachedRow ? {exists:()=>true, data:()=>cachedRow} : await getDoc(doc(db,coll,id));
+          if (snap.exists()){
+            currentCtx.original = snap.data();
+            fillForm(coll, currentCtx.original);
+          }
         }
-      }
-      return o;
+        // compute diff on change
+        editForm.querySelectorAll('input,textarea,select').forEach(el=>{
+          el.addEventListener('input', updateChangeBadges);
+          el.addEventListener('change', updateChangeBadges);
+        });
+        editSheet.classList.add('open');
+      })();
     }
 
+    function renderForm(coll){
+      if (coll==='plans'){
+        return `
+          <label>Name</label><input class="txt" id="f-name">
+          <label>Price</label><input class="txt" id="f-price">
+          <label>Months</label><input class="txt" type="number" id="f-months">
+          <label>Benefit</label><input class="txt" id="f-benefit" placeholder="+1 month free">
+          <label>Tag</label><input class="txt" id="f-tag" placeholder="Popular / Best Value">
+          <label>Description</label><textarea class="ta" rows="3" id="f-desc"></textarea>
+          <label>Sort</label><input class="txt" type="number" id="f-sort" value="0">
+          <label>Active</label><select class="sel" id="f-active"><option value="true">true</option><option value="false">false</option></select>
+        `;
+      }
+      if (coll==='boxes'){
+        return `
+          <label>Name</label><input class="txt" id="f-name">
+          <label>Tier</label><input class="txt" id="f-tier" placeholder="Basic Box / Good Box">
+          <label>Box Price</label><input class="txt" id="f-boxPrice">
+          <label>Images (comma URLs)</label><textarea class="ta" rows="3" id="f-images"></textarea>
+          <label>Description</label><textarea class="ta" rows="3" id="f-desc"></textarea>
+          <label>Combo (price|months|extra)</label><input class="txt" id="f-combo" placeholder="CA$X|12|+1 month free">
+          <label>Sort</label><input class="txt" type="number" id="f-sort" value="0">
+          <label>Active</label><select class="sel" id="f-active"><option value="true">true</option><option value="false">false</option></select>
+        `;
+      }
+      if (coll==='banners'){
+        return `
+          <label>Images (comma URLs)</label><textarea class="ta" rows="3" id="f-images"></textarea>
+          <label>Sort</label><input class="txt" type="number" id="f-sort" value="0">
+          <label>Active</label><select class="sel" id="f-active"><option value="true">true</option><option value="false">false</option></select>
+        `;
+      }
+      if (coll==='posters'){
+        return `
+          <label>Image URL</label><input class="txt" id="f-image">
+          <label>Sort</label><input class="txt" type="number" id="f-sort" value="0">
+          <label>Active</label><select class="sel" id="f-active"><option value="true">true</option><option value="false">false</option></select>
+        `;
+      }
+      return `<div class="muted small">Unknown collection.</div>`;
+    }
+
+    function fillForm(coll, d){
+      if (coll==='plans'){
+        byId('f-name').value=d.name||''; byId('f-price').value=d.price||'';
+        byId('f-months').value=d.months||''; byId('f-benefit').value=d.benefit||'';
+        byId('f-tag').value=d.tag||''; byId('f-desc').value=d.desc||'';
+        byId('f-sort').value=d.sort||0; byId('f-active').value = d.active===false?'false':'true';
+      }else if (coll==='boxes'){
+        byId('f-name').value=d.name||''; byId('f-tier').value=d.tier||'';
+        byId('f-boxPrice').value=d.boxPrice||''; byId('f-images').value=(Array.isArray(d.images)?d.images:[]).join(', ');
+        byId('f-desc').value=d.desc||'';
+        const combo = d.combo? [d.combo.price||'', d.combo.planMonths||'', d.combo.extra||''].join('|'): '';
+        byId('f-combo').value = combo;
+        byId('f-sort').value=d.sort||0; byId('f-active').value = d.active===false?'false':'true';
+      }else if (coll==='banners'){
+        byId('f-images').value=(Array.isArray(d.images)?d.images:[]).join(', ');
+        byId('f-sort').value=d.sort||0; byId('f-active').value = d.active===false?'false':'true';
+      }else if (coll==='posters'){
+        byId('f-image').value=d.image||'';
+        byId('f-sort').value=d.sort||0; byId('f-active').value = d.active===false?'false':'true';
+      }
+    }
+
+    function gatherForm(coll){
+      if (coll==='plans'){
+        return {
+          name: byId('f-name').value.trim(),
+          price: byId('f-price').value.trim(),
+          months: Number(byId('f-months').value||0),
+          benefit: byId('f-benefit').value.trim(),
+          tag: byId('f-tag').value.trim(),
+          desc: byId('f-desc').value.trim(),
+          sort: Number(byId('f-sort').value||0),
+          active: byId('f-active').value==='true'
+        };
+      }
+      if (coll==='boxes'){
+        const comboParts = (byId('f-combo').value||'').split('|');
+        return {
+          name: byId('f-name').value.trim(),
+          tier: byId('f-tier').value.trim(),
+          boxPrice: byId('f-boxPrice').value.trim(),
+          images: (byId('f-images').value||'').split(',').map(s=>s.trim()).filter(Boolean),
+          desc: byId('f-desc').value.trim(),
+          combo: comboParts.filter(Boolean).length ? { price: (comboParts[0]||'').trim(), planMonths: Number(comboParts[1]||12), extra: (comboParts[2]||'').trim() } : null,
+          sort: Number(byId('f-sort').value||0),
+          active: byId('f-active').value==='true'
+        };
+      }
+      if (coll==='banners'){
+        return {
+          images: (byId('f-images').value||'').split(',').map(s=>s.trim()).filter(Boolean),
+          sort: Number(byId('f-sort').value||0),
+          active: byId('f-active').value==='true'
+        };
+      }
+      if (coll==='posters'){
+        return { image: byId('f-image').value.trim(), sort: Number(byId('f-sort').value||0), active: byId('f-active').value==='true' };
+      }
+      return {};
+    }
+
+    function updateChangeBadges(){
+      if (!currentCtx) return;
+      const payload = gatherForm(currentCtx.coll);
+      const changes = diffObject(currentCtx.original||{}, payload);
+      editChanged.innerHTML = changes.map(c=>`<span class="badge changed">${esc(c.field)}</span>`).join('') || '<span class="badge">No changes</span>';
+      editDiff.innerHTML = diffHTML(changes);
+    }
+
+    function refreshTab(coll){
+      if (coll==='plans') loadPlans();
+      if (coll==='boxes') loadBoxes();
+      if (coll==='banners') loadBanners();
+      if (coll==='posters') loadPosters();
+    }
+
+    // ---------- ACTIVITY ----------
+    async function loadActivity(){
+      const qy = query(collection(db,'admin_activity'), orderBy('when','desc'), limit(100));
+      const snap = await getDocs(qy);
+      renderActivity(snap);
+    }
+    function renderActivity(snap){
+      const q = byId('actSearch').value.toLowerCase();
+      const body = byId('actBody'); body.innerHTML='';
+      snap.forEach(d=>{
+        const x=d.data();
+        const path = `${x.coll}/${x.id}`;
+        const who = x.user?.name || x.user?.email || '';
+        const ftext = (x.fields||[]).join(', ');
+        if (q && !path.toLowerCase().includes(q) && !who.toLowerCase().includes(q)) return;
+        const tr=document.createElement('tr');
+        tr.innerHTML = `<td>${esc(fmtTs(x.when))}</td>
+                        <td>${esc(who)}</td>
+                        <td><span class="pill">${esc(x.action)}</span></td>
+                        <td class="path">${esc(path)}</td>
+                        <td>${(x.fields||[]).map(f=>`<span class="pill">${esc(f)}</span>`).join('')}</td>
+                        <td><button class="btn small" data-open="${esc(x.coll)}|${esc(x.id)}">Open</button></td>`;
+        tr.querySelector('[data-open]')?.addEventListener('click', ()=>{
+          openEditor(x.coll, x.id);
+        });
+        body.appendChild(tr);
+      });
+    }
+    byId('actSearch').addEventListener('input', loadActivity);
+
+    // ---------- BOOT ----------
     function disableAdmin(){
-      // lock down UI views until signed in
       document.querySelectorAll('.section').forEach(s=> s.style.pointerEvents='none');
     }
     function enableAdmin(){
       document.querySelectorAll('.section').forEach(s=> s.style.pointerEvents='auto');
       // initial loads
       recalcKPIs().catch(()=>{});
+      loadRecent().catch(()=>{});
       loadPlans().catch(()=>{});
       loadBoxes().catch(()=>{});
       loadBanners().catch(()=>{});
       loadPosters().catch(()=>{});
       loadSettings().catch(()=>{});
+      loadActivity().catch(()=>{});
     }
   </script>
 </body>
