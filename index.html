@@ -45,11 +45,11 @@
   .hint{font-size:13px;color:var(--muted);margin-top:6px}
 
   /* Banners 16:9 */
-  .banner{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;margin:0 0 14px;box-shadow:var(--shadow)}
+  .banner{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;margin:0 0 14px;box-shadow:var(--shadow);background:#000}
   .banner::before{content:"";display:block;aspect-ratio:16/9}
   .bannerTrack{display:flex;transform:translateX(0);transition:transform .5s ease}
   .bannerSlide{min-width:100%;position:relative}
-  .bannerSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+  .bannerSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#000}
 
   /* Ticker */
   .ticker{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);margin-top:12px}
@@ -64,7 +64,7 @@
 
   /* Posters rail */
   .postersRail{margin-top:12px;display:flex;gap:10px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
-  .postersRail img{width:200px;height:300px;object-fit:cover;border-radius:12px;flex:0 0 auto;scroll-snap-align:start;border:1px solid var(--line);background:#000;box-shadow:var(--shadow)}
+  .postersRail img{width:200px;height:300px;object-fit:cover;border-radius:12px;flex:0 0 auto;scroll-snap-align:start;border:1px solid var(--line);background:#000;box-shadow:var(--shadow);display:block}
 
   /* Sections */
   .section{padding:22px 16px;border-top:1px solid var(--line)}
@@ -111,7 +111,7 @@
   .boxSlider::before{content:"";display:block;aspect-ratio:16/9}
   .boxTrack{display:flex;transition:transform .35s ease}
   .boxSlide{min-width:100%;position:relative}
-  .boxSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .boxSlide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#000}
   .boxDots{display:flex;gap:6px;justify-content:center;margin-top:6px}
   .boxDot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25)}
   .boxDot.active{background:#fff}
@@ -154,13 +154,15 @@
   <section class="hero">
     <div class="heroInner wrap">
       <!-- BANNERS -->
-      <div class="banner" aria-label="Promotions"><div class="bannerTrack" id="bannerTrack"></div></div>
+      <div class="banner" aria-label="Promotions">
+        <div class="bannerTrack" id="bannerTrack"></div>
+      </div>
 
       <div id="heroSubtitle" class="subtitle">Quick Activation</div>
       <h1 id="heroTitle" class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
-      <p id="heroSubline" class="subtitle">Latest + classic Movies & Series • Full HD & 4K Channels • Anti-Freeze Tech</p>
+      <p id="heroSubline" class="subtitle">Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech</p>
 
-      <!-- Ticker -->
+      <!-- Smooth one-line ticker (right → left) -->
       <div class="ticker"><div class="tickerInner" id="featureTicker"></div></div>
 
       <div class="ctaRow" id="actionButtons">
@@ -208,7 +210,7 @@
     </div>
   </div>
 
-  <!-- MODALS (plans/boxes/own/renew/support/faq/about/pin/subscribe) -->
+  <!-- MODALS -->
   <div id="plansModal" class="modal" role="dialog" aria-modal="true" aria-label="Plans">
     <div class="modalCard">
       <div class="modalHead"><strong>Our Plans</strong><div style="display:flex;gap:8px"><button class="btn" id="refreshPlans">Refresh</button><button class="x" data-close="plansModal">Close</button></div></div>
@@ -261,18 +263,24 @@
     </div>
   </div>
 
+  <!-- RENEW: now lists the same plans with a Renew button -->
   <div id="rechargeModal" class="modal" role="dialog" aria-modal="true" aria-label="Renew Plan">
     <div class="modalCard">
       <div class="modalHead"><strong>Renew Plan</strong><button class="x" data-close="rechargeModal">Close</button></div>
       <div class="modalBody">
+        <p class="muted">Pick your plan below, then fill in your details.</p>
+        <div id="renewPlansGrid" class="plans" style="margin-bottom:12px"></div>
+
         <form id="rechargeForm" class="grid two">
+          <input type="hidden" name="planName" id="renewPlanName">
+          <input type="hidden" name="planMonths" id="renewPlanMonths">
+
           <div><label>Email</label><input required name="email" type="email" placeholder="you@example.com"></div>
           <div><label>Registered Name</label><input required name="name" placeholder="Account name"></div>
           <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
           <div><label>MAC Address</label><input required name="mac" placeholder="00:1A:79:xx:xx:xx"></div>
-          <div>
-            <label>Plan Duration</label>
-            <select name="duration" required>
+          <div><label>Plan Duration</label>
+            <select name="duration" id="renewDuration" required>
               <option value="1">1 month</option><option value="3">3 months</option><option value="6">6 months</option><option value="12">12 months</option>
             </select>
           </div>
@@ -436,6 +444,7 @@
       let i=0; const slides=track.children.length;
       if (bannerTimer) clearInterval(bannerTimer);
       if (!slides) return;
+      track.style.transform = 'translateX(0)';
       bannerTimer = setInterval(()=>{ i=(i+1)%slides; track.style.transform=`translateX(-${i*100}%)`; }, 4500);
     }
 
@@ -448,19 +457,15 @@
     // Forms -> WA
     document.getElementById('subscribeForm').addEventListener('submit', e=>{
       e.preventDefault(); const kv=formToKV(e.target);
-      toWA([`New Subscription Request`,`Plan: ${kv.plan}`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,`Channels: ${kv.channels}`,`VOD: ${kv.vod}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\\n'));
+      toWA([`New Subscription Request`,`Plan: ${kv.plan}`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,`Channels: ${kv.channels}`,`VOD: ${kv.vod}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
     });
     document.getElementById('ownPlanForm').addEventListener('submit', e=>{
       e.preventDefault(); const kv=formToKV(e.target);
-      toWA([`Custom Plan Request`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,kv.email?`Email: ${kv.email}`:null,`Preferred Channels: ${kv.channels}`,`VOD: ${kv.vod}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\\n'));
-    });
-    document.getElementById('rechargeForm').addEventListener('submit', e=>{
-      e.preventDefault(); const kv=formToKV(e.target);
-      toWA([`Renewal Request`,`Email: ${kv.email}`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,`MAC: ${kv.mac}`,`Duration: ${kv.duration} month(s)`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\\n'));
+      toWA([`Custom Plan Request`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,kv.email?`Email: ${kv.email}`:null,`Preferred Channels: ${kv.channels}`,`VOD: ${kv.vod}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
     });
     document.getElementById('supportForm').addEventListener('submit', e=>{
       e.preventDefault(); const kv=formToKV(e.target);
-      toWA([`Support Request`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,`Issue: ${kv.issue}`].join('\\n'));
+      toWA([`Support Request`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,`Issue: ${kv.issue}`].join('\n'));
     });
 
     // PIN brand mapping
@@ -470,7 +475,7 @@
     document.getElementById('pinForm').addEventListener('submit', e=>{
       e.preventDefault(); const kv=formToKV(e.target);
       const resolvedPin=pinForBrand(kv.brand);
-      toWA([`Parental PIN Request`,`MAC: ${kv.mac}`,`Email: ${kv.email}`,`Brand: ${kv.brand||'N/A'}`,`Suggested PIN: ${resolvedPin}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\\n'));
+      toWA([`Parental PIN Request`,`MAC: ${kv.mac}`,`Email: ${kv.email}`,`Brand: ${kv.brand||'N/A'}`,`Suggested PIN: ${resolvedPin}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
     });
 
     // DOM refs
@@ -479,6 +484,16 @@
     const bannerTrack = document.getElementById('bannerTrack');
     const postersRail = document.getElementById('postersRail');
     const boxesGrid = document.getElementById('boxesGrid');
+    const renewGrid = document.getElementById('renewPlansGrid');
+
+    // Ticker helper (duplicate items to guarantee continuous scroll)
+    function setTicker(items){
+      const host = document.getElementById('featureTicker');
+      const line = items.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
+      host.innerHTML = line + line; // duplicate for seamless loop
+      // restart animation in case of dynamic update
+      host.style.animation = 'none'; host.offsetHeight; host.style.animation = '';
+    }
 
     /* ===== Firestore loaders with graceful fallback ===== */
 
@@ -496,35 +511,45 @@
             ['cta0','cta1','cta2','cta3'].forEach((id,i)=>{ if (s.ctaLabels[i]) document.getElementById(id).textContent = s.ctaLabels[i]; });
           }
           const feats = Array.isArray(s.features) && s.features.length ? s.features : ["🇨🇦 Proudly Canadian","Zero Latency Streams","24/7 Support","Multi-Device"];
-          document.getElementById('featureTicker').innerHTML = feats.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
+          setTicker(feats);
           return;
         }
       }catch(e){}
-      // Fallback ticker if no settings found
-      document.getElementById('featureTicker').innerHTML = `<span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>`;
+      setTicker(["🇨🇦 Proudly Canadian","Zero Latency Streams","24/7 Support","Multi-Device"]);
     }
 
     async function loadBanners(){
       bannerTrack.innerHTML = '';
+      let urls = [];
       try{
+        // Primary path
         const snap = await getDocs(collection(db,'banners'));
-        const arr = [];
         snap.forEach(d=>{
           const x=d.data();
-          if(x.active!==false && Array.isArray(x.images)) arr.push(...x.images.map(u=>({sort:x.sort||0,url:u})));
+          if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u})));
         });
-        arr.sort((a,b)=>a.sort-b.sort);
-        const imgs = arr.map(o=>o.url);
-        const list = imgs.length ? imgs : [
-          "https://via.placeholder.com/1280x720?text=Banner+1",
-          "https://via.placeholder.com/1280x720?text=Banner+2"
-        ];
-        bannerTrack.innerHTML = list.map(u=>`<div class="bannerSlide"><img src="${u}" alt=""></div>`).join('');
-      }catch(e){
-        bannerTrack.innerHTML = `
-          <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+1" alt=""></div>
-          <div class="bannerSlide"><img src="https://via.placeholder.com/1280x720?text=Banner+2" alt=""></div>`;
+      }catch(e){}
+      if (!urls.length){
+        try{
+          // Legacy optional path: site_content/banners/items
+          const snap2 = await getDocs(collection(db,'site_content/banners/items'));
+          snap2.forEach(d=>{
+            const x=d.data();
+            if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u})));
+          });
+        }catch(e){}
       }
+      urls.sort((a,b)=>a.sort-b.sort);
+      const list = urls.length ? urls.map(o=>o.url) : [
+        "https://via.placeholder.com/1280x720?text=Banner+1",
+        "https://via.placeholder.com/1280x720?text=Banner+2"
+      ];
+      bannerTrack.innerHTML = list.map(u=>`
+        <div class="bannerSlide">
+          <img src="${u}${u.includes('?')?'&':'?'}v=${Date.now()}" alt=""
+               loading="lazy" referrerpolicy="no-referrer"
+               onerror="this.src='https://via.placeholder.com/1280x720?text=Image+not+available'">
+        </div>`).join('');
       startBanner(bannerTrack);
     }
 
@@ -540,12 +565,13 @@
           "https://via.placeholder.com/300x450?text=Poster+2",
           "https://via.placeholder.com/300x450?text=Poster+3"
         ];
-        postersRail.innerHTML = list.map(u=>`<img src="${u}" loading="lazy" alt="">`).join('');
+        postersRail.innerHTML = list.map(u=>`<img src="${u}" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/300x450?text=Poster'">`).join('');
       }catch(e){
         postersRail.innerHTML = `<img src="https://via.placeholder.com/300x450?text=Poster+1"><img src="https://via.placeholder.com/300x450?text=Poster+2">`;
       }
     }
 
+    let plansData = [];
     const demoPlans = [
       { id:'p1', name:"Starter HD", price:"CA$60", months:6, benefit:"+1 month free", tag:"Popular", desc:"HD focus • Core channels" },
       { id:'p2', name:"Family FHD", price:"CA$100", months:12, benefit:"+2 months free", tag:"Best Value", desc:"Full HD • Family packs" }
@@ -553,14 +579,15 @@
 
     async function loadPlans(){
       plansGrid.innerHTML = '<div class="muted">Loading plans…</div>';
-      let items = [];
+      plansData = [];
       try{
         const snap = await getDocs(collection(db,'plans'));
-        snap.forEach(doc=>{ const d=doc.data(); if(d?.name && d?.price && d.active!==false) items.push({id:doc.id,...d}); });
-        items.sort((a,b)=> (a.sort||0)-(b.sort||0));
+        snap.forEach(doc=>{ const d=doc.data(); if(d?.name && d?.price && d.active!==false) plansData.push({id:doc.id,...d}); });
+        plansData.sort((a,b)=> (a.sort||0)-(b.sort||0));
       }catch(e){}
-      if (!items.length) items = demoPlans;
-      renderPlans(items);
+      if (!plansData.length) plansData = demoPlans;
+      renderPlans(plansData);
+      renderRenewPlans(plansData);
     }
     function renderPlans(items){
       plansGrid.innerHTML = '';
@@ -587,7 +614,54 @@
         document.getElementById('subPlan').value = b.dataset.subscribe; openModal('subscribeModal');
       }));
     }
-    document.getElementById('refreshPlans').addEventListener('click', loadPlans);
+
+    // Same plans in Renew modal, with Renew button
+    function renderRenewPlans(items){
+      renewGrid.innerHTML = '';
+      items.forEach(p=>{
+        const el = document.createElement('div');
+        el.className = 'card';
+        el.innerHTML = `
+          ${p.tag ? `<div class="tag">${escapeHtml(p.tag)}</div>` : ''}
+          <div class="cardHead">
+            <h3>${escapeHtml(p.name)}</h3>
+            <div class="priceRight">${escapeHtml(p.price)}</div>
+          </div>
+          ${p.months ? `<div class="muted">${escapeHtml(p.months + ' months')}</div>` : ''}
+          ${p.benefit ? `<div class="benefit">${escapeHtml(p.benefit)}</div>` : ''}
+          <div class="muted" style="margin:10px 0 14px">${escapeHtml(p.desc || '')}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn whats" data-renew='${escapeAttr(JSON.stringify({name:p.name,months:p.months||""}))}'>Renew</button>
+          </div>`;
+        renewGrid.appendChild(el);
+      });
+      renewGrid.querySelectorAll('[data-renew]').forEach(b=>{
+        b.addEventListener('click', ()=>{
+          const {name, months} = JSON.parse(b.dataset.renew || '{}');
+          document.getElementById('renewPlanName').value = name || '';
+          document.getElementById('renewPlanMonths').value = months || '';
+          if (months) document.getElementById('renewDuration').value = String(months);
+          // jump to form area
+          document.getElementById('rechargeForm').scrollIntoView({behavior:'smooth', block:'start'});
+        });
+      });
+    }
+
+    document.getElementById('rechargeForm').addEventListener('submit', e=>{
+      e.preventDefault();
+      const kv = formToKV(e.target);
+      const chosen = kv.planName ? `Plan: ${kv.planName} (${kv.planMonths||kv.duration} months)` : `Duration: ${kv.duration} month(s)`;
+      const msg = [
+        `Renewal Request`,
+        chosen,
+        `Email: ${kv.email}`,
+        `Name: ${kv.name}`,
+        `Phone: ${kv.phone}`,
+        `MAC: ${kv.mac}`,
+        kv.note ? `Note: ${kv.note}` : null
+      ].filter(Boolean).join('\n');
+      toWA(msg);
+    });
 
     async function loadBoxes(){
       boxesGrid.innerHTML = '<div class="muted">Loading boxes…</div>';
@@ -606,7 +680,11 @@
         const card = document.createElement('div'); card.className='card';
         const images = Array.isArray(b.images) && b.images.length ? b.images : ["https://via.placeholder.com/1280x720?text=Box"];
         card.innerHTML = `
-          <div class="boxSlider"><div class="boxTrack">${images.map(u=>`<div class="boxSlide"><img src="${u}" alt=""></div>`).join('')}</div></div>
+          <div class="boxSlider">
+            <div class="boxTrack">
+              ${images.map(u=>`<div class="boxSlide"><img src="${u}" loading="lazy" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/1280x720?text=Box'"></div>`).join('')}
+            </div>
+          </div>
           <div class="boxDots">${images.map((_,i)=>`<div class="boxDot ${i===0?'active':''}"></div>`).join('')}</div>
 
           ${b.tier ? `<span class="miniTag">${escapeHtml(b.tier)}</span>` : ''}
@@ -628,9 +706,9 @@
       });
 
       boxesGrid.querySelectorAll('[data-box]').forEach(b=>{
-        b.addEventListener('click', ()=> toWA(`Box Request\\nBox: ${b.dataset.box}\\nPrefer combo? yes/no\\nName:\\nPhone:\\nNote:`));
+        b.addEventListener('click', ()=> toWA(`Box Request\nBox: ${b.dataset.box}\nPrefer combo? yes/no\nName:\nPhone:\nNote:`));
       });
-      boxesGrid.querySelectorAll('[data-boxinfo]').forEach(b=> b.addEventListener('click', ()=> alert(`${b.dataset.box}\\nIncludes HDMI, power adapter, supports our portal.`)));
+      boxesGrid.querySelectorAll('[data-boxinfo]').forEach(b=> b.addEventListener('click', ()=> alert(`${b.dataset.box}\nIncludes HDMI, power adapter, supports our portal.`)));
     }
 
     // Boot
