@@ -498,6 +498,25 @@ function addMonthsISO(startISO, months){
   if (d.getDate() !== day) d.setDate(0);
   return d.toISOString().slice(0,10);
 }
+function setStatusOk(msg='Connected'){
+  const chip = document.getElementById('envInfo');
+  if (!chip) return;
+  chip.textContent = msg;
+  chip.style.background = '';  // remove red background
+}
+
+// After a successful collectionGroup load:
+async function loadRenewals(){
+  renewals = [];
+  try{
+    const snap = await safeGetDocs(collectionGroup(db, "renewals"), '[renewals] collectionGroup');
+    snap.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+    setStatusOk();  // <-- clear the error badge
+  }catch(e){
+    // fallback per-customer...
+  }
+}
+
 function daysLeft(expISO){
   const end = new Date((expISO||'')+"T23:59:59");
   const now = new Date();
