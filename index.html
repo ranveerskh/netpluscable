@@ -162,11 +162,14 @@
 
       <!-- One-line ticker that starts immediately -->
       <div class="ticker">
-        <div class="tickerInner" id="featureTicker">
-          <span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
-          <span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
-        </div>
-      </div>
+  <div class="tickerInner" id="featureTicker">
+    <span>🇨🇦 Proudly Canadian</span>
+    <span>Zero Latency Streams</span>
+    <span>24/7 Support</span>
+    <span>Multi-Device</span>
+  </div>
+</div>
+
 
       <div class="ctaRow" id="actionButtons">
         <button class="bigBtn" data-open="plansModal" id="cta0">Our Plans</button>
@@ -480,21 +483,37 @@
     const renewGrid = document.getElementById('renewPlansGrid');
 
     // Ticker: starts immediately (already in HTML). When settings load, replace content and keep motion seamless.
-    function setTicker(items){
-  // fallback defaults
-  if (!Array.isArray(items) || !items.length){
-    items = [
-      "🇨🇦 Proudly Canadian",
-      "Zero Latency Streams",
-      "24/7 Support",
-      "Multi-Device"
-    ];
-  }
+const DEFAULT_TICKER = [
+  "🇨🇦 Proudly Canadian",
+  "Zero Latency Streams",
+  "24/7 Support",
+  "Multi-Device"
+];
+
+function setTicker(items){
   const host = document.getElementById('featureTicker');
-  const line = items.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
-  // duplicate content so it loops seamlessly
-  host.innerHTML = line + line;
+  const list = (Array.isArray(items) && items.length) ? items : DEFAULT_TICKER;
+  const line = list.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
+  host.innerHTML = line + line; // duplicate for seamless loop
 }
+
+// seed immediately so it never looks empty
+setTicker(DEFAULT_TICKER);
+
+// later, settings can overwrite if they have custom features
+async function loadSettings(){
+  try{
+    const sDoc = await getDoc(doc(db,'settings','main'));
+    if (sDoc.exists()){
+      const s = sDoc.data();
+      if (Array.isArray(s.features) && s.features.length) {
+        setTicker(s.features);
+      }
+      // ...rest of your settings code
+    }
+  }catch(e){}
+}
+
 
     /* ===== Firestore loaders ===== */
 
