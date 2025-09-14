@@ -2,36 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, viewport-fit=cover"
-/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Net + Cable • Admin</title>
 <style>
   :root{
     --bg:#0b1020;--card:#121831;--ink:#e7ecff;--muted:#9aa7d9;--accent:#6a8cff;--accent2:#8a5ff;--danger:#ff647c;--ok:#35d0a7;--border:#23305b;--warn:#ffc857;
-    /* iOS safe areas */
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
     --safe-left: env(safe-area-inset-left, 0px);
     --safe-right: env(safe-area-inset-right, 0px);
-    /* compact sizes for iPhone */
     --space:14px;
     --radius:14px;
-    --tap:44px; /* min tap target */
+    --tap:44px;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color: rgba(255,255,255,0); }
   html,body{height:100%}
   body{
-    margin:0;
-    font-family: ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
     background:
       radial-gradient(1300px 800px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
       radial-gradient(900px 700px at 0% 0%,rgba(106,140,255,.18),transparent 55%),
       linear-gradient(180deg,#0b1020,#0b1020 30%,#0b1020);
     color:var(--ink);
-    padding-bottom: calc(var(--safe-bottom) + 6px); /* keep content above home bar */
-    /* iOS rubber band sanity */
+    padding-bottom: calc(var(--safe-bottom) + 6px);
     overscroll-behavior-y: none;
   }
   a{color:var(--accent)}
@@ -43,7 +36,7 @@
     appearance:none;border:1px solid var(--border);
     background:linear-gradient(135deg,var(--accent),var(--accent2));
     color:#fff;padding:12px 16px;border-radius:10px;font-weight:600;cursor:pointer;
-    min-height:var(--tap); /* easier tap on iPhone */
+    min-height:var(--tap);
     touch-action: manipulation;
   }
   .btn.secondary{background:#182041}
@@ -54,34 +47,30 @@
   .btn:active{transform:translateY(1px); opacity:.95}
   .chip{display:inline-block;padding:4px 8px;border-radius:999px;background:#1a2244;border:1px solid #2a3670;color:#cfe2ff;font-size:12px}
   .topbar{
-    position:sticky;top:0;z-index:50;
-    background:rgba(11,16,32,.86);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    position:sticky;top:0;z-index:50;background:rgba(11,16,32,.86);
+    -webkit-backdrop-filter: blur(10px);backdrop-filter: blur(10px);
     border-bottom:1px solid var(--border);
-    padding-top: calc(var(--safe-top) * 1); /* avoid Dynamic Island */
+    padding-top: calc(var(--safe-top) * 1);
   }
   .topbar .wrap{display:flex;align-items:center;gap:14px;justify-content:space-between;padding-top:8px;padding-bottom:6px}
   .tabs{display:flex;gap:8px;flex-wrap:wrap}
   .tab{padding:10px 12px;border-radius:10px;border:1px solid var(--border);cursor:pointer;background:#121831; min-height:var(--tap); display:flex; align-items:center}
   .tab.active{background:linear-gradient(135deg,#1b2350,#1a244f)}
-  /* Tables: keep sticky headers + make horizontal scrollable on iPhone (no :has) */
-.table-scroll{ overflow:auto; -webkit-overflow-scrolling:touch; }
-.grid{width:100%;border-collapse:collapse; min-width:720px}
-.grid th,.grid td{padding:10px;border-bottom:1px solid #1d274e;font-size:14px}
-.grid th{
-  text-align:left;color:#c7d3ff;background:#121a3a;
-  position:sticky; top:calc(var(--safe-top) + var(--sticky-offset,56px));
-  z-index:2;
-}
-/* When the table is in its own scroll container, stick to that container's top */
-.table-scroll .grid th { top: 0; }
+  .table-scroll{ overflow:auto; -webkit-overflow-scrolling:touch; }
+  .grid{width:100%;border-collapse:collapse; min-width:720px}
+  .grid th,.grid td{padding:10px;border-bottom:1px solid #1d274e;font-size:14px}
+  .grid th{
+    text-align:left;color:#c7d3ff;background:#121a3a;
+    position:sticky; top:calc(var(--safe-top) + var(--sticky-offset,56px));
+    z-index:2;
+  }
+  .table-scroll .grid th { top: 0; }
   .muted{color:var(--muted)}
   .hidden{display:none!important}
   input,select,textarea{
     width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);
-    background:#0f1530;color:var(--ink); font-size:16px; /* stops iOS zoom */
-    min-height:44px; /* comfy tap size */
+    background:#0f1530;color:var(--ink); font-size:16px;
+    min-height:44px;
   }
   label{display:block;margin-top:10px;margin-bottom:6px;color:#ccd6ff;font-size:13px}
   .kpi{padding:12px;border-radius:12px;border:1px solid var(--border);background:#121a3a}
@@ -94,8 +83,6 @@
   .danger-text{color:#ff8ca0}
   .ok-text{color:#5ee0c1}
   .warn-text{color:#ffd479}
-
-  /* Modal (scrollable) */
   .modal{
     position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center;
     background:rgba(0,0,0,.55); z-index:200; padding:16px; overflow:auto;
@@ -113,18 +100,12 @@
     position:sticky; bottom:0; background:linear-gradient(180deg, transparent, rgba(18,24,49,.9) 24px, rgba(18,24,49,1) 48px);
     padding-top:12px; padding-bottom:6px;
   }
-
-  /* Auth */
   .auth{max-width:420px;margin:60px auto; padding-left: max(16px, var(--safe-left)); padding-right: max(16px, var(--safe-right));}
   .logo{font-weight:900;letter-spacing:.5px}
   .subtle{opacity:.66}
-
-  /* Badges */
   .badge-exp{background:#2a1a1a;color:#ffb3c0;border:1px solid #624}
   .badge-ok{background:#14231b;color:#b9ffe9;border:1px solid #264}
   .badge-warn{background:#2a2416;color:#ffe7a8;border:1px solid #684}
-
-  /* Small iPhone tweaks */
   @media (max-width: 420px){
     .wrap{padding:16px}
     .col{min-width:100%}
@@ -133,8 +114,6 @@
     .topbar .wrap{padding-left: max(14px, var(--safe-left)); padding-right: max(14px, var(--safe-right));}
     .card{padding:14px}
   }
-
-  /* Reduce motion respect */
   @media (prefers-reduced-motion: reduce){
     *{scroll-behavior:auto}
   }
@@ -216,7 +195,7 @@
           <option value="60">60 days</option>
         </select>
       </div>
-     <div class="card table-scroll" style="padding:0">
+      <div class="card table-scroll" style="padding:0">
         <table class="grid" id="nearGrid">
           <thead><tr>
             <th>Name</th><th>Phone</th><th>Plan</th><th>Expiry</th><th>Days Left</th><th></th>
@@ -236,28 +215,26 @@
           <button id="btnAddCustomer" class="btn ok" type="button">+ Add Customer</button>
         </div>
       </div>
-        <!-- Filters row (place right under the toolbar above the table) -->
-  <div class="flex" style="gap:10px;flex-wrap:wrap;margin-bottom:10px">
-    <!-- Filter 1: time window -->
-    <select id="timeFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
-      <option value="7" selected>Last 7 Days</option>
-      <option value="30">Monthly</option>
-      <option value="365">Yearly</option>
-      <option value="lifetime">Lifetime</option>
-    </select>
 
-    <!-- Filter 2: payment status -->
-    <select id="statusFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
-      <option value="all" selected>All</option>
-      <option value="paid">Paid</option>
-      <option value="unpaid">Unpaid</option>
-    </select>
-  </div>
+      <div class="flex" style="gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <select id="timeFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
+          <option value="7" selected>Last 7 Days</option>
+          <option value="30">Monthly</option>
+          <option value="365">Yearly</option>
+          <option value="lifetime">Lifetime</option>
+        </select>
+        <select id="statusFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
+          <option value="all" selected>All</option>
+          <option value="paid">Paid</option>
+          <option value="unpaid">Unpaid</option>
+        </select>
+      </div>
+
       <div class="card table-scroll" style="padding:0">
         <table class="grid" id="custGrid">
           <thead><tr>
-            <th>Name</th><th>Phone</th><th>Email</th><th>User ID</th><th>MAC</th>
-            <th>Plan</th><th>Start</th><th>Expiry</th><th>Paid</th><th>Actions</th>
+            <th>Name</th><th>Phone</th><th>Email</th><th>Plan</th><th>Paid</th>
+            <th>Start</th><th>Expiry</th><th>Actions</th>
           </tr></thead>
           <tbody></tbody>
         </table>
@@ -273,7 +250,7 @@
           <button id="btnAddPlan" class="btn ok" type="button">+ Add Plan</button>
         </div>
       </div>
-     <div class="card table-scroll" style="padding:0">
+      <div class="card table-scroll" style="padding:0">
         <table class="grid" id="plansGrid">
           <thead><tr>
             <th>ID</th><th>Name</th><th>Duration (months)</th>
@@ -340,18 +317,14 @@
       <label>Near-expiry threshold (days)</label>
       <input id="settingNearDays" type="number">
       <p class="muted" style="margin-top:6px"></p>
-
       <hr style="border:none;border-top:1px solid var(--border);margin:14px 0">
-
       <div class="flex">
-        <button id="btnCleanupOrphans" class="btn danger" type="button">
-          🗑 Delete Orphan Renewals
-        </button>
+        <button id="btnCleanupOrphans" class="btn danger" type="button">🗑 Delete Orphan Renewals</button>
         <span id="cleanupMsg" class="muted"></span>
       </div>
     </section>
 
-    <!-- MODALS -->
+    <!-- MODALS (Customer, Renew, Plan) — unchanged UI -->
     <div id="modalCustomer" class="modal">
       <div class="body">
         <div class="head">
@@ -367,17 +340,12 @@
             <label>MAC Address</label><input id="c_mac" placeholder="AA:BB:CC:DD:EE:FF">
           </div>
           <div class="col">
-            <label>Plan</label>
-            <select id="c_plan"></select>
+            <label>Plan</label><select id="c_plan"></select>
             <div class="muted" style="margin-top:6px">You can override price/wholesale below.</div>
-
             <label>Plan Actual Price</label><input id="c_actual" type="number" step="0.01" placeholder="e.g., 20.00">
             <label>Selling Price (what customer pays)</label><input id="c_cost" type="number" step="0.01">
             <label>Wholesale Rate (your cost)</label><input id="c_wholesale" type="number" step="0.01">
-
-            <label>Discount Name (optional)</label>
-            <input id="c_discName" placeholder="e.g., Diwali Offer, Combo Deal">
-
+            <label>Discount Name (optional)</label><input id="c_discName" placeholder="e.g., Diwali Offer, Combo Deal">
             <label>Includes STB?</label>
             <select id="c_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
             <div id="stbBox" class="hidden">
@@ -391,7 +359,6 @@
             <label>Plan Expiry Date</label><input id="c_expiry" type="date">
             <label>Payment Received?</label>
             <select id="c_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
-
             <div class="card" style="margin-top:10px">
               <div class="muted">Totals Preview</div>
               <div id="c_preview" class="muted">—</div>
@@ -400,8 +367,7 @@
         </div>
         <div class="foot">
           <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
-            <input id="c_invoice" type="checkbox" checked>
-            Open slip after save
+            <input id="c_invoice" type="checkbox" checked> Open slip after save
           </label>
           <button type="button" class="btn secondary" id="btnSaveCustomer">Save</button>
         </div>
@@ -417,18 +383,16 @@
         <div class="row">
           <div class="col">
             <label>Plan</label><select id="r_plan"></select>
-            <label>Plan Actual Price</label><input id="r_actual" type="number" step="0.01" placeholder="e.g., 20.00">
+            <label>Plan Actual Price</label><input id="r_actual" type="number" step="0.01">
             <label>Plan Selling Price</label><input id="r_cost" type="number" step="0.01">
             <label>Wholesale</label><input id="r_wholesale" type="number" step="0.01">
-
-            <label>Discount Name (optional)</label>
-            <input id="r_discName" placeholder="e.g., Festival Promo, Renewal Saver">
+            <label>Discount Name (optional)</label><input id="r_discName">
           </div>
           <div class="col">
             <label>Includes STB?</label>
             <select id="r_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
             <div id="r_stbBox" class="hidden">
-              <label>STB Actual Price</label><input id="r_stbActual" type="number" step="0.01" placeholder="e.g., 49.00">
+              <label>STB Actual Price</label><input id="r_stbActual" type="number" step="0.01">
               <label>STB Selling Price</label><input id="r_stbCost" type="number" step="0.01">
               <label>STB Wholesale</label><input id="r_stbWholesale" type="number" step="0.01">
             </div>
@@ -440,8 +404,7 @@
         </div>
         <div class="foot">
           <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
-            <input id="r_invoice" type="checkbox" checked>
-            Open slip after renewal
+            <input id="r_invoice" type="checkbox" checked> Open slip after renewal
           </label>
           <button id="btnDoRenew" class="btn ok" type="button">Confirm Renewal</button>
         </div>
@@ -481,7 +444,10 @@
    ========================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, doc, setDoc, addDoc, getDoc, getDocs, updateDoc, deleteDoc, query, orderBy, serverTimestamp, collectionGroup, writeBatch} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+  getFirestore, collection, doc, setDoc, addDoc, getDoc, getDocs, updateDoc, deleteDoc,
+  query, orderBy, serverTimestamp, collectionGroup, writeBatch
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 /* ---- Firebase Config ---- */
 const firebaseConfig = {
@@ -495,6 +461,26 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+/* =========================
+   Error reporting helpers
+   ========================= */
+function showErr(label, err){
+  console.error(label, err);
+  const chip = document.getElementById('envInfo');
+  if (chip){
+    chip.textContent = (err?.code || 'error') + ' • ' + (err?.message || label);
+    chip.style.background = '#3a1220';
+  }
+}
+window.addEventListener('error', e => showErr('[window.error]', e.error || e.message));
+window.addEventListener('unhandledrejection', e => showErr('[promise]', e.reason));
+
+async function safeGetDocs(qry, label){ try{ return await getDocs(qry); } catch(e){ showErr(label, e); throw e; } }
+async function safeAddDoc(ref, data, label){ try{ return await addDoc(ref, data); } catch(e){ showErr(label, e); throw e; } }
+async function safeSetDoc(ref, data, opts, label){ try{ return await setDoc(ref, data, opts); } catch(e){ showErr(label, e); throw e; } }
+async function safeUpdateDoc(ref, data, label){ try{ return await updateDoc(ref, data); } catch(e){ showErr(label, e); throw e; } }
+async function safeDeleteDoc(ref, label){ try{ return await deleteDoc(ref); } catch(e){ showErr(label, e); throw e; } }
 
 /* =========================
    Helpers (dates, money)
@@ -517,37 +503,18 @@ function daysLeft(expISO){
   const now = new Date();
   return Math.ceil((end - now) / (1000*60*60*24));
 }
-/* Updated to include actual prices and discount math */
-function calcFigures({
-  cost,            // plan selling
-  wholesale,       // plan wholesale
-  actual,          // plan actual (MSRP)
-  stbIncluded,
-  stbCost,         // stb selling
-  stbWholesale,    // stb wholesale
-  stbActual        // stb actual (MSRP)
-}){
-  const sellPlan = +cost||0;
-  const whPlan   = +wholesale||0;
-  const msrpPlan = +actual||0;
-
-  const sellSTB  = +stbCost||0;
-  const whSTB    = +stbWholesale||0;
-  const msrpSTB  = +stbActual||0;
-
+function calcFigures({ cost, wholesale, actual, stbIncluded, stbCost, stbWholesale, stbActual }){
+  const sellPlan = +cost||0, whPlan = +wholesale||0, msrpPlan=+actual||0;
+  const sellSTB  = +stbCost||0, whSTB = +stbWholesale||0, msrpSTB=+stbActual||0;
   const turnover = sellPlan + (stbIncluded==='yes' ? sellSTB : 0);
   const expense  = whPlan   + (stbIncluded==='yes' ? whSTB   : 0);
   const profit   = turnover - expense;
-
-  const savedPlan = Math.max(msrpPlan - sellPlan, 0);
-  const savedSTB  = (stbIncluded==='yes') ? Math.max(msrpSTB - sellSTB, 0) : 0;
-  const discountSaved = savedPlan + savedSTB;
-
-  return {turnover, expense, profit, discountSaved, savedPlan, savedSTB};
+  const discountSaved = Math.max(msrpPlan - sellPlan, 0) + (stbIncluded==='yes' ? Math.max(msrpSTB - sellSTB, 0) : 0);
+  return {turnover, expense, profit, discountSaved};
 }
 
 /* =========================
-   iOS niceties (no feature changes)
+   iOS niceties
    ========================= */
 (function iosTweaks(){
   const topbar = document.querySelector('.topbar');
@@ -555,9 +522,7 @@ function calcFigures({
     const topH = topbar ? topbar.getBoundingClientRect().height : 0;
     document.documentElement.style.setProperty('--sticky-offset', topH + 'px');
   }
-  setStickyOffset();
-  window.addEventListener('resize', setStickyOffset);
-
+  setStickyOffset(); window.addEventListener('resize', setStickyOffset);
   const useVV = window.visualViewport;
   if (useVV) {
     const onVVChange = () => {
@@ -608,7 +573,7 @@ $("#btnLogin").onclick = async ()=>{
     await signInWithEmailAndPassword(auth, authEmail.value.trim(), authPass.value.trim());
     authMsg.textContent = "Signed in.";
   }catch(e){
-    console.error(e);
+    showErr('[auth/login]', e);
     authMsg.textContent = (e.code||'auth/error') + " — " + e.message;
   }
 };
@@ -620,7 +585,6 @@ $("#btnDemo").onclick = ()=>{
 $("#signOutBtn").onclick = ()=> signOut(auth);
 
 onAuthStateChanged(auth, (user)=>{
-  console.log('[auth]', user ? 'in as '+user.email : 'out');
   if(user){
     authView.classList.add('hidden');
     appView.classList.remove('hidden');
@@ -635,10 +599,10 @@ onAuthStateChanged(auth, (user)=>{
 /* =========================
    Data caches
    ========================= */
-let plans = {};          // id -> plan
-let customers = [];      // array of {id, ...}
-let renewals = [];       // array of all renewals (collectionGroup)
-let settingNear = 30;    // days
+let plans = {};
+let customers = [];
+let renewals = [];
+let settingNear = 30;
 
 /* =========================
    Load initial app data
@@ -662,19 +626,17 @@ async function loadApp(user){
   $("#btnSeedPlans").onclick = seedPlans;
   $("#btnAddPlan").onclick = ()=>openPlanModal();
 
-  $("#btnRunReport")?.addEventListener("click", (e) => {
-    e.preventDefault(); e.stopPropagation(); runReport();
-  });
-  $("#btnCsv")?.addEventListener("click", (e) => {
-    e.preventDefault(); e.stopPropagation(); exportCSV();
-  });
+  $("#btnRunReport")?.addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); runReport(); });
+  $("#btnCsv")?.addEventListener("click",  (e) => { e.preventDefault(); e.stopPropagation(); exportCSV(); });
 
   $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
   $("#searchCustomers").addEventListener('input', renderCustomers);
   $("#timeFilter").addEventListener('change', renderCustomers);
   $("#statusFilter").addEventListener('change', renderCustomers);
 
-  await Promise.all([loadPlans(), loadCustomers(), loadRenewals()]);
+  await Promise.all([loadPlans(), loadCustomers()]);
+  await loadRenewals();
+
   const now = new Date();
   $("#repMonth").value = now.toISOString().slice(0,7);
   $("#repYear").value  = String(now.getFullYear());
@@ -684,84 +646,25 @@ async function loadApp(user){
 
   renderAll();
 }
-async function getLatestRenewalRef(customerId){
-  const snap = await getDocs(collection(db, "customers", String(customerId), "renewals"));
-  let latest = null;
-  snap.forEach(d => {
-    const r = d.data() || {};
-    // startDate is YYYY-MM-DD, so string compare works
-    const key = r.startDate || r.expiryDate || "";
-    if (!latest || key > latest.key) latest = { key, ref: d.ref, id: d.id, data: r };
-  });
-  return latest?.ref || null;
-}
-async function cleanupOrphanRenewals(){
-  const msg = $("#cleanupMsg");
-  const btn = $("#btnCleanupOrphans");
-  try{
-    btn.disabled = true; msg.textContent = "Scanning…";
-    await loadCustomers();
-    const existing = new Set(customers.map(c => String(c.id)));
-    const snap = await getDocs(collectionGroup(db, "renewals"));
-    const orphans = [];
-    snap.forEach(d => {
-      const data = d.data() || {};
-      const cid  = String(data.customerId || "");
-      if (!existing.has(cid)) orphans.push(d.ref);
-    });
-    if (orphans.length === 0){
-      msg.textContent = "No orphan renewals found."; return;
-    }
-    msg.textContent = `Deleting ${orphans.length} orphan renewals…`;
-    const CHUNK = 400;
-    for (let i = 0; i < orphans.length; i += CHUNK){
-      const batch = writeBatch(db);
-      for (let j = i; j < Math.min(i+CHUNK, orphans.length); j++){
-        batch.delete(orphans[j]);
-      }
-      await batch.commit();
-    }
-    await loadRenewals();
-    renderKPIs();
-    runReport();
-    msg.textContent = `Deleted ${orphans.length} orphan renewals.`;
-  }catch(err){
-    console.error("[cleanupOrphanRenewals]", err);
-    alert(err?.message || "Failed to clean up orphan renewals");
-    msg.textContent = "Error during cleanup.";
-  }finally{
-    btn.disabled = false;
-  }
-}
+
 /* =========================
-   Firestore load/save
+   Firestore load/save (safe wrappers)
    ========================= */
 async function loadPlans(){
   plans = {};
-  const snap = await getDocs(query(collection(db, "plans"), orderBy("id")));
+  const snap = await safeGetDocs(query(collection(db, "plans"), orderBy("id")), '[plans] getDocs');
   snap.forEach(d=>{ plans[d.id] = d.data(); });
   renderPlans();
 }
 async function savePlan(p){
   const ref = doc(db, "plans", String(p.id));
-  await setDoc(ref, p, {merge:true});
+  await safeSetDoc(ref, p, {merge:true}, '[plans] setDoc');
   plans[p.id] = p;
   renderPlans();
   refreshPlanSelects();
 }
-async function deleteCustomerAndRenewals(customerId) {
-  const idStr = String(customerId);
-  const renSnap = await getDocs(collection(db, "customers", idStr, "renewals"));
-  const batch = writeBatch(db);
-  renSnap.forEach(d => batch.delete(doc(db, "customers", idStr, "renewals", d.id)));
-  batch.delete(doc(db, "customers", idStr));
-  await batch.commit();
-  await loadCustomers();
-  await loadRenewals();
-  renderAll();
-}
 async function deletePlan(id){
-  await deleteDoc(doc(db, "plans", String(id)));
+  await safeDeleteDoc(doc(db, "plans", String(id)), '[plans] deleteDoc');
   delete plans[id];
   renderPlans();
   refreshPlanSelects();
@@ -769,7 +672,7 @@ async function deletePlan(id){
 
 async function loadCustomers(){
   customers = [];
-  const snap = await getDocs(query(collection(db,"customers"), orderBy("name")));
+  const snap = await safeGetDocs(query(collection(db,"customers"), orderBy("name")), '[customers] getDocs');
   snap.forEach(d=> customers.push({id:d.id, ...d.data()}) );
   renderCustomers();
 }
@@ -779,44 +682,65 @@ async function saveCustomer(payload, existingId=null){
     const idStr = String(existingId);
     const ref = doc(db,"customers", idStr);
     payload.updatedAt = serverTimestamp();
-    await updateDoc(ref, payload);
+    await safeUpdateDoc(ref, payload, '[customers] updateDoc');
     await loadCustomers();
     return idStr;
   } else {
-    const ref = await addDoc(collection(db,"customers"), {
+    const ref = await safeAddDoc(collection(db,"customers"), {
       ...payload,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
-    });
+    }, '[customers] addDoc');
     await loadCustomers();
     return String(ref.id);
   }
 }
 
 async function addRenewal(customerId, ren){
-  const ref = await addDoc(collection(db, "customers", String(customerId), "renewals"), { ...ren, createdAt: serverTimestamp() });
+  const ref = await safeAddDoc(collection(db, "customers", String(customerId), "renewals"), { ...ren, createdAt: serverTimestamp() }, '[renewals] addDoc');
   await loadRenewals();
   return String(ref.id);
 }
+
 async function loadRenewals(){
   renewals = [];
-  const snap = await getDocs(collectionGroup(db, "renewals"));
-  snap.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+  try{
+    const snap = await safeGetDocs(collectionGroup(db, "renewals"), '[renewals] collectionGroup');
+    snap.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+  }catch(e){
+    // Fallback: per-customer read (still requires read access to each subcollection)
+    for (const c of customers){
+      try{
+        const rs = await safeGetDocs(collection(db, "customers", String(c.id), "renewals"), `[renewals] fallback ${c.id}`);
+        rs.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+      }catch(e2){
+        // already reported by safeGetDocs
+      }
+    }
+  }
 }
 
 async function setCustomerCurrentPlan(customerId, planFields){
   const ref = doc(db, "customers", String(customerId));
-  await updateDoc(ref, { currentPlan: planFields, updatedAt: serverTimestamp() });
+  await safeUpdateDoc(ref, { currentPlan: planFields, updatedAt: serverTimestamp() }, '[customers] set currentPlan');
+}
+
+async function deleteCustomerAndRenewals(customerId) {
+  const idStr = String(customerId);
+  const renSnap = await safeGetDocs(collection(db, "customers", idStr, "renewals"), '[renewals] list before delete');
+  const batch = writeBatch(db);
+  renSnap.forEach(d => batch.delete(doc(db, "customers", idStr, "renewals", d.id)));
+  batch.delete(doc(db, "customers", idStr));
+  await batch.commit();
+  await loadCustomers();
+  await loadRenewals();
+  renderAll();
 }
 
 /* =========================
    Rendering
    ========================= */
-function renderAll(){
-  renderCustomers();
-  renderKPIs();
-  renderNearExpiry();
-}
+function renderAll(){ renderCustomers(); renderKPIs(); renderNearExpiry(); }
 
 function renderPlans(){
   const tbody = $("#plansGrid tbody");
@@ -835,19 +759,14 @@ function renderPlans(){
       <td class="flex">
         <button class="btn ghost" data-edit="${p.id}">Edit</button>
         <button class="btn danger" data-del="${p.id}">Delete</button>
-      </td>
-    `;
+      </td>`;
     tbody.appendChild(tr);
   });
   tbody.querySelectorAll("[data-edit]").forEach(btn=>{
-    btn.onclick = ()=>{
-      const pid = btn.getAttribute('data-edit');
-      const p = plans[pid];
-      openPlanModal(p);
-    };
+    btn.onclick = ()=> openPlanModal(plans[btn.getAttribute('data-edit')]);
   });
   tbody.querySelectorAll("[data-del]").forEach(btn=>{
-    btn.onclick = async()=>{
+    btn.onclick = async ()=>{
       const pid = btn.getAttribute('data-del');
       if(confirm("Delete plan "+pid+" ?")) await deletePlan(pid);
     };
@@ -857,7 +776,6 @@ function renderPlans(){
 
 function renderCustomers(){
   const q = ($("#searchCustomers").value||"").toLowerCase().trim();
-
   const tVal = ($("#timeFilter")?.value)||"7";
   const sVal = ($("#statusFilter")?.value)||"all";
 
@@ -870,7 +788,6 @@ function renderCustomers(){
   customers.forEach(c=>{
     const plan = c.currentPlan || {};
     const inText = `${c.name||''} ${c.phone||''} ${c.email||''} ${c.userId||''} ${c.mac||''}`.toLowerCase();
-
     if(q && !inText.includes(q)) return;
 
     const startISO = plan.startDate || c.originalStartDate || "";
@@ -906,33 +823,17 @@ function renderCustomers(){
         <button class="btn ok" data-renew="${c.id}">Renew</button>
         <button class="btn" data-invoice="${c.id}">Slip</button>
         <button class="btn danger" data-del="${c.id}">Delete</button>
-      </td>
-    `;
+      </td>`;
     tbody.appendChild(tr);
   });
 
   $("#kpiCustomers").textContent = String(customers.length);
 
-  tbody.querySelectorAll("[data-edit]").forEach(btn=>{
-    btn.onclick = ()=> openCustomerModal(btn.getAttribute('data-edit'));
-  });
-  tbody.querySelectorAll("[data-del]").forEach(btn=>{
-    btn.onclick = async()=>{
-      const id = btn.getAttribute('data-del');
-      if(confirm("Delete this customer and all their renewals?")){
-        await deleteCustomerAndRenewals(id);
-      }
-    };
-  });
-  tbody.querySelectorAll("[data-renew]").forEach(btn=>{
-    btn.onclick = ()=> openRenewModal(btn.getAttribute('data-renew'));
-  });
-  tbody.querySelectorAll("[data-view]").forEach(btn=>{
-    btn.onclick = ()=> viewCustomer(btn.getAttribute('data-view'));
-  });
-  tbody.querySelectorAll("[data-invoice]").forEach(btn=>{
-    btn.onclick = ()=> printInvoice(btn.getAttribute('data-invoice'));
-  });
+  tbody.querySelectorAll("[data-edit]").forEach(btn=> btn.onclick = ()=> openCustomerModal(btn.getAttribute('data-edit')));
+  tbody.querySelectorAll("[data-del]").forEach(btn=> btn.onclick = async()=>{ const id = btn.getAttribute('data-del'); if(confirm("Delete this customer and all their renewals?")) await deleteCustomerAndRenewals(id); });
+  tbody.querySelectorAll("[data-renew]").forEach(btn=> btn.onclick = ()=> openRenewModal(btn.getAttribute('data-renew')));
+  tbody.querySelectorAll("[data-view]").forEach(btn=> btn.onclick = ()=> viewCustomer(btn.getAttribute('data-view')));
+  tbody.querySelectorAll("[data-invoice]").forEach(btn=> btn.onclick = ()=> printInvoice(btn.getAttribute('data-invoice')));
 }
 
 function daysLeftBadge(exp){
@@ -961,13 +862,10 @@ function renderNearExpiry(){
       <td>${x.plan.planName||''}</td>
       <td>${x.plan.expiryDate||''}</td>
       <td>${x.left}d</td>
-      <td><button class="btn ok" data-renew="${x.c.id}">Renew</button></td>
-    `;
+      <td><button class="btn ok" data-renew="${x.c.id}">Renew</button></td>`;
     tbody.appendChild(tr);
   });
-  tbody.querySelectorAll("[data-renew]").forEach(btn=>{
-    btn.onclick = ()=> openRenewModal(btn.getAttribute('data-renew'));
-  });
+  tbody.querySelectorAll("[data-renew]").forEach(btn=> btn.onclick = ()=> openRenewModal(btn.getAttribute('data-renew')));
 }
 
 function renderKPIs(){
@@ -989,27 +887,12 @@ function renderKPIs(){
    ========================= */
 const custModal = $("#modalCustomer");
 const custTitle = $("#custModalTitle");
-$("#xCust").onclick = ()=>{
-  editCustomerId = null;
-  custModal.classList.remove('open');
-};
-$("#c_stb").addEventListener('change', ()=>{
-  $("#stbBox").classList.toggle('hidden', $("#c_stb").value!=='yes');
-  previewTotals();
-});
-["#c_cost","#c_wholesale","#c_stbCost","#c_stbWholesale","#c_stb","#c_plan"].forEach(sel=>{
-  $(sel).addEventListener('input', previewTotals);
-});
-["#c_actual","#c_discName","#c_stbActual"].forEach(sel=>{
-  $(sel).addEventListener('input', previewTotals);
-});
-$("#c_start").addEventListener('change', ()=>{
-  const pid = $("#c_plan").value;
-  const dur = plans[pid]?.duration_months ?? 0;
-  $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
-});
+$("#xCust").onclick = ()=>{ editCustomerId = null; custModal.classList.remove('open'); };
+$("#c_stb").addEventListener('change', ()=>{ $("#stbBox").classList.toggle('hidden', $("#c_stb").value!=='yes'); previewTotals(); });
+["#c_cost","#c_wholesale","#c_stbCost","#c_stbWholesale","#c_stb","#c_plan"].forEach(sel=> $(sel).addEventListener('input', previewTotals));
+["#c_actual","#c_discName","#c_stbActual"].forEach(sel=> $(sel).addEventListener('input', previewTotals));
+$("#c_start").addEventListener('change', ()=>{ const pid = $("#c_plan").value; const dur = plans[pid]?.duration_months ?? 0; $("#c_expiry").value = addMonthsISO($("#c_start").value, dur); });
 
-// robust Save button handler
 const saveBtn = document.getElementById('btnSaveCustomer');
 saveBtn.addEventListener('click', async (e) => {
   e.preventDefault(); e.stopPropagation();
@@ -1019,7 +902,7 @@ saveBtn.addEventListener('click', async (e) => {
   saveBtn.textContent = 'Saving…';
   saveBtn.disabled = true;
   try { await saveCustomerFromModal(); }
-  catch (err) { console.error('[save] error:', err); alert(err?.code ? `${err.code} — ${err.message}` : (err?.message||'Failed to save')); }
+  catch (err) { showErr('[save customer]', err); alert(err?.code ? `${err.code} — ${err.message}` : (err?.message||'Failed to save')); }
   finally { saveBtn.disabled = false; saveBtn.textContent = old; saveBtn.dataset.busy = '0'; }
 });
 
@@ -1041,17 +924,11 @@ function refreshPlanSelects(){
     if(curr && plans[curr]) sel.value = curr;
   });
 }
-
 function previewTotals(){
   const stbIncluded = $("#c_stb").value;
   const f = calcFigures({
-    cost:$("#c_cost").value,
-    wholesale:$("#c_wholesale").value,
-    actual:$("#c_actual").value,
-    stbIncluded,
-    stbCost:$("#c_stbCost").value,
-    stbWholesale:$("#c_stbWholesale").value,
-    stbActual:$("#c_stbActual").value
+    cost:$("#c_cost").value, wholesale:$("#c_wholesale").value, actual:$("#c_actual").value,
+    stbIncluded, stbCost:$("#c_stbCost").value, stbWholesale:$("#c_stbWholesale").value, stbActual:$("#c_stbActual").value
   });
   const discName = ($("#c_discName").value || "").trim();
   $("#c_preview").innerHTML = `
@@ -1069,11 +946,7 @@ function openCustomerModal(id=null){
   const firstPlanId = Object.keys(plans)[0];
   const defaults = firstPlanId ? plans[firstPlanId] : null;
 
-  $("#c_name").value = "";
-  $("#c_phone").value= "";
-  $("#c_email").value= "";
-  $("#c_userId").value= "";
-  $("#c_mac").value= "";
+  $("#c_name").value = ""; $("#c_phone").value= ""; $("#c_email").value= ""; $("#c_userId").value= ""; $("#c_mac").value= "";
   $("#c_plan").value = firstPlanId||"";
   $("#c_actual").value = defaults? (defaults.retail_price||"") : "";
   $("#c_cost").value = defaults? (defaults.retail_price||"") : "";
@@ -1089,11 +962,8 @@ function openCustomerModal(id=null){
   if(id){
     const c = customers.find(x=>x.id===id);
     if(c){
-      $("#c_name").value=c.name||"";
-      $("#c_phone").value=c.phone||"";
-      $("#c_email").value=c.email||"";
-      $("#c_userId").value=c.userId||"";
-      $("#c_mac").value=c.mac||"";
+      $("#c_name").value=c.name||""; $("#c_phone").value=c.phone||""; $("#c_email").value=c.email||"";
+      $("#c_userId").value=c.userId||""; $("#c_mac").value=c.mac||"";
       if(c.currentPlan){
         $("#c_plan").value=c.currentPlan.planId||firstPlanId||"";
         $("#c_actual").value=c.currentPlan.actual||"";
@@ -1115,6 +985,17 @@ function openCustomerModal(id=null){
   custModal.classList.add('open');
 }
 
+async function getLatestRenewalRef(customerId){
+  const snap = await safeGetDocs(collection(db, "customers", String(customerId), "renewals"), '[renewals] list latest');
+  let latest = null;
+  snap.forEach(d => {
+    const r = d.data() || {};
+    const key = r.startDate || r.expiryDate || "";
+    if (!latest || key > latest.key) latest = { key, ref: d.ref, id: d.id, data: r };
+  });
+  return latest?.ref || null;
+}
+
 async function saveCustomerFromModal(){
   const name=$("#c_name").value.trim();
   if(!name){ throw new Error("Name is required"); }
@@ -1129,24 +1010,16 @@ async function saveCustomerFromModal(){
 
   const currentPlan = {
     planId, planName, durationMonths,
-    actual:+$("#c_actual").value||0,
-    cost:+$("#c_cost").value||0,
-    wholesale:+$("#c_wholesale").value||0,
+    actual:+$("#c_actual").value||0, cost:+$("#c_cost").value||0, wholesale:+$("#c_wholesale").value||0,
     discountName: ($("#c_discName").value || "").trim(),
     stbIncluded:$("#c_stb").value,
-    stbActual:+$("#c_stbActual").value||0,
-    stbCost:+$("#c_stbCost").value||0,
-    stbWholesale:+$("#c_stbWholesale").value||0,
-    startDate:start, expiryDate:expiry,
-    paymentReceived:$("#c_paid").value
+    stbActual:+$("#c_stbActual").value||0, stbCost:+$("#c_stbCost").value||0, stbWholesale:+$("#c_stbWholesale").value||0,
+    startDate:start, expiryDate:expiry, paymentReceived:$("#c_paid").value
   };
 
   const payload = {
-    name,
-    phone:$("#c_phone").value.trim(),
-    email:$("#c_email").value.trim(),
-    userId:$("#c_userId").value.trim(),
-    mac:$("#c_mac").value.trim(),
+    name, phone:$("#c_phone").value.trim(), email:$("#c_email").value.trim(),
+    userId:$("#c_userId").value.trim(), mac:$("#c_mac").value.trim(),
     originalStartDate: (editCustomerId? (customers.find(x=>x.id===editCustomerId)?.originalStartDate || start) : start),
     currentPlan
   };
@@ -1169,48 +1042,32 @@ async function saveCustomerFromModal(){
   await loadCustomers();
   await loadRenewals();
   renderAll();
-// If this was an EDIT (correction mode), also update the latest renewal so Reports match.
-if (editCustomerId) {
-  const latestRef = await getLatestRenewalRef(editCustomerId);
-  if (latestRef) {
-    await updateDoc(latestRef, {
-      planId, planName, durationMonths,
-      cost: currentPlan.cost,
-      wholesale: currentPlan.wholesale,
-      stbIncluded: currentPlan.stbIncluded,
-      stbCost: currentPlan.stbCost,
-      stbWholesale: currentPlan.stbWholesale,
-      startDate: currentPlan.startDate,
-      expiryDate: currentPlan.expiryDate,
-      paymentReceived: currentPlan.paymentReceived,
-      customerId: editCustomerId,
-      customerName: name,
-      updatedAt: serverTimestamp()
-    });
-  } else {
-    // Safety net: if somehow no renewal exists, create one so Reports have data.
-    await addRenewal(editCustomerId, {
-      customerId: editCustomerId,
-      customerName: name,
-      planId, planName, durationMonths,
-      cost: currentPlan.cost,
-      wholesale: currentPlan.wholesale,
-      stbIncluded: currentPlan.stbIncluded,
-      stbCost: currentPlan.stbCost,
-      stbWholesale: currentPlan.stbWholesale,
-      startDate: currentPlan.startDate,
-      expiryDate: currentPlan.expiryDate,
-      paymentReceived: currentPlan.paymentReceived
-    });
-  }
-}
 
-// Refresh the Reports view immediately so you see the change.
-runReport();
-
-  if (document.querySelector("#c_invoice")?.checked) {
-    setTimeout(()=> printInvoice(cid), 200);
+  if (editCustomerId) {
+    const latestRef = await getLatestRenewalRef(editCustomerId);
+    if (latestRef) {
+      await safeUpdateDoc(latestRef, {
+        planId, planName, durationMonths,
+        cost: currentPlan.cost, wholesale: currentPlan.wholesale,
+        stbIncluded: currentPlan.stbIncluded, stbCost: currentPlan.stbCost, stbWholesale: currentPlan.stbWholesale,
+        startDate: currentPlan.startDate, expiryDate: currentPlan.expiryDate,
+        paymentReceived: currentPlan.paymentReceived,
+        customerId: editCustomerId, customerName: name, updatedAt: serverTimestamp()
+      }, '[renewals] update latest');
+    } else {
+      await addRenewal(editCustomerId, {
+        customerId: editCustomerId, customerName: name,
+        planId, planName, durationMonths,
+        cost: currentPlan.cost, wholesale: currentPlan.wholesale,
+        stbIncluded: currentPlan.stbIncluded, stbCost: currentPlan.stbCost, stbWholesale: currentPlan.stbWholesale,
+        startDate: currentPlan.startDate, expiryDate: currentPlan.expiryDate,
+        paymentReceived: currentPlan.paymentReceived
+      });
+    }
   }
+
+  runReport();
+  if (document.querySelector("#c_invoice")?.checked) setTimeout(()=> printInvoice(cid), 200);
 }
 
 function viewCustomer(id){
@@ -1244,9 +1101,7 @@ Tip: Use "Reports" tab for totals across all renewals.`)
    ========================= */
 const renewModal = $("#modalRenew");
 $("#xRenew").onclick = ()=> renewModal.classList.remove('open');
-$("#r_stb").addEventListener('change', ()=>{
-  $("#r_stbBox").classList.toggle('hidden', $("#r_stb").value!=='yes');
-});
+$("#r_stb").addEventListener('change', ()=>{ $("#r_stbBox").classList.toggle('hidden', $("#r_stb").value!=='yes'); });
 let renewCustomerId = null;
 
 function openRenewModal(id){
@@ -1293,16 +1148,11 @@ $("#btnDoRenew").onclick = async ()=>{
   const expiry= $("#r_expiry").value || addMonthsISO(start, durationMonths);
 
   const ren = {
-    customerId: String(renewCustomerId),
-    customerName: c.name||'',
+    customerId: String(renewCustomerId), customerName: c.name||'',
     planId, planName, durationMonths,
-    actual:+$("#r_actual").value||0,
-    cost:+$("#r_cost").value||0,
-    wholesale:+$("#r_wholesale").value||0,
+    actual:+$("#r_actual").value||0, cost:+$("#r_cost").value||0, wholesale:+$("#r_wholesale").value||0,
     stbIncluded:$("#r_stb").value,
-    stbActual:+$("#r_stbActual").value||0,
-    stbCost:+$("#r_stbCost").value||0,
-    stbWholesale:+$("#r_stbWholesale").value||0,
+    stbActual:+$("#r_stbActual").value||0, stbCost:+$("#r_stbCost").value||0, stbWholesale:+$("#r_stbWholesale").value||0,
     discountName: ($("#r_discName").value || "").trim(),
     startDate:start, expiryDate:expiry,
     paymentReceived: $("#r_paid").value
@@ -1314,10 +1164,7 @@ $("#btnDoRenew").onclick = async ()=>{
   await loadRenewals();
   renderAll();
   runReport();
-
-  if (document.querySelector("#r_invoice")?.checked) {
-    setTimeout(()=> printInvoice(renewCustomerId), 200);
-  }
+  if (document.querySelector("#r_invoice")?.checked) setTimeout(()=> printInvoice(renewCustomerId), 200);
 };
 
 /* =========================
@@ -1373,17 +1220,12 @@ function onRepTypeChange(){
   $("#repToCol").classList.toggle('hidden', t!=="custom");
   if(t==="monthly"){ $("#repYearCol").classList.add('hidden'); }
 }
-
 function filterRenewalsByPeriod(){
   const t = $("#repType").value;
   let from, to;
-
   if (t === "monthly") {
-    let ym = $("#repMonth").value;
-    if (!ym) {
-      ym = new Date().toISOString().slice(0,7);
-      $("#repMonth").value = ym;
-    }
+    let ym = $("#repMonth").value || new Date().toISOString().slice(0,7);
+    $("#repMonth").value = ym;
     from = ym + "-01";
     const [y, m] = ym.split("-").map(Number);
     const last = new Date(y, m, 0).getDate();
@@ -1391,18 +1233,14 @@ function filterRenewalsByPeriod(){
   } else if (t === "yearly") {
     const y = +$("#repYear").value;
     if (!y) return {arr: [], from: undefined, to: undefined};
-    from = y + "-01-01";
-    to   = y + "-12-31";
-  } else { // custom
-    from = $("#repFrom").value;
-    to   = $("#repTo").value;
+    from = y + "-01-01"; to = y + "-12-31";
+  } else {
+    from = $("#repFrom").value; to = $("#repTo").value;
     if (!from || !to) return {arr: [], from: undefined, to: undefined};
   }
-
   const arr = renewals.filter(r => r.startDate >= from && r.startDate <= to);
   return {arr, from, to};
 }
-
 function runReport(){
   const out = filterRenewalsByPeriod();
   if(!out || !out.arr){ alert("Select a valid period."); return; }
@@ -1410,24 +1248,16 @@ function runReport(){
   const tbody = $("#repGrid tbody"); tbody.innerHTML="";
   let T=0,E=0,P=0;
   rows.forEach(r=>{
-    const f = calcFigures({
-      cost:r.cost, wholesale:r.wholesale,
-      stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale
-    });
+    const f = calcFigures({ cost:r.cost, wholesale:r.wholesale, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale });
     T+=f.turnover; E+=f.expense; P+=f.profit;
-
     const payload = {
-      id: r.id,
-      customerId: r.customerId, customerName: r.customerName,
+      id: r.id, customerId: r.customerId, customerName: r.customerName,
       planId: r.planId, planName: r.planName, durationMonths: r.durationMonths,
       actual: r.actual, cost: r.cost, wholesale: r.wholesale,
       stbIncluded: r.stbIncluded, stbActual: r.stbActual, stbCost: r.stbCost, stbWholesale: r.stbWholesale,
-      discountName: r.discountName,
-      startDate: r.startDate, expiryDate: r.expiryDate,
-      paymentReceived: r.paymentReceived
+      discountName: r.discountName, startDate: r.startDate, expiryDate: r.expiryDate, paymentReceived: r.paymentReceived
     };
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${r.startDate}</td>
@@ -1437,46 +1267,27 @@ function runReport(){
       <td>${f.expense.toFixed(2)}</td>
       <td>${f.profit.toFixed(2)}</td>
       <td>${r.paymentReceived==='yes'?'Yes':'No'}</td>
-      <td><button class="btn" data-inv-ren="${encoded}">Slip</button></td>
-    `;
+      <td><button class="btn" data-inv-ren="${encoded}">Slip</button></td>`;
     tbody.appendChild(tr);
   });
-
-  tbody.querySelectorAll("[data-inv-ren]").forEach(btn=>{
-    btn.onclick = ()=>{
-      const encoded = btn.getAttribute("data-inv-ren");
-      printInvoiceFromRenewalData(encoded);
-    };
-  });
-
+  tbody.querySelectorAll("[data-inv-ren]").forEach(btn=> btn.onclick = ()=> printInvoiceFromRenewalData(btn.getAttribute("data-inv-ren")));
   $("#repTurnover").textContent = fmt(T);
   $("#repExpense").textContent  = fmt(E);
   $("#repProfit").textContent   = fmt(P);
 }
-
 function exportCSV(){
   const rows = [["Date","Customer","Plan","Turnover","Expense","Profit","Paid"]];
   document.querySelectorAll("#repGrid tbody tr").forEach(tr=>{
     const cols = [...tr.children].slice(0,7).map(td => td.textContent);
     rows.push(cols);
   });
-  const csvStr = "\uFEFF" + rows
-    .map(r => r.map(x => `"${String(x).replaceAll('"','""')}"`).join(","))
-    .join("\n");
-
+  const csvStr = "\uFEFF" + rows.map(r => r.map(x => `"${String(x).replaceAll('"','""')}"`).join(",")).join("\n");
   const blob = new Blob([csvStr], { type: "text/csv;charset=utf-8;" });
   const canDownloadAttr = "download" in HTMLAnchorElement.prototype;
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
   if (canDownloadAttr && !isIOS) {
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "report.csv";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    const a = document.createElement("a"); a.href = url; a.download = "report.csv"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   } else {
     const dataUrl = "data:text/csv;charset=utf-8," + encodeURIComponent(csvStr);
     window.open(dataUrl, "_blank");
@@ -1484,219 +1295,183 @@ function exportCSV(){
 }
 
 /* =========================
-   SLIP GENERATION (formerly Invoice)
+   Slip generation
    ========================= */
 const LOGO_SVG = `
 <svg xmlns='http://www.w3.org/2000/svg' width='180' height='36' viewBox='0 0 430 86'>
   <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
-    <stop offset='0' stop-color='#6a8cff'/><stop offset='1' stop-color='#8a5fff'/>
-  </linearGradient></defs>
+    <stop offset='0' stop-color='#6a8cff'/><stop offset='1' stop-color='#8a5fff'/></linearGradient></defs>
   <rect rx='12' ry='12' width='86' height='86' fill='url(#g)'/>
   <circle cx='43' cy='43' r='24' fill='none' stroke='white' stroke-width='8'/>
   <path d='M108 62 h34 v-38 h-34 v38 M149 24 h14 v38 h-14 z' fill='url(#g)'/>
-  <text x='170' y='60' font-family='Segoe UI, Roboto, Arial' font-size='44' font-weight='800'
-        fill='white' letter-spacing='.5'>Net + TV</text>
+  <text x='170' y='60' font-family='Segoe UI, Roboto, Arial' font-size='44' font-weight='800' fill='white' letter-spacing='.5'>Net + TV</text>
 </svg>`;
 const LOGO_URL = "data:image/svg+xml;utf8," + encodeURIComponent(LOGO_SVG);
 
 function buildSlipHTML({invNo, today, billTo, contactLine, metaLine, plan, lines, total, paidBadge, discountBlock}){
   return `
-<!doctype html>
-<html><head><meta charset="utf-8"><title>${invNo}</title>
+<!doctype html><html><head><meta charset="utf-8"><title>${invNo}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
   :root{ --ink:#111; --muted:#666; --line:#e5e7eb; --bg:#fff; --pill:#f3f4f6; --ok:#16a34a; --warn:#b91c1c; --safe-bottom: env(safe-area-inset-bottom,0px); }
-  *{ box-sizing:border-box }
-  body{ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial; color:var(--ink); background:#fff; margin:24px; padding-bottom: calc(24px + var(--safe-bottom)); }
+  *{ box-sizing:border-box } body{ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial; color:var(--ink); background:#fff; margin:24px; padding-bottom: calc(24px + var(--safe-bottom)); }
   .hdr{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap }
-  .brand{ display:flex; gap:12px; align-items:center }
-  .brand img{ height:42px }
-  .brand h2{ margin:0; font-size:22px }
-  .muted{ color:var(--muted) }
-  .box{ border:1px solid var(--line); border-radius:10px; padding:14px; margin-top:14px }
+  .brand{ display:flex; gap:12px; align-items:center } .brand img{ height:42px } .brand h2{ margin:0; font-size:22px }
+  .muted{ color:var(--muted) } .box{ border:1px solid var(--line); border-radius:10px; padding:14px; margin-top:14px }
   .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px 16px; }
-  .grid .lbl{ color:var(--muted) }
-  table{ width:100%; border-collapse:collapse; margin-top:12px }
-  th,td{ padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:14px }
-  th{ background:#fafafa }
-  .right{ text-align:right }
-  .totals td{ font-weight:700 }
-  .badge{ display:inline-block; background:var(--pill); padding:4px 8px; border-radius:999px; font-size:12px }
-  .paid{ color:var(--ok) } .unpaid{ color:var(--warn) }
-  .strike{ text-decoration: line-through; opacity:.7; margin-right:6px }
+  .grid .lbl{ color:var(--muted) } table{ width:100%; border-collapse:collapse; margin-top:12px }
+  th,td{ padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:14px } th{ background:#fafafa }
+  .right{ text-align:right } .totals td{ font-weight:700 } .badge{ display:inline-block; background:var(--pill); padding:4px 8px; border-radius:999px; font-size:12px }
+  .paid{ color:var(--ok) } .unpaid{ color:var(--warn) } .strike{ text-decoration: line-through; opacity:.7; margin-right:6px }
   @media print{ button{ display:none } body{ margin:0; } }
-</style></head>
-<body>
+</style></head><body>
   <div class="hdr">
     <div class="brand">
       <img src="${LOGO_URL}" alt="Net + TV">
-      <div>
-        <h2 style="margin:0">Sale Slip</h2>
-        <div class="muted">Net + TV</div>
-      </div>
+      <div><h2 style="margin:0">Sale Slip</h2><div class="muted">Net + TV</div></div>
     </div>
-    <div class="right">
-      <div><strong>${invNo}</strong></div>
-      <div>Date: ${today}</div>
-    </div>
+    <div class="right"><div><strong>${invNo}</strong></div><div>Date: ${today}</div></div>
   </div>
 
-  <div class="box">
-    <strong>Bill To</strong><br>
-    ${billTo}<br>
-    ${contactLine}
-    ${metaLine ? `<div class="muted">${metaLine}</div>` : ""}
-  </div>
+  <div class="box"><strong>Bill To</strong><br>${billTo}<br>${contactLine}${metaLine ? `<div class="muted">${metaLine}</div>` : ""}</div>
 
   <div class="box">
-  <strong>Plan Details</strong>
-  <div class="grid" style="margin-top:8px">
-    <div class="lbl">Plan</div><div>${plan?.name || '-'}</div>
-    <div class="lbl">Duration</div><div>${(plan?.months ?? 0)} months</div>
-    <div class="lbl">Parental Pin</div><div>7274</div>
-    <div class="lbl">Start Date</div><div>${plan?.start || '-'}</div>
-    <div class="lbl">Expiry Date</div><div>${plan?.expiry || '-'}</div>
-    <div class="lbl">Payment</div><div>${plan?.paidText || '-'}</div>
+    <strong>Plan Details</strong>
+    <div class="grid" style="margin-top:8px">
+      <div class="lbl">Plan</div><div>${plan?.name || '-'}</div>
+      <div class="lbl">Duration</div><div>${(plan?.months ?? 0)} months</div>
+      <div class="lbl">Parental Pin</div><div>7274</div>
+      <div class="lbl">Start Date</div><div>${plan?.start || '-'}</div>
+      <div class="lbl">Expiry Date</div><div>${plan?.expiry || '-'}</div>
+      <div class="lbl">Payment</div><div>${plan?.paidText || '-'}</div>
+    </div>
   </div>
-</div>
 
   <table>
     <thead><tr><th>Description</th><th class="right">Amount (CAD)</th></tr></thead>
     <tbody>
       ${lines.map(l=>`<tr><td>${l[0]}</td><td class="right">${(+l[1]||0).toFixed(2)}</td></tr>`).join("")}
-      ${discountBlock ? discountBlock : ""}
+      ${discountBlock || ""}
       <tr class="totals"><td>Total</td><td class="right">${(+total||0).toFixed(2)}</td></tr>
     </tbody>
   </table>
 
   <div class="badge ${plan?.paidText==='Paid'?'paid':'unpaid'}" style="margin-top:8px">${paidBadge}</div>
   <p class="muted">Thank you.</p>
-
   <button onclick="window.print()">Print / Save as PDF</button>
 </body></html>`;
 }
-
 function openPrintWindow(html){
   const w = window.open("", "_blank");
   if(!w){ alert("Pop-up blocked. Please allow pop-ups for this site."); return; }
-  w.document.open(); w.document.write(html); w.document.close();
-  w.onload = ()=> w.print();
+  w.document.open(); w.document.write(html); w.document.close(); w.onload = ()=> w.print();
 }
-
-/* Keep function names for compatibility, but they now print a "Sale Slip" */
 function printInvoice(customerId){
   const c = customers.find(x=> String(x.id) === String(customerId));
   if(!c){ alert("Customer not found"); return; }
   const p = c.currentPlan || {};
-  const f = calcFigures({
-    cost:p.cost, wholesale:p.wholesale, actual:p.actual,
-    stbIncluded:p.stbIncluded, stbCost:p.stbCost, stbWholesale:p.stbWholesale, stbActual:p.stbActual
-  });
-
+  const f = calcFigures({ cost:p.cost, wholesale:p.wholesale, actual:p.actual, stbIncluded:p.stbIncluded, stbCost:p.stbCost, stbWholesale:p.stbWholesale, stbActual:p.stbActual });
   const today = new Date().toISOString().slice(0,10);
   const invNo = `SLIP-${String(customerId).slice(-6).toUpperCase()}-${today.replaceAll('-','')}`;
-
-  const planBlock = {
-    name: `${p.planName || 'Plan'}`,
-    months: +p.durationMonths || 0,
-    start: p.startDate || '-',
-    expiry: p.expiryDate || '-',
-    paidText: (p.paymentReceived==='yes' ? 'Paid' : 'Unpaid')
-  };
-
+  const planBlock = { name: `${p.planName || 'Plan'}`, months: +p.durationMonths || 0, start: p.startDate || '-', expiry: p.expiryDate || '-', paidText: (p.paymentReceived==='yes' ? 'Paid' : 'Unpaid') };
   const lines = [];
   const planLineLabel = `Plan — ${p.planName||'Plan'} (${p.durationMonths||0} mo)`;
-  if (+p.actual > 0) {
-    lines.push([`${planLineLabel} <span class="muted"><span class="strike">${fmt(+p.actual)}</span> now</span>`, +p.cost||0]);
-  } else {
-    lines.push([planLineLabel, +p.cost||0]);
-  }
+  if (+p.actual > 0) { lines.push([`${planLineLabel} <span class="muted"><span class="strike">${fmt(+p.actual)}</span> now</span>`, +p.cost||0]); }
+  else { lines.push([planLineLabel, +p.cost||0]); }
   if (p.stbIncluded==='yes') {
-    if (+p.stbActual > 0) {
-      lines.push([`STB <span class="muted"><span class="strike">${fmt(+p.stbActual)}</span> now</span>`, +p.stbCost||0]);
-    } else {
-      lines.push([`STB`, +p.stbCost||0]);
-    }
+    if (+p.stbActual > 0) { lines.push([`STB <span class="muted"><span class="strike">${fmt(+p.stbActual)}</span> now</span>`, +p.stbCost||0]); }
+    else { lines.push([`STB`, +p.stbCost||0]); }
   }
-
   const discountName = (p.discountName || "").trim();
-  const discountBlock = (f.discountSaved > 0)
-    ? `<tr><td>${discountName ? `Discount — ${discountName}` : 'Discount'}</td><td class="right">-${f.discountSaved.toFixed(2)}</td></tr>`
-    : "";
-
+  const discountBlock = (f.discountSaved > 0) ? `<tr><td>${discountName ? `Discount — ${discountName}` : 'Discount'}</td><td class="right">-${f.discountSaved.toFixed(2)}</td></tr>` : "";
   const html = buildSlipHTML({
-    invNo,
-    today,
-    billTo: c.name || "-",
-    contactLine: [c.phone, c.email].filter(Boolean).join(" • ") || "",
+    invNo, today, billTo: c.name || "-", contactLine: [c.phone, c.email].filter(Boolean).join(" • ") || "",
     metaLine: [c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • "),
-    plan: planBlock,
-    lines,
-    total: f.turnover,
-    paidBadge: (p.paymentReceived==='yes' ? 'Paid' : 'Unpaid'),
-    discountBlock
+    plan: planBlock, lines, total: f.turnover, paidBadge: (p.paymentReceived==='yes' ? 'Paid' : 'Unpaid'), discountBlock
   });
-
   openPrintWindow(html);
 }
-
 function printInvoiceFromRenewalData(encoded){
   try{
     const ren = JSON.parse(decodeURIComponent(escape(atob(encoded))));
     const c = customers.find(x=> String(x.id) === String(ren.customerId)) || {};
-    const f = calcFigures({
-      cost:ren.cost, wholesale:ren.wholesale, actual:ren.actual,
-      stbIncluded:ren.stbIncluded, stbCost:ren.stbCost, stbWholesale:ren.stbWholesale, stbActual:ren.stbActual
-    });
+    const f = calcFigures({ cost:ren.cost, wholesale:ren.wholesale, actual:ren.actual, stbIncluded:ren.stbIncluded, stbCost:ren.stbCost, stbWholesale:ren.stbWholesale, stbActual:ren.stbActual });
     const today = new Date().toISOString().slice(0,10);
     const suffix = ren.id ? ren.id.slice(-6).toUpperCase() : (ren.startDate?.replaceAll('-','')||today.replaceAll('-',''));
     const invNo = `SLIP-${String(ren.customerId).slice(-6).toUpperCase()}-${suffix}`;
-
-    const planBlock = {
-      name: `${ren.planName || 'Plan'}`,
-      months: +ren.durationMonths || 0,
-      start: ren.startDate || '-',
-      expiry: ren.expiryDate || '-',
-      paidText: (ren.paymentReceived==='yes' ? 'Paid' : 'Unpaid')
-    };
-
+    const planBlock = { name: `${ren.planName || 'Plan'}`, months: +ren.durationMonths || 0, start: ren.startDate || '-', expiry: ren.expiryDate || '-', paidText: (ren.paymentReceived==='yes' ? 'Paid' : 'Unpaid') };
     const lines = [];
     const planLineLabel = `Plan — ${ren.planName||ren.planId||'Plan'} (${ren.durationMonths||0} mo)`;
-    if (+ren.actual > 0) {
-      lines.push([`${planLineLabel} <span class="muted"><span class="strike">${fmt(+ren.actual)}</span> now</span>`, +ren.cost||0]);
-    } else {
-      lines.push([planLineLabel, +ren.cost||0]);
-    }
+    if (+ren.actual > 0) { lines.push([`${planLineLabel} <span class="muted"><span class="strike">${fmt(+ren.actual)}</span> now</span>`, +ren.cost||0]); }
+    else { lines.push([planLineLabel, +ren.cost||0]); }
     if (ren.stbIncluded==='yes') {
-      if (+ren.stbActual > 0) {
-        lines.push([`STB <span class="muted"><span class="strike">${fmt(+ren.stbActual)}</span> now</span>`, +ren.stbCost||0]);
-      } else {
-        lines.push([`STB`, +ren.stbCost||0]);
-      }
+      if (+ren.stbActual > 0) { lines.push([`STB <span class="muted"><span class="strike">${fmt(+ren.stbActual)}</span> now</span>`, +ren.stbCost||0]); }
+      else { lines.push([`STB`, +ren.stbCost||0]); }
     }
-
     const discountName = (ren.discountName || "").trim();
-    const discountBlock = (f.discountSaved > 0)
-      ? `<tr><td>${discountName ? `Discount — ${discountName}` : 'Discount'}</td><td class="right">-${f.discountSaved.toFixed(2)}</td></tr>`
-      : "";
-
+    const discountBlock = (f.discountSaved > 0) ? `<tr><td>${discountName ? `Discount — ${discountName}` : 'Discount'}</td><td class="right">-${f.discountSaved.toFixed(2)}</td></tr>` : "";
     const html = buildSlipHTML({
-      invNo,
-      today,
-      billTo: ren.customerName || c.name || "-",
-      contactLine: [c.phone, c.email].filter(Boolean).join(" • "),
+      invNo, today, billTo: ren.customerName || c.name || "-", contactLine: [c.phone, c.email].filter(Boolean).join(" • "),
       metaLine: [c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • "),
-      plan: planBlock,
-      lines,
-      total: f.turnover,
-      paidBadge: (ren.paymentReceived==='yes' ? 'Paid' : 'Unpaid'),
-      discountBlock
+      plan: planBlock, lines, total: f.turnover, paidBadge: (ren.paymentReceived==='yes' ? 'Paid' : 'Unpaid'), discountBlock
+    });
+    openPrintWindow(html);
+  }catch(e){ showErr('[print from renewal]', e); alert("Could not open slip for this row."); }
+}
+/* =========================
+   Cleanup Orphan Renewals
+   ========================= */
+async function cleanupOrphanRenewals(){
+  const msg = $("#cleanupMsg");
+  const btn = $("#btnCleanupOrphans");
+  try{
+    btn.disabled = true;
+    msg.textContent = "Scanning…";
+
+    // Ensure we have a fresh customers list
+    await loadCustomers();
+
+    // Build a set of valid customer IDs
+    const existing = new Set(customers.map(c => String(c.id)));
+
+    // Fetch all renewals via collectionGroup (rules must allow)
+    const snap = await safeGetDocs(collectionGroup(db, "renewals"), "[cleanup] collectionGroup renewals");
+    const orphans = [];
+    snap.forEach(d => {
+      const data = d.data() || {};
+      const cid  = String(data.customerId || "");
+      if (!existing.has(cid)) {
+        orphans.push(d.ref);
+      }
     });
 
-    openPrintWindow(html);
-  }catch(e){
-    console.error(e);
-    alert("Could not open slip for this row.");
+    if (orphans.length === 0){
+      msg.textContent = "No orphan renewals found.";
+      return;
+    }
+
+    msg.textContent = `Deleting ${orphans.length} orphan renewals…`;
+
+    // Delete in chunks to avoid batch limits
+    const CHUNK = 400;
+    for (let i = 0; i < orphans.length; i += CHUNK){
+      const batch = writeBatch(db);
+      for (let j = i; j < Math.min(i + CHUNK, orphans.length); j++){
+        batch.delete(orphans[j]);
+      }
+      await batch.commit();
+    }
+
+    await loadRenewals();
+    renderKPIs();
+    runReport();
+    msg.textContent = `Deleted ${orphans.length} orphan renewals.`;
+  }catch(err){
+    showErr("[cleanup orphans]", err);
+    alert(err?.message || "Failed to clean up orphan renewals");
+    msg.textContent = "Error during cleanup.";
+  }finally{
+    btn.disabled = false;
   }
 }
 
