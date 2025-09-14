@@ -53,7 +53,7 @@
   /* Ticker */
   .ticker{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);margin-top:12px}
   :root[data-theme="light"] .ticker{background:#eef2ff}
-  .tickerInner{display:inline-block;white-space:nowrap;animation:tickerMove 50s linear infinite;will-change:transform}
+  .tickerInner{display:inline-block;white-space:nowrap;animation:tickerMove 60s linear infinite;will-change:transform}
   .tickerInner span{display:inline-block;padding:8px 18px}
   @keyframes tickerMove{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
 
@@ -481,11 +481,20 @@
 
     // Ticker: starts immediately (already in HTML). When settings load, replace content and keep motion seamless.
     function setTicker(items){
-      const host = document.getElementById('featureTicker');
-      const line = items.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
-      host.innerHTML = line + line; // duplicate for seamless loop
-      // Do NOT toggle animation; it keeps running
-    }
+  // fallback defaults
+  if (!Array.isArray(items) || !items.length){
+    items = [
+      "🇨🇦 Proudly Canadian",
+      "Zero Latency Streams",
+      "24/7 Support",
+      "Multi-Device"
+    ];
+  }
+  const host = document.getElementById('featureTicker');
+  const line = items.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
+  // duplicate content so it loops seamlessly
+  host.innerHTML = line + line;
+}
 
     /* ===== Firestore loaders ===== */
 
