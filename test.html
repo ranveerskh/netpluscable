@@ -51,11 +51,21 @@
   .bannerSlide img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
 
   /* Ticker */
-  .ticker{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);margin-top:12px}
+  .ticker{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);margin-top:12px;
+    -webkit-mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
+            mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
+  }
   :root[data-theme="light"] .ticker{background:#eef2ff}
-  .tickerInner{display:inline-block;white-space:nowrap;animation:tickerMove 60s linear infinite;will-change:transform}
+  .tickerInner{
+    display:inline-block;white-space:nowrap;will-change:transform;
+    animation:tickerMove var(--dur,45s) linear infinite;
+  }
   .tickerInner span{display:inline-block;padding:8px 18px}
-  @keyframes tickerMove{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+  /* Move exactly one content-length (half of duplicated content) */
+  @keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion: reduce){
+    .tickerInner{animation:none;transform:none}
+  }
 
   /* CTA buttons */
   .ctaRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 18px}
@@ -127,8 +137,15 @@
   :root[data-theme="light"] input, :root[data-theme="light"] select, :root[data-theme="light"] textarea{background:#f6f8ff;color:#0b1020}
   .help{font-size:12px;color:#7d86ad}
   .catGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .catItem{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
+  .catItem{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
   :root[data-theme="light"] .catItem{background:#f7f9ff}
+  /* iOS checkbox layout fix + nicer look */
+  input[type="checkbox"],input[type="radio"]{width:auto;height:auto;-webkit-appearance:auto;appearance:auto}
+  .catItem input{flex:0 0 auto;transform:scale(1.1)}
+  .catItem span{flex:1 1 auto;white-space:normal}
+  @supports (accent-color: auto){
+    .catItem input{accent-color:var(--g2)}
+  }
   .footpad{height:calc(24px + var(--safe-bottom))}
 
   /* Footer */
@@ -163,13 +180,11 @@
       <h1 id="heroTitle" class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
       <p id="heroSubline" class="subtitle">Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech</p>
 
-      <!-- Always-filled ticker -->
+      <!-- Always-filled ticker (prefilled + duplicated so it animates immediately) -->
       <div class="ticker">
-        <div class="tickerInner" id="featureTicker">
-          <span>🇨🇦 Proudly Canadian</span>
-          <span>Zero Latency Streams</span>
-          <span>24/7 Support</span>
-          <span>Multi-Device</span>
+        <div class="tickerInner" id="featureTicker" aria-live="polite">
+          <span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
+          <span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
         </div>
       </div>
 
@@ -455,94 +470,79 @@
 
     function renderCats(containerId){
       const host = document.getElementById(containerId);
-      host.innerHTML = CATEGORY_LIST.map((c,i)=>`
+      host.innerHTML = CATEGORY_LIST.map((c)=>`
         <label class="catItem">
-          <input type="checkbox" name="cats" value="${escapeAttr(c)}"${i<2? ' data-full="1"':''}>
+          <input type="checkbox" name="cats" value="${escapeAttr(c)}">
           <span>${escapeHtml(c)}</span>
         </label>`).join('');
-      // Full package toggles others
-      const checks = host.querySelectorAll('input[name="cats"]');
-      const full = host.querySelectorAll('input[data-full="1"]');
-      full.forEach(f=>{
-        f.addEventListener('change', ()=>{
-          if (f.checked){
-            checks.forEach(ch=>{
-              if (ch !== f){
-                if (f.value === "Full Package"){ ch.checked = true; }
-                if (f.value === "Full Package (No Adult)"){
-                  ch.checked = true;
-                  if (ch.value === "Adult") ch.checked = false;
-                }
-              }
-            });
-          }
-        });
+
+      const checks = [...host.querySelectorAll('input[name="cats"]')];
+      const full = checks.find(x => x.value === "Full Package");
+      const noAdult = checks.find(x => x.value === "Full Package (No Adult)");
+      const adult = checks.find(x => x.value === "Adult");
+
+      function applyFull(which){
+        if (which === 'full' && full){
+          checks.forEach(ch => { if (ch !== full) ch.checked = true; });
+          if (noAdult) noAdult.checked = false;
+        }
+        if (which === 'noAdult' && noAdult){
+          checks.forEach(ch => { if (ch !== noAdult) ch.checked = (ch.value !== 'Adult'); });
+          if (full) full.checked = false;
+        }
+      }
+      if (full) full.addEventListener('change', ()=> { if (full.checked) applyFull('full'); });
+      if (noAdult) noAdult.addEventListener('change', ()=> { if (noAdult.checked) applyFull('noAdult'); });
+      if (adult && noAdult){
+        adult.addEventListener('change', ()=> { if (adult.checked && noAdult.checked) noAdult.checked = false; });
+      }
+      checks.forEach(ch=>{
+        if (ch !== full && ch !== noAdult){
+          ch.addEventListener('change', ()=>{
+            if (!ch.checked){
+              if (full) full.checked = false;
+              if (noAdult) noAdult.checked = false;
+            }
+          });
+        }
       });
     }
 
-    /* ========== FORMS -> WHATSAPP ========== */
-    // Subscribe
-    document.getElementById('subscribeForm').addEventListener('submit', e=>{
-      e.preventDefault(); const kv=formToKV(e.target);
-      const cats = pickChecked(document.getElementById('catsSub'));
-      toWA([`New Subscription Request`,
-            `Plan: ${kv.plan || '-'}`,
-            `Name: ${kv.name}`,
-            `Phone: ${kv.phone}`,
-            cats.length?`Categories: ${cats.join(', ')}`:null,
-            kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
-    });
-
-    // Custom plan
-    document.getElementById('ownPlanForm').addEventListener('submit', e=>{
-      e.preventDefault(); const kv=formToKV(e.target);
-      const cats = pickChecked(document.getElementById('catsOwn'));
-      toWA([`Custom Plan Request`,
-            `Name: ${kv.name}`,
-            `Phone: ${kv.phone}`,
-            kv.email?`Email: ${kv.email}`:null,
-            cats.length?`Categories: ${cats.join(', ')}`:`Categories: -`,
-            kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
-    });
-
-    // Support
-    document.getElementById('supportForm').addEventListener('submit', e=>{
-      e.preventDefault(); const kv=formToKV(e.target);
-      toWA([`Support Request`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,`Issue: ${kv.issue}`].join('\n'));
-    });
-
-    /* ========== PIN ========== */
-    function pinForBrand(brand){ const b=(brand||'').toLowerCase(); return (b.includes('mag')||b.includes('stalker')) ? '7274' : '0000'; }
-    const brandSel=document.getElementById('pinBrand'); const pinOut=document.getElementById('pinOutput');
-    if (brandSel && pinOut){ brandSel.addEventListener('change', ()=>{ pinOut.value=pinForBrand(brandSel.value); }); }
-    document.getElementById('pinForm').addEventListener('submit', e=>{
-      e.preventDefault(); const kv=formToKV(e.target);
-      const resolvedPin=pinForBrand(kv.brand);
-      toWA([`Parental PIN Request`,`MAC: ${kv.mac}`,`Email: ${kv.email}`,`Brand: ${kv.brand||'N/A'}`,`Suggested PIN: ${resolvedPin}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
-    });
-
-    /* ========== DOM REFS ========== */
-    const plansGrid = document.getElementById('plansGrid');
-    const bannerTrack = document.getElementById('bannerTrack');
-    const postersRail = document.getElementById('postersRail');
-    const boxesGrid = document.getElementById('boxesGrid');
-    const renewGrid = document.getElementById('renewPlansGrid');
-
-    /* ========== TICKER (never empty) ========== */
+    /* ========== TICKER (always visible, readable speed) ========== */
     const DEFAULT_TICKER = [
       "🇨🇦 Proudly Canadian",
       "Zero Latency Streams",
       "24/7 Support",
       "Multi-Device"
     ];
+
+    function restartTicker(host){
+      host.style.animation = 'none';
+      // Force reflow
+      void host.offsetWidth;
+      host.style.animation = '';
+    }
+
+    function setTickerDuration(host){
+      // Move half the content width per loop (because content is duplicated)
+      const distancePx = host.scrollWidth / 2;
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const velocity = vw < 480 ? 40 : 55; // px per second; readable
+      const dur = Math.max(12, distancePx / velocity); // floor to avoid silly fast loops
+      host.style.setProperty('--dur', `${dur}s`);
+      restartTicker(host);
+    }
+
     function setTicker(items){
       const host = document.getElementById('featureTicker');
       const list = (Array.isArray(items) && items.length) ? items : DEFAULT_TICKER;
       const line = list.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
       host.innerHTML = line + line; // duplicate for seamless loop
+      // Next frame, measure and set readable speed
+      requestAnimationFrame(()=> setTickerDuration(host));
     }
-    // seed immediately so it never looks empty
-    setTicker(DEFAULT_TICKER);
+
+    window.addEventListener('resize', ()=> setTickerDuration(document.getElementById('featureTicker')));
 
     /* ========== FIRESTORE LOADERS ========== */
     async function loadSettings(){
@@ -565,12 +565,13 @@
 
     let bannerTimer = null;
     function startBanner(){
-      const track = bannerTrack; if (!track.children.length) return;
+      const track = document.getElementById('bannerTrack'); if (!track.children.length) return;
       let i=0; if (bannerTimer) clearInterval(bannerTimer);
       track.style.transform='translateX(0)';
       bannerTimer = setInterval(()=>{ i=(i+1)%track.children.length; track.style.transform=`translateX(-${i*100}%)`; }, 4500);
     }
     async function loadBanners(){
+      const bannerTrack = document.getElementById('bannerTrack');
       bannerTrack.innerHTML = '';
       let urls = [];
       try{
@@ -593,6 +594,7 @@
     }
 
     async function loadPosters(){
+      const postersRail = document.getElementById('postersRail');
       postersRail.innerHTML = '';
       try{
         const snap = await getDocs(collection(db,'posters'));
@@ -604,7 +606,6 @@
           "https://via.placeholder.com/300x450?text=Poster+2",
           "https://via.placeholder.com/300x450?text=Poster+3"
         ];
-        // Fixed stray ) and quote here
         postersRail.innerHTML = list.map(u=> imgTag(u,'https://via.placeholder.com/300x450?text=Poster','loading="lazy"')).join('');
       }catch(e){
         postersRail.innerHTML = `<img src="https://via.placeholder.com/300x450?text=Poster+1"><img src="https://via.placeholder.com/300x450?text=Poster+2">`;
@@ -618,9 +619,12 @@
     ];
 
     function descHTML(p){
-      // Accept features[], or desc with \n, else single-line
       if (Array.isArray(p.features) && p.features.length){
         return `<ul style="margin:8px 0 12px;padding-left:18px">${p.features.map(li=>`<li>${escapeHtml(String(li))}</li>`).join('')}</ul>`;
+      }
+      if (typeof p.desc === 'string' && p.desc.includes('\\n')){
+        const parts = p.desc.split(/\\n/).map(s=>s.trim()).filter(Boolean);
+        return `<ul style="margin:8px 0 12px;padding-left:18px">${parts.map(li=>`<li>${escapeHtml(li)}</li>`).join('')}</ul>`;
       }
       if (typeof p.desc === 'string' && p.desc.includes('\n')){
         const parts = p.desc.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
@@ -647,6 +651,8 @@
     }
 
     async function loadPlans(){
+      const plansGrid = document.getElementById('plansGrid');
+      const renewGrid = document.getElementById('renewPlansGrid');
       plansGrid.innerHTML = '<div class="muted">Loading plans…</div>';
       plansData = [];
       try{
@@ -655,13 +661,10 @@
         plansData.sort((a,b)=> (a.sort||0)-(b.sort||0));
       }catch(e){}
       if (!plansData.length) plansData = demoPlans;
-      renderPlans(plansData);
-      renderRenewPlans(plansData);
-    }
 
-    function renderPlans(items){
+      // Render
       plansGrid.innerHTML = '';
-      items.forEach(p=>{
+      plansData.forEach(p=>{
         const el = document.createElement('div'); el.className='card'; el.innerHTML = planCardHTML(p,'sub');
         plansGrid.appendChild(el);
       });
@@ -669,11 +672,10 @@
       plansGrid.querySelectorAll('[data-subscribe]').forEach(b=> b.addEventListener('click', ()=>{
         document.getElementById('subPlan').value = b.dataset.subscribe; openModal('subscribeModal');
       }));
-    }
 
-    function renderRenewPlans(items){
+      // Renew list
       renewGrid.innerHTML = '';
-      items.forEach(p=>{
+      plansData.forEach(p=>{
         const el = document.createElement('div'); el.className='card'; el.innerHTML = planCardHTML(p,'renew');
         renewGrid.appendChild(el);
       });
@@ -689,6 +691,7 @@
     }
 
     async function loadBoxes(){
+      const boxesGrid = document.getElementById('boxesGrid');
       boxesGrid.innerHTML = '<div class="muted">Loading boxes…</div>';
       let items=[];
       try{
@@ -696,9 +699,6 @@
         snap.forEach(d=>{ const x=d.data(); if(x.active!==false) items.push({id:d.id,...x}); });
         items.sort((a,b)=> (a.sort||0)-(b.sort||0));
       }catch(e){}
-      renderBoxes(items);
-    }
-    function renderBoxes(items){
       boxesGrid.innerHTML = '';
       if(!items.length){ boxesGrid.innerHTML = '<div class="muted">Boxes coming soon.</div>'; return; }
       items.forEach(b=>{
@@ -738,6 +738,9 @@
 
     /* ========== BOOT ========== */
     (async()=>{
+      // Make the initial hardcoded ticker animate at readable speed
+      setTicker(DEFAULT_TICKER);
+
       await loadSettings();
       await loadBanners();
       await loadPosters();
@@ -750,7 +753,29 @@
       renderCats('catsRenew');
     })();
 
-    // Renew -> WhatsApp
+    // FORMS -> WhatsApp
+    document.getElementById('subscribeForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      const cats = pickChecked(document.getElementById('catsSub'));
+      toWA([`New Subscription Request`,
+            `Plan: ${kv.plan || '-'}`,
+            `Name: ${kv.name}`,
+            `Phone: ${kv.phone}`,
+            cats.length?`Categories: ${cats.join(', ')}`:null,
+            kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
+    });
+
+    document.getElementById('ownPlanForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      const cats = pickChecked(document.getElementById('catsOwn'));
+      toWA([`Custom Plan Request`,
+            `Name: ${kv.name}`,
+            `Phone: ${kv.phone}`,
+            kv.email?`Email: ${kv.email}`:null,
+            cats.length?`Categories: ${cats.join(', ')}`:`Categories: -`,
+            kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
+    });
+
     document.getElementById('rechargeForm').addEventListener('submit', e=>{
       e.preventDefault(); const kv=formToKV(e.target);
       const cats = pickChecked(document.getElementById('catsRenew'));
@@ -762,6 +787,16 @@
             `MAC: ${kv.mac}`,
             cats.length?`Categories: ${cats.join(', ')}`:null,
             kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
+    });
+
+    /* PIN form */
+    function pinForBrand(brand){ const b=(brand||'').toLowerCase(); return (b.includes('mag')||b.includes('stalker')) ? '7274' : '0000'; }
+    const brandSel=document.getElementById('pinBrand'); const pinOut=document.getElementById('pinOutput');
+    if (brandSel && pinOut){ brandSel.addEventListener('change', ()=>{ pinOut.value=pinForBrand(brandSel.value); }); }
+    document.getElementById('pinForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      const resolvedPin=pinForBrand(kv.brand);
+      toWA([`Parental PIN Request`,`MAC: ${kv.mac}`,`Email: ${kv.email}`,`Brand: ${kv.brand||'N/A'}`,`Suggested PIN: ${resolvedPin}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
     });
 
     document.getElementById('refreshPlans')?.addEventListener('click', loadPlans);
