@@ -527,7 +527,7 @@
       // Move half the content width per loop (because content is duplicated)
       const distancePx = host.scrollWidth / 2;
       const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      const velocity = vw < 480 ? 45 : 62; // px per second; slightly faster
+      const velocity = vw < 480 ? 50 : 82; // px per second; slightly faster
       const dur = Math.max(12, distancePx / velocity); // floor to avoid silly fast loops
       host.style.setProperty('--dur', `${dur}s`);
       restartTicker(host);
