@@ -6,679 +6,800 @@
 <title>net+TV — Home</title>
 <meta name="theme-color" content="#0b1020" />
 <style>
-:root{
---bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
---g1:#6a11cb;--g2:#2575fc;--ok:#32d296;--warn:#f8b84a;--whats:#25D366;
---safe-top: env(safe-area-inset-top,0px);--safe-bottom: env(safe-area-inset-bottom,0px);
---shadow:0 10px 30px rgba(0,0,0,.35);
-}
-:root[data-theme="light"]{
---bg:#ffffff;--ink:#0b1020;--muted:#36415f;--card:#ffffff;--line:#d9e0ff;
---g1:#2575fc;--g2:#6a11cb;--ok:#15a37a;--warn:#e59f2a;--whats:#25D366;
---shadow:0 10px 30px rgba(0,12,60,.10);
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-button{font:inherit;cursor:pointer}
-.wrap{max-width:1160px;margin:0 auto;padding:16px}
+  :root{
+    --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
+    --g1:#6a11cb;--g2:#2575fc;--ok:#32d296;--warn:#f8b84a;--whats:#25D366;
+    --safe-top: env(safe-area-inset-top,0px);--safe-bottom: env(safe-area-inset-bottom,0px);
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"]{
+    --bg:#ffffff;--ink:#0b1020;--muted:#36415f;--card:#ffffff;--line:#d9e0ff;
+    --g1:#2575fc;--g2:#6a11cb;--ok:#15a37a;--warn:#e59f2a;--whats:#25D366;
+    --shadow:0 10px 30px rgba(0,12,60,.10);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;cursor:pointer}
+  .wrap{max-width:1160px;margin:0 auto;padding:16px}
 
-/* Topbar */
-.topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:calc(8px + var(--safe-top)) 16px 8px}
-:root[data-theme="light"] .topbar{background:#ffffffcc;border-bottom:1px solid #d9e0ff;backdrop-filter:blur(10px) saturate(1.2)}
-.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.logo{display:flex;align-items:center;gap:10px}
-.dot{width:12px;height:12px;border-radius:50%;background:conic-gradient(from 180deg,var(--g1),var(--g2))}
-.brand{font-weight:800;letter-spacing:.3px}
-.badge{font-size:12px;color:var(--muted)}
-.menuBtn{border:1px solid var(--line);background:rgba(255,255,255,.06);padding:10px 12px;border-radius:14px}
-:root[data-theme="light"] .menuBtn{background:#f2f6ff;border-color:#d9e0ff;color:#0b1020}
+  /* Topbar */
+  .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:calc(8px + var(--safe-top)) 16px 8px}
+  :root[data-theme="light"] .topbar{background:#ffffffcc;border-bottom:1px solid #d9e0ff;backdrop-filter:blur(10px) saturate(1.2)}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .logo{display:flex;align-items:center;gap:10px}
+  .dot{width:12px;height:12px;border-radius:50%;background:conic-gradient(from 180deg,var(--g1),var(--g2))}
+  .brand{font-weight:800;letter-spacing:.3px}
+  .badge{font-size:12px;color:var(--muted)}
+  .menuBtn{border:1px solid var(--line);background:rgba(255,255,255,.06);padding:10px 12px;border-radius:14px}
+  :root[data-theme="light"] .menuBtn{background:#f2f6ff;border-color:#d9e0ff;color:#0b1020}
 
-/* Hero */
-.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
-background:radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.15),transparent 60%),radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 50%)}
-:root[data-theme="light"] .hero{background:linear-gradient(180deg,#f6f8ff,transparent)}
-.heroInner{padding:32px 16px 24px}
-.title{font-size:30px;line-height:1.2;font-weight:800;margin:6px 0 10px}
-.subtitle{color:var(--muted)}
-.hint{font-size:13px;color:var(--muted);margin-top:6px}
+  /* Hero */
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
+    background:radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.15),transparent 60%),radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 50%)}
+  :root[data-theme="light"] .hero{background:linear-gradient(180deg,#f6f8ff,transparent)}
+  .heroInner{padding:32px 16px 24px}
+  .title{font-size:30px;line-height:1.2;font-weight:800;margin:6px 0 10px}
+  .subtitle{color:var(--muted)}
+  .hint{font-size:13px;color:var(--muted);margin-top:6px}
 
-/* Banners (simple <img>, no absolute positioning) */
-.banner{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;margin:0 0 14px;box-shadow:var(--shadow);background:#000}
-.bannerTrack{display:flex;transition:transform .5s ease;will-change:transform}
-.bannerSlide{flex:0 0 100%}
-.bannerSlide img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
+  /* Banners */
+  .banner{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;margin:0 0 14px;box-shadow:var(--shadow);background:#000}
+  .bannerTrack{display:flex;transition:transform .5s ease;will-change:transform}
+  .bannerSlide{flex:0 0 100%}
+  .bannerSlide img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
 
-/* Ticker */
-.ticker{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);margin-top:12px}
-:root[data-theme="light"] .ticker{background:#eef2ff}
-  .tickerInner{display:inline-block;white-space:nowrap;animation:tickerMove 18s linear infinite;will-change:transform}
-  .tickerInner{display:inline-block;white-space:nowrap;animation:tickerMove 50s linear infinite;will-change:transform}
-.tickerInner span{display:inline-block;padding:8px 18px}
-@keyframes tickerMove{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+  /* Ticker */
+  .ticker{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);margin-top:12px;
+    -webkit-mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
+            mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
+  }
+  :root[data-theme="light"] .ticker{background:#eef2ff}
+  .tickerInner{
+    display:inline-block;white-space:nowrap;will-change:transform;
+    animation:tickerMove var(--dur,45s) linear infinite;
+  }
+  .tickerInner span{display:inline-block;padding:8px 18px}
+  /* Move exactly one content-length (half of duplicated content) */
+  @keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion: reduce){
+    .tickerInner{animation:none;transform:none}
+  }
 
-/* CTA buttons */
-.ctaRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 18px}
-.bigBtn{height:64px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg, rgba(106,17,203,.18), rgba(37,117,252,.18));display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:800;box-shadow:var(--shadow)}
+  /* CTA buttons */
+  .ctaRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 18px}
+  .bigBtn{height:64px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg, rgba(106,17,203,.18), rgba(37,117,252,.18));display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:800;box-shadow:var(--shadow)}
 
-/* Posters rail */
-.postersRail{margin-top:12px;display:flex;gap:10px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
-.postersRail img{width:200px;height:300px;object-fit:cover;border-radius:12px;flex:0 0 auto;scroll-snap-align:start;border:1px solid var(--line);background:#000;box-shadow:var(--shadow);display:block}
+  /* Posters rail */
+  .postersRail{margin-top:12px;display:flex;gap:10px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
+  .postersRail img{width:200px;height:300px;object-fit:cover;border-radius:12px;flex:0 0 auto;scroll-snap-align:start;border:1px solid var(--line);background:#000;box-shadow:var(--shadow);display:block}
 
-/* Sections */
-.section{padding:22px 16px;border-top:1px solid var(--line)}
-.list{display:grid;gap:10px}
-.pill{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04)}
-:root[data-theme="light"] .pill{background:#f7f9ff}
+  /* Sections */
+  .section{padding:22px 16px;border-top:1px solid var(--line)}
+  .list{display:grid;gap:10px}
+  .pill{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04)}
+  :root[data-theme="light"] .pill{background:#f7f9ff}
 
-/* Sheet (menu) */
-.sheet{position:fixed;inset:auto 0 0 0;background:rgba(18,24,49,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(100%);transition:transform .25s ease;z-index:70;max-height:80vh;display:flex;flex-direction:column}
-:root[data-theme="light"] .sheet{background:#ffffff; border-top:1px solid #d9e0ff}
-.sheet.open{transform:translateY(0)}
-.sheetHead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-:root[data-theme="light"] .sheetHead{background:#f6f9ff}
-.sheetBody{padding:10px 16px;overflow:auto}
-.menuList{display:grid;gap:10px}
-.menuItem{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.04)}
-:root[data-theme="light"] .menuItem{background:#f6f9ff}
+  /* Sheet (menu) */
+  .sheet{position:fixed;inset:auto 0 0 0;background:rgba(18,24,49,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(100%);transition:transform .25s ease;z-index:70;max-height:80vh;display:flex;flex-direction:column}
+  :root[data-theme="light"] .sheet{background:#ffffff; border-top:1px solid #d9e0ff}
+  .sheet.open{transform:translateY(0)}
+  .sheetHead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  :root[data-theme="light"] .sheetHead{background:#f6f9ff}
+  .sheetBody{padding:10px 16px;overflow:auto}
+  .menuList{display:grid;gap:10px}
+  .menuItem{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.04)}
+  :root[data-theme="light"] .menuItem{background:#f6f9ff}
 
-/* Modal */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:90}
-.modal.open{display:flex}
-.modalCard{margin:auto;max-width:780px;width:100%;height:90vh;background:var(--card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
-:root[data-theme="light"] .modalCard{background:#ffffff;border-color:#d9e0ff}
-.modalHead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-.modalBody{padding:12px 14px;overflow:auto}
-.x{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
-:root[data-theme="light"] .x{background:#eef2ff}
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:90}
+  .modal.open{display:flex}
+  .modalCard{margin:auto;max-width:780px;width:100%;height:90vh;background:var(--card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+  :root[data-theme="light"] .modalCard{background:#ffffff;border-color:#d9e0ff}
+  .modalHead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .modalBody{padding:12px 14px;overflow:auto}
+  .x{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
+  :root[data-theme="light"] .x{background:#eef2ff}
 
-/* Cards/grids */
-.plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.card{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-:root[data-theme="light"] .card{background:#ffffff}
-.card h3{margin:0 0 6px;font-size:18px;line-height:1.2}
-.muted{color:var(--muted)}
-.btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);padding:10px 12px;cursor:pointer}
-.btn.whats{background:var(--whats);border-color:#1fa851;color:#08210e;font-weight:800}
-.priceRight{font-weight:900;font-size:18px}
-.cardHead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
-.tag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin-bottom:6px}
-.benefit{font-size:12px;font-weight:800;color:var(--ok);margin-top:4px}
+  /* Cards/grids */
+  .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .card{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+  :root[data-theme="light"] .card{background:#ffffff}
+  .card h3{margin:0 0 6px;font-size:18px;line-height:1.2}
+  .muted{color:var(--muted)}
+  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);padding:10px 12px;cursor:pointer}
+  .btn.whats{background:var(--whats);border-color:#1fa851;color:#08210e;font-weight:800}
+  .priceRight{font-weight:900;font-size:18px}
+  .cardHead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+  .tag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin-bottom:6px}
+  .benefit{font-size:12px;font-weight:800;color:var(--ok);margin-top:4px}
 
-/* Boxes (simple <img> slider) */
-.boxSlider{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000}
-.boxTrack{display:flex;transition:transform .35s ease;will-change:transform}
-.boxSlide{flex:0 0 100%}
-.boxSlide img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
-.boxDots{display:flex;gap:6px;justify-content:center;margin-top:6px}
-.boxDot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25)}
-.boxDot.active{background:#fff}
-.miniTag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin:10px 0 6px}
-.comboCallout{margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:12px;background:rgba(37,117,252,.08)}
-:root[data-theme="light"] .comboCallout{background:#eef5ff}
-.boxMeta{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.boxPrice{font-weight:900}
-.boxName{font-size:18px;font-weight:800;margin:0}
+  /* Boxes */
+  .boxSlider{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000}
+  .boxTrack{display:flex;transition:transform .35s ease;will-change:transform}
+  .boxSlide{flex:0 0 100%}
+  .boxSlide img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
+  .boxDots{display:flex;gap:6px;justify-content:center;margin-top:6px}
+  .boxDot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25)}
+  .boxDot.active{background:#fff}
+  .miniTag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin:10px 0 6px}
+  .comboCallout{margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:12px;background:rgba(37,117,252,.08)}
+  :root[data-theme="light"] .comboCallout{background:#eef5ff}
+  .boxMeta{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .boxPrice{font-weight:900}
+  .boxName{font-size:18px;font-weight:800;margin:0}
 
-/* Forms */
-.grid{display:grid;gap:10px}
-.two{grid-template-columns:1fr 1fr}
-input,select,textarea{width:100%;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff}
-:root[data-theme="light"] input, :root[data-theme="light"] select, :root[data-theme="light"] textarea{background:#f6f8ff;color:#0b1020}
-.help{font-size:12px;color:#7d86ad}
-.footpad{height:calc(24px + var(--safe-bottom))}
+  /* Forms */
+  .grid{display:grid;gap:10px}
+  .two{grid-template-columns:1fr 1fr}
+  input,select,textarea{width:100%;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff}
+  :root[data-theme="light"] input, :root[data-theme="light"] select, :root[data-theme="light"] textarea{background:#f6f8ff;color:#0b1020}
+  .help{font-size:12px;color:#7d86ad}
+  .catGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .catItem{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
+  :root[data-theme="light"] .catItem{background:#f7f9ff}
+  /* iOS checkbox layout fix + nicer look */
+  input[type="checkbox"],input[type="radio"]{width:auto;height:auto;-webkit-appearance:auto;appearance:auto}
+  .catItem input{flex:0 0 auto;transform:scale(1.1)}
+  .catItem span{flex:1 1 auto;white-space:normal}
+  @supports (accent-color: auto){
+    .catItem input{accent-color:var(--g2)}
+  }
+  .footpad{height:calc(24px + var(--safe-bottom))}
 
-/* Footer */
-.footer{padding:16px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
+  /* Footer */
+  .footer{padding:16px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
-<div class="topbar">
-<div class="row">
-<div class="logo">
-<div class="dot"></div>
-<div>
-<div class="brand">net+<span style="margin-left:3px">TV</span></div>
-<div class="badge">Full HD • 4K • PPV</div>
-</div>
-</div>
-<div style="display:flex;gap:8px;align-items:center">
-<button id="themeBtn" class="menuBtn" title="Toggle theme">💡</button>
-<button id="menuBtn" class="menuBtn">Menu ▾</button>
-</div>
-</div>
-</div>
+  <div class="topbar">
+    <div class="row">
+      <div class="logo">
+        <div class="dot"></div>
+        <div>
+          <div class="brand">net+<span style="margin-left:3px">TV</span></div>
+          <div class="badge">Full HD • 4K • PPV</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="themeBtn" class="menuBtn" title="Toggle theme">💡</button>
+        <button id="menuBtn" class="menuBtn">Menu ▾</button>
+      </div>
+    </div>
+  </div>
 
-<section class="hero">
-<div class="heroInner wrap">
-<!-- BANNERS -->
-<div class="banner" aria-label="Promotions">
-<div class="bannerTrack" id="bannerTrack"></div>
-</div>
+  <section class="hero">
+    <div class="heroInner wrap">
+      <!-- BANNERS -->
+      <div class="banner" aria-label="Promotions">
+        <div class="bannerTrack" id="bannerTrack"></div>
+      </div>
 
-<div id="heroSubtitle" class="subtitle">Quick Activation</div>
-<h1 id="heroTitle" class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
-<p id="heroSubline" class="subtitle">Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech</p>
+      <div id="heroSubtitle" class="subtitle">Quick Activation</div>
+      <h1 id="heroTitle" class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
+      <p id="heroSubline" class="subtitle">Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech</p>
 
-<!-- One-line ticker that starts immediately -->
-<div class="ticker">
-<div class="tickerInner" id="featureTicker">
-<span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
-<span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
-</div>
-</div>
+      <!-- Always-filled ticker (prefilled + duplicated so it animates immediately) -->
+      <div class="ticker">
+        <div class="tickerInner" id="featureTicker" aria-live="polite">
+          <span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
+          <span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
+        </div>
+      </div>
 
-<div class="ctaRow" id="actionButtons">
-<button class="bigBtn" data-open="plansModal" id="cta0">Our Plans</button>
-<button class="bigBtn" data-open="boxesModal" id="cta1">New Boxes</button>
-<button class="bigBtn" data-open="rechargeModal" id="cta2">Renew Plan</button>
-<button class="bigBtn" data-open="supportModal" id="cta3">Contact Support</button>
-</div>
+      <div class="ctaRow" id="actionButtons">
+        <button class="bigBtn" data-open="plansModal" id="cta0">Our Plans</button>
+        <button class="bigBtn" data-open="boxesModal" id="cta1">New Boxes</button>
+        <button class="bigBtn" data-open="rechargeModal" id="cta2">Renew Plan</button>
+        <button class="bigBtn" data-open="supportModal" id="cta3">Contact Support</button>
+      </div>
 
-<!-- Posters -->
-<div class="postersRail" id="postersRail"></div>
+      <!-- Posters -->
+      <div class="postersRail" id="postersRail"></div>
 
-<div class="hint">Scroll for more. Scroll back up any time to use the big buttons.</div>
-</div>
-</section>
+      <div class="hint">Scroll for more. Scroll back up any time to use the big buttons.</div>
+    </div>
+  </section>
 
-<!-- Why -->
-<section class="section wrap">
-<h2 style="margin:0 0 8px">Why net+TV</h2>
-<p class="muted" style="margin:0">Stable quality, solid support, and no drama. Except in the shows.</p>
-<div class="list" style="margin-top:12px">
-<div class="pill">Fast activation with WhatsApp confirmation</div>
-<div class="pill">No-nonsense plans, real 4K where available</div>
-<div class="pill">Works on STBs, smart TVs, mobile and laptops</div>
-</div>
-</section>
+  <!-- Why -->
+  <section class="section wrap">
+    <h2 style="margin:0 0 8px">Why net+TV</h2>
+    <p class="muted" style="margin:0">Stable quality, solid support, and no drama. Except in the shows.</p>
+    <div class="list" style="margin-top:12px">
+      <div class="pill">Fast activation with WhatsApp confirmation</div>
+      <div class="pill">No-nonsense plans, real 4K where available</div>
+      <div class="pill">Works on STBs, smart TVs, mobile and laptops</div>
+    </div>
+  </section>
 
-<footer class="footer">© <span id="year"></span> net+TV. All rights reserved.</footer>
+  <footer class="footer">© <span id="year"></span> net+TV. All rights reserved.</footer>
 
-<!-- MENU SHEET -->
-<div id="menuSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Main menu">
-<div class="sheetHead"><div style="font-weight:800">Menu</div><button class="x" data-close="menuSheet">Close</button></div>
-<div class="sheetBody">
-<div class="menuList">
-<a class="menuItem" data-open="plansModal">Our Plans</a>
-<a class="menuItem" data-open="boxesModal">New Boxes</a>
-<a class="menuItem" data-open="ownPlanModal">Your Own Set-Top Box Plan</a>
-<a class="menuItem" data-open="rechargeModal">Renew Plan</a>
-<a class="menuItem" data-open="supportModal">Contact Support</a>
-<a class="menuItem" data-open="faqModal">FAQ</a>
-<a class="menuItem" data-open="aboutModal">About Us</a>
-<a class="menuItem" data-open="pinModal">Know Your Parental PIN</a>
-</div>
-<div class="footpad"></div>
-</div>
-</div>
+  <!-- MENU SHEET -->
+  <div id="menuSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Main menu">
+    <div class="sheetHead"><div style="font-weight:800">Menu</div><button class="x" data-close="menuSheet">Close</button></div>
+    <div class="sheetBody">
+      <div class="menuList">
+        <a class="menuItem" data-open="plansModal">Our Plans</a>
+        <a class="menuItem" data-open="boxesModal">New Boxes</a>
+        <a class="menuItem" data-open="ownPlanModal">Your Own Set-Top Box Plan</a>
+        <a class="menuItem" data-open="rechargeModal">Renew Plan</a>
+        <a class="menuItem" data-open="supportModal">Contact Support</a>
+        <a class="menuItem" data-open="faqModal">FAQ</a>
+        <a class="menuItem" data-open="aboutModal">About Us</a>
+        <a class="menuItem" data-open="pinModal">Know Your Parental PIN</a>
+      </div>
+      <div class="footpad"></div>
+    </div>
+  </div>
 
-<!-- MODALS -->
-<div id="plansModal" class="modal" role="dialog" aria-modal="true" aria-label="Plans">
-<div class="modalCard">
-<div class="modalHead"><strong>Our Plans</strong><div style="display:flex;gap:8px"><button class="btn" id="refreshPlans">Refresh</button><button class="x" data-close="plansModal">Close</button></div></div>
-<div class="modalBody">
-<p class="muted">All plans include Live Channels, Movies/Series, PPV (where available) and Anti-Freeze Tech.</p>
-<div id="plansGrid" class="plans"></div>
-<div class="footpad"></div>
-</div>
-</div>
-</div>
+  <!-- MODALS -->
+  <div id="plansModal" class="modal" role="dialog" aria-modal="true" aria-label="Plans">
+    <div class="modalCard">
+      <div class="modalHead"><strong>Our Plans</strong><div style="display:flex;gap:8px"><button class="btn" id="refreshPlans">Refresh</button><button class="x" data-close="plansModal">Close</button></div></div>
+      <div class="modalBody">
+        <p class="muted">All plans include Live Channels, Movies/Series, PPV (where available) and Anti-Freeze Tech.</p>
+        <div id="plansGrid" class="plans"></div>
+        <div class="footpad"></div>
+      </div>
+    </div>
+  </div>
 
-<div id="boxesModal" class="modal" role="dialog" aria-modal="true" aria-label="New Boxes">
-<div class="modalCard">
-<div class="modalHead"><strong>New Boxes</strong><button class="x" data-close="boxesModal">Close</button></div>
-<div class="modalBody"><div id="boxesGrid" class="plans"></div><div class="footpad"></div></div>
-</div>
-</div>
+  <div id="boxesModal" class="modal" role="dialog" aria-modal="true" aria-label="New Boxes">
+    <div class="modalCard">
+      <div class="modalHead"><strong>New Boxes</strong><button class="x" data-close="boxesModal">Close</button></div>
+      <div class="modalBody"><div id="boxesGrid" class="plans"></div><div class="footpad"></div></div>
+    </div>
+  </div>
 
-<div id="ownPlanModal" class="modal" role="dialog" aria-modal="true" aria-label="Build your plan">
-<div class="modalCard">
-<div class="modalHead"><strong>Your Own Plan</strong><button class="x" data-close="ownPlanModal">Close</button></div>
-<div class="modalBody">
-<form id="ownPlanForm" class="grid">
-<div class="grid two">
-<div><label>Full Name</label><input required name="name" placeholder="Your name"></div>
-<div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
-</div>
-<div><label>Email (optional)</label><input name="email" type="email" placeholder="you@example.com"></div>
-<div>
-<label>Preferred Channels</label>
-<select name="channels" required>
-<option>English</option><option>Punjabi</option><option>Hindi</option><option>Urdu</option>
-<option>French</option><option>Arabic</option><option>Korean</option><option>Gujarati</option><option>Others</option>
-</select>
-<div class="help">You’ll get Full HD and 4K where available.</div>
-</div>
-<div>
-<label>VOD Category</label>
-<select name="vod" required>
-<option>English</option><option>Panjabi</option><option>Hindi</option><option>Urdu</option>
-<option>French</option><option>Action</option><option>Drama</option><option>Comedy</option>
-<option>Kids</option><option>Documentary</option><option>Others</option><option>Adult</option>
-</select>
-</div>
-<div><label>Notes</label><textarea name="note" rows="3" placeholder="Any channel packs, devices, or timing?"></textarea></div>
-<button class="btn whats" type="submit">Send Request on WhatsApp</button>
-</form>
-<div class="footpad"></div>
-</div>
-</div>
-</div>
+  <div id="ownPlanModal" class="modal" role="dialog" aria-modal="true" aria-label="Build your plan">
+    <div class="modalCard">
+      <div class="modalHead"><strong>Your Own Plan</strong><button class="x" data-close="ownPlanModal">Close</button></div>
+      <div class="modalBody">
+        <form id="ownPlanForm" class="grid">
+          <div class="grid two">
+            <div><label>Full Name</label><input required name="name" placeholder="Your name"></div>
+            <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
+          </div>
+          <div><label>Email (optional)</label><input name="email" type="email" placeholder="you@example.com"></div>
 
-<!-- RENEW: mirrors plans with Renew button -->
-<div id="rechargeModal" class="modal" role="dialog" aria-modal="true" aria-label="Renew Plan">
-<div class="modalCard">
-<div class="modalHead"><strong>Renew Plan</strong><button class="x" data-close="rechargeModal">Close</button></div>
-<div class="modalBody">
-<p class="muted">Pick your plan below, then fill in your details.</p>
-<div id="renewPlansGrid" class="plans" style="margin-bottom:12px"></div>
+          <div>
+            <label>TV + VOD Categories (select multiple)</label>
+            <div id="catsOwn" class="catGrid"></div>
+            <div class="help">Full Package picks everything. Use the “No Adult” option if needed.</div>
+          </div>
 
-<form id="rechargeForm" class="grid two">
-<input type="hidden" name="planName" id="renewPlanName">
-<input type="hidden" name="planMonths" id="renewPlanMonths">
+          <div><label>Notes</label><textarea name="note" rows="3" placeholder="Any channel packs, devices, or timing?"></textarea></div>
+          <button class="btn whats" type="submit">Send Request on WhatsApp</button>
+        </form>
+        <div class="footpad"></div>
+      </div>
+    </div>
+  </div>
 
-<div><label>Email</label><input required name="email" type="email" placeholder="you@example.com"></div>
-<div><label>Registered Name</label><input required name="name" placeholder="Account name"></div>
-<div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
-<div><label>MAC Address</label><input required name="mac" placeholder="00:1A:79:xx:xx:xx"></div>
-<div><label>Plan Duration</label>
-<select name="duration" id="renewDuration" required>
-<option value="1">1 month</option><option value="3">3 months</option><option value="6">6 months</option><option value="12">12 months</option>
-</select>
-</div>
-<div><label>Notes</label><input name="note" placeholder="Optional note"></div>
-<button class="btn whats" type="submit">Request Renewal</button>
-</form>
-<div class="footpad"></div>
-</div>
-</div>
-</div>
+  <div id="rechargeModal" class="modal" role="dialog" aria-modal="true" aria-label="Renew Plan">
+    <div class="modalCard">
+      <div class="modalHead"><strong>Renew Plan</strong><button class="x" data-close="rechargeModal">Close</button></div>
+      <div class="modalBody">
+        <p class="muted">Pick your plan below, then fill in your details.</p>
+        <div id="renewPlansGrid" class="plans" style="margin-bottom:12px"></div>
 
-<div id="supportModal" class="modal" role="dialog" aria-modal="true" aria-label="Support">
-<div class="modalCard">
-<div class="modalHead"><strong>Contact Support</strong><button class="x" data-close="supportModal">Close</button></div>
-<div class="modalBody">
-<form id="supportForm" class="grid">
-<div class="grid two">
-<div><label>Name</label><input required name="name" placeholder="Your name"></div>
-<div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
-</div>
-<div><label>Issue</label><textarea required name="issue" rows="4" placeholder="Describe the problem..."></textarea></div>
-<button class="btn whats" type="submit">Send on WhatsApp</button>
-</form>
-<div class="footpad"></div>
-</div>
-</div>
-</div>
+        <form id="rechargeForm" class="grid two">
+          <input type="hidden" name="planName" id="renewPlanName">
+          <input type="hidden" name="planMonths" id="renewPlanMonths">
 
-<div id="faqModal" class="modal" role="dialog" aria-modal="true" aria-label="FAQ">
-<div class="modalCard">
-<div class="modalHead"><strong>FAQ</strong><button class="x" data-close="faqModal">Close</button></div>
-<div class="modalBody">
-<div class="list">
-<div class="pill"><strong>Q:</strong> Do all channels stream in 4K?<br><span class="muted">A:</span> 4K where available. Otherwise Full HD or SD.</div>
-<div class="pill"><strong>Q:</strong> What devices are supported?<br><span class="muted">A:</span> Popular STBs, Android TV, Fire TV, smart TVs, phones, tablets, and web players.</div>
-<div class="pill"><strong>Q:</strong> Activation time?<br><span class="muted">A:</span> Usually minutes after WhatsApp confirmation.</div>
-</div>
-<div class="footpad"></div>
-</div>
-</div>
-</div>
+          <div><label>Email</label><input required name="email" type="email" placeholder="you@example.com"></div>
+          <div><label>Registered Name</label><input required name="name" placeholder="Account name"></div>
+          <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
+          <div><label>MAC Address</label><input required name="mac" placeholder="00:1A:79:xx:xx:xx"></div>
+          <div><label>Plan Duration</label>
+            <select name="duration" id="renewDuration" required>
+              <option value="1">1 month</option><option value="3">3 months</option><option value="6">6 months</option><option value="12">12 months</option>
+            </select>
+          </div>
 
-<div id="aboutModal" class="modal" role="dialog" aria-modal="true" aria-label="About">
-<div class="modalCard"><div class="modalHead"><strong>About Us</strong><button class="x" data-close="aboutModal">Close</button></div><div class="modalBody"><p>net+TV is built for stability and clarity. If something isn’t true, we don’t print it on banners.</p><div class="footpad"></div></div></div>
-</div>
+          <div style="grid-column:1 / -1">
+            <label>TV + VOD Categories (select multiple)</label>
+            <div id="catsRenew" class="catGrid"></div>
+          </div>
 
-<div id="pinModal" class="modal" role="dialog" aria-modal="true" aria-label="Know Your Parental PIN">
-<div class="modalCard">
-<div class="modalHead"><strong>Know Your Parental PIN</strong><button class="x" data-close="pinModal">Close</button></div>
-<div class="modalBody">
-<form id="pinForm" class="grid">
-<div class="grid two">
-<div><label>MAC Address</label><input required name="mac" placeholder="00:1A:79:xx:xx:xx"></div>
-<div><label>Email</label><input required name="email" type="email" placeholder="you@example.com"></div>
-</div>
-<div class="grid two">
-<div>
-<label>Set-top Box Brand</label>
-<select id="pinBrand" name="brand" required>
-<option value="">Select</option><option>MAG / Stalker</option><option>Formuler</option><option>Buzztv</option><option>Dreamlink</option><option>Other</option>
-</select>
-</div>
-<div><label>PIN</label><input id="pinOutput" readonly placeholder="Will show after brand" /></div>
-</div>
-<div><label>Notes</label><input name="note" placeholder="Optional note"></div>
-<button class="btn whats" type="submit">Request PIN on WhatsApp</button>
-<div class="help">Common PINs: 0000 or 7274 depending on device.</div>
-</form>
-<div class="footpad"></div>
-</div>
-</div>
-</div>
+          <div style="grid-column:1 / -1"><label>Notes</label><input name="note" placeholder="Optional note"></div>
+          <button class="btn whats" type="submit">Request Renewal</button>
+        </form>
+        <div class="footpad"></div>
+      </div>
+    </div>
+  </div>
 
-<div id="subscribeModal" class="modal" role="dialog" aria-modal="true" aria-label="Subscribe">
-<div class="modalCard">
-<div class="modalHead"><strong>Subscribe</strong><button class="x" data-close="subscribeModal">Close</button></div>
-<div class="modalBody">
-<form id="subscribeForm" class="grid">
-<input type="hidden" name="plan" id="subPlan">
-<div class="grid two">
-<div><label>Full Name</label><input required name="name" placeholder="Your name"></div>
-<div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
-</div>
-<div class="grid two">
-<div>
-<label>TV Channels</label>
-<select name="channels" required>
-<option>English</option><option>Punjabi</option><option>Hindi</option><option>Urdu</option>
-<option>French</option><option>Arabic</option><option>Korean</option><option>Gujarati</option><option>Others</option>
-</select>
-</div>
-<div>
-<label>VOD Category</label>
-<select name="vod" required>
-<option>English</option><option>Panjabi</option><option>Hindi</option><option>Urdu</option>
-<option>French</option><option>Action</option><option>Drama</option><option>Comedy</option>
-<option>Kids</option><option>Documentary</option><option>Others</option><option>Adult</option>
-</select>
-</div>
-</div>
-<div><label>Notes</label><textarea name="note" rows="3" placeholder="Anything else we should know?"></textarea></div>
-<button class="btn whats" type="submit">Send on WhatsApp</button>
-</form>
-<div class="footpad"></div>
-</div>
-</div>
-</div>
+  <div id="supportModal" class="modal" role="dialog" aria-modal="true" aria-label="Support">
+    <div class="modalCard">
+      <div class="modalHead"><strong>Contact Support</strong><button class="x" data-close="supportModal">Close</button></div>
+      <div class="modalBody">
+        <form id="supportForm" class="grid">
+          <div class="grid two">
+            <div><label>Name</label><input required name="name" placeholder="Your name"></div>
+            <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
+          </div>
+          <div><label>Issue</label><textarea required name="issue" rows="4" placeholder="Describe the problem..."></textarea></div>
+          <button class="btn whats" type="submit">Send on WhatsApp</button>
+        </form>
+        <div class="footpad"></div>
+      </div>
+    </div>
+  </div>
 
-<!-- Firebase + Scripts -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+  <div id="faqModal" class="modal" role="dialog" aria-modal="true" aria-label="FAQ">
+    <div class="modalCard">
+      <div class="modalHead"><strong>FAQ</strong><button class="x" data-close="faqModal">Close</button></div>
+      <div class="modalBody">
+        <div class="list">
+          <div class="pill"><strong>Q:</strong> Do all channels stream in 4K?<br><span class="muted">A:</span> 4K where available. Otherwise Full HD or SD.</div>
+          <div class="pill"><strong>Q:</strong> What devices are supported?<br><span class="muted">A:</span> Popular STBs, Android TV, Fire TV, smart TVs, phones, tablets, and web players.</div>
+          <div class="pill"><strong>Q:</strong> Activation time?<br><span class="muted">A:</span> Usually minutes after WhatsApp confirmation.</div>
+        </div>
+        <div class="footpad"></div>
+      </div>
+    </div>
+  </div>
 
-const firebaseConfig = {
-apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
-authDomain: "netplus-site-4ff04.firebaseapp.com",
-projectId: "netplus-site-4ff04",
-storageBucket: "netplus-site-4ff04.firebasestorage.app",
-messagingSenderId: "49095160110",
-appId: "1:49095160110:web:5431d5c9f8ca45c4d70abf",
-measurementId: "G-PYWFFDZ0RR"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+  <div id="aboutModal" class="modal" role="dialog" aria-modal="true" aria-label="About">
+    <div class="modalCard"><div class="modalHead"><strong>About Us</strong><button class="x" data-close="aboutModal">Close</button></div><div class="modalBody"><p>net+TV is built for stability and clarity. If something isn’t true, we don’t print it on banners.</p><div class="footpad"></div></div></div>
+  </div>
 
-let WHATSAPP_NUMBER = "16476961656";
-document.getElementById('year').textContent = new Date().getFullYear();
+  <div id="pinModal" class="modal" role="dialog" aria-modal="true" aria-label="Know Your Parental PIN">
+    <div class="modalCard">
+      <div class="modalHead"><strong>Know Your Parental PIN</strong><button class="x" data-close="pinModal">Close</button></div>
+      <div class="modalBody">
+        <form id="pinForm" class="grid">
+          <div class="grid two">
+            <div><label>MAC Address</label><input required name="mac" placeholder="00:1A:79:xx:xx:xx"></div>
+            <div><label>Email</label><input required name="email" type="email" placeholder="you@example.com"></div>
+          </div>
+          <div class="grid two">
+            <div>
+              <label>Set-top Box Brand</label>
+              <select id="pinBrand" name="brand" required>
+                <option value="">Select</option><option>MAG / Stalker</option><option>Formuler</option><option>Buzztv</option><option>Dreamlink</option><option>Other</option>
+              </select>
+            </div>
+            <div><label>PIN</label><input id="pinOutput" readonly placeholder="Will show after brand" /></div>
+          </div>
+          <div><label>Notes</label><input name="note" placeholder="Optional note"></div>
+          <button class="btn whats" type="submit">Request PIN on WhatsApp</button>
+          <div class="help">Common PINs: 0000 or 7274 depending on device.</div>
+        </form>
+        <div class="footpad"></div>
+      </div>
+    </div>
+  </div>
 
-// Theme
-const themeBtn = document.getElementById('themeBtn');
-const preferred = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-document.documentElement.setAttribute('data-theme', preferred);
-themeBtn.addEventListener('click', ()=>{
-const now = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-document.documentElement.setAttribute('data-theme', now);
-localStorage.setItem('theme', now);
-});
+  <div id="subscribeModal" class="modal" role="dialog" aria-modal="true" aria-label="Subscribe">
+    <div class="modalCard">
+      <div class="modalHead"><strong>Subscribe</strong><button class="x" data-close="subscribeModal">Close</button></div>
+      <div class="modalBody">
+        <form id="subscribeForm" class="grid">
+          <input type="hidden" name="plan" id="subPlan">
+          <div class="grid two">
+            <div><label>Full Name</label><input required name="name" placeholder="Your name"></div>
+            <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
+          </div>
 
-// Menu + modals
-const menuBtn = document.getElementById('menuBtn');
-const menuSheet = document.getElementById('menuSheet');
-menuBtn.addEventListener('click', () => menuSheet.classList.add('open'));
-menuSheet.addEventListener('click', e => { if (e.target.dataset.close === 'menuSheet' || e.target === menuSheet) menuSheet.classList.remove('open'); });
-menuSheet.querySelectorAll('[data-open]').forEach(a=> a.addEventListener('click', ()=>{ menuSheet.classList.remove('open'); openModal(a.dataset.open); }));
-function openModal(id){ document.getElementById(id)?.classList.add('open'); }
-function closeModal(id){ document.getElementById(id)?.classList.remove('open'); }
-document.querySelectorAll('.modal').forEach(m=>{
-m.addEventListener('click', e=>{ if (e.target === m) m.classList.remove('open'); });
-m.querySelectorAll('[data-close]').forEach(b=> b.addEventListener('click', ()=> closeModal(b.dataset.close || m.id)));
-});
-document.querySelectorAll('[data-open]').forEach(b=> b.addEventListener('click', ()=> openModal(b.dataset.open)));
+          <div>
+            <label>TV + VOD Categories (select multiple)</label>
+            <div id="catsSub" class="catGrid"></div>
+          </div>
 
-// Helpers
-function toWA(text){ window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,'_blank'); }
-function formToKV(form){ const data=new FormData(form); const kv={}; data.forEach((v,k)=>kv[k]=v); return kv; }
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
-function imgTag(u, ph, attrs=''){
-// cache-bust + strict referrer + robust fallback on error or naturalWidth=0
-const src = u ? `${u}${u.includes('?')?'&':'?'}v=${Date.now()}` : ph;
-return `<img src="${src}" ${attrs} referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${ph}'" onload="if(!this.naturalWidth){this.src='${ph}'}">`;
-}
+          <div><label>Notes</label><textarea name="note" rows="3" placeholder="Anything else we should know?"></textarea></div>
+          <button class="btn whats" type="submit">Send on WhatsApp</button>
+        </form>
+        <div class="footpad"></div>
+      </div>
+    </div>
+  </div>
 
-// Forms -> WA
-document.getElementById('subscribeForm').addEventListener('submit', e=>{
-e.preventDefault(); const kv=formToKV(e.target);
-toWA([`New Subscription Request`,`Plan: ${kv.plan}`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,`Channels: ${kv.channels}`,`VOD: ${kv.vod}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
-});
-document.getElementById('ownPlanForm').addEventListener('submit', e=>{
-e.preventDefault(); const kv=formToKV(e.target);
-toWA([`Custom Plan Request`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,kv.email?`Email: ${kv.email}`:null,`Preferred Channels: ${kv.channels}`,`VOD: ${kv.vod}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
-});
-document.getElementById('supportForm').addEventListener('submit', e=>{
-e.preventDefault(); const kv=formToKV(e.target);
-toWA([`Support Request`,`Name: ${kv.name}`,`Phone: ${kv.phone}`,`Issue: ${kv.issue}`].join('\n'));
-});
+  <!-- Firebase + Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
 
-// PIN brand mapping
-function pinForBrand(brand){ const b=(brand||'').toLowerCase(); return (b.includes('mag')||b.includes('stalker')) ? '7274' : '0000'; }
-const brandSel=document.getElementById('pinBrand'); const pinOut=document.getElementById('pinOutput');
-if (brandSel && pinOut){ brandSel.addEventListener('change', ()=>{ pinOut.value=pinForBrand(brandSel.value); }); }
-document.getElementById('pinForm').addEventListener('submit', e=>{
-e.preventDefault(); const kv=formToKV(e.target);
-const resolvedPin=pinForBrand(kv.brand);
-toWA([`Parental PIN Request`,`MAC: ${kv.mac}`,`Email: ${kv.email}`,`Brand: ${kv.brand||'N/A'}`,`Suggested PIN: ${resolvedPin}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
-});
+    const firebaseConfig = {
+      apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
+      authDomain: "netplus-site-4ff04.firebaseapp.com",
+      projectId: "netplus-site-4ff04",
+      storageBucket: "netplus-site-4ff04.firebasestorage.app",
+      messagingSenderId: "49095160110",
+      appId: "1:49095160110:web:5431d5c9f8ca45c4d70abf",
+      measurementId: "G-PYWFFDZ0RR"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-// DOM refs
-const plansGrid = document.getElementById('plansGrid');
-const refreshBtn = document.getElementById('refreshPlans');
-const bannerTrack = document.getElementById('bannerTrack');
-const postersRail = document.getElementById('postersRail');
-const boxesGrid = document.getElementById('boxesGrid');
-const renewGrid = document.getElementById('renewPlansGrid');
+    let WHATSAPP_NUMBER = "16476961656";
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-// Ticker: starts immediately (already in HTML). When settings load, replace content and keep motion seamless.
-function setTicker(items){
-const host = document.getElementById('featureTicker');
-const line = items.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
-host.innerHTML = line + line; // duplicate for seamless loop
-// Do NOT toggle animation; it keeps running
-}
+    /* ========== THEME ========== */
+    const themeBtn = document.getElementById('themeBtn');
+    const preferred = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', preferred);
+    themeBtn.addEventListener('click', ()=>{
+      const now = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', now);
+      localStorage.setItem('theme', now);
+    });
 
-/* ===== Firestore loaders ===== */
+    /* ========== MENU / MODALS ========== */
+    const menuBtn = document.getElementById('menuBtn');
+    const menuSheet = document.getElementById('menuSheet');
+    menuBtn.addEventListener('click', () => menuSheet.classList.add('open'));
+    menuSheet.addEventListener('click', e => { if (e.target.dataset.close === 'menuSheet' || e.target === menuSheet) menuSheet.classList.remove('open'); });
+    menuSheet.querySelectorAll('[data-open]').forEach(a=> a.addEventListener('click', ()=>{ menuSheet.classList.remove('open'); openModal(a.dataset.open); }));
+    function openModal(id){ document.getElementById(id)?.classList.add('open'); }
+    function closeModal(id){ document.getElementById(id)?.classList.remove('open'); }
+    document.querySelectorAll('.modal').forEach(m=>{
+      m.addEventListener('click', e=>{ if (e.target === m) m.classList.remove('open'); });
+      m.querySelectorAll('[data-close]').forEach(b=> b.addEventListener('click', ()=> closeModal(b.dataset.close || m.id)));
+    });
+    document.querySelectorAll('[data-open]').forEach(b=> b.addEventListener('click', ()=> openModal(b.dataset.open)));
 
-async function loadSettings(){
-try{
-const sDoc = await getDoc(doc(db,'settings','main'));
-if (sDoc.exists()){
-const s = sDoc.data();
-if (!localStorage.getItem('theme') && s.themeDefault) document.documentElement.setAttribute('data-theme', s.themeDefault);
-if (s.whatsappNumber) WHATSAPP_NUMBER = s.whatsappNumber;
-if (s.heroSubtitle) document.getElementById('heroSubtitle').textContent = s.heroSubtitle;
-if (s.heroTitle) document.getElementById('heroTitle').textContent = s.heroTitle;
-if (s.heroSubline) document.getElementById('heroSubline').textContent = s.heroSubline;
-if (Array.isArray(s.ctaLabels)){
-['cta0','cta1','cta2','cta3'].forEach((id,i)=>{ if (s.ctaLabels[i]) document.getElementById(id).textContent = s.ctaLabels[i]; });
-}
-if (Array.isArray(s.features) && s.features.length) setTicker(s.features);
-}
-}catch(e){}
-}
+    /* ========== HELPERS ========== */
+    function toWA(text){ window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,'_blank'); }
+    function formToKV(form){ const data=new FormData(form); const kv={}; data.forEach((v,k)=>kv[k]=v); return kv; }
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+    function imgTag(u, ph, attrs=''){
+      const src = u ? `${u}${u.includes('?')?'&':'?'}v=${Date.now()}` : ph;
+      return `<img src="${src}" ${attrs} referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${ph}'" onload="if(!this.naturalWidth){this.src='${ph}'}">`;
+    }
+    function pickChecked(container){
+      return Array.from(container.querySelectorAll('input[type="checkbox"][name="cats"]:checked')).map(i=>i.value);
+    }
 
-// Banners: try /banners then legacy site_content/banners/items
-let bannerTimer = null;
-function startBanner(){
-const track = bannerTrack; if (!track.children.length) return;
-let i=0; if (bannerTimer) clearInterval(bannerTimer);
-track.style.transform='translateX(0)';
-bannerTimer = setInterval(()=>{ i=(i+1)%track.children.length; track.style.transform=`translateX(-${i*100}%)`; }, 4500);
-}
-async function loadBanners(){
-bannerTrack.innerHTML = '';
-let urls = [];
-try{
-const snap = await getDocs(collection(db,'banners'));
-snap.forEach(d=>{ const x=d.data(); if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u}))); });
-}catch(e){}
-if (!urls.length){
-try{
-const snap2 = await getDocs(collection(db,'site_content/banners/items'));
-snap2.forEach(d=>{ const x=d.data(); if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u}))); });
-}catch(e){}
-}
-urls.sort((a,b)=>a.sort-b.sort);
-const list = urls.length ? urls.map(o=>o.url) : [
-"https://via.placeholder.com/1280x720?text=Banner+1",
-"https://via.placeholder.com/1280x720?text=Banner+2"
-];
-bannerTrack.innerHTML = list.map(u=>`<div class="bannerSlide">${imgTag(u,'https://via.placeholder.com/1280x720?text=Banner','loading="eager" fetchpriority="high"' )}</div>`).join('');
-startBanner();
-}
+    /* Category list in required order */
+    const CATEGORY_LIST = [
+      "Full Package",
+      "Full Package (No Adult)",
+      "English",
+      "Hindi",
+      "Punjabi",
+      "Gujarati",
+      "South Indian",
+      "Kids",
+      "Sports",
+      "Adult"
+    ];
 
-async function loadPosters(){
-postersRail.innerHTML = '';
-try{
-const snap = await getDocs(collection(db,'posters'));
-const arr=[]; snap.forEach(d=>{ const x=d.data(); if(x.active!==false && x.image) arr.push(x); });
-arr.sort((a,b)=> (a.sort||0)-(b.sort||0));
-const imgs = arr.map(x=>x.image);
-const list = imgs.length ? imgs : [
-"https://via.placeholder.com/300x450?text=Poster+1",
-"https://via.placeholder.com/300x450?text=Poster+2",
-"https://via.placeholder.com/300x450?text=Poster+3"
-];
-postersRail.innerHTML = list.map(u=> imgTag(u,'https://via.placeholder.com/300x450?text=Poster','loading="lazy"') ).join('');
-}catch(e){
-postersRail.innerHTML = `<img src="https://via.placeholder.com/300x450?text=Poster+1"><img src="https://via.placeholder.com/300x450?text=Poster+2">`;
-}
-}
+    function renderCats(containerId){
+      const host = document.getElementById(containerId);
+      host.innerHTML = CATEGORY_LIST.map((c)=>`
+        <label class="catItem">
+          <input type="checkbox" name="cats" value="${escapeAttr(c)}">
+          <span>${escapeHtml(c)}</span>
+        </label>`).join('');
 
-let plansData = [];
-const demoPlans = [
-{ id:'p1', name:"Starter HD", price:"CA$60", months:6, benefit:"+1 month free", tag:"Popular", desc:"HD focus • Core channels" },
-{ id:'p2', name:"Family FHD", price:"CA$100", months:12, benefit:"+2 months free", tag:"Best Value", desc:"Full HD • Family packs" }
-];
+      const checks = [...host.querySelectorAll('input[name="cats"]')];
+      const full = checks.find(x => x.value === "Full Package");
+      const noAdult = checks.find(x => x.value === "Full Package (No Adult)");
+      const adult = checks.find(x => x.value === "Adult");
 
-async function loadPlans(){
-plansGrid.innerHTML = '<div class="muted">Loading plans…</div>';
-plansData = [];
-try{
-const snap = await getDocs(collection(db,'plans'));
-snap.forEach(doc=>{ const d=doc.data(); if(d?.name && d?.price && d.active!==false) plansData.push({id:doc.id,...d}); });
-plansData.sort((a,b)=> (a.sort||0)-(b.sort||0));
-}catch(e){}
-if (!plansData.length) plansData = demoPlans;
-renderPlans(plansData);
-renderRenewPlans(plansData);
-}
+      function applyFull(which){
+        if (which === 'full' && full){
+          checks.forEach(ch => { if (ch !== full) ch.checked = true; });
+          if (noAdult) noAdult.checked = false;
+        }
+        if (which === 'noAdult' && noAdult){
+          checks.forEach(ch => { if (ch !== noAdult) ch.checked = (ch.value !== 'Adult'); });
+          if (full) full.checked = false;
+        }
+      }
+      if (full) full.addEventListener('change', ()=> { if (full.checked) applyFull('full'); });
+      if (noAdult) noAdult.addEventListener('change', ()=> { if (noAdult.checked) applyFull('noAdult'); });
+      if (adult && noAdult){
+        adult.addEventListener('change', ()=> { if (adult.checked && noAdult.checked) noAdult.checked = false; });
+      }
+      checks.forEach(ch=>{
+        if (ch !== full && ch !== noAdult){
+          ch.addEventListener('change', ()=>{
+            if (!ch.checked){
+              if (full) full.checked = false;
+              if (noAdult) noAdult.checked = false;
+            }
+          });
+        }
+      });
+    }
 
-function planCardHTML(p, mode){
-const btn = mode==='renew'
-? `<button class="btn whats" data-renew='${escapeAttr(JSON.stringify({name:p.name,months:p.months||""}))}'>Renew</button>`
-: `<button class="btn whats" data-subscribe="${escapeAttr(p.name)}">Subscribe</button><button class="btn" data-info="${escapeAttr(p.name)}">Info</button>`;
-return `
-       ${p.tag ? `<div class="tag">${escapeHtml(p.tag)}</div>` : ''}
-       <div class="cardHead">
-         <h3>${escapeHtml(p.name)}</h3>
-         <div class="priceRight">${escapeHtml(p.price)}</div>
-       </div>
-       ${p.months ? `<div class="muted">${escapeHtml(p.months + ' months')}</div>` : ''}
-       ${p.benefit ? `<div class="benefit">${escapeHtml(p.benefit)}</div>` : ''}
-       <div class="muted" style="margin:10px 0 14px">${escapeHtml(p.desc || '')}</div>
-       <div style="display:flex;gap:8px;flex-wrap:wrap">${btn}</div>`;
-}
+    /* ========== TICKER (always visible, readable speed) ========== */
+    const DEFAULT_TICKER = [
+      "🇨🇦 Proudly Canadian",
+      "Zero Latency Streams",
+      "24/7 Support",
+      "Multi-Device"
+    ];
 
-function renderPlans(items){
-plansGrid.innerHTML = '';
-items.forEach(p=>{
-const el = document.createElement('div'); el.className='card'; el.innerHTML = planCardHTML(p,'sub');
-plansGrid.appendChild(el);
-});
-plansGrid.querySelectorAll('[data-info]').forEach(b=> b.addEventListener('click', ()=> alert('Includes channels in English, Punjabi, Hindi, Urdu, Gujarati, Arabic, Korean and more. 4K where available.')));
-plansGrid.querySelectorAll('[data-subscribe]').forEach(b=> b.addEventListener('click', ()=>{
-document.getElementById('subPlan').value = b.dataset.subscribe; openModal('subscribeModal');
-}));
-}
+    function restartTicker(host){
+      host.style.animation = 'none';
+      // Force reflow
+      void host.offsetWidth;
+      host.style.animation = '';
+    }
 
-function renderRenewPlans(items){
-renewGrid.innerHTML = '';
-items.forEach(p=>{
-const el = document.createElement('div'); el.className='card'; el.innerHTML = planCardHTML(p,'renew');
-renewGrid.appendChild(el);
-});
-renewGrid.querySelectorAll('[data-renew]').forEach(b=>{
-b.addEventListener('click', ()=>{
-const {name, months} = JSON.parse(b.dataset.renew || '{}');
-document.getElementById('renewPlanName').value = name || '';
-document.getElementById('renewPlanMonths').value = months || '';
-if (months) document.getElementById('renewDuration').value = String(months);
-document.getElementById('rechargeForm').scrollIntoView({behavior:'smooth', block:'start'});
-});
-});
-}
+    function setTickerDuration(host){
+      // Move half the content width per loop (because content is duplicated)
+      const distancePx = host.scrollWidth / 2;
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const velocity = vw < 700 ? 82 : 82; // px per second; slightly faster
+      const dur = Math.max(12, distancePx / velocity); // floor to avoid silly fast loops
+      host.style.setProperty('--dur', `${dur}s`);
+      restartTicker(host);
+    }
 
-async function loadBoxes(){
-boxesGrid.innerHTML = '<div class="muted">Loading boxes…</div>';
-let items=[];
-try{
-const snap = await getDocs(collection(db,'boxes'));
-snap.forEach(d=>{ const x=d.data(); if(x.active!==false) items.push({id:d.id,...x}); });
-items.sort((a,b)=> (a.sort||0)-(b.sort||0));
-}catch(e){}
-renderBoxes(items);
-}
-function renderBoxes(items){
-boxesGrid.innerHTML = '';
-if(!items.length){ boxesGrid.innerHTML = '<div class="muted">Boxes coming soon.</div>'; return; }
-items.forEach(b=>{
-const images = Array.isArray(b.images) && b.images.length ? b.images : ["https://via.placeholder.com/1280x720?text=Box"];
-const card = document.createElement('div'); card.className='card';
-card.innerHTML = `
-         <div class="boxSlider">
-           <div class="boxTrack">
-             ${images.map(u=>`<div class="boxSlide">${imgTag(u,'https://via.placeholder.com/1280x720?text=Box','loading="lazy"')}</div>`).join('')}
-           </div>
-         </div>
-         <div class="boxDots">${images.map((_,i)=>`<div class="boxDot ${i===0?'active':''}"></div>`).join('')}</div>
+    function setTicker(items){
+      const host = document.getElementById('featureTicker');
+      const list = (Array.isArray(items) && items.length) ? items : DEFAULT_TICKER;
+      const line = list.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
+      host.innerHTML = line + line; // duplicate for seamless loop
+      // Next frame, measure and set readable speed
+      requestAnimationFrame(()=> setTickerDuration(host));
+    }
 
-         ${b.tier ? `<span class="miniTag">${escapeHtml(b.tier)}</span>` : ''}
-         <div class="boxMeta"><h3 class="boxName">${escapeHtml(b.name||'')}</h3><div class="boxPrice">${escapeHtml(b.boxPrice||'')}</div></div>
+    window.addEventListener('resize', ()=> setTickerDuration(document.getElementById('featureTicker')));
 
-         ${b.combo ? `<div class="comboCallout"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Combo Plan</strong><strong>${escapeHtml(b.combo.price||'')}</strong></div><div class="muted">${b.combo.planMonths||12} months • ${escapeHtml(b.combo.extra||'')}</div></div>` : ''}
+    /* ========== FIRESTORE LOADERS ========== */
+    async function loadSettings(){
+      try{
+        const sDoc = await getDoc(doc(db,'settings','main'));
+        if (sDoc.exists()){
+          const s = sDoc.data();
+          if (!localStorage.getItem('theme') && s.themeDefault) document.documentElement.setAttribute('data-theme', s.themeDefault);
+          if (s.whatsappNumber) WHATSAPP_NUMBER = s.whatsappNumber;
+          if (s.heroSubtitle) document.getElementById('heroSubtitle').textContent = s.heroSubtitle;
+          if (s.heroTitle) document.getElementById('heroTitle').textContent = s.heroTitle;
+          if (s.heroSubline) document.getElementById('heroSubline').textContent = s.heroSubline;
+          if (Array.isArray(s.ctaLabels)){
+            ['cta0','cta1','cta2','cta3'].forEach((id,i)=>{ if (s.ctaLabels[i]) document.getElementById(id).textContent = s.ctaLabels[i]; });
+          }
+          if (Array.isArray(s.features) && s.features.length) setTicker(s.features);
+        }
+      }catch(e){}
+    }
 
-         <div class="muted" style="line-height:1.5;margin:8px 0 12px">${escapeHtml(b.desc||'')}</div>
-         <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn whats" data-box="${escapeAttr(b.name||'')}">Get Box</button><button class="btn" data-boxinfo="${escapeAttr(b.name||'')}">Info</button></div>`;
-boxesGrid.appendChild(card);
+    let bannerTimer = null;
+    function startBanner(){
+      const track = document.getElementById('bannerTrack'); if (!track.children.length) return;
+      let i=0; if (bannerTimer) clearInterval(bannerTimer);
+      track.style.transform='translateX(0)';
+      bannerTimer = setInterval(()=>{ i=(i+1)%track.children.length; track.style.transform=`translateX(-${i*100}%)`; }, 4500);
+    }
+    async function loadBanners(){
+      const bannerTrack = document.getElementById('bannerTrack');
+      bannerTrack.innerHTML = '';
+      let urls = [];
+      try{
+        const snap = await getDocs(collection(db,'banners'));
+        snap.forEach(d=>{ const x=d.data(); if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u}))); });
+      }catch(e){}
+      if (!urls.length){
+        try{
+          const snap2 = await getDocs(collection(db,'site_content/banners/items'));
+          snap2.forEach(d=>{ const x=d.data(); if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u}))); });
+        }catch(e){}
+      }
+      urls.sort((a,b)=>a.sort-b.sort);
+      const list = urls.length ? urls.map(o=>o.url) : [
+        "https://via.placeholder.com/1280x720?text=Banner+1",
+        "https://via.placeholder.com/1280x720?text=Banner+2"
+      ];
+      bannerTrack.innerHTML = list.map(u=>`<div class="bannerSlide">${imgTag(u,'https://via.placeholder.com/1280x720?text=Banner','loading="eager" fetchpriority="high"')}</div>`).join('');
+      startBanner();
+    }
 
-const track = card.querySelector('.boxTrack');
-const dots = Array.from(card.querySelectorAll('.boxDot'));
-let idx = 0; const go=i=>{ idx=(i+images.length)%images.length; track.style.transform=`translateX(-${idx*100}%)`; dots.forEach((d,k)=>d.classList.toggle('active',k===idx)); };
-let timer=setInterval(()=>go(idx+1),3500);
-card.addEventListener('mouseenter', ()=>clearInterval(timer));
-card.addEventListener('mouseleave', ()=>timer=setInterval(()=>go(idx+1),3500));
-dots.forEach((d,k)=> d.addEventListener('click', ()=>go(k)));
-});
+    async function loadPosters(){
+      const postersRail = document.getElementById('postersRail');
+      postersRail.innerHTML = '';
+      try{
+        const snap = await getDocs(collection(db,'posters'));
+        const arr=[]; snap.forEach(d=>{ const x=d.data(); if(x.active!==false && x.image) arr.push(x); });
+        arr.sort((a,b)=> (a.sort||0)-(b.sort||0));
+        const imgs = arr.map(x=>x.image);
+        const list = imgs.length ? imgs : [
+          "https://via.placeholder.com/300x450?text=Poster+1",
+          "https://via.placeholder.com/300x450?text=Poster+2",
+          "https://via.placeholder.com/300x450?text=Poster+3"
+        ];
+        postersRail.innerHTML = list.map(u=> imgTag(u,'https://via.placeholder.com/300x450?text=Poster','loading="lazy"')).join('');
+      }catch(e){
+        postersRail.innerHTML = `<img src="https://via.placeholder.com/300x450?text=Poster+1"><img src="https://via.placeholder.com/300x450?text=Poster+2">`;
+      }
+    }
 
-boxesGrid.querySelectorAll('[data-box]').forEach(b=>{
-b.addEventListener('click', ()=> toWA(`Box Request\nBox: ${b.dataset.box}\nPrefer combo? yes/no\nName:\nPhone:\nNote:`));
-});
-boxesGrid.querySelectorAll('[data-boxinfo]').forEach(b=> b.addEventListener('click', ()=> alert(`${b.dataset.box}\nIncludes HDMI, power adapter, supports our portal.`)));
-}
+    let plansData = [];
+    const demoPlans = [
+      { id:'p1', name:"Starter HD", price:"CA$60", months:6, benefit:"+1 month free", tag:"Popular", desc:"HD focus • Core channels" },
+      { id:'p2', name:"Family FHD", price:"CA$100", months:12, benefit:"+2 months free", tag:"Best Value", desc:"Full HD • Family packs" }
+    ];
 
-// Boot
-(async()=>{
-await loadSettings();       // updates ticker text if present
-await loadBanners();        // new simple <img> slider
-await loadPosters();        // these were already OK
-await loadPlans();          // renders plans + renew plans
-await loadBoxes();          // new simple <img> slider
-})();
+    function descHTML(p){
+      if (Array.isArray(p.features) && p.features.length){
+        return `<ul style="margin:8px 0 12px;padding-left:18px">${p.features.map(li=>`<li>${escapeHtml(String(li))}</li>`).join('')}</ul>`;
+      }
+      if (typeof p.desc === 'string' && p.desc.includes('\\n')){
+        const parts = p.desc.split(/\\n/).map(s=>s.trim()).filter(Boolean);
+        return `<ul style="margin:8px 0 12px;padding-left:18px">${parts.map(li=>`<li>${escapeHtml(li)}</li>`).join('')}</ul>`;
+      }
+      if (typeof p.desc === 'string' && p.desc.includes('\n')){
+        const parts = p.desc.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+        return `<ul style="margin:8px 0 12px;padding-left:18px">${parts.map(li=>`<li>${escapeHtml(li)}</li>`).join('')}</ul>`;
+      }
+      const line = p.desc ? escapeHtml(String(p.desc)) : '';
+      return `<div class="muted" style="margin:10px 0 14px">${line}</div>`;
+    }
 
-// Manual refresh for plans
-document.getElementById('refreshPlans')?.addEventListener('click', loadPlans);
-</script>
+    function planCardHTML(p, mode){
+      const btn = mode==='renew'
+        ? `<button class="btn whats" data-renew='${escapeAttr(JSON.stringify({name:p.name,months:p.months||""}))}'>Renew</button>`
+        : `<button class="btn whats" data-subscribe="${escapeAttr(p.name)}">Subscribe</button><button class="btn" data-info="${escapeAttr(p.name)}">Info</button>`;
+      return `
+        ${p.tag ? `<div class="tag">${escapeHtml(p.tag)}</div>` : ''}
+        <div class="cardHead">
+          <h3>${escapeHtml(p.name)}</h3>
+          <div class="priceRight">${escapeHtml(p.price)}</div>
+        </div>
+        ${p.months ? `<div class="muted">${escapeHtml(p.months + ' months')}</div>` : ''}
+        ${p.benefit ? `<div class="benefit">${escapeHtml(p.benefit)}</div>` : ''}
+        ${descHTML(p)}
+        <div style="display:flex;gap:8px;flex-wrap:wrap">${btn}</div>`;
+    }
+
+    async function loadPlans(){
+      const plansGrid = document.getElementById('plansGrid');
+      const renewGrid = document.getElementById('renewPlansGrid');
+      plansGrid.innerHTML = '<div class="muted">Loading plans…</div>';
+      plansData = [];
+      try{
+        const snap = await getDocs(collection(db,'plans'));
+        snap.forEach(doc=>{ const d=doc.data(); if(d?.name && d?.price && d.active!==false) plansData.push({id:doc.id,...d}); });
+        plansData.sort((a,b)=> (a.sort||0)-(b.sort||0));
+      }catch(e){}
+      if (!plansData.length) plansData = demoPlans;
+
+      // Render
+      plansGrid.innerHTML = '';
+      plansData.forEach(p=>{
+        const el = document.createElement('div'); el.className='card'; el.innerHTML = planCardHTML(p,'sub');
+        plansGrid.appendChild(el);
+      });
+      plansGrid.querySelectorAll('[data-info]').forEach(b=> b.addEventListener('click', ()=> alert('Includes channels in English, Hindi, Punjabi, Gujarati, South Indian, Kids, Sports and more. 4K where available.')));
+      plansGrid.querySelectorAll('[data-subscribe]').forEach(b=> b.addEventListener('click', ()=>{
+        document.getElementById('subPlan').value = b.dataset.subscribe; openModal('subscribeModal');
+      }));
+
+      // Renew list
+      renewGrid.innerHTML = '';
+      plansData.forEach(p=>{
+        const el = document.createElement('div'); el.className='card'; el.innerHTML = planCardHTML(p,'renew');
+        renewGrid.appendChild(el);
+      });
+      renewGrid.querySelectorAll('[data-renew]').forEach(b=>{
+        b.addEventListener('click', ()=>{
+          const {name, months} = JSON.parse(b.dataset.renew || '{}');
+          document.getElementById('renewPlanName').value = name || '';
+          document.getElementById('renewPlanMonths').value = months || '';
+          if (months) document.getElementById('renewDuration').value = String(months);
+          document.getElementById('rechargeForm').scrollIntoView({behavior:'smooth', block:'start'});
+        });
+      });
+    }
+
+    async function loadBoxes(){
+      const boxesGrid = document.getElementById('boxesGrid');
+      boxesGrid.innerHTML = '<div class="muted">Loading boxes…</div>';
+      let items=[];
+      try{
+        const snap = await getDocs(collection(db,'boxes'));
+        snap.forEach(d=>{ const x=d.data(); if(x.active!==false) items.push({id:d.id,...x}); });
+        items.sort((a,b)=> (a.sort||0)-(b.sort||0));
+      }catch(e){}
+      boxesGrid.innerHTML = '';
+      if(!items.length){ boxesGrid.innerHTML = '<div class="muted">Boxes coming soon.</div>'; return; }
+      items.forEach(b=>{
+        const images = Array.isArray(b.images) && b.images.length ? b.images : ["https://via.placeholder.com/1280x720?text=Box"];
+        const card = document.createElement('div'); card.className='card';
+        card.innerHTML = `
+          <div class="boxSlider">
+            <div class="boxTrack">
+              ${images.map(u=>`<div class="boxSlide">${imgTag(u,'https://via.placeholder.com/1280x720?text=Box','loading="lazy"')}</div>`).join('')}
+            </div>
+          </div>
+          <div class="boxDots">${images.map((_,i)=>`<div class="boxDot ${i===0?'active':''}"></div>`).join('')}</div>
+
+          ${b.tier ? `<span class="miniTag">${escapeHtml(b.tier)}</span>` : ''}
+          <div class="boxMeta"><h3 class="boxName">${escapeHtml(b.name||'')}</h3><div class="boxPrice">${escapeHtml(b.boxPrice||'')}</div></div>
+
+          ${b.combo ? `<div class="comboCallout"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Combo Plan</strong><strong>${escapeHtml(b.combo.price||'')}</strong></div><div class="muted">${b.combo.planMonths||12} months • ${escapeHtml(b.combo.extra||'')}</div></div>` : ''}
+
+          <div class="muted" style="line-height:1.5;margin:8px 0 12px">${escapeHtml(b.desc||'')}</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn whats" data-box="${escapeAttr(b.name||'')}">Get Box</button><button class="btn" data-boxinfo="${escapeAttr(b.name||'')}">Info</button></div>`;
+        boxesGrid.appendChild(card);
+
+        const track = card.querySelector('.boxTrack');
+        const dots = Array.from(card.querySelectorAll('.boxDot'));
+        let idx = 0; const go=i=>{ idx=(i+images.length)%images.length; track.style.transform=`translateX(-${idx*100}%)`; dots.forEach((d,k)=>d.classList.toggle('active',k===idx)); };
+        let timer=setInterval(()=>go(idx+1),3500);
+        card.addEventListener('mouseenter', ()=>clearInterval(timer));
+        card.addEventListener('mouseleave', ()=>timer=setInterval(()=>go(idx+1),3500));
+        dots.forEach((d,k)=> d.addEventListener('click', ()=>go(k)));
+      });
+
+      boxesGrid.querySelectorAll('[data-box]').forEach(b=>{
+        b.addEventListener('click', ()=> toWA(`Box Request\nBox: ${b.dataset.box}\nPrefer combo? yes/no\nName:\nPhone:\nNote:`));
+      });
+      boxesGrid.querySelectorAll('[data-boxinfo]').forEach(b=> b.addEventListener('click', ()=> alert(`${b.dataset.box}\nIncludes HDMI, power adapter, supports our portal.`)));
+    }
+
+    /* ========== BOOT ========== */
+    (async()=>{
+      // Make the initial hardcoded ticker animate at readable speed
+      setTicker(DEFAULT_TICKER);
+
+      await loadSettings();
+      await loadBanners();
+      await loadPosters();
+      await loadPlans();
+      await loadBoxes();
+
+      // Render category checkboxes in all forms
+      renderCats('catsSub');
+      renderCats('catsOwn');
+      renderCats('catsRenew');
+    })();
+
+    // FORMS -> WhatsApp
+    document.getElementById('subscribeForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      const cats = pickChecked(document.getElementById('catsSub'));
+      toWA([`New Subscription Request`,
+            `Plan: ${kv.plan || '-'}`,
+            `Name: ${kv.name}`,
+            `Phone: ${kv.phone}`,
+            cats.length?`Categories: ${cats.join(', ')}`:null,
+            kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
+    });
+
+    document.getElementById('ownPlanForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      const cats = pickChecked(document.getElementById('catsOwn'));
+      toWA([`Custom Plan Request`,
+            `Name: ${kv.name}`,
+            `Phone: ${kv.phone}`,
+            kv.email?`Email: ${kv.email}`:null,
+            cats.length?`Categories: ${cats.join(', ')}`:`Categories: -`,
+            kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
+    });
+
+    document.getElementById('rechargeForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      const cats = pickChecked(document.getElementById('catsRenew'));
+      toWA([`Renewal Request`,
+            `Plan: ${kv.planName || '-'} (${kv.duration || kv.planMonths || '-' } months)`,
+            `Name: ${kv.name}`,
+            `Email: ${kv.email}`,
+            `Phone: ${kv.phone}`,
+            `MAC: ${kv.mac}`,
+            cats.length?`Categories: ${cats.join(', ')}`:null,
+            kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
+    });
+
+    /* PIN form */
+    function pinForBrand(brand){ const b=(brand||'').toLowerCase(); return (b.includes('mag')||b.includes('stalker')) ? '7274' : '0000'; }
+    const brandSel=document.getElementById('pinBrand'); const pinOut=document.getElementById('pinOutput');
+    if (brandSel && pinOut){ brandSel.addEventListener('change', ()=>{ pinOut.value=pinForBrand(brandSel.value); }); }
+    document.getElementById('pinForm').addEventListener('submit', e=>{
+      e.preventDefault(); const kv=formToKV(e.target);
+      const resolvedPin=pinForBrand(kv.brand);
+      toWA([`Parental PIN Request`,`MAC: ${kv.mac}`,`Email: ${kv.email}`,`Brand: ${kv.brand||'N/A'}`,`Suggested PIN: ${resolvedPin}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
+    });
+
+    document.getElementById('refreshPlans')?.addEventListener('click', loadPlans);
+  </script>
 </body>
 </html>
