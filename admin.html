@@ -6,26 +6,43 @@
 <title>net+TV — Admin</title>
 <meta name="theme-color" content="#0b1020" />
 <style>
-  :root{--bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;--g1:#6a11cb;--g2:#2575fc;--ok:#31d296;--bad:#ff7b7b;--shadow:0 10px 30px rgba(0,0,0,.35)}
+  :root{
+    --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
+    --g1:#6a11cb;--g2:#2575fc;--ok:#31d296;--bad:#ff7b7b;--shadow:0 10px 30px rgba(0,0,0,.35);
+    --safe-top: env(safe-area-inset-top,0px);--safe-bottom: env(safe-area-inset-bottom,0px);
+  }
   *{box-sizing:border-box}
-  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink)}
-  a{color:inherit}
-  .top{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(8px)}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink);-webkit-tap-highlight-color:transparent}
+  a{color:inherit;text-decoration:none}
+  .top{
+    position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;
+    padding:calc(8px + var(--safe-top)) 14px 8px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(8px)
+  }
+  .brandRow{display:flex;align-items:baseline;gap:8px}
+  .env{color:var(--muted);font-size:12px}
   .wrap{max-width:1200px;margin:0 auto;padding:16px}
+  .spacer{height:6px} /* avoid cards hugging the sticky bar on iPhone */
+
   .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .btn{padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.06);cursor:pointer}
+  .btn{
+    padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.06);cursor:pointer;
+    min-height:40px;line-height:1
+  }
   .btn.primary{background:linear-gradient(135deg, rgba(106,17,203,.45), rgba(37,117,252,.45));border-color:#3b4f8f}
-  .btn.link{background:linear-gradient(135deg, rgba(106,17,203,.25), rgba(37,117,252,.25))}
   .muted{color:var(--muted);font-size:12px}
   .success{color:var(--ok)} .danger{color:var(--bad)}
   .grid{display:grid;gap:12px}
   .two{grid-template-columns:1fr 1fr} .three{grid-template-columns:1fr 1fr 1fr}
   label{font-size:12px;color:var(--muted)}
-  input,select,textarea{width:100%;padding:11px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff}
+  input,select,textarea{
+    width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff;font-size:16px
+  }
   textarea{min-height:86px}
   .card{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.04);padding:16px;box-shadow:var(--shadow)}
   .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-  .tab{padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.06);cursor:pointer}
+  .tab{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.06);cursor:pointer;min-height:40px}
   .tab.active{background:linear-gradient(135deg,rgba(106,17,203,.18),rgba(37,117,252,.18))}
   .list{display:grid;gap:10px}
   .item{border:1px dashed var(--line);border-radius:12px;padding:10px}
@@ -35,31 +52,39 @@
   .tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:999px;background:linear-gradient(135deg,var(--g1),var(--g2))}
   .imgRow{display:flex;gap:8px;flex-wrap:wrap}
   .thumb{width:120px;height:68px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#000}
-  .authCard{position:absolute;right:0;top:42px;width:300px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:var(--shadow);display:none;z-index:40}
-  .authCard.open{display:block}
   .hidden{display:none}
+
+  /* Auth popover */
+  .authWrap{position:relative}
+  .authCard{position:absolute;right:0;top:calc(40px + var(--safe-top));width:300px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:var(--shadow);display:none;z-index:40}
+  .authCard.open{display:block}
+
+  /* Dashboard quick links */
+  .ql-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+  .ql{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:14px;padding:12px;background:rgba(255,255,255,.06)}
+  .ql:active{transform:translateY(1px)}
+
+  /* Toasts */
+  .toastHost{position:fixed;inset:auto 12px calc(12px + var(--safe-bottom)) 12px;display:grid;gap:8px;z-index:60}
+  .toast{background:#10162e;color:#e9edff;border:1px solid #2a3969;border-radius:12px;padding:10px 12px;box-shadow:var(--shadow)}
 </style>
 </head>
 <body>
   <div class="top">
-    <div class="row">
+    <div class="brandRow">
       <strong>net+TV Admin</strong>
-      <span class="muted mini">| Anyone signed in can edit</span>
+      <span class="env" id="envBadge"></span>
     </div>
-    <div class="row">
-      <a class="btn link" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glo TV</a>
-      <a class="btn link" href="https://bill.spicetv.cc/login" target="_blank" rel="noopener">Spice4K</a>
-      <a class="btn link" href="https://fast4k.cc/login" target="_blank" rel="noopener">Smart 4K</a>
-      <a class="btn link" href="data.html" target="_blank" rel="noopener">Users Data</a>
-      <a class="btn link" href="https://postimages.org" target="_blank" rel="noopener">Upload Images</a>
 
-      <div style="position:relative">
+    <!-- Auth area: shows either Sign in OR (email + Sign out). Never both. -->
+    <div class="row" id="authArea">
+      <div class="authWrap" id="signinWrap">
         <button id="authToggle" class="btn">Sign in</button>
         <div id="authCard" class="authCard">
           <div class="grid">
             <div class="muted mini">Firebase Email/Password</div>
-            <input id="authEmail" placeholder="you@example.com" type="email">
-            <input id="authPass" placeholder="password" type="password">
+            <input id="authEmail" placeholder="you@example.com" type="email" autocomplete="email">
+            <input id="authPass" placeholder="password" type="password" autocomplete="current-password">
             <div class="row">
               <button id="emailSignIn" class="btn primary">Sign in</button>
               <button id="emailRegister" class="btn">Register</button>
@@ -70,23 +95,54 @@
         </div>
       </div>
 
-      <span id="userInfo" class="muted mini">Not signed in</span>
-      <button id="signOutBtn" class="btn hidden">Sign out</button>
+      <div class="row hidden" id="signedWrap">
+        <span id="userEmail" class="muted mini"></span>
+        <button id="signOutBtn" class="btn">Sign out</button>
+      </div>
     </div>
   </div>
 
   <div class="wrap">
+    <div class="spacer"></div>
+
     <div id="editor" class="hidden">
       <div class="tabs">
-        <button class="tab active" data-tab="settings">Settings & Text</button>
+        <button class="tab active" data-tab="home">Dashboard</button>
+        <button class="tab" data-tab="settings">Settings & Text</button>
         <button class="tab" data-tab="plans">Plans</button>
         <button class="tab" data-tab="boxes">Boxes</button>
         <button class="tab" data-tab="banners">Banners</button>
         <button class="tab" data-tab="posters">Posters</button>
       </div>
 
+      <!-- DASHBOARD -->
+      <section id="tab-home" class="grid" style="margin-top:12px">
+        <div class="card">
+          <h3 style="margin:0 0 8px">Quick Links</h3>
+          <div class="ql-grid">
+            <a class="ql" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glo TV</a>
+            <a class="ql" href="https://bill.spicetv.cc/login" target="_blank" rel="noopener">Spice4K</a>
+            <a class="ql" href="https://fast4k.cc/login" target="_blank" rel="noopener">Smart 4K</a>
+            <a class="ql" href="data.html" target="_blank" rel="noopener">Users Data</a>
+            <a class="ql" href="https://postimages.org" target="_blank" rel="noopener">Upload Images</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin:0 0 8px">At a glance</h3>
+          <div class="grid three">
+            <div><div class="muted mini">Plans</div><div id="stat-plans" style="font-weight:800">0</div></div>
+            <div><div class="muted mini">Boxes</div><div id="stat-boxes" style="font-weight:800">0</div></div>
+            <div><div class="muted mini">Banners</div><div id="stat-banners" style="font-weight:800">0</div></div>
+            <div><div class="muted mini">Posters</div><div id="stat-posters" style="font-weight:800">0</div></div>
+            <div><div class="muted mini">Theme</div><div id="stat-theme" style="font-weight:800">–</div></div>
+            <div><div class="muted mini">WhatsApp</div><div id="stat-wa" style="font-weight:800">–</div></div>
+          </div>
+        </div>
+      </section>
+
       <!-- SETTINGS & TEXT -->
-      <section id="tab-settings" class="grid" style="margin-top:12px">
+      <section id="tab-settings" class="grid hidden" style="margin-top:12px">
         <div class="card">
           <div class="split"><h3 style="margin:0">Homepage Text</h3><button id="seedBtn" class="btn">Seed sample data</button></div>
           <div class="grid three" style="margin-top:8px">
@@ -95,8 +151,8 @@
             <div><label>Hero Subline</label><input id="set-hero-subline" placeholder="Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech"></div>
           </div>
           <div class="grid two">
-            <div><label>CTA Buttons (comma separated, 4)</label><input id="set-ctas" placeholder="Our Plans, New Boxes, Renew Plan, Contact Support"></div>
-            <div><label>Feature Ticker (comma separated)</label><input id="set-features" placeholder="🇨🇦 Proudly Canadian, Zero Latency Streams, 24/7 Support, Multi-Device"></div>
+            <div><label>CTA Buttons (comma separated, 4)</label><input id="set-ctas" placeholder="Our Plans, New Boxes, Renew Plan, Contact Support" autocomplete="off"></div>
+            <div><label>Feature Ticker (comma separated)</label><input id="set-features" placeholder="🇨🇦 Proudly Canadian, Zero Latency Streams, 24/7 Support, Multi-Device" autocomplete="off"></div>
           </div>
         </div>
 
@@ -109,13 +165,35 @@
             </div>
             <div>
               <label>WhatsApp Number (no +)</label>
-              <input id="set-wa" placeholder="16476961656" />
+              <input id="set-wa" placeholder="16476961656" autocomplete="tel" inputmode="numeric" />
             </div>
             <div>
               <label>Notes</label>
-              <input id="set-notes" placeholder="Internal note (optional)">
+              <input id="set-notes" placeholder="Internal note (optional)" autocomplete="off">
             </div>
           </div>
+
+          <div class="grid two" style="margin-top:8px">
+            <div>
+              <label>Categories (one per line)</label>
+              <textarea id="set-categories" placeholder="Full Package
+Full Package (No Adult)
+English
+Hindi
+Punjabi
+Gujarati
+South Indian
+Kids
+Sports
+Adult"></textarea>
+            </div>
+            <div>
+              <label>Ticker Speed (multiplier, 1 = default)</label>
+              <input id="set-ticker-speed" type="number" step="0.01" min="0.5" max="2" placeholder="1.00" inputmode="decimal">
+              <div class="muted" style="margin-top:4px">Used by homepage to slightly speed up or slow down the marquee.</div>
+            </div>
+          </div>
+
           <div class="row" style="margin-top:6px">
             <button id="saveSettings" class="btn primary">Save Settings</button>
             <div id="settingsMsg" class="muted"></div>
@@ -129,18 +207,31 @@
         <div class="card">
           <h3>New / Edit Plan</h3>
           <div class="grid three">
-            <div><label>Name</label><input id="p-name"></div>
-            <div><label>Price (e.g., CA$100)</label><input id="p-price"></div>
-            <div><label>Months</label><input id="p-months" type="number" min="1"></div>
+            <div><label>Name</label><input id="p-name" autocomplete="off"></div>
+            <div><label>Price (e.g., CA$100)</label><input id="p-price" autocomplete="off"></div>
+            <div><label>Months</label><input id="p-months" type="number" min="1" inputmode="numeric"></div>
           </div>
           <div class="grid three">
-            <div><label>Benefit</label><input id="p-benefit" placeholder="+1 month free"></div>
-            <div><label>Tag</label><input id="p-tag" placeholder="Popular / Best Value"></div>
-            <div><label>Sort</label><input id="p-sort" type="number" value="10"></div>
+            <div><label>Benefit</label><input id="p-benefit" placeholder="+1 month free" autocomplete="off"></div>
+            <div><label>Tag</label><input id="p-tag" placeholder="Popular / Best Value" autocomplete="off"></div>
+            <div><label>Sort</label><input id="p-sort" type="number" value="10" inputmode="numeric"></div>
           </div>
           <div class="grid two">
-            <div><label>Description</label><input id="p-desc" placeholder="Short description"></div>
+            <div>
+              <label>Description (multi-line supported)</label>
+              <textarea id="p-desc" placeholder="Short description..."></textarea>
+            </div>
+            <div>
+              <label>Features (one per line)</label>
+              <textarea id="p-features" placeholder="Example:
+Full HD channels
+PPV included (where available)
++1 month free"></textarea>
+            </div>
+          </div>
+          <div class="grid two">
             <div><label>Active</label><select id="p-active"><option>true</option><option>false</option></select></div>
+            <div></div>
           </div>
           <div class="row">
             <button id="planSave" class="btn primary">Save</button>
@@ -162,20 +253,20 @@
         <div class="card">
           <h3>New / Edit Box</h3>
           <div class="grid three">
-            <div><label>Tier badge</label><input id="b-tier" placeholder="Basic Box / Good Box"></div>
-            <div><label>Model name</label><input id="b-name" placeholder="X-100"></div>
-            <div><label>Sort</label><input id="b-sort" type="number" value="10"></div>
+            <div><label>Tier badge</label><input id="b-tier" placeholder="Basic Box / Good Box" autocomplete="off"></div>
+            <div><label>Model name</label><input id="b-name" placeholder="X-100" autocomplete="off"></div>
+            <div><label>Sort</label><input id="b-sort" type="number" value="10" inputmode="numeric"></div>
           </div>
           <div class="grid two">
-            <div><label>Box Price</label><input id="b-boxPrice" placeholder="CA$120"></div>
+            <div><label>Box Price</label><input id="b-boxPrice" placeholder="CA$120" autocomplete="off"></div>
             <div><label>Active</label><select id="b-active"><option>true</option><option>false</option></select></div>
           </div>
           <div class="grid three">
-            <div><label>Combo Price</label><input id="b-c-price" placeholder="CA$199"></div>
-            <div><label>Combo Months</label><input id="b-c-months" type="number" value="12"></div>
-            <div><label>Combo Extra</label><input id="b-c-extra" placeholder="+1 month free"></div>
+            <div><label>Combo Price</label><input id="b-c-price" placeholder="CA$199" autocomplete="off"></div>
+            <div><label>Combo Months</label><input id="b-c-months" type="number" value="12" inputmode="numeric"></div>
+            <div><label>Combo Extra</label><input id="b-c-extra" placeholder="+1 month free" autocomplete="off"></div>
           </div>
-          <div><label>Description</label><input id="b-desc" placeholder="Short description"></div>
+          <div><label>Description</label><input id="b-desc" placeholder="Short description" autocomplete="off"></div>
 
           <div class="grid">
             <label>Image URLs (1–3, one per line)</label>
@@ -204,8 +295,8 @@ https://.../1280x720-2.jpg"></textarea>
         <div class="card">
           <h3>New / Edit Banner</h3>
           <div class="grid two">
-            <div><label>Title</label><input id="bn-title" placeholder="Promo title"></div>
-            <div><label>Sort</label><input id="bn-sort" type="number" value="10"></div>
+            <div><label>Title</label><input id="bn-title" placeholder="Promo title" autocomplete="off"></div>
+            <div><label>Sort</label><input id="bn-sort" type="number" value="10" inputmode="numeric"></div>
           </div>
           <div class="grid two">
             <div><label>Active</label><select id="bn-active"><option>true</option><option>false</option></select></div>
@@ -234,13 +325,13 @@ https://.../banner-2-1280x720.jpg"></textarea>
         <div class="card">
           <h3>New / Edit Poster</h3>
           <div class="grid three">
-            <div><label>Title</label><input id="ps-title" placeholder="Movie / Series title"></div>
+            <div><label>Title</label><input id="ps-title" placeholder="Movie / Series title" autocomplete="off"></div>
             <div><label>Aspect ratio</label><select id="ps-ratio"><option>2:3</option><option>16:9</option></select></div>
-            <div><label>Sort</label><input id="ps-sort" type="number" value="10"></div>
+            <div><label>Sort</label><input id="ps-sort" type="number" value="10" inputmode="numeric"></div>
           </div>
           <div class="grid two">
             <div><label>Active</label><select id="ps-active"><option>true</option><option>false</option></select></div>
-            <div><label>Image URL</label><input id="ps-url" placeholder="https://.../poster.jpg"></div>
+            <div><label>Image URL</label><input id="ps-url" placeholder="https://.../poster.jpg" autocomplete="off"></div>
           </div>
           <div class="row"><img id="ps-thumb" class="thumb hidden" alt=""></div>
           <div class="row">
@@ -261,9 +352,11 @@ https://.../banner-2-1280x720.jpg"></textarea>
 
     <div id="locked" class="card">
       <h3>Sign in to edit</h3>
-      <p class="muted">Anyone who can sign in can edit. Try not to hand out the login like festival flyers.</p>
+      <p class="muted">Once signed in, the Dashboard shows your Quick Links. The top bar stays clean.</p>
     </div>
   </div>
+
+  <div class="toastHost" id="toastHost"></div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
@@ -287,45 +380,79 @@ https://.../banner-2-1280x720.jpg"></textarea>
 
   const $ = s => document.querySelector(s);
   const $$ = s => Array.from(document.querySelectorAll(s));
+  const splitLines = raw => (raw||"").split(/\r?\n|,/).map(s=>s.trim()).filter(Boolean);
   const splitUrls = raw => (raw||"").split(/\r?\n|,/).map(s=>s.trim()).filter(Boolean);
   function msg(el, text, ok=true){ el.textContent = text; el.className = ok ? "muted success" : "muted danger"; setTimeout(()=>{el.textContent=""; el.className="muted";}, 3000); }
   function ensure(v,f){ return (v===undefined||v===null)?f:v; }
   function renderThumbs(hostSel, urls){ const host=$(hostSel); host.innerHTML=''; urls.forEach(u=>{ host.insertAdjacentHTML('beforeend', `<img src="${u}" class="thumb">`); }); }
+  function toast(text){ const host=$("#toastHost"); const div=document.createElement('div'); div.className="toast"; div.textContent=text; host.appendChild(div); setTimeout(()=>{div.remove();}, 2600); }
 
-  // Auth UI
-  const userInfo = $('#userInfo'), signOutBtn = $('#signOutBtn');
+  // Env badge
+  const env = /localhost|127\.0\.0\.1/i.test(location.hostname) ? "Local" : (/web|vercel|netlify|beta|staging/i.test(location.hostname) ? "Test" : "Prod");
+  $('#envBadge').textContent = `• ${env}`;
+
+  // Auth UI elements
+  const signinWrap = $('#signinWrap');
+  const signedWrap = $('#signedWrap');
   const authToggle = $('#authToggle'), authCard = $('#authCard');
   const emailIn = $('#authEmail'), passIn = $('#authPass'), authMsg = $('#authMsg');
+  const userEmail = $('#userEmail'), signOutBtn = $('#signOutBtn');
 
+  // Popover open/close
   authToggle.onclick = ()=> authCard.classList.toggle('open');
-  document.addEventListener('click', e=>{ if (!authCard.contains(e.target) && !authToggle.contains(e.target)) authCard.classList.remove('open'); });
+  document.addEventListener('click', e=>{
+    if (!authCard.contains(e.target) && !authToggle.contains(e.target)) authCard.classList.remove('open');
+  });
 
-  $('#googleSignIn').onclick = async()=>{ try{ await signInWithPopup(auth, provider); authCard.classList.remove('open'); }catch(e){ msg(authMsg,e.message,false); } };
-  $('#emailSignIn').onclick = async()=>{ try{ await signInWithEmailAndPassword(auth, emailIn.value.trim(), passIn.value); authCard.classList.remove('open'); }catch(e){ msg(authMsg,e.message,false); } };
-  $('#emailRegister').onclick = async()=>{ try{ const cred=await createUserWithEmailAndPassword(auth, emailIn.value.trim(), passIn.value); msg(authMsg,'Registered: '+cred.user.email,true); }catch(e){ msg(authMsg,e.message,false); } };
+  // Auth handlers
+  $('#googleSignIn').onclick = async()=>{
+    try{ await signInWithPopup(auth, provider); }catch(e){ msg(authMsg,e.message,false); }
+  };
+  $('#emailSignIn').onclick = async()=>{
+    try{ await signInWithEmailAndPassword(auth, emailIn.value.trim(), passIn.value); }
+    catch(e){ msg(authMsg,e.message,false); }
+  };
+  $('#emailRegister').onclick = async()=>{
+    try{ const cred=await createUserWithEmailAndPassword(auth, emailIn.value.trim(), passIn.value); msg(authMsg,'Registered: '+cred.user.email,true); }
+    catch(e){ msg(authMsg,e.message,false); }
+  };
   signOutBtn.onclick = async()=>{ await signOut(auth); };
 
-  // Anyone signed in can edit
+  // Caches for stats
+  let plansCache=[], boxesCache=[], bannersCache=[], postersCache=[], settingsCache=null;
+
   onAuthStateChanged(auth, async user=>{
     const editor = $('#editor'), locked = $('#locked');
+
     if(!user){
-      userInfo.textContent = "Not signed in";
-      signOutBtn.classList.add('hidden');
+      // show Sign in only
+      signedWrap.classList.add('hidden');
+      signinWrap.classList.remove('hidden');
+      authCard.classList.remove('open');
+
       editor.classList.add('hidden');
       locked.classList.remove('hidden');
       return;
     }
-    userInfo.textContent = user.displayName || user.email || user.uid;
-    signOutBtn.classList.remove('hidden');
+
+    // show user email + Sign out, hide Sign in
+    userEmail.textContent = user.displayName || user.email || user.uid;
+    signinWrap.classList.add('hidden');
+    signedWrap.classList.remove('hidden');
+    authCard.classList.remove('open');
+
+    // show editor, hide locked
     editor.classList.remove('hidden');
     locked.classList.add('hidden');
 
-    // load data
-    await loadSettings();
-    await loadPlans();
-    await loadBoxes();
-    await loadBanners();
-    await loadPosters();
+    // default to Dashboard
+    $$('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelector('.tab[data-tab="home"]').classList.add('active');
+    ['home','settings','plans','boxes','banners','posters'].forEach(key=> $('#tab-'+key).classList.toggle('hidden', key!=='home'));
+
+    // load data and stats
+    await Promise.all([loadSettings(), loadPlans(), loadBoxes(), loadBanners(), loadPosters()]);
+    updateStats();
   });
 
   // Tabs
@@ -333,17 +460,26 @@ https://.../banner-2-1280x720.jpg"></textarea>
     t.onclick = ()=>{
       $$('.tab').forEach(x=>x.classList.remove('active'));
       t.classList.add('active');
-      ['settings','plans','boxes','banners','posters'].forEach(key=>{
+      ['home','settings','plans','boxes','banners','posters'].forEach(key=>{
         $('#tab-'+key).classList.toggle('hidden', key!==t.dataset.tab);
       });
     };
   });
 
+  function updateStats(){
+    $('#stat-plans').textContent = String(plansCache.length);
+    $('#stat-boxes').textContent = String(boxesCache.length);
+    $('#stat-banners').textContent = String(bannersCache.length);
+    $('#stat-posters').textContent = String(postersCache.length);
+    $('#stat-theme').textContent = settingsCache?.themeDefault || 'dark';
+    $('#stat-wa').textContent = settingsCache?.whatsappNumber || '-';
+  }
+
   /* SETTINGS */
   async function loadSettings(){
     const sDoc = await getDoc(doc(db,'settings','main'));
     if(sDoc.exists()){
-      const s = sDoc.data();
+      const s = sDoc.data(); settingsCache = s;
       $('#set-theme').value = ensure(s.themeDefault,'dark');
       $('#set-wa').value = ensure(s.whatsappNumber,'16476961656');
       $('#set-features').value = ensure((s.features||[]).join(', '),'🇨🇦 Proudly Canadian, Zero Latency Streams, 24/7 Support, Multi-Device');
@@ -352,6 +488,10 @@ https://.../banner-2-1280x720.jpg"></textarea>
       $('#set-hero-subline').value = ensure(s.heroSubline,'Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech');
       $('#set-ctas').value = ensure((s.ctaLabels||['Our Plans','New Boxes','Renew Plan','Contact Support']).join(', '),'Our Plans, New Boxes, Renew Plan, Contact Support');
       $('#set-notes').value = ensure(s.notes,'');
+      $('#set-categories').value = ensure((s.categories||[
+        'Full Package','Full Package (No Adult)','English','Hindi','Punjabi','Gujarati','South Indian','Kids','Sports','Adult'
+      ]).join('\n'),'');
+      $('#set-ticker-speed').value = ensure(typeof s.tickerSpeed === 'number' ? s.tickerSpeed : 1.00, 1.00);
     }
   }
   $('#saveSettings').onclick = async()=>{
@@ -364,16 +504,19 @@ https://.../banner-2-1280x720.jpg"></textarea>
       heroSubline: $('#set-hero-subline').value.trim(),
       ctaLabels: ($('#set-ctas').value||'').split(',').map(s=>s.trim()).slice(0,4),
       notes: $('#set-notes').value.trim(),
+      categories: splitLines($('#set-categories').value),
+      tickerSpeed: Number($('#set-ticker-speed').value || 1.00),
       updatedAt: serverTimestamp()
     };
     await setDoc(doc(db,'settings','main'), body, {merge:true});
-    msg($('#settingsMsg'),'Saved.');
+    toast('Settings saved');
+    settingsCache = {...(settingsCache||{}), ...body};
+    updateStats();
   };
 
-  // Seed sample content fast so homepage shows data immediately
+  // Seed sample content
   $('#seedBtn').onclick = async()=>{
     if(!confirm('Seed demo content? This will add sample banners, posters, a box and 2 plans.')) return;
-    // settings
     await setDoc(doc(db,'settings','main'), {
       themeDefault:'dark',
       whatsappNumber:'16476961656',
@@ -382,20 +525,28 @@ https://.../banner-2-1280x720.jpg"></textarea>
       heroTitle:'20,000+ Live Channels, All Shows, Movies & PPV',
       heroSubline:'Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech',
       ctaLabels:['Our Plans','New Boxes','Renew Plan','Contact Support'],
+      categories:['Full Package','Full Package (No Adult)','English','Hindi','Punjabi','Gujarati','South Indian','Kids','Sports','Adult'],
+      tickerSpeed:1.12,
       updatedAt: serverTimestamp()
     }, {merge:true});
-    // banners
     await addDoc(collection(db,'banners'), { title:'Welcome', sort:10, active:true, images:[
       'https://via.placeholder.com/1280x720?text=net%2BTV+Banner+1',
       'https://via.placeholder.com/1280x720?text=net%2BTV+Banner+2'
     ], updatedAt:serverTimestamp()});
-    // posters
     await addDoc(collection(db,'posters'), { title:'Sample Poster 1', ratio:'2:3', sort:10, active:true, image:'https://via.placeholder.com/300x450?text=Poster+1', updatedAt:serverTimestamp()});
     await addDoc(collection(db,'posters'), { title:'Sample Poster 2', ratio:'2:3', sort:20, active:true, image:'https://via.placeholder.com/300x450?text=Poster+2', updatedAt:serverTimestamp()});
-    // plans
-    await addDoc(collection(db,'plans'), { name:'Starter HD', price:'CA$60', months:6, benefit:'+1 month free', tag:'Popular', desc:'HD focus • Core channels', sort:10, active:true, updatedAt:serverTimestamp()});
-    await addDoc(collection(db,'plans'), { name:'Family FHD', price:'CA$100', months:12, benefit:'+2 months free', tag:'Best Value', desc:'Full HD • Family packs', sort:20, active:true, updatedAt:serverTimestamp()});
-    // box
+    await addDoc(collection(db,'plans'), {
+      name:'Starter HD', price:'CA$60', months:6, benefit:'+1 month free', tag:'Popular',
+      desc:'HD focus • Core channels',
+      features:['Full HD where available','Core English + Hindi + Punjabi','Anti-freeze tech'],
+      sort:10, active:true, updatedAt:serverTimestamp()
+    });
+    await addDoc(collection(db,'plans'), {
+      name:'Family FHD', price:'CA$100', months:12, benefit:'+2 months free', tag:'Best Value',
+      desc:'Family packs and sports',
+      features:['Full HD channels','Kids + Sports','+2 months free on annual'],
+      sort:20, active:true, updatedAt:serverTimestamp()
+    });
     await addDoc(collection(db,'boxes'), {
       tier:'Basic Box', name:'X-100', sort:10, boxPrice:'CA$120', active:true,
       combo:{price:'CA$199', planMonths:12, extra:'+1 month free'},
@@ -403,11 +554,12 @@ https://.../banner-2-1280x720.jpg"></textarea>
       images:['https://via.placeholder.com/1280x720?text=Box+Front','https://via.placeholder.com/1280x720?text=Box+UI'],
       updatedAt:serverTimestamp()
     });
-    alert('Seeded. Open your homepage and refresh.');
+    toast('Seeded sample content');
+    await Promise.all([loadSettings(), loadPlans(), loadBoxes(), loadBanners(), loadPosters()]);
+    updateStats();
   };
 
   /* PLANS */
-  let plansCache=[];
   async function loadPlans(){
     const snap = await getDocs(collection(db,'plans'));
     plansCache=[]; snap.forEach(d=> plansCache.push({id:d.id,...d.data()}));
@@ -417,11 +569,12 @@ https://.../banner-2-1280x720.jpg"></textarea>
   function renderPlansList(){
     const list=$('#plansList'); list.innerHTML='';
     plansCache.forEach(p=>{
+      const featureCount = Array.isArray(p.features) ? p.features.length : 0;
       const div=document.createElement('div'); div.className='item';
       div.innerHTML=`
         <div class="split">
           <div><span class="tag mini">${p.tag||''}</span> <strong>${p.name||''}</strong> <span class="muted">(${p.months||''} mo)</span></div>
-          <div class="right"><strong>${p.price||''}</strong> <span class="muted">sort:${p.sort||0}</span> <span class="muted">${p.active===false?'inactive':'active'}</span>
+          <div class="right"><strong>${p.price||''}</strong> <span class="muted">features:${featureCount}</span> <span class="muted">sort:${p.sort||0}</span> <span class="muted">${p.active===false?'inactive':'active'}</span>
             <button class="btn mini" data-edit="${p.id}">Edit</button>
           </div>
         </div>`;
@@ -430,30 +583,42 @@ https://.../banner-2-1280x720.jpg"></textarea>
     list.querySelectorAll('[data-edit]').forEach(b=>{
       b.onclick=()=>{
         const p=plansCache.find(x=>x.id===b.dataset.edit);
-        $('#p-id').value=p.id; $('#p-name').value=p.name||''; $('#p-price').value=p.price||'';
-        $('#p-months').value=p.months||''; $('#p-benefit').value=p.benefit||''; $('#p-tag').value=p.tag||'';
-        $('#p-desc').value=p.desc||''; $('#p-sort').value=p.sort||0; $('#p-active').value=String(p.active!==false);
+        $('#p-id').value=p.id;
+        $('#p-name').value=p.name||'';
+        $('#p-price').value=p.price||'';
+        $('#p-months').value=p.months||'';
+        $('#p-benefit').value=p.benefit||'';
+        $('#p-tag').value=p.tag||'';
+        $('#p-desc').value=p.desc||'';
+        $('#p-sort').value=p.sort||0;
+        $('#p-active').value=String(p.active!==false);
+        $('#p-features').value = Array.isArray(p.features) ? p.features.join('\n') : '';
       };
     });
   }
-  $('#planNew').onclick=()=>{ ['p-id','p-name','p-price','p-months','p-benefit','p-tag','p-desc','p-sort'].forEach(id=>$('#'+id).value=''); $('#p-active').value='true'; };
+  $('#planNew').onclick=()=>{
+    ['p-id','p-name','p-price','p-months','p-benefit','p-tag','p-desc','p-sort','p-features'].forEach(id=>$('#'+id).value='');
+    $('#p-active').value='true';
+  };
   $('#planSave').onclick=async()=>{
     const id=$('#p-id').value.trim();
-    const body={ name:$('#p-name').value.trim(), price:$('#p-price').value.trim(), months:Number($('#p-months').value||0),
+    const features = splitLines($('#p-features').value);
+    const body={
+      name:$('#p-name').value.trim(), price:$('#p-price').value.trim(), months:Number($('#p-months').value||0),
       benefit:$('#p-benefit').value.trim(), tag:$('#p-tag').value.trim(), desc:$('#p-desc').value.trim(),
-      sort:Number($('#p-sort').value||0), active:$('#p-active').value==='true', updatedAt:serverTimestamp() };
+      features, sort:Number($('#p-sort').value||0), active:$('#p-active').value==='true', updatedAt:serverTimestamp()
+    };
     if(!body.name||!body.price){ msg($('#planMsg'),'Name and Price required',false); return; }
     if(id){ await setDoc(doc(db,'plans',id),body,{merge:true}); } else { await addDoc(collection(db,'plans'),body); }
-    await loadPlans(); msg($('#planMsg'),'Saved.');
+    await loadPlans(); toast('Plan saved');
   };
   $('#planDelete').onclick=async()=>{
     const id=$('#p-id').value.trim(); if(!id) return;
-    if(confirm('Delete this plan?')){ await deleteDoc(doc(db,'plans',id)); await loadPlans(); msg($('#planMsg'),'Deleted.'); }
+    if(confirm('Delete this plan?')){ await deleteDoc(doc(db,'plans',id)); await loadPlans(); toast('Plan deleted'); }
   };
   $('#plansReload').onclick=loadPlans;
 
   /* BOXES */
-  let boxesCache=[];
   async function loadBoxes(){
     const snap=await getDocs(collection(db,'boxes'));
     boxesCache=[]; snap.forEach(d=> boxesCache.push({id:d.id,...d.data()}));
@@ -481,7 +646,7 @@ https://.../banner-2-1280x720.jpg"></textarea>
         $('#b-id').value=x.id; $('#b-tier').value=x.tier||''; $('#b-name').value=x.name||'';
         $('#b-sort').value=x.sort||0; $('#b-boxPrice').value=x.boxPrice||''; $('#b-active').value=String(x.active!==false);
         $('#b-c-price').value=x.combo?.price||''; $('#b-c-months').value=x.combo?.planMonths||12; $('#b-c-extra').value=x.combo?.extra||'';
-        $('#b-desc').value=x.desc||''; $('#b-img-urls').value=(x.images||[]).join('\\n'); renderThumbs('#b-images', x.images||[]);
+        $('#b-desc').value=x.desc||''; $('#b-img-urls').value=(x.images||[]).join('\n'); renderThumbs('#b-images', x.images||[]);
       };
     });
   }
@@ -497,16 +662,15 @@ https://.../banner-2-1280x720.jpg"></textarea>
     if(!body.name){ msg($('#boxMsg'),'Model name required',false); return; }
     if(images.length===0){ msg($('#boxMsg'),'At least 1 image URL',false); return; }
     if(id){ await setDoc(doc(db,'boxes',id), body, {merge:true}); } else { await addDoc(collection(db,'boxes'), body); }
-    await loadBoxes(); msg($('#boxMsg'),'Saved.');
+    await loadBoxes(); toast('Box saved');
   };
   $('#boxDelete').onclick=async()=>{
     const id=$('#b-id').value.trim(); if(!id) return;
-    if(confirm('Delete this box?')){ await deleteDoc(doc(db,'boxes',id)); await loadBoxes(); msg($('#boxMsg'),'Deleted.'); }
+    if(confirm('Delete this box?')){ await deleteDoc(doc(db,'boxes',id)); await loadBoxes(); toast('Box deleted'); }
   };
   $('#boxesReload').onclick=loadBoxes;
 
   /* BANNERS */
-  let bannersCache=[];
   async function loadBanners(){
     const snap=await getDocs(collection(db,'banners'));
     bannersCache=[]; snap.forEach(d=> bannersCache.push({id:d.id,...d.data()}));
@@ -532,7 +696,7 @@ https://.../banner-2-1280x720.jpg"></textarea>
       b.onclick=()=>{
         const x=bannersCache.find(z=>z.id===b.dataset.edit);
         $('#bn-id').value=x.id; $('#bn-title').value=x.title||''; $('#bn-sort').value=x.sort||0; $('#bn-active').value=String(x.active!==false);
-        $('#bn-img-urls').value=(x.images||[]).join('\\n'); renderThumbs('#bn-images', x.images||[]);
+        $('#bn-img-urls').value=(x.images||[]).join('\n'); renderThumbs('#bn-images', x.images||[]);
       };
     });
   }
@@ -544,16 +708,15 @@ https://.../banner-2-1280x720.jpg"></textarea>
     const body={ title:$('#bn-title').value.trim(), sort:Number($('#bn-sort').value||0), active:$('#bn-active').value==='true', images, updatedAt:serverTimestamp() };
     if(!images.length){ msg($('#bnMsg'),'At least one image URL',false); return; }
     if(id){ await setDoc(doc(db,'banners',id), body, {merge:true}); } else { await addDoc(collection(db,'banners'), body); }
-    await loadBanners(); msg($('#bnMsg'),'Saved.');
+    await loadBanners(); toast('Banner saved');
   };
   $('#bnDelete').onclick=async()=>{
     const id=$('#bn-id').value.trim(); if(!id) return;
-    if(confirm('Delete this banner?')){ await deleteDoc(doc(db,'banners',id)); await loadBanners(); msg($('#bnMsg'),'Deleted.'); }
+    if(confirm('Delete this banner?')){ await deleteDoc(doc(db,'banners',id)); await loadBanners(); toast('Banner deleted'); }
   };
   $('#bnReload').onclick=loadBanners;
 
   /* POSTERS */
-  let postersCache=[];
   async function loadPosters(){
     const snap=await getDocs(collection(db,'posters'));
     postersCache=[]; snap.forEach(d=> postersCache.push({id:d.id,...d.data()}));
@@ -589,11 +752,11 @@ https://.../banner-2-1280x720.jpg"></textarea>
     const body={ title:$('#ps-title').value.trim(), ratio:$('#ps-ratio').value, sort:Number($('#ps-sort').value||0), active:$('#ps-active').value==='true', image:$('#ps-url').value||'', updatedAt:serverTimestamp() };
     if(!body.title || !body.image){ msg($('#psMsg'),'Title and image URL required',false); return; }
     if(id){ await setDoc(doc(db,'posters',id), body, {merge:true}); } else { await addDoc(collection(db,'posters'), body); }
-    await loadPosters(); msg($('#psMsg'),'Saved.');
+    await loadPosters(); toast('Poster saved');
   };
   $('#psDelete').onclick=async()=>{
     const id=$('#ps-id').value.trim(); if(!id) return;
-    if(confirm('Delete this poster?')){ await deleteDoc(doc(db,'posters',id)); await loadPosters(); msg($('#psMsg'),'Deleted.'); }
+    if(confirm('Delete this poster?')){ await deleteDoc(doc(db,'posters',id)); await loadPosters(); toast('Poster deleted'); }
   };
   $('#psReload').onclick=loadPosters;
 </script>
