@@ -3,803 +3,676 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1" />
-<title>net+TV — Home</title>
+<title>net+TV — Admin</title>
 <meta name="theme-color" content="#0b1020" />
 <style>
-  :root{
-    --bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;
-    --g1:#6a11cb;--g2:#2575fc;--ok:#32d296;--warn:#f8b84a;--whats:#25D366;
-    --safe-top: env(safe-area-inset-top,0px);--safe-bottom: env(safe-area-inset-bottom,0px);
-    --shadow:0 10px 30px rgba(0,0,0,.35);
-  }
-  :root[data-theme="light"]{
-    --bg:#ffffff;--ink:#0b1020;--muted:#36415f;--card:#ffffff;--line:#d9e0ff;
-    --g1:#2575fc;--g2:#6a11cb;--ok:#15a37a;--warn:#e59f2a;--whats:#25D366;
-    --shadow:0 10px 30px rgba(0,12,60,.10);
-  }
+  :root{--bg:#0b1020;--ink:#e9edff;--muted:#a9b5e6;--card:#121831;--line:#23305b;--g1:#6a11cb;--g2:#2575fc;--ok:#31d296;--bad:#ff7b7b;--shadow:0 10px 30px rgba(0,0,0,.35)}
   *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
-  a{color:inherit;text-decoration:none}
-  button{font:inherit;cursor:pointer}
-  .wrap{max-width:1160px;margin:0 auto;padding:16px}
-
-  /* Topbar */
-  .topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:calc(8px + var(--safe-top)) 16px 8px}
-  :root[data-theme="light"] .topbar{background:#ffffffcc;border-bottom:1px solid #d9e0ff;backdrop-filter:blur(10px) saturate(1.2)}
-  .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .logo{display:flex;align-items:center;gap:10px}
-  .dot{width:12px;height:12px;border-radius:50%;background:conic-gradient(from 180deg,var(--g1),var(--g2))}
-  .brand{font-weight:800;letter-spacing:.3px}
-  .badge{font-size:12px;color:var(--muted)}
-  .menuBtn{border:1px solid var(--line);background:rgba(255,255,255,.06);padding:10px 12px;border-radius:14px}
-  :root[data-theme="light"] .menuBtn{background:#f2f6ff;border-color:#d9e0ff;color:#0b1020}
-
-  /* Hero */
-  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);
-    background:radial-gradient(1200px 700px at 80% -10%,rgba(138,91,255,.15),transparent 60%),radial-gradient(900px 700px at 0% 0%,rgba(37,117,252,.14),transparent 50%)}
-  :root[data-theme="light"] .hero{background:linear-gradient(180deg,#f6f8ff,transparent)}
-  .heroInner{padding:32px 16px 24px}
-  .title{font-size:30px;line-height:1.2;font-weight:800;margin:6px 0 10px}
-  .subtitle{color:var(--muted)}
-  .hint{font-size:13px;color:var(--muted);margin-top:6px}
-
-  /* Banners */
-  .banner{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;margin:0 0 14px;box-shadow:var(--shadow);background:#000}
-  .bannerTrack{display:flex;transition:transform .5s ease;will-change:transform}
-  .bannerSlide{flex:0 0 100%}
-  .bannerSlide img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
-
-  /* Ticker */
-  .ticker{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);margin-top:12px;
-    -webkit-mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
-            mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
-  }
-  :root[data-theme="light"] .ticker{background:#eef2ff}
-  .tickerInner{
-    display:inline-block;white-space:nowrap;will-change:transform;
-    animation:tickerMove var(--dur,45s) linear infinite;
-  }
-  .tickerInner span{display:inline-block;padding:8px 18px}
-  /* Move exactly one content-length (half of duplicated content) */
-  @keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-  @media (prefers-reduced-motion: reduce){
-    .tickerInner{animation:none;transform:none}
-  }
-
-  /* CTA buttons */
-  .ctaRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 18px}
-  .bigBtn{height:64px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(135deg, rgba(106,17,203,.18), rgba(37,117,252,.18));display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-weight:800;box-shadow:var(--shadow)}
-
-  /* Posters rail */
-  .postersRail{margin-top:12px;display:flex;gap:10px;overflow:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
-  .postersRail img{width:200px;height:300px;object-fit:cover;border-radius:12px;flex:0 0 auto;scroll-snap-align:start;border:1px solid var(--line);background:#000;box-shadow:var(--shadow);display:block}
-
-  /* Sections */
-  .section{padding:22px 16px;border-top:1px solid var(--line)}
+  body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--ink)}
+  a{color:inherit}
+  .top{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(11,16,32,.95),rgba(11,16,32,.7));backdrop-filter:blur(8px)}
+  .wrap{max-width:1200px;margin:0 auto;padding:16px}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .btn{padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.06);cursor:pointer}
+  .btn.primary{background:linear-gradient(135deg, rgba(106,17,203,.45), rgba(37,117,252,.45));border-color:#3b4f8f}
+  .btn.link{background:linear-gradient(135deg, rgba(106,17,203,.25), rgba(37,117,252,.25))}
+  .muted{color:var(--muted);font-size:12px}
+  .success{color:var(--ok)} .danger{color:var(--bad)}
+  .grid{display:grid;gap:12px}
+  .two{grid-template-columns:1fr 1fr} .three{grid-template-columns:1fr 1fr 1fr}
+  label{font-size:12px;color:var(--muted)}
+  input,select,textarea{width:100%;padding:11px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff}
+  textarea{min-height:86px}
+  .card{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.04);padding:16px;box-shadow:var(--shadow)}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+  .tab{padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.06);cursor:pointer}
+  .tab.active{background:linear-gradient(135deg,rgba(106,17,203,.18),rgba(37,117,252,.18))}
   .list{display:grid;gap:10px}
-  .pill{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04)}
-  :root[data-theme="light"] .pill{background:#f7f9ff}
-
-  /* Sheet (menu) */
-  .sheet{position:fixed;inset:auto 0 0 0;background:rgba(18,24,49,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);transform:translateY(100%);transition:transform .25s ease;z-index:70;max-height:80vh;display:flex;flex-direction:column}
-  :root[data-theme="light"] .sheet{background:#ffffff; border-top:1px solid #d9e0ff}
-  .sheet.open{transform:translateY(0)}
-  .sheetHead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-  :root[data-theme="light"] .sheetHead{background:#f6f9ff}
-  .sheetBody{padding:10px 16px;overflow:auto}
-  .menuList{display:grid;gap:10px}
-  .menuItem{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:rgba(255,255,255,.04)}
-  :root[data-theme="light"] .menuItem{background:#f6f9ff}
-
-  /* Modal */
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:90}
-  .modal.open{display:flex}
-  .modalCard{margin:auto;max-width:780px;width:100%;height:90vh;background:var(--card);border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
-  :root[data-theme="light"] .modalCard{background:#ffffff;border-color:#d9e0ff}
-  .modalHead{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
-  .modalBody{padding:12px 14px;overflow:auto}
-  .x{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
-  :root[data-theme="light"] .x{background:#eef2ff}
-
-  /* Cards/grids */
-  .plans{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-  .card{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-  :root[data-theme="light"] .card{background:#ffffff}
-  .card h3{margin:0 0 6px;font-size:18px;line-height:1.2}
-  .muted{color:var(--muted)}
-  .btn{display:inline-flex;align-items:center;gap:8px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);padding:10px 12px;cursor:pointer}
-  .btn.whats{background:var(--whats);border-color:#1fa851;color:#08210e;font-weight:800}
-  .priceRight{font-weight:900;font-size:18px}
-  .cardHead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
-  .tag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin-bottom:6px}
-  .benefit{font-size:12px;font-weight:800;color:var(--ok);margin-top:4px}
-
-  /* Boxes */
-  .boxSlider{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000}
-  .boxTrack{display:flex;transition:transform .35s ease;will-change:transform}
-  .boxSlide{flex:0 0 100%}
-  .boxSlide img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
-  .boxDots{display:flex;gap:6px;justify-content:center;margin-top:6px}
-  .boxDot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25)}
-  .boxDot.active{background:#fff}
-  .miniTag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));padding:2px 8px;border-radius:999px;margin:10px 0 6px}
-  .comboCallout{margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:12px;background:rgba(37,117,252,.08)}
-  :root[data-theme="light"] .comboCallout{background:#eef5ff}
-  .boxMeta{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-  .boxPrice{font-weight:900}
-  .boxName{font-size:18px;font-weight:800;margin:0}
-
-  /* Forms */
-  .grid{display:grid;gap:10px}
-  .two{grid-template-columns:1fr 1fr}
-  input,select,textarea{width:100%;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1430;color:#fff}
-  :root[data-theme="light"] input, :root[data-theme="light"] select, :root[data-theme="light"] textarea{background:#f6f8ff;color:#0b1020}
-  .help{font-size:12px;color:#7d86ad}
-  .catGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-  .catItem{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
-  :root[data-theme="light"] .catItem{background:#f7f9ff}
-  /* iOS checkbox layout fix + nicer look */
-  input[type="checkbox"],input[type="radio"]{width:auto;height:auto;-webkit-appearance:auto;appearance:auto}
-  .catItem input{flex:0 0 auto;transform:scale(1.1)}
-  .catItem span{flex:1 1 auto;white-space:normal}
-  @supports (accent-color: auto){
-    .catItem input{accent-color:var(--g2)}
-  }
-  .footpad{height:calc(24px + var(--safe-bottom))}
-
-  /* Footer */
-  .footer{padding:16px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
+  .item{border:1px dashed var(--line);border-radius:12px;padding:10px}
+  .split{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .right{display:flex;gap:6px;align-items:center}
+  .mini{font-size:12px}
+  .tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:999px;background:linear-gradient(135deg,var(--g1),var(--g2))}
+  .imgRow{display:flex;gap:8px;flex-wrap:wrap}
+  .thumb{width:120px;height:68px;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:#000}
+  .authCard{position:absolute;right:0;top:42px;width:300px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;box-shadow:var(--shadow);display:none;z-index:40}
+  .authCard.open{display:block}
+  .hidden{display:none}
 </style>
 </head>
 <body>
-  <div class="topbar">
+  <div class="top">
     <div class="row">
-      <div class="logo">
-        <div class="dot"></div>
-        <div>
-          <div class="brand">net+<span style="margin-left:3px">TV</span></div>
-          <div class="badge">Full HD • 4K • PPV</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button id="themeBtn" class="menuBtn" title="Toggle theme">💡</button>
-        <button id="menuBtn" class="menuBtn">Menu ▾</button>
-      </div>
+      <strong>net+TV Admin</strong>
+      <span class="muted mini">| Anyone signed in can edit</span>
     </div>
-  </div>
+    <div class="row">
+      <a class="btn link" href="https://beta.gpanel.me/login" target="_blank" rel="noopener">Glo TV</a>
+      <a class="btn link" href="https://bill.spicetv.cc/login" target="_blank" rel="noopener">Spice4K</a>
+      <a class="btn link" href="https://fast4k.cc/login" target="_blank" rel="noopener">Smart 4K</a>
+      <a class="btn link" href="data.html" target="_blank" rel="noopener">Users Data</a>
+      <a class="btn link" href="https://postimages.org" target="_blank" rel="noopener">Upload Images</a>
 
-  <section class="hero">
-    <div class="heroInner wrap">
-      <!-- BANNERS -->
-      <div class="banner" aria-label="Promotions">
-        <div class="bannerTrack" id="bannerTrack"></div>
-      </div>
-
-      <div id="heroSubtitle" class="subtitle">Quick Activation</div>
-      <h1 id="heroTitle" class="title">20,000+ Live Channels, All Shows, Movies & PPV</h1>
-      <p id="heroSubline" class="subtitle">Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech</p>
-
-      <!-- Always-filled ticker (prefilled + duplicated so it animates immediately) -->
-      <div class="ticker">
-        <div class="tickerInner" id="featureTicker" aria-live="polite">
-          <span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
-          <span>🇨🇦 Proudly Canadian</span><span>Zero Latency Streams</span><span>24/7 Support</span><span>Multi-Device</span>
+      <div style="position:relative">
+        <button id="authToggle" class="btn">Sign in</button>
+        <div id="authCard" class="authCard">
+          <div class="grid">
+            <div class="muted mini">Firebase Email/Password</div>
+            <input id="authEmail" placeholder="you@example.com" type="email">
+            <input id="authPass" placeholder="password" type="password">
+            <div class="row">
+              <button id="emailSignIn" class="btn primary">Sign in</button>
+              <button id="emailRegister" class="btn">Register</button>
+            </div>
+            <button id="googleSignIn" class="btn">Sign in with Google</button>
+            <div id="authMsg" class="muted"></div>
+          </div>
         </div>
       </div>
 
-      <div class="ctaRow" id="actionButtons">
-        <button class="bigBtn" data-open="plansModal" id="cta0">Our Plans</button>
-        <button class="bigBtn" data-open="boxesModal" id="cta1">New Boxes</button>
-        <button class="bigBtn" data-open="rechargeModal" id="cta2">Renew Plan</button>
-        <button class="bigBtn" data-open="supportModal" id="cta3">Contact Support</button>
-      </div>
-
-      <!-- Posters -->
-      <div class="postersRail" id="postersRail"></div>
-
-      <div class="hint">Scroll for more. Scroll back up any time to use the big buttons.</div>
-    </div>
-  </section>
-
-  <!-- Why -->
-  <section class="section wrap">
-    <h2 style="margin:0 0 8px">Why net+TV</h2>
-    <p class="muted" style="margin:0">Stable quality, solid support, and no drama. Except in the shows.</p>
-    <div class="list" style="margin-top:12px">
-      <div class="pill">Fast activation with WhatsApp confirmation</div>
-      <div class="pill">No-nonsense plans, real 4K where available</div>
-      <div class="pill">Works on STBs, smart TVs, mobile and laptops</div>
-    </div>
-  </section>
-
-  <footer class="footer">© <span id="year"></span> net+TV. All rights reserved.</footer>
-
-  <!-- MENU SHEET -->
-  <div id="menuSheet" class="sheet" role="dialog" aria-modal="true" aria-label="Main menu">
-    <div class="sheetHead"><div style="font-weight:800">Menu</div><button class="x" data-close="menuSheet">Close</button></div>
-    <div class="sheetBody">
-      <div class="menuList">
-        <a class="menuItem" data-open="plansModal">Our Plans</a>
-        <a class="menuItem" data-open="boxesModal">New Boxes</a>
-        <a class="menuItem" data-open="ownPlanModal">Your Own Set-Top Box Plan</a>
-        <a class="menuItem" data-open="rechargeModal">Renew Plan</a>
-        <a class="menuItem" data-open="supportModal">Contact Support</a>
-        <a class="menuItem" data-open="faqModal">FAQ</a>
-        <a class="menuItem" data-open="aboutModal">About Us</a>
-        <a class="menuItem" data-open="pinModal">Know Your Parental PIN</a>
-      </div>
-      <div class="footpad"></div>
+      <span id="userInfo" class="muted mini">Not signed in</span>
+      <button id="signOutBtn" class="btn hidden">Sign out</button>
     </div>
   </div>
 
-  <!-- MODALS -->
-  <div id="plansModal" class="modal" role="dialog" aria-modal="true" aria-label="Plans">
-    <div class="modalCard">
-      <div class="modalHead"><strong>Our Plans</strong><div style="display:flex;gap:8px"><button class="btn" id="refreshPlans">Refresh</button><button class="x" data-close="plansModal">Close</button></div></div>
-      <div class="modalBody">
-        <p class="muted">All plans include Live Channels, Movies/Series, PPV (where available) and Anti-Freeze Tech.</p>
-        <div id="plansGrid" class="plans"></div>
-        <div class="footpad"></div>
+  <div class="wrap">
+    <div id="editor" class="hidden">
+      <div class="tabs">
+        <button class="tab active" data-tab="settings">Settings & Text</button>
+        <button class="tab" data-tab="plans">Plans</button>
+        <button class="tab" data-tab="boxes">Boxes</button>
+        <button class="tab" data-tab="banners">Banners</button>
+        <button class="tab" data-tab="posters">Posters</button>
       </div>
-    </div>
-  </div>
 
-  <div id="boxesModal" class="modal" role="dialog" aria-modal="true" aria-label="New Boxes">
-    <div class="modalCard">
-      <div class="modalHead"><strong>New Boxes</strong><button class="x" data-close="boxesModal">Close</button></div>
-      <div class="modalBody"><div id="boxesGrid" class="plans"></div><div class="footpad"></div></div>
-    </div>
-  </div>
-
-  <div id="ownPlanModal" class="modal" role="dialog" aria-modal="true" aria-label="Build your plan">
-    <div class="modalCard">
-      <div class="modalHead"><strong>Your Own Plan</strong><button class="x" data-close="ownPlanModal">Close</button></div>
-      <div class="modalBody">
-        <form id="ownPlanForm" class="grid">
+      <!-- SETTINGS & TEXT -->
+      <section id="tab-settings" class="grid" style="margin-top:12px">
+        <div class="card">
+          <div class="split"><h3 style="margin:0">Homepage Text</h3><button id="seedBtn" class="btn">Seed sample data</button></div>
+          <div class="grid three" style="margin-top:8px">
+            <div><label>Hero Subtitle</label><input id="set-hero-subtitle" placeholder="Quick Activation"></div>
+            <div><label>Hero Title</label><input id="set-hero-title" placeholder="20,000+ Live Channels, All Shows, Movies & PPV"></div>
+            <div><label>Hero Subline</label><input id="set-hero-subline" placeholder="Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech"></div>
+          </div>
           <div class="grid two">
-            <div><label>Full Name</label><input required name="name" placeholder="Your name"></div>
-            <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
+            <div><label>CTA Buttons (comma separated, 4)</label><input id="set-ctas" placeholder="Our Plans, New Boxes, Renew Plan, Contact Support"></div>
+            <div><label>Feature Ticker (comma separated)</label><input id="set-features" placeholder="🇨🇦 Proudly Canadian, Zero Latency Streams, 24/7 Support, Multi-Device"></div>
           </div>
-          <div><label>Email (optional)</label><input name="email" type="email" placeholder="you@example.com"></div>
-
-          <div>
-            <label>TV + VOD Categories (select multiple)</label>
-            <div id="catsOwn" class="catGrid"></div>
-            <div class="help">Full Package picks everything. Use the “No Adult” option if needed.</div>
-          </div>
-
-          <div><label>Notes</label><textarea name="note" rows="3" placeholder="Any channel packs, devices, or timing?"></textarea></div>
-          <button class="btn whats" type="submit">Send Request on WhatsApp</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
-
-  <div id="rechargeModal" class="modal" role="dialog" aria-modal="true" aria-label="Renew Plan">
-    <div class="modalCard">
-      <div class="modalHead"><strong>Renew Plan</strong><button class="x" data-close="rechargeModal">Close</button></div>
-      <div class="modalBody">
-        <p class="muted">Pick your plan below, then fill in your details.</p>
-        <div id="renewPlansGrid" class="plans" style="margin-bottom:12px"></div>
-
-        <form id="rechargeForm" class="grid two">
-          <input type="hidden" name="planName" id="renewPlanName">
-          <input type="hidden" name="planMonths" id="renewPlanMonths">
-
-          <div><label>Email</label><input required name="email" type="email" placeholder="you@example.com"></div>
-          <div><label>Registered Name</label><input required name="name" placeholder="Account name"></div>
-          <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
-          <div><label>MAC Address</label><input required name="mac" placeholder="00:1A:79:xx:xx:xx"></div>
-          <div><label>Plan Duration</label>
-            <select name="duration" id="renewDuration" required>
-              <option value="1">1 month</option><option value="3">3 months</option><option value="6">6 months</option><option value="12">12 months</option>
-            </select>
-          </div>
-
-          <div style="grid-column:1 / -1">
-            <label>TV + VOD Categories (select multiple)</label>
-            <div id="catsRenew" class="catGrid"></div>
-          </div>
-
-          <div style="grid-column:1 / -1"><label>Notes</label><input name="note" placeholder="Optional note"></div>
-          <button class="btn whats" type="submit">Request Renewal</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
-
-  <div id="supportModal" class="modal" role="dialog" aria-modal="true" aria-label="Support">
-    <div class="modalCard">
-      <div class="modalHead"><strong>Contact Support</strong><button class="x" data-close="supportModal">Close</button></div>
-      <div class="modalBody">
-        <form id="supportForm" class="grid">
-          <div class="grid two">
-            <div><label>Name</label><input required name="name" placeholder="Your name"></div>
-            <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
-          </div>
-          <div><label>Issue</label><textarea required name="issue" rows="4" placeholder="Describe the problem..."></textarea></div>
-          <button class="btn whats" type="submit">Send on WhatsApp</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
-
-  <div id="faqModal" class="modal" role="dialog" aria-modal="true" aria-label="FAQ">
-    <div class="modalCard">
-      <div class="modalHead"><strong>FAQ</strong><button class="x" data-close="faqModal">Close</button></div>
-      <div class="modalBody">
-        <div class="list">
-          <div class="pill"><strong>Q:</strong> Do all channels stream in 4K?<br><span class="muted">A:</span> 4K where available. Otherwise Full HD or SD.</div>
-          <div class="pill"><strong>Q:</strong> What devices are supported?<br><span class="muted">A:</span> Popular STBs, Android TV, Fire TV, smart TVs, phones, tablets, and web players.</div>
-          <div class="pill"><strong>Q:</strong> Activation time?<br><span class="muted">A:</span> Usually minutes after WhatsApp confirmation.</div>
         </div>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
 
-  <div id="aboutModal" class="modal" role="dialog" aria-modal="true" aria-label="About">
-    <div class="modalCard"><div class="modalHead"><strong>About Us</strong><button class="x" data-close="aboutModal">Close</button></div><div class="modalBody"><p>net+TV is built for stability and clarity. If something isn’t true, we don’t print it on banners.</p><div class="footpad"></div></div></div>
-  </div>
+        <div class="card">
+          <h3>Site Settings</h3>
+          <div class="grid three">
+            <div>
+              <label>Default Theme</label>
+              <select id="set-theme"><option>dark</option><option>light</option></select>
+            </div>
+            <div>
+              <label>WhatsApp Number (no +)</label>
+              <input id="set-wa" placeholder="16476961656" />
+            </div>
+            <div>
+              <label>Notes</label>
+              <input id="set-notes" placeholder="Internal note (optional)">
+            </div>
+          </div>
 
-  <div id="pinModal" class="modal" role="dialog" aria-modal="true" aria-label="Know Your Parental PIN">
-    <div class="modalCard">
-      <div class="modalHead"><strong>Know Your Parental PIN</strong><button class="x" data-close="pinModal">Close</button></div>
-      <div class="modalBody">
-        <form id="pinForm" class="grid">
-          <div class="grid two">
-            <div><label>MAC Address</label><input required name="mac" placeholder="00:1A:79:xx:xx:xx"></div>
-            <div><label>Email</label><input required name="email" type="email" placeholder="you@example.com"></div>
+          <div class="grid two" style="margin-top:8px">
+            <div>
+              <label>Categories (one per line)</label>
+              <textarea id="set-categories" placeholder="Full Package
+Full Package (No Adult)
+English
+Hindi
+Punjabi
+Gujarati
+South Indian
+Kids
+Sports
+Adult"></textarea>
+            </div>
+            <div>
+              <label>Ticker Speed (multiplier, 1 = default)</label>
+              <input id="set-ticker-speed" type="number" step="0.01" min="0.5" max="2" placeholder="1.00">
+              <div class="muted" style="margin-top:4px">Used by homepage to slightly speed up or slow down the marquee.</div>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:6px">
+            <button id="saveSettings" class="btn primary">Save Settings</button>
+            <div id="settingsMsg" class="muted"></div>
+          </div>
+          <div class="muted" style="margin-top:8px">Tip: After saving, refresh your homepage tab. If you seeded, you should instantly see banners, posters, plans and a sample box.</div>
+        </div>
+      </section>
+
+      <!-- PLANS -->
+      <section id="tab-plans" class="grid hidden" style="margin-top:12px">
+        <div class="card">
+          <h3>New / Edit Plan</h3>
+          <div class="grid three">
+            <div><label>Name</label><input id="p-name"></div>
+            <div><label>Price (e.g., CA$100)</label><input id="p-price"></div>
+            <div><label>Months</label><input id="p-months" type="number" min="1"></div>
+          </div>
+          <div class="grid three">
+            <div><label>Benefit</label><input id="p-benefit" placeholder="+1 month free"></div>
+            <div><label>Tag</label><input id="p-tag" placeholder="Popular / Best Value"></div>
+            <div><label>Sort</label><input id="p-sort" type="number" value="10"></div>
           </div>
           <div class="grid two">
             <div>
-              <label>Set-top Box Brand</label>
-              <select id="pinBrand" name="brand" required>
-                <option value="">Select</option><option>MAG / Stalker</option><option>Formuler</option><option>Buzztv</option><option>Dreamlink</option><option>Other</option>
-              </select>
+              <label>Description (multi-line supported)</label>
+              <textarea id="p-desc" placeholder="Short description..."></textarea>
             </div>
-            <div><label>PIN</label><input id="pinOutput" readonly placeholder="Will show after brand" /></div>
+            <div>
+              <label>Features (one per line)</label>
+              <textarea id="p-features" placeholder="Example:
+Full HD channels
+PPV included (where available)
++1 month free"></textarea>
+            </div>
           </div>
-          <div><label>Notes</label><input name="note" placeholder="Optional note"></div>
-          <button class="btn whats" type="submit">Request PIN on WhatsApp</button>
-          <div class="help">Common PINs: 0000 or 7274 depending on device.</div>
-        </form>
-        <div class="footpad"></div>
-      </div>
-    </div>
-  </div>
-
-  <div id="subscribeModal" class="modal" role="dialog" aria-modal="true" aria-label="Subscribe">
-    <div class="modalCard">
-      <div class="modalHead"><strong>Subscribe</strong><button class="x" data-close="subscribeModal">Close</button></div>
-      <div class="modalBody">
-        <form id="subscribeForm" class="grid">
-          <input type="hidden" name="plan" id="subPlan">
           <div class="grid two">
-            <div><label>Full Name</label><input required name="name" placeholder="Your name"></div>
-            <div><label>Phone</label><input required name="phone" placeholder="+1 647-696-1656" inputmode="tel"></div>
+            <div><label>Active</label><select id="p-active"><option>true</option><option>false</option></select></div>
+            <div></div>
+          </div>
+          <div class="row">
+            <button id="planSave" class="btn primary">Save</button>
+            <button id="planNew" class="btn">New</button>
+            <button id="planDelete" class="btn">Delete</button>
+            <div id="planMsg" class="muted"></div>
+          </div>
+          <input id="p-id" type="hidden">
+        </div>
+
+        <div class="card">
+          <div class="split"><h3>Plans</h3><button id="plansReload" class="btn">Reload</button></div>
+          <div id="plansList" class="list"></div>
+        </div>
+      </section>
+
+      <!-- BOXES -->
+      <section id="tab-boxes" class="grid hidden" style="margin-top:12px">
+        <div class="card">
+          <h3>New / Edit Box</h3>
+          <div class="grid three">
+            <div><label>Tier badge</label><input id="b-tier" placeholder="Basic Box / Good Box"></div>
+            <div><label>Model name</label><input id="b-name" placeholder="X-100"></div>
+            <div><label>Sort</label><input id="b-sort" type="number" value="10"></div>
+          </div>
+          <div class="grid two">
+            <div><label>Box Price</label><input id="b-boxPrice" placeholder="CA$120"></div>
+            <div><label>Active</label><select id="b-active"><option>true</option><option>false</option></select></div>
+          </div>
+          <div class="grid three">
+            <div><label>Combo Price</label><input id="b-c-price" placeholder="CA$199"></div>
+            <div><label>Combo Months</label><input id="b-c-months" type="number" value="12"></div>
+            <div><label>Combo Extra</label><input id="b-c-extra" placeholder="+1 month free"></div>
+          </div>
+          <div><label>Description</label><input id="b-desc" placeholder="Short description"></div>
+
+          <div class="grid">
+            <label>Image URLs (1–3, one per line)</label>
+            <textarea id="b-img-urls" placeholder="https://.../1280x720-1.jpg
+https://.../1280x720-2.jpg"></textarea>
+            <div id="b-images" class="imgRow"></div>
           </div>
 
-          <div>
-            <label>TV + VOD Categories (select multiple)</label>
-            <div id="catsSub" class="catGrid"></div>
+          <div class="row">
+            <button id="boxSave" class="btn primary">Save</button>
+            <button id="boxNew" class="btn">New</button>
+            <button id="boxDelete" class="btn">Delete</button>
+            <div id="boxMsg" class="muted"></div>
           </div>
+          <input id="b-id" type="hidden">
+        </div>
 
-          <div><label>Notes</label><textarea name="note" rows="3" placeholder="Anything else we should know?"></textarea></div>
-          <button class="btn whats" type="submit">Send on WhatsApp</button>
-        </form>
-        <div class="footpad"></div>
-      </div>
+        <div class="card">
+          <div class="split"><h3>Boxes</h3><button id="boxesReload" class="btn">Reload</button></div>
+          <div id="boxesList" class="list"></div>
+        </div>
+      </section>
+
+      <!-- BANNERS -->
+      <section id="tab-banners" class="grid hidden" style="margin-top:12px">
+        <div class="card">
+          <h3>New / Edit Banner</h3>
+          <div class="grid two">
+            <div><label>Title</label><input id="bn-title" placeholder="Promo title"></div>
+            <div><label>Sort</label><input id="bn-sort" type="number" value="10"></div>
+          </div>
+          <div class="grid two">
+            <div><label>Active</label><select id="bn-active"><option>true</option><option>false</option></select></div>
+            <div><label>Image URLs (one per line, 1280×720)</label></div>
+          </div>
+          <textarea id="bn-img-urls" placeholder="https://.../banner-1-1280x720.jpg
+https://.../banner-2-1280x720.jpg"></textarea>
+          <div id="bn-images" class="imgRow" style="margin-top:6px"></div>
+          <div class="row">
+            <button id="bnSave" class="btn primary">Save</button>
+            <button id="bnNew" class="btn">New</button>
+            <button id="bnDelete" class="btn">Delete</button>
+            <div id="bnMsg" class="muted"></div>
+          </div>
+          <input id="bn-id" type="hidden">
+        </div>
+
+        <div class="card">
+          <div class="split"><h3>Banners</h3><button id="bnReload" class="btn">Reload</button></div>
+          <div id="bannersList" class="list"></div>
+        </div>
+      </section>
+
+      <!-- POSTERS -->
+      <section id="tab-posters" class="grid hidden" style="margin-top:12px">
+        <div class="card">
+          <h3>New / Edit Poster</h3>
+          <div class="grid three">
+            <div><label>Title</label><input id="ps-title" placeholder="Movie / Series title"></div>
+            <div><label>Aspect ratio</label><select id="ps-ratio"><option>2:3</option><option>16:9</option></select></div>
+            <div><label>Sort</label><input id="ps-sort" type="number" value="10"></div>
+          </div>
+          <div class="grid two">
+            <div><label>Active</label><select id="ps-active"><option>true</option><option>false</option></select></div>
+            <div><label>Image URL</label><input id="ps-url" placeholder="https://.../poster.jpg"></div>
+          </div>
+          <div class="row"><img id="ps-thumb" class="thumb hidden" alt=""></div>
+          <div class="row">
+            <button id="psSave" class="btn primary">Save</button>
+            <button id="psNew" class="btn">New</button>
+            <button id="psDelete" class="btn">Delete</button>
+            <div id="psMsg" class="muted"></div>
+          </div>
+          <input id="ps-id" type="hidden">
+        </div>
+
+        <div class="card">
+          <div class="split"><h3>Posters</h3><button id="psReload" class="btn">Reload</button></div>
+          <div id="postersList" class="list"></div>
+        </div>
+      </section>
+    </div>
+
+    <div id="locked" class="card">
+      <h3>Sign in to edit</h3>
+      <p class="muted">Anyone who can sign in can edit. Try not to hand out the login like festival flyers.</p>
     </div>
   </div>
 
-  <!-- Firebase + Scripts -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+  import { getFirestore, collection, getDocs, doc, setDoc, addDoc, deleteDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut,
+           createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
-      authDomain: "netplus-site-4ff04.firebaseapp.com",
-      projectId: "netplus-site-4ff04",
-      storageBucket: "netplus-site-4ff04.firebasestorage.app",
-      messagingSenderId: "49095160110",
-      appId: "1:49095160110:web:5431d5c9f8ca45c4d70abf",
-      measurementId: "G-PYWFFDZ0RR"
+  const firebaseConfig = {
+    apiKey: "AIzaSyCboIOCfsY1Zvx-cyKPMbAMGYdg27rnP0Y",
+    authDomain: "netplus-site-4ff04.firebaseapp.com",
+    projectId: "netplus-site-4ff04",
+    storageBucket: "netplus-site-4ff04.firebasestorage.app",
+    messagingSenderId: "49095160110",
+    appId: "1:49095160110:web:5431d5c9f8ca45c4d70abf",
+    measurementId: "G-PYWFFDZ0RR"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const splitLines = raw => (raw||"").split(/\r?\n|,/).map(s=>s.trim()).filter(Boolean);
+  const splitUrls = raw => (raw||"").split(/\r?\n|,/).map(s=>s.trim()).filter(Boolean);
+  function msg(el, text, ok=true){ el.textContent = text; el.className = ok ? "muted success" : "muted danger"; setTimeout(()=>{el.textContent=""; el.className="muted";}, 3000); }
+  function ensure(v,f){ return (v===undefined||v===null)?f:v; }
+  function renderThumbs(hostSel, urls){ const host=$(hostSel); host.innerHTML=''; urls.forEach(u=>{ host.insertAdjacentHTML('beforeend', `<img src="${u}" class="thumb">`); }); }
+
+  // Auth UI
+  const userInfo = $('#userInfo'), signOutBtn = $('#signOutBtn');
+  const authToggle = $('#authToggle'), authCard = $('#authCard');
+  const emailIn = $('#authEmail'), passIn = $('#authPass'), authMsg = $('#authMsg');
+
+  authToggle.onclick = ()=> authCard.classList.toggle('open');
+  document.addEventListener('click', e=>{ if (!authCard.contains(e.target) && !authToggle.contains(e.target)) authCard.classList.remove('open'); });
+
+  $('#googleSignIn').onclick = async()=>{ try{ await signInWithPopup(auth, provider); authCard.classList.remove('open'); }catch(e){ msg(authMsg,e.message,false); } };
+  $('#emailSignIn').onclick = async()=>{ try{ await signInWithEmailAndPassword(auth, emailIn.value.trim(), passIn.value); authCard.classList.remove('open'); }catch(e){ msg(authMsg,e.message,false); } };
+  $('#emailRegister').onclick = async()=>{ try{ const cred=await createUserWithEmailAndPassword(auth, emailIn.value.trim(), passIn.value); msg(authMsg,'Registered: '+cred.user.email,true); }catch(e){ msg(authMsg,e.message,false); } };
+  signOutBtn.onclick = async()=>{ await signOut(auth); };
+
+  // Anyone signed in can edit
+  onAuthStateChanged(auth, async user=>{
+    const editor = $('#editor'), locked = $('#locked');
+    if(!user){
+      userInfo.textContent = "Not signed in";
+      signOutBtn.classList.add('hidden');
+      editor.classList.add('hidden');
+      locked.classList.remove('hidden');
+      return;
+    }
+    userInfo.textContent = user.displayName || user.email || user.uid;
+    signOutBtn.classList.remove('hidden');
+    editor.classList.remove('hidden');
+    locked.classList.add('hidden');
+
+    // load data
+    await loadSettings();
+    await loadPlans();
+    await loadBoxes();
+    await loadBanners();
+    await loadPosters();
+  });
+
+  // Tabs
+  $$('.tab').forEach(t=>{
+    t.onclick = ()=>{
+      $$('.tab').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      ['settings','plans','boxes','banners','posters'].forEach(key=>{
+        $('#tab-'+key).classList.toggle('hidden', key!==t.dataset.tab);
+      });
     };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  });
 
-    let WHATSAPP_NUMBER = "16476961656";
-    document.getElementById('year').textContent = new Date().getFullYear();
+  /* SETTINGS */
+  async function loadSettings(){
+    const sDoc = await getDoc(doc(db,'settings','main'));
+    if(sDoc.exists()){
+      const s = sDoc.data();
+      $('#set-theme').value = ensure(s.themeDefault,'dark');
+      $('#set-wa').value = ensure(s.whatsappNumber,'16476961656');
+      $('#set-features').value = ensure((s.features||[]).join(', '),'🇨🇦 Proudly Canadian, Zero Latency Streams, 24/7 Support, Multi-Device');
+      $('#set-hero-subtitle').value = ensure(s.heroSubtitle,'Quick Activation');
+      $('#set-hero-title').value = ensure(s.heroTitle,'20,000+ Live Channels, All Shows, Movies & PPV');
+      $('#set-hero-subline').value = ensure(s.heroSubline,'Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech');
+      $('#set-ctas').value = ensure((s.ctaLabels||['Our Plans','New Boxes','Renew Plan','Contact Support']).join(', '),'Our Plans, New Boxes, Renew Plan, Contact Support');
+      $('#set-notes').value = ensure(s.notes,'');
 
-    /* ========== THEME ========== */
-    const themeBtn = document.getElementById('themeBtn');
-    const preferred = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', preferred);
-    themeBtn.addEventListener('click', ()=>{
-      const now = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', now);
-      localStorage.setItem('theme', now);
+      // New: categories + ticker speed
+      $('#set-categories').value = ensure((s.categories||[
+        'Full Package','Full Package (No Adult)','English','Hindi','Punjabi','Gujarati','South Indian','Kids','Sports','Adult'
+      ]).join('\n'),'');
+      $('#set-ticker-speed').value = ensure(typeof s.tickerSpeed === 'number' ? s.tickerSpeed : 1.00, 1.00);
+    }
+  }
+  $('#saveSettings').onclick = async()=>{
+    const body = {
+      themeDefault: $('#set-theme').value || 'dark',
+      whatsappNumber: $('#set-wa').value || '16476961656',
+      features: ($('#set-features').value||'').split(',').map(s=>s.trim()).filter(Boolean),
+      heroSubtitle: $('#set-hero-subtitle').value.trim(),
+      heroTitle: $('#set-hero-title').value.trim(),
+      heroSubline: $('#set-hero-subline').value.trim(),
+      ctaLabels: ($('#set-ctas').value||'').split(',').map(s=>s.trim()).slice(0,4),
+      notes: $('#set-notes').value.trim(),
+      categories: splitLines($('#set-categories').value),
+      tickerSpeed: Number($('#set-ticker-speed').value || 1.00),
+      updatedAt: serverTimestamp()
+    };
+    await setDoc(doc(db,'settings','main'), body, {merge:true});
+    msg($('#settingsMsg'),'Saved.');
+  };
+
+  // Seed sample content fast so homepage shows data immediately
+  $('#seedBtn').onclick = async()=>{
+    if(!confirm('Seed demo content? This will add sample banners, posters, a box and 2 plans.')) return;
+    // settings
+    await setDoc(doc(db,'settings','main'), {
+      themeDefault:'dark',
+      whatsappNumber:'16476961656',
+      features:['🇨🇦 Proudly Canadian','Zero Latency Streams','24/7 Support','Multi-Device'],
+      heroSubtitle:'Quick Activation',
+      heroTitle:'20,000+ Live Channels, All Shows, Movies & PPV',
+      heroSubline:'Latest + classic Movies & Series • Full HD & SD Channels • Anti-Freeze Tech',
+      ctaLabels:['Our Plans','New Boxes','Renew Plan','Contact Support'],
+      categories:['Full Package','Full Package (No Adult)','English','Hindi','Punjabi','Gujarati','South Indian','Kids','Sports','Adult'],
+      tickerSpeed:1.12,
+      updatedAt: serverTimestamp()
+    }, {merge:true});
+    // banners
+    await addDoc(collection(db,'banners'), { title:'Welcome', sort:10, active:true, images:[
+      'https://via.placeholder.com/1280x720?text=net%2BTV+Banner+1',
+      'https://via.placeholder.com/1280x720?text=net%2BTV+Banner+2'
+    ], updatedAt:serverTimestamp()});
+    // posters
+    await addDoc(collection(db,'posters'), { title:'Sample Poster 1', ratio:'2:3', sort:10, active:true, image:'https://via.placeholder.com/300x450?text=Poster+1', updatedAt:serverTimestamp()});
+    await addDoc(collection(db,'posters'), { title:'Sample Poster 2', ratio:'2:3', sort:20, active:true, image:'https://via.placeholder.com/300x450?text=Poster+2', updatedAt:serverTimestamp()});
+    // plans
+    await addDoc(collection(db,'plans'), {
+      name:'Starter HD', price:'CA$60', months:6, benefit:'+1 month free', tag:'Popular',
+      desc:'HD focus • Core channels',
+      features:['Full HD where available','Core English + Hindi + Punjabi','Anti-freeze tech'],
+      sort:10, active:true, updatedAt:serverTimestamp()
     });
-
-    /* ========== MENU / MODALS ========== */
-    const menuBtn = document.getElementById('menuBtn');
-    const menuSheet = document.getElementById('menuSheet');
-    menuBtn.addEventListener('click', () => menuSheet.classList.add('open'));
-    menuSheet.addEventListener('click', e => { if (e.target.dataset.close === 'menuSheet' || e.target === menuSheet) menuSheet.classList.remove('open'); });
-    menuSheet.querySelectorAll('[data-open]').forEach(a=> a.addEventListener('click', ()=>{ menuSheet.classList.remove('open'); openModal(a.dataset.open); }));
-    function openModal(id){ document.getElementById(id)?.classList.add('open'); }
-    function closeModal(id){ document.getElementById(id)?.classList.remove('open'); }
-    document.querySelectorAll('.modal').forEach(m=>{
-      m.addEventListener('click', e=>{ if (e.target === m) m.classList.remove('open'); });
-      m.querySelectorAll('[data-close]').forEach(b=> b.addEventListener('click', ()=> closeModal(b.dataset.close || m.id)));
+    await addDoc(collection(db,'plans'), {
+      name:'Family FHD', price:'CA$100', months:12, benefit:'+2 months free', tag:'Best Value',
+      desc:'Family packs and sports',
+      features:['Full HD channels','Kids + Sports','+2 months free on annual'],
+      sort:20, active:true, updatedAt:serverTimestamp()
     });
-    document.querySelectorAll('[data-open]').forEach(b=> b.addEventListener('click', ()=> openModal(b.dataset.open)));
+    // box
+    await addDoc(collection(db,'boxes'), {
+      tier:'Basic Box', name:'X-100', sort:10, boxPrice:'CA$120', active:true,
+      combo:{price:'CA$199', planMonths:12, extra:'+1 month free'},
+      desc:'Fast setup. Supports our portal.',
+      images:['https://via.placeholder.com/1280x720?text=Box+Front','https://via.placeholder.com/1280x720?text=Box+UI'],
+      updatedAt:serverTimestamp()
+    });
+    alert('Seeded. Open your homepage and refresh.');
+  };
 
-    /* ========== HELPERS ========== */
-    function toWA(text){ window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,'_blank'); }
-    function formToKV(form){ const data=new FormData(form); const kv={}; data.forEach((v,k)=>kv[k]=v); return kv; }
-    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-    function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
-    function imgTag(u, ph, attrs=''){
-      const src = u ? `${u}${u.includes('?')?'&':'?'}v=${Date.now()}` : ph;
-      return `<img src="${src}" ${attrs} referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${ph}'" onload="if(!this.naturalWidth){this.src='${ph}'}">`;
-    }
-    function pickChecked(container){
-      return Array.from(container.querySelectorAll('input[type="checkbox"][name="cats"]:checked')).map(i=>i.value);
-    }
-
-    /* Category list in required order */
-    const CATEGORY_LIST = [
-      "Full Package",
-      "Full Package (No Adult)",
-      "English",
-      "Hindi",
-      "Punjabi",
-      "Gujarati",
-      "South Indian",
-      "Kids",
-      "Sports",
-      "Adult"
-    ];
-
-    function renderCats(containerId){
-      const host = document.getElementById(containerId);
-      host.innerHTML = CATEGORY_LIST.map((c)=>`
-        <label class="catItem">
-          <input type="checkbox" name="cats" value="${escapeAttr(c)}">
-          <span>${escapeHtml(c)}</span>
-        </label>`).join('');
-
-      const checks = [...host.querySelectorAll('input[name="cats"]')];
-      const full = checks.find(x => x.value === "Full Package");
-      const noAdult = checks.find(x => x.value === "Full Package (No Adult)");
-      const adult = checks.find(x => x.value === "Adult");
-
-      function applyFull(which){
-        if (which === 'full' && full){
-          checks.forEach(ch => { if (ch !== full) ch.checked = true; });
-          if (noAdult) noAdult.checked = false;
-        }
-        if (which === 'noAdult' && noAdult){
-          checks.forEach(ch => { if (ch !== noAdult) ch.checked = (ch.value !== 'Adult'); });
-          if (full) full.checked = false;
-        }
-      }
-      if (full) full.addEventListener('change', ()=> { if (full.checked) applyFull('full'); });
-      if (noAdult) noAdult.addEventListener('change', ()=> { if (noAdult.checked) applyFull('noAdult'); });
-      if (adult && noAdult){
-        adult.addEventListener('change', ()=> { if (adult.checked && noAdult.checked) noAdult.checked = false; });
-      }
-      checks.forEach(ch=>{
-        if (ch !== full && ch !== noAdult){
-          ch.addEventListener('change', ()=>{
-            if (!ch.checked){
-              if (full) full.checked = false;
-              if (noAdult) noAdult.checked = false;
-            }
-          });
-        }
-      });
-    }
-
-    /* ========== TICKER (always visible, readable speed) ========== */
-    const DEFAULT_TICKER = [
-      "🇨🇦 Proudly Canadian",
-      "Zero Latency Streams",
-      "24/7 Support",
-      "Multi-Device"
-    ];
-
-    function restartTicker(host){
-      host.style.animation = 'none';
-      // Force reflow
-      void host.offsetWidth;
-      host.style.animation = '';
-    }
-
-    function setTickerDuration(host){
-      // Move half the content width per loop (because content is duplicated)
-      const distancePx = host.scrollWidth / 2;
-      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      const velocity = vw < 700 ? 82 : 82; // px per second; slightly faster
-      const dur = Math.max(12, distancePx / velocity); // floor to avoid silly fast loops
-      host.style.setProperty('--dur', `${dur}s`);
-      restartTicker(host);
-    }
-
-    function setTicker(items){
-      const host = document.getElementById('featureTicker');
-      const list = (Array.isArray(items) && items.length) ? items : DEFAULT_TICKER;
-      const line = list.map(x=>`<span>${escapeHtml(x)}</span>`).join('');
-      host.innerHTML = line + line; // duplicate for seamless loop
-      // Next frame, measure and set readable speed
-      requestAnimationFrame(()=> setTickerDuration(host));
-    }
-
-    window.addEventListener('resize', ()=> setTickerDuration(document.getElementById('featureTicker')));
-
-    /* ========== FIRESTORE LOADERS ========== */
-    async function loadSettings(){
-      try{
-        const sDoc = await getDoc(doc(db,'settings','main'));
-        if (sDoc.exists()){
-          const s = sDoc.data();
-          if (!localStorage.getItem('theme') && s.themeDefault) document.documentElement.setAttribute('data-theme', s.themeDefault);
-          if (s.whatsappNumber) WHATSAPP_NUMBER = s.whatsappNumber;
-          if (s.heroSubtitle) document.getElementById('heroSubtitle').textContent = s.heroSubtitle;
-          if (s.heroTitle) document.getElementById('heroTitle').textContent = s.heroTitle;
-          if (s.heroSubline) document.getElementById('heroSubline').textContent = s.heroSubline;
-          if (Array.isArray(s.ctaLabels)){
-            ['cta0','cta1','cta2','cta3'].forEach((id,i)=>{ if (s.ctaLabels[i]) document.getElementById(id).textContent = s.ctaLabels[i]; });
-          }
-          if (Array.isArray(s.features) && s.features.length) setTicker(s.features);
-        }
-      }catch(e){}
-    }
-
-    let bannerTimer = null;
-    function startBanner(){
-      const track = document.getElementById('bannerTrack'); if (!track.children.length) return;
-      let i=0; if (bannerTimer) clearInterval(bannerTimer);
-      track.style.transform='translateX(0)';
-      bannerTimer = setInterval(()=>{ i=(i+1)%track.children.length; track.style.transform=`translateX(-${i*100}%)`; }, 4500);
-    }
-    async function loadBanners(){
-      const bannerTrack = document.getElementById('bannerTrack');
-      bannerTrack.innerHTML = '';
-      let urls = [];
-      try{
-        const snap = await getDocs(collection(db,'banners'));
-        snap.forEach(d=>{ const x=d.data(); if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u}))); });
-      }catch(e){}
-      if (!urls.length){
-        try{
-          const snap2 = await getDocs(collection(db,'site_content/banners/items'));
-          snap2.forEach(d=>{ const x=d.data(); if(x.active!==false && Array.isArray(x.images)) urls.push(...x.images.map(u=>({sort:x.sort||0,url:u}))); });
-        }catch(e){}
-      }
-      urls.sort((a,b)=>a.sort-b.sort);
-      const list = urls.length ? urls.map(o=>o.url) : [
-        "https://via.placeholder.com/1280x720?text=Banner+1",
-        "https://via.placeholder.com/1280x720?text=Banner+2"
-      ];
-      bannerTrack.innerHTML = list.map(u=>`<div class="bannerSlide">${imgTag(u,'https://via.placeholder.com/1280x720?text=Banner','loading="eager" fetchpriority="high"')}</div>`).join('');
-      startBanner();
-    }
-
-    async function loadPosters(){
-      const postersRail = document.getElementById('postersRail');
-      postersRail.innerHTML = '';
-      try{
-        const snap = await getDocs(collection(db,'posters'));
-        const arr=[]; snap.forEach(d=>{ const x=d.data(); if(x.active!==false && x.image) arr.push(x); });
-        arr.sort((a,b)=> (a.sort||0)-(b.sort||0));
-        const imgs = arr.map(x=>x.image);
-        const list = imgs.length ? imgs : [
-          "https://via.placeholder.com/300x450?text=Poster+1",
-          "https://via.placeholder.com/300x450?text=Poster+2",
-          "https://via.placeholder.com/300x450?text=Poster+3"
-        ];
-        postersRail.innerHTML = list.map(u=> imgTag(u,'https://via.placeholder.com/300x450?text=Poster','loading="lazy"')).join('');
-      }catch(e){
-        postersRail.innerHTML = `<img src="https://via.placeholder.com/300x450?text=Poster+1"><img src="https://via.placeholder.com/300x450?text=Poster+2">`;
-      }
-    }
-
-    let plansData = [];
-    const demoPlans = [
-      { id:'p1', name:"Starter HD", price:"CA$60", months:6, benefit:"+1 month free", tag:"Popular", desc:"HD focus • Core channels" },
-      { id:'p2', name:"Family FHD", price:"CA$100", months:12, benefit:"+2 months free", tag:"Best Value", desc:"Full HD • Family packs" }
-    ];
-
-    function descHTML(p){
-      if (Array.isArray(p.features) && p.features.length){
-        return `<ul style="margin:8px 0 12px;padding-left:18px">${p.features.map(li=>`<li>${escapeHtml(String(li))}</li>`).join('')}</ul>`;
-      }
-      if (typeof p.desc === 'string' && p.desc.includes('\\n')){
-        const parts = p.desc.split(/\\n/).map(s=>s.trim()).filter(Boolean);
-        return `<ul style="margin:8px 0 12px;padding-left:18px">${parts.map(li=>`<li>${escapeHtml(li)}</li>`).join('')}</ul>`;
-      }
-      if (typeof p.desc === 'string' && p.desc.includes('\n')){
-        const parts = p.desc.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-        return `<ul style="margin:8px 0 12px;padding-left:18px">${parts.map(li=>`<li>${escapeHtml(li)}</li>`).join('')}</ul>`;
-      }
-      const line = p.desc ? escapeHtml(String(p.desc)) : '';
-      return `<div class="muted" style="margin:10px 0 14px">${line}</div>`;
-    }
-
-    function planCardHTML(p, mode){
-      const btn = mode==='renew'
-        ? `<button class="btn whats" data-renew='${escapeAttr(JSON.stringify({name:p.name,months:p.months||""}))}'>Renew</button>`
-        : `<button class="btn whats" data-subscribe="${escapeAttr(p.name)}">Subscribe</button><button class="btn" data-info="${escapeAttr(p.name)}">Info</button>`;
-      return `
-        ${p.tag ? `<div class="tag">${escapeHtml(p.tag)}</div>` : ''}
-        <div class="cardHead">
-          <h3>${escapeHtml(p.name)}</h3>
-          <div class="priceRight">${escapeHtml(p.price)}</div>
-        </div>
-        ${p.months ? `<div class="muted">${escapeHtml(p.months + ' months')}</div>` : ''}
-        ${p.benefit ? `<div class="benefit">${escapeHtml(p.benefit)}</div>` : ''}
-        ${descHTML(p)}
-        <div style="display:flex;gap:8px;flex-wrap:wrap">${btn}</div>`;
-    }
-
-    async function loadPlans(){
-      const plansGrid = document.getElementById('plansGrid');
-      const renewGrid = document.getElementById('renewPlansGrid');
-      plansGrid.innerHTML = '<div class="muted">Loading plans…</div>';
-      plansData = [];
-      try{
-        const snap = await getDocs(collection(db,'plans'));
-        snap.forEach(doc=>{ const d=doc.data(); if(d?.name && d?.price && d.active!==false) plansData.push({id:doc.id,...d}); });
-        plansData.sort((a,b)=> (a.sort||0)-(b.sort||0));
-      }catch(e){}
-      if (!plansData.length) plansData = demoPlans;
-
-      // Render
-      plansGrid.innerHTML = '';
-      plansData.forEach(p=>{
-        const el = document.createElement('div'); el.className='card'; el.innerHTML = planCardHTML(p,'sub');
-        plansGrid.appendChild(el);
-      });
-      plansGrid.querySelectorAll('[data-info]').forEach(b=> b.addEventListener('click', ()=> alert('Includes channels in English, Hindi, Punjabi, Gujarati, South Indian, Kids, Sports and more. 4K where available.')));
-      plansGrid.querySelectorAll('[data-subscribe]').forEach(b=> b.addEventListener('click', ()=>{
-        document.getElementById('subPlan').value = b.dataset.subscribe; openModal('subscribeModal');
-      }));
-
-      // Renew list
-      renewGrid.innerHTML = '';
-      plansData.forEach(p=>{
-        const el = document.createElement('div'); el.className='card'; el.innerHTML = planCardHTML(p,'renew');
-        renewGrid.appendChild(el);
-      });
-      renewGrid.querySelectorAll('[data-renew]').forEach(b=>{
-        b.addEventListener('click', ()=>{
-          const {name, months} = JSON.parse(b.dataset.renew || '{}');
-          document.getElementById('renewPlanName').value = name || '';
-          document.getElementById('renewPlanMonths').value = months || '';
-          if (months) document.getElementById('renewDuration').value = String(months);
-          document.getElementById('rechargeForm').scrollIntoView({behavior:'smooth', block:'start'});
-        });
-      });
-    }
-
-    async function loadBoxes(){
-      const boxesGrid = document.getElementById('boxesGrid');
-      boxesGrid.innerHTML = '<div class="muted">Loading boxes…</div>';
-      let items=[];
-      try{
-        const snap = await getDocs(collection(db,'boxes'));
-        snap.forEach(d=>{ const x=d.data(); if(x.active!==false) items.push({id:d.id,...x}); });
-        items.sort((a,b)=> (a.sort||0)-(b.sort||0));
-      }catch(e){}
-      boxesGrid.innerHTML = '';
-      if(!items.length){ boxesGrid.innerHTML = '<div class="muted">Boxes coming soon.</div>'; return; }
-      items.forEach(b=>{
-        const images = Array.isArray(b.images) && b.images.length ? b.images : ["https://via.placeholder.com/1280x720?text=Box"];
-        const card = document.createElement('div'); card.className='card';
-        card.innerHTML = `
-          <div class="boxSlider">
-            <div class="boxTrack">
-              ${images.map(u=>`<div class="boxSlide">${imgTag(u,'https://via.placeholder.com/1280x720?text=Box','loading="lazy"')}</div>`).join('')}
-            </div>
+  /* PLANS */
+  let plansCache=[];
+  async function loadPlans(){
+    const snap = await getDocs(collection(db,'plans'));
+    plansCache=[]; snap.forEach(d=> plansCache.push({id:d.id,...d.data()}));
+    plansCache.sort((a,b)=> (a.sort||0)-(b.sort||0));
+    renderPlansList();
+  }
+  function renderPlansList(){
+    const list=$('#plansList'); list.innerHTML='';
+    plansCache.forEach(p=>{
+      const featureCount = Array.isArray(p.features) ? p.features.length : 0;
+      const div=document.createElement('div'); div.className='item';
+      div.innerHTML=`
+        <div class="split">
+          <div><span class="tag mini">${p.tag||''}</span> <strong>${p.name||''}</strong> <span class="muted">(${p.months||''} mo)</span></div>
+          <div class="right"><strong>${p.price||''}</strong> <span class="muted">features:${featureCount}</span> <span class="muted">sort:${p.sort||0}</span> <span class="muted">${p.active===false?'inactive':'active'}</span>
+            <button class="btn mini" data-edit="${p.id}">Edit</button>
           </div>
-          <div class="boxDots">${images.map((_,i)=>`<div class="boxDot ${i===0?'active':''}"></div>`).join('')}</div>
-
-          ${b.tier ? `<span class="miniTag">${escapeHtml(b.tier)}</span>` : ''}
-          <div class="boxMeta"><h3 class="boxName">${escapeHtml(b.name||'')}</h3><div class="boxPrice">${escapeHtml(b.boxPrice||'')}</div></div>
-
-          ${b.combo ? `<div class="comboCallout"><div style="display:flex;justify-content:space-between;align-items:center"><strong>Combo Plan</strong><strong>${escapeHtml(b.combo.price||'')}</strong></div><div class="muted">${b.combo.planMonths||12} months • ${escapeHtml(b.combo.extra||'')}</div></div>` : ''}
-
-          <div class="muted" style="line-height:1.5;margin:8px 0 12px">${escapeHtml(b.desc||'')}</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn whats" data-box="${escapeAttr(b.name||'')}">Get Box</button><button class="btn" data-boxinfo="${escapeAttr(b.name||'')}">Info</button></div>`;
-        boxesGrid.appendChild(card);
-
-        const track = card.querySelector('.boxTrack');
-        const dots = Array.from(card.querySelectorAll('.boxDot'));
-        let idx = 0; const go=i=>{ idx=(i+images.length)%images.length; track.style.transform=`translateX(-${idx*100}%)`; dots.forEach((d,k)=>d.classList.toggle('active',k===idx)); };
-        let timer=setInterval(()=>go(idx+1),3500);
-        card.addEventListener('mouseenter', ()=>clearInterval(timer));
-        card.addEventListener('mouseleave', ()=>timer=setInterval(()=>go(idx+1),3500));
-        dots.forEach((d,k)=> d.addEventListener('click', ()=>go(k)));
-      });
-
-      boxesGrid.querySelectorAll('[data-box]').forEach(b=>{
-        b.addEventListener('click', ()=> toWA(`Box Request\nBox: ${b.dataset.box}\nPrefer combo? yes/no\nName:\nPhone:\nNote:`));
-      });
-      boxesGrid.querySelectorAll('[data-boxinfo]').forEach(b=> b.addEventListener('click', ()=> alert(`${b.dataset.box}\nIncludes HDMI, power adapter, supports our portal.`)));
-    }
-
-    /* ========== BOOT ========== */
-    (async()=>{
-      // Make the initial hardcoded ticker animate at readable speed
-      setTicker(DEFAULT_TICKER);
-
-      await loadSettings();
-      await loadBanners();
-      await loadPosters();
-      await loadPlans();
-      await loadBoxes();
-
-      // Render category checkboxes in all forms
-      renderCats('catsSub');
-      renderCats('catsOwn');
-      renderCats('catsRenew');
-    })();
-
-    // FORMS -> WhatsApp
-    document.getElementById('subscribeForm').addEventListener('submit', e=>{
-      e.preventDefault(); const kv=formToKV(e.target);
-      const cats = pickChecked(document.getElementById('catsSub'));
-      toWA([`New Subscription Request`,
-            `Plan: ${kv.plan || '-'}`,
-            `Name: ${kv.name}`,
-            `Phone: ${kv.phone}`,
-            cats.length?`Categories: ${cats.join(', ')}`:null,
-            kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
+        </div>`;
+      list.appendChild(div);
     });
-
-    document.getElementById('ownPlanForm').addEventListener('submit', e=>{
-      e.preventDefault(); const kv=formToKV(e.target);
-      const cats = pickChecked(document.getElementById('catsOwn'));
-      toWA([`Custom Plan Request`,
-            `Name: ${kv.name}`,
-            `Phone: ${kv.phone}`,
-            kv.email?`Email: ${kv.email}`:null,
-            cats.length?`Categories: ${cats.join(', ')}`:`Categories: -`,
-            kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
+    list.querySelectorAll('[data-edit]').forEach(b=>{
+      b.onclick=()=>{
+        const p=plansCache.find(x=>x.id===b.dataset.edit);
+        $('#p-id').value=p.id;
+        $('#p-name').value=p.name||'';
+        $('#p-price').value=p.price||'';
+        $('#p-months').value=p.months||'';
+        $('#p-benefit').value=p.benefit||'';
+        $('#p-tag').value=p.tag||'';
+        $('#p-desc').value=p.desc||'';
+        $('#p-sort').value=p.sort||0;
+        $('#p-active').value=String(p.active!==false);
+        $('#p-features').value = Array.isArray(p.features) ? p.features.join('\n') : '';
+      };
     });
+  }
+  $('#planNew').onclick=()=>{
+    ['p-id','p-name','p-price','p-months','p-benefit','p-tag','p-desc','p-sort','p-features'].forEach(id=>$('#'+id).value='');
+    $('#p-active').value='true';
+  };
+  $('#planSave').onclick=async()=>{
+    const id=$('#p-id').value.trim();
+    const features = splitLines($('#p-features').value);
+    const body={
+      name:$('#p-name').value.trim(),
+      price:$('#p-price').value.trim(),
+      months:Number($('#p-months').value||0),
+      benefit:$('#p-benefit').value.trim(),
+      tag:$('#p-tag').value.trim(),
+      desc:$('#p-desc').value.trim(),
+      features,
+      sort:Number($('#p-sort').value||0),
+      active:$('#p-active').value==='true',
+      updatedAt:serverTimestamp()
+    };
+    if(!body.name||!body.price){ msg($('#planMsg'),'Name and Price required',false); return; }
+    if(id){ await setDoc(doc(db,'plans',id),body,{merge:true}); } else { await addDoc(collection(db,'plans'),body); }
+    await loadPlans(); msg($('#planMsg'),'Saved.');
+  };
+  $('#planDelete').onclick=async()=>{
+    const id=$('#p-id').value.trim(); if(!id) return;
+    if(confirm('Delete this plan?')){ await deleteDoc(doc(db,'plans',id)); await loadPlans(); msg($('#planMsg'),'Deleted.'); }
+  };
+  $('#plansReload').onclick=loadPlans;
 
-    document.getElementById('rechargeForm').addEventListener('submit', e=>{
-      e.preventDefault(); const kv=formToKV(e.target);
-      const cats = pickChecked(document.getElementById('catsRenew'));
-      toWA([`Renewal Request`,
-            `Plan: ${kv.planName || '-'} (${kv.duration || kv.planMonths || '-' } months)`,
-            `Name: ${kv.name}`,
-            `Email: ${kv.email}`,
-            `Phone: ${kv.phone}`,
-            `MAC: ${kv.mac}`,
-            cats.length?`Categories: ${cats.join(', ')}`:null,
-            kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
+  /* BOXES */
+  let boxesCache=[];
+  async function loadBoxes(){
+    const snap=await getDocs(collection(db,'boxes'));
+    boxesCache=[]; snap.forEach(d=> boxesCache.push({id:d.id,...d.data()}));
+    boxesCache.sort((a,b)=> (a.sort||0)-(b.sort||0));
+    renderBoxesList();
+  }
+  function renderBoxesList(){
+    const list=$('#boxesList'); list.innerHTML='';
+    boxesCache.forEach(bx=>{
+      const imgs=(bx.images||[]).map(u=>`<img class="thumb" src="${u}">`).join('');
+      const div=document.createElement('div'); div.className='item';
+      div.innerHTML=`
+        <div class="split">
+          <div><span class="tag mini">${bx.tier||''}</span> <strong>${bx.name||''}</strong> <span class="muted">(${(bx.images||[]).length} img)</span></div>
+          <div class="right"><strong>${bx.boxPrice||''}</strong> <span class="muted">sort:${bx.sort||0}</span> <span class="muted">${bx.active===false?'inactive':'active'}</span>
+            <button class="btn mini" data-edit="${bx.id}">Edit</button>
+          </div>
+        </div>
+        <div class="imgRow" style="margin-top:6px">${imgs}</div>`;
+      list.appendChild(div);
     });
-
-    /* PIN form */
-    function pinForBrand(brand){ const b=(brand||'').toLowerCase(); return (b.includes('mag')||b.includes('stalker')) ? '7274' : '0000'; }
-    const brandSel=document.getElementById('pinBrand'); const pinOut=document.getElementById('pinOutput');
-    if (brandSel && pinOut){ brandSel.addEventListener('change', ()=>{ pinOut.value=pinForBrand(brandSel.value); }); }
-    document.getElementById('pinForm').addEventListener('submit', e=>{
-      e.preventDefault(); const kv=formToKV(e.target);
-      const resolvedPin=pinForBrand(kv.brand);
-      toWA([`Parental PIN Request`,`MAC: ${kv.mac}`,`Email: ${kv.email}`,`Brand: ${kv.brand||'N/A'}`,`Suggested PIN: ${resolvedPin}`,kv.note?`Note: ${kv.note}`:null].filter(Boolean).join('\n'));
+    list.querySelectorAll('[data-edit]').forEach(b=>{
+      b.onclick=()=>{
+        const x=boxesCache.find(z=>z.id===b.dataset.edit);
+        $('#b-id').value=x.id; $('#b-tier').value=x.tier||''; $('#b-name').value=x.name||'';
+        $('#b-sort').value=x.sort||0; $('#b-boxPrice').value=x.boxPrice||''; $('#b-active').value=String(x.active!==false);
+        $('#b-c-price').value=x.combo?.price||''; $('#b-c-months').value=x.combo?.planMonths||12; $('#b-c-extra').value=x.combo?.extra||'';
+        $('#b-desc').value=x.desc||''; $('#b-img-urls').value=(x.images||[]).join('\n'); renderThumbs('#b-images', x.images||[]);
+      };
     });
+  }
+  $('#b-img-urls').addEventListener('input', ()=> renderThumbs('#b-images', splitUrls($('#b-img-urls').value).slice(0,3)) );
+  $('#boxNew').onclick=()=>{ ['b-id','b-tier','b-name','b-sort','b-boxPrice','b-c-price','b-c-months','b-c-extra','b-desc','b-img-urls'].forEach(i=>$('#'+i).value=''); $('#b-active').value='true'; $('#b-images').innerHTML=''; };
+  $('#boxSave').onclick=async()=>{
+    const id=$('#b-id').value.trim();
+    const images=splitUrls($('#b-img-urls').value).slice(0,3);
+    const body={ tier:$('#b-tier').value.trim(), name:$('#b-name').value.trim(), sort:Number($('#b-sort').value||0),
+      boxPrice:$('#b-boxPrice').value.trim(), active:$('#b-active').value==='true',
+      combo:{ price:$('#b-c-price').value.trim(), planMonths:Number($('#b-c-months').value||12), extra:$('#b-c-extra').value.trim() },
+      desc:$('#b-desc').value.trim(), images, updatedAt:serverTimestamp() };
+    if(!body.name){ msg($('#boxMsg'),'Model name required',false); return; }
+    if(images.length===0){ msg($('#boxMsg'),'At least 1 image URL',false); return; }
+    if(id){ await setDoc(doc(db,'boxes',id), body, {merge:true}); } else { await addDoc(collection(db,'boxes'), body); }
+    await loadBoxes(); msg($('#boxMsg'),'Saved.');
+  };
+  $('#boxDelete').onclick=async()=>{
+    const id=$('#b-id').value.trim(); if(!id) return;
+    if(confirm('Delete this box?')){ await deleteDoc(doc(db,'boxes',id)); await loadBoxes(); msg($('#boxMsg'),'Deleted.'); }
+  };
+  $('#boxesReload').onclick=loadBoxes;
 
-    document.getElementById('refreshPlans')?.addEventListener('click', loadPlans);
-  </script>
+  /* BANNERS */
+  let bannersCache=[];
+  async function loadBanners(){
+    const snap=await getDocs(collection(db,'banners'));
+    bannersCache=[]; snap.forEach(d=> bannersCache.push({id:d.id,...d.data()}));
+    bannersCache.sort((a,b)=> (a.sort||0)-(b.sort||0));
+    renderBannersList();
+  }
+  function renderBannersList(){
+    const list=$('#bannersList'); list.innerHTML='';
+    bannersCache.forEach(bn=>{
+      const imgs=(bn.images||[]).map(u=>`<img class="thumb" src="${u}">`).join('');
+      const div=document.createElement('div'); div.className='item';
+      div.innerHTML=`
+        <div class="split">
+          <div><strong>${bn.title||''}</strong> <span class="muted">(${(bn.images||[]).length} img)</span></div>
+          <div class="right"><span class="muted">sort:${bn.sort||0}</span> <span class="muted">${bn.active===false?'inactive':'active'}</span>
+            <button class="btn mini" data-edit="${bn.id}">Edit</button>
+          </div>
+        </div>
+        <div class="imgRow" style="margin-top:6px">${imgs}</div>`;
+      list.appendChild(div);
+    });
+    list.querySelectorAll('[data-edit]').forEach(b=>{
+      b.onclick=()=>{
+        const x=bannersCache.find(z=>z.id===b.dataset.edit);
+        $('#bn-id').value=x.id; $('#bn-title').value=x.title||''; $('#bn-sort').value=x.sort||0; $('#bn-active').value=String(x.active!==false);
+        $('#bn-img-urls').value=(x.images||[]).join('\n'); renderThumbs('#bn-images', x.images||[]);
+      };
+    });
+  }
+  $('#bnNew').onclick=()=>{ ['bn-id','bn-title','bn-sort','bn-img-urls'].forEach(i=>$('#'+i).value=''); $('#bn-active').value='true'; $('#bn-images').innerHTML=''; };
+  $('#bn-img-urls').addEventListener('input', ()=> renderThumbs('#bn-images', splitUrls($('#bn-img-urls').value)) );
+  $('#bnSave').onclick=async()=>{
+    const id=$('#bn-id').value.trim();
+    const images=splitUrls($('#bn-img-urls').value);
+    const body={ title:$('#bn-title').value.trim(), sort:Number($('#bn-sort').value||0), active:$('#bn-active').value==='true', images, updatedAt:serverTimestamp() };
+    if(!images.length){ msg($('#bnMsg'),'At least one image URL',false); return; }
+    if(id){ await setDoc(doc(db,'banners',id), body, {merge:true}); } else { await addDoc(collection(db,'banners'), body); }
+    await loadBanners(); msg($('#bnMsg'),'Saved.');
+  };
+  $('#bnDelete').onclick=async()=>{
+    const id=$('#bn-id').value.trim(); if(!id) return;
+    if(confirm('Delete this banner?')){ await deleteDoc(doc(db,'banners',id)); await loadBanners(); msg($('#bnMsg'),'Deleted.'); }
+  };
+  $('#bnReload').onclick=loadBanners;
+
+  /* POSTERS */
+  let postersCache=[];
+  async function loadPosters(){
+    const snap=await getDocs(collection(db,'posters'));
+    postersCache=[]; snap.forEach(d=> postersCache.push({id:d.id,...d.data()}));
+    postersCache.sort((a,b)=> (a.sort||0)-(b.sort||0));
+    renderPostersList();
+  }
+  function renderPostersList(){
+    const list=$('#postersList'); list.innerHTML='';
+    postersCache.forEach(ps=>{
+      const div=document.createElement('div'); div.className='item';
+      div.innerHTML=`
+        <div class="split">
+          <div><strong>${ps.title||''}</strong> <span class="muted">${ps.ratio||''}</span></div>
+          <div class="right"><span class="muted">sort:${ps.sort||0}</span> <span class="muted">${ps.active===false?'inactive':'active'}</span>
+            <button class="btn mini" data-edit="${ps.id}">Edit</button>
+          </div>
+        </div>
+        ${ps.image?`<img class="thumb" src="${ps.image}" style="margin-top:6px">`:''}`;
+      list.appendChild(div);
+    });
+    list.querySelectorAll('[data-edit]').forEach(b=>{
+      b.onclick=()=>{
+        const x=postersCache.find(z=>z.id===b.dataset.edit);
+        $('#ps-id').value=x.id; $('#ps-title').value=x.title||''; $('#ps-ratio').value=x.ratio||'2:3'; $('#ps-sort').value=x.sort||0;
+        $('#ps-active').value=String(x.active!==false); $('#ps-url').value=x.image||'';
+        const th=$('#ps-thumb'); if(x.image){ th.src=x.image; th.classList.remove('hidden'); } else { th.classList.add('hidden'); }
+      };
+    });
+  }
+  $('#psNew').onclick=()=>{ ['ps-id','ps-title','ps-sort','ps-url'].forEach(i=>$('#'+i).value=''); $('#ps-active').value='true'; $('#ps-ratio').value='2:3'; $('#ps-thumb').classList.add('hidden'); };
+  $('#psSave').onclick=async()=>{
+    const id=$('#ps-id').value.trim();
+    const body={ title:$('#ps-title').value.trim(), ratio:$('#ps-ratio').value, sort:Number($('#ps-sort').value||0), active:$('#ps-active').value==='true', image:$('#ps-url').value||'', updatedAt:serverTimestamp() };
+    if(!body.title || !body.image){ msg($('#psMsg'),'Title and image URL required',false); return; }
+    if(id){ await setDoc(doc(db,'posters',id), body, {merge:true}); } else { await addDoc(collection(db,'posters'), body); }
+    await loadPosters(); msg($('#psMsg'),'Saved.');
+  };
+  $('#psDelete').onclick=async()=>{
+    const id=$('#ps-id').value.trim(); if(!id) return;
+    if(confirm('Delete this poster?')){ await deleteDoc(doc(db,'posters',id)); await loadPosters(); msg($('#psMsg'),'Deleted.'); }
+  };
+  $('#psReload').onclick=loadPosters;
+</script>
 </body>
 </html>
