@@ -56,16 +56,10 @@
             mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
   }
   :root[data-theme="light"] .ticker{background:#eef2ff}
-  .tickerInner{
-    display:inline-block;white-space:nowrap;will-change:transform;
-    animation:tickerMove var(--dur,45s) linear infinite;
-  }
+  .tickerInner{display:inline-block;white-space:nowrap;will-change:transform;animation:tickerMove var(--dur,45s) linear infinite;}
   .tickerInner span{display:inline-block;padding:8px 18px}
-  /* Move exactly one content-length (half of duplicated content) */
   @keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-  @media (prefers-reduced-motion: reduce){
-    .tickerInner{animation:none;transform:none}
-  }
+  @media (prefers-reduced-motion: reduce){.tickerInner{animation:none;transform:none}}
 
   /* CTA buttons */
   .ctaRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 18px}
@@ -119,7 +113,15 @@
   .boxSlider{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000}
   .boxTrack{display:flex;transition:transform .35s ease;will-change:transform}
   .boxSlide{flex:0 0 100%}
-  .boxSlide img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:#000}
+  /* FIX: enforce 1:1 aspect ratio for box photos */
+  .boxSlide img{
+    width:100%;
+    aspect-ratio:1/1;
+    height:auto;
+    object-fit:cover;
+    display:block;
+    background:#000;
+  }
   .boxDots{display:flex;gap:6px;justify-content:center;margin-top:6px}
   .boxDot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25)}
   .boxDot.active{background:#fff}
@@ -139,13 +141,10 @@
   .catGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
   .catItem{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.04)}
   :root[data-theme="light"] .catItem{background:#f7f9ff}
-  /* iOS checkbox layout fix + nicer look */
   input[type="checkbox"],input[type="radio"]{width:auto;height:auto;-webkit-appearance:auto;appearance:auto}
   .catItem input{flex:0 0 auto;transform:scale(1.1)}
   .catItem span{flex:1 1 auto;white-space:normal}
-  @supports (accent-color: auto){
-    .catItem input{accent-color:var(--g2)}
-  }
+  @supports (accent-color: auto){.catItem input{accent-color:var(--g2)}}
   .footpad{height:calc(24px + var(--safe-bottom))}
 
   /* Footer */
