@@ -2,1546 +2,2290 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Net + Cable • Admin</title>
 <style>
   :root{
-    --bg:#060b1f;
-    --bg2:#0b1232;
-    --panel:#0d1537;
-    --panel-2:#111a42;
-    --panel-3:#0b1436;
-    --border:#22357e;
-    --border-soft:rgba(88,120,255,.28);
-    --text:#eef2ff;
-    --muted:#97a6d8;
-    --muted-2:#7283ba;
-    --accent:#6c89ff;
-    --accent-2:#8d62ff;
-    --green:#37d1b5;
-    --green-deep:#103d3d;
-    --red:#ff627e;
-    --red-deep:#431427;
-    --yellow:#f5c96a;
-    --yellow-deep:#403318;
-    --shadow:0 20px 50px rgba(0,0,0,.34);
-    --radius:22px;
-    --radius-sm:16px;
-    --radius-xs:13px;
+    --bg:#0b1020;
+    --card:#121831;
+    --card2:#10162d;
+    --ink:#e7ecff;
+    --muted:#9aa7d9;
+    --accent:#6a8cff;
+    --accent2:#8a5fff;
+    --danger:#ff647c;
+    --ok:#35d0a7;
+    --border:#23305b;
+    --warn:#ffc857;
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --space:14px;
+    --radius:14px;
+    --tap:44px;
   }
 
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;padding:0;background:
-    radial-gradient(circle at 18% 12%, rgba(36,177,176,.16), transparent 18%),
-    radial-gradient(circle at 82% 10%, rgba(120,88,255,.14), transparent 18%),
-    radial-gradient(circle at 50% 40%, rgba(57,90,255,.12), transparent 22%),
-    linear-gradient(180deg, #040816 0%, #071130 48%, #07102a 100%);
-    color:var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    width:100%; min-height:100%;
-    overflow-x:hidden;
-  }
-  body{padding:0}
-  button,input,select,textarea{font:inherit}
-  a{color:inherit;text-decoration:none}
-  .app{
-    width:100%;
-    max-width:480px;
-    margin:0 auto;
-    min-height:100vh;
-    padding:calc(var(--safe-top) + 12px) 12px calc(var(--safe-bottom) + 24px);
-    position:relative;
-    overflow-x:hidden;
-  }
-  .shell{
-    width:100%;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  }
-  .card{
-    background:linear-gradient(180deg, rgba(13,21,55,.95), rgba(10,17,46,.96));
-    border:1px solid var(--border-soft);
-    border-radius:var(--radius);
-    box-shadow:var(--shadow);
-    width:100%;
-    min-width:0;
-  }
-  .topbar{
-    padding:14px;
-    display:grid;
-    grid-template-columns:minmax(0,1fr) auto;
-    gap:12px;
-    align-items:start;
-    position:sticky;
-    top:calc(var(--safe-top) + 8px);
-    z-index:20;
-    backdrop-filter: blur(18px);
-    background:
-      linear-gradient(180deg, rgba(6,11,31,.92), rgba(6,11,31,.80)),
-      radial-gradient(circle at 20% 30%, rgba(58,224,216,.12), transparent 24%),
-      radial-gradient(circle at 78% 12%, rgba(115,82,255,.12), transparent 20%);
-  }
-  .brand-wrap{min-width:0;display:flex;flex-direction:column;gap:12px}
-  .brand{
-    font-size:24px;
-    line-height:1.1;
-    font-weight:800;
-    letter-spacing:.1px;
-    word-break:break-word;
-  }
-  .brand .accent{color:#9db0ff}
-  .status-row,.top-right{
-    display:flex;
-    flex-direction:column;
-    align-items:flex-start;
-    gap:10px;
-  }
-  .top-right{align-items:stretch; min-width:146px}
-  .pill{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    min-height:46px;
-    padding:10px 16px;
-    border-radius:999px;
-    border:1px solid var(--border);
-    color:#dce5ff;
-    background:rgba(95,117,255,.08);
-    box-shadow:inset 0 0 0 1px rgba(140,163,255,.06);
-    white-space:nowrap;
-    max-width:100%;
-  }
-  .pill.connected{
-    min-height:44px;
-    padding:8px 16px;
-    color:#dde7ff;
-    background:rgba(121,136,255,.10);
-  }
-  .pill.near{
-    min-height:52px;
-    padding:10px 18px;
-    font-size:18px;
-    color:#cdd8ff;
-  }
-  .signout-btn{
-    width:100%;
-    min-height:92px;
-    border:none;
-    border-radius:22px;
-    color:#fff;
-    font-weight:800;
-    background:linear-gradient(180deg, rgba(95,116,255,.16), rgba(95,116,255,.08));
-    border:1px solid var(--border-soft);
-    box-shadow:inset 0 0 0 1px rgba(133,154,255,.08);
-  }
-
-  .nav-grid{
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:10px;
-  }
-  .nav-btn{
-    min-width:0;
-    min-height:78px;
-    border:none;
-    border-radius:20px;
-    padding:10px 8px;
-    background:linear-gradient(180deg, rgba(16,26,66,.95), rgba(10,17,46,.96));
-    border:1px solid var(--border-soft);
-    color:var(--text);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    gap:4px;
-    text-align:center;
-    font-weight:800;
-  }
-  .nav-btn small{
-    color:var(--muted);
-    font-size:11px;
-    line-height:1;
-    font-weight:700;
-  }
-  .nav-btn.active{
-    background:linear-gradient(180deg, rgba(92,108,255,.26), rgba(111,78,255,.14));
-    box-shadow:inset 0 0 0 1px rgba(154,171,255,.14);
-  }
-
-  .section{
-    display:none;
-    gap:12px;
-    flex-direction:column;
-  }
-  .section.active{display:flex}
-
-  .panel{
-    padding:14px;
-  }
-  .panel-title{
+  *{box-sizing:border-box; -webkit-tap-highlight-color: rgba(255,255,255,0);}
+  html,body{height:100%}
+  body{
     margin:0;
-    font-size:20px;
-    line-height:1.1;
-    font-weight:800;
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    background:
+      radial-gradient(1300px 800px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
+      radial-gradient(900px 700px at 0% 0%,rgba(106,140,255,.18),transparent 55%),
+      linear-gradient(180deg,#0b1020,#0b1020 30%,#0b1020);
+    color:var(--ink);
+    padding-bottom: calc(var(--safe-bottom) + 6px);
+    overscroll-behavior-y:none;
   }
-  .panel-sub{
-    margin:6px 0 0;
-    font-size:14px;
-    color:var(--muted);
+  a{color:var(--accent)}
+  .wrap{max-width:1280px;margin:0 auto;padding:24px}
+  .card{
+    background:linear-gradient(180deg, rgba(18,24,49,.96), rgba(16,22,45,.96));
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.18);
   }
-
-  .stats-grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:10px;
-    margin-top:12px;
+  .row{display:flex;gap:var(--space);flex-wrap:wrap}
+  .col{flex:1 1 280px; min-width:260px}
+  .btn{
+    appearance:none;border:1px solid var(--border);
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;padding:12px 16px;border-radius:10px;font-weight:700;cursor:pointer;
+    min-height:var(--tap); touch-action:manipulation;
+    transition:transform .08s ease, opacity .2s ease, filter .2s ease;
   }
-  .stat-box{
-    padding:14px;
-    border-radius:20px;
-    background:rgba(96,117,255,.08);
-    border:1px solid rgba(100,124,255,.22);
-    min-width:0;
+  .btn.secondary{background:#182041}
+  .btn.ghost{background:transparent;border-color:var(--border);color:var(--ink)}
+  .btn.warn{background:linear-gradient(135deg,#ff9d00,#ff6800)}
+  .btn.danger{background:linear-gradient(135deg,#ff5b73,#ff1f49)}
+  .btn.ok{background:linear-gradient(135deg,#3cd6b5,#15a37f)}
+  .btn:active{transform:translateY(1px); opacity:.95}
+  .btn:disabled{opacity:.6; cursor:not-allowed}
+  .chip{display:inline-block;padding:4px 8px;border-radius:999px;background:#1a2244;border:1px solid #2a3670;color:#cfe2ff;font-size:12px}
+  .topbar{
+    position:sticky;top:0;z-index:50;background:rgba(11,16,32,.86);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    padding-top: calc(var(--safe-top) * 1);
   }
-  .stat-label{
-    color:var(--muted);
-    font-size:13px;
-    line-height:1.2;
+  .topbar .wrap{
+    display:flex;align-items:center;gap:14px;justify-content:space-between;
+    padding-top:8px;padding-bottom:6px
   }
-  .stat-value{
-    margin-top:6px;
-    font-size:28px;
-    line-height:1;
-    font-weight:800;
-    letter-spacing:-.03em;
-  }
-  .metric-stack{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-top:12px;
-  }
-  .metric-bar{
-    padding:12px;
-    border-radius:18px;
-    background:rgba(255,255,255,.03);
-    border:1px solid rgba(105,127,255,.18);
-  }
-  .metric-top{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    align-items:center;
-    margin-bottom:10px;
-  }
-  .metric-name{
-    font-size:14px;
-    color:var(--muted);
+  .tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .tab{
+    padding:10px 12px;border-radius:10px;border:1px solid var(--border);
+    cursor:pointer;background:#121831; min-height:var(--tap); display:flex; align-items:center;
     font-weight:700;
   }
-  .metric-value{
-    font-size:21px;
-    font-weight:800;
-    letter-spacing:-.02em;
+  .tab.active{background:linear-gradient(135deg,#1b2350,#1a244f)}
+  .table-scroll{overflow:auto; -webkit-overflow-scrolling:touch; border-radius:14px}
+  .grid{width:100%;border-collapse:collapse; min-width:720px}
+  .grid th,.grid td{padding:11px 10px;border-bottom:1px solid #1d274e;font-size:14px;vertical-align:top}
+  .grid th{
+    text-align:left;color:#c7d3ff;background:#121a3a;
+    position:sticky; top:calc(var(--safe-top) + var(--sticky-offset,56px));
+    z-index:2;
   }
-  .track{
-    height:10px;
-    border-radius:999px;
-    background:rgba(255,255,255,.06);
-    overflow:hidden;
-    border:1px solid rgba(125,145,255,.08);
-  }
-  .fill{
-    height:100%;
-    border-radius:999px;
-    background:linear-gradient(90deg, rgba(53,210,181,.92), rgba(126,146,255,.92), rgba(154,108,255,.92));
-  }
-
-  .range-row,.segmented{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:12px;
-  }
-  .chip{
-    min-height:40px;
-    padding:0 14px;
-    border:none;
-    border-radius:999px;
-    background:rgba(255,255,255,.04);
-    border:1px solid rgba(111,133,255,.20);
-    color:var(--muted);
-    font-weight:700;
-  }
-  .chip.active{
-    background:rgba(100,120,255,.22);
-    color:var(--text);
-  }
-
-  .stack{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-top:12px;
-  }
-
-  .compact-item{
-    background:linear-gradient(180deg, rgba(13,22,58,.92), rgba(10,17,45,.94));
-    border:1px solid rgba(102,124,255,.18);
-    border-radius:20px;
-    overflow:hidden;
-  }
-  .compact-head{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) auto;
-    gap:10px;
-    padding:12px;
-    align-items:center;
-  }
-  .compact-left{
-    min-width:0;
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-  }
-  .compact-name{
-    font-size:18px;
-    line-height:1.15;
-    font-weight:800;
-    word-break:break-word;
-  }
-  .compact-meta{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    color:var(--muted);
-    font-size:12px;
-  }
-  .mini-pill{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding:8px 10px;
-    min-height:34px;
-    border-radius:999px;
-    font-size:12px;
-    font-weight:800;
-    border:1px solid transparent;
-    white-space:nowrap;
-  }
-  .mini-pill.ok{
-    color:#b9ffe9;
-    background:rgba(18,96,76,.36);
-    border-color:rgba(55,209,181,.36);
-  }
-  .mini-pill.warn{
-    color:#ffe8ba;
-    background:rgba(98,74,19,.34);
-    border-color:rgba(245,201,106,.28);
-  }
-  .mini-pill.bad{
-    color:#ffd2da;
-    background:rgba(106,25,46,.34);
-    border-color:rgba(255,98,126,.28);
-  }
-  .head-actions{
-    display:flex;
-    gap:8px;
-    align-items:center;
-  }
-  .icon-toggle{
-    width:38px;
-    height:38px;
-    border-radius:12px;
-    border:1px solid rgba(102,124,255,.18);
-    background:rgba(255,255,255,.03);
-    color:var(--text);
-    flex:0 0 auto;
-  }
-  .renew-btn{
-    min-height:40px;
-    padding:0 14px;
-    border:none;
-    border-radius:14px;
-    color:#fff;
-    font-weight:800;
-    background:linear-gradient(135deg, #38d6b9, #57b8ff 130%);
-    box-shadow:0 10px 20px rgba(40,180,170,.22);
-    flex:0 0 auto;
-  }
-  .ghost-btn, .danger-btn, .secondary-btn{
-    min-height:42px;
-    border-radius:14px;
-    border:none;
-    padding:0 14px;
-    font-weight:800;
-    color:var(--text);
-  }
-  .ghost-btn{
-    background:rgba(255,255,255,.04);
-    border:1px solid rgba(102,124,255,.18);
-  }
-  .secondary-btn{
-    background:linear-gradient(135deg, rgba(106,137,255,.22), rgba(141,98,255,.22));
-    border:1px solid rgba(111,133,255,.22);
-  }
-  .danger-btn{
-    background:linear-gradient(135deg, rgba(255,98,126,.18), rgba(255,98,126,.12));
-    border:1px solid rgba(255,98,126,.26);
-  }
-  .compact-body{
-    display:none;
-    border-top:1px solid rgba(102,124,255,.14);
-    padding:12px;
-    background:rgba(255,255,255,.015);
-  }
-  .compact-item.open .compact-body{display:block}
-  .detail-grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:10px;
-  }
-  .detail-box{
-    padding:12px;
-    border-radius:16px;
-    background:rgba(255,255,255,.03);
-    border:1px solid rgba(102,124,255,.14);
-    min-width:0;
-  }
-  .detail-label{
-    color:var(--muted);
-    font-size:12px;
-    font-weight:700;
-    margin-bottom:6px;
-  }
-  .detail-value{
-    font-size:18px;
-    line-height:1.2;
-    font-weight:800;
-    word-break:break-word;
-  }
-  .actions-row{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:12px;
-  }
-
-  .search-input, .field, .select{
-    width:100%;
-    min-height:48px;
-    border-radius:16px;
-    border:1px solid rgba(102,124,255,.20);
-    background:rgba(255,255,255,.03);
-    color:var(--text);
-    padding:12px 14px;
+  .table-scroll .grid th{top:0}
+  .muted{color:var(--muted)}
+  .hidden{display:none!important}
+  input,select,textarea{
+    width:100%;padding:12px;border-radius:10px;border:1px solid var(--border);
+    background:#0f1530;color:var(--ink); font-size:16px; min-height:44px;
     outline:none;
   }
-  .field::placeholder, .search-input::placeholder{color:#7f8ec4}
-  .list-empty{
-    padding:18px 14px;
-    color:var(--muted);
-    text-align:center;
-    border-radius:18px;
-    border:1px dashed rgba(102,124,255,.18);
-    background:rgba(255,255,255,.02);
+  input:focus,select:focus,textarea:focus{
+    border-color:#4b69d6;
+    box-shadow:0 0 0 3px rgba(106,140,255,.15);
   }
-  .small-card{
-    padding:14px;
-    border-radius:18px;
-    background:rgba(255,255,255,.03);
-    border:1px solid rgba(102,124,255,.14);
+  label{display:block;margin-top:10px;margin-bottom:6px;color:#ccd6ff;font-size:13px}
+  .kpi{padding:12px;border-radius:12px;border:1px solid var(--border);background:#121a3a}
+  .kpi .big{font-size:24px;font-weight:800}
+  .pill{
+    border:1px solid var(--border);
+    padding:8px 10px;border-radius:999px; min-height:var(--tap);
+    display:inline-flex;align-items:center;gap:6px;
   }
-  .small-card h4{
-    margin:0 0 6px;
-    font-size:16px;
-  }
-  .small-card p{
-    margin:0;
-    font-size:13px;
-    color:var(--muted);
-  }
-  .settings-stack{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-top:12px;
+  .right{text-align:right}
+  .center{text-align:center}
+  .flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .grow{flex:1}
+  .danger-text{color:#ff8ca0}
+  .ok-text{color:#5ee0c1}
+  .warn-text{color:#ffd479}
+
+  .top-stack{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .section-title h3{margin:0}
+  .helper{font-size:12px;color:var(--muted)}
+  .empty-state{
+    text-align:center;padding:18px;color:var(--muted);
   }
 
   .modal{
-    position:fixed;
-    inset:0;
-    display:none;
-    align-items:flex-end;
-    justify-content:center;
-    background:rgba(2,5,14,.62);
-    backdrop-filter:blur(10px);
-    z-index:60;
-    padding:14px 12px calc(var(--safe-bottom) + 12px);
+    position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center;
+    background:rgba(0,0,0,.55); z-index:200; padding:16px; overflow:auto;
+    padding-top: calc(16px + var(--safe-top));
+    padding-bottom: calc(16px + var(--safe-bottom));
   }
-  .modal.show{display:flex}
-  .sheet{
-    width:min(100%, 480px);
-    border-radius:24px;
-    background:linear-gradient(180deg, rgba(15,23,58,.98), rgba(8,14,38,.98));
-    border:1px solid rgba(102,124,255,.22);
-    box-shadow:var(--shadow);
-    padding:16px;
+  .modal.open{display:flex}
+  .modal .body{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px; width:96%; max-width:760px; max-height:90vh; overflow:auto; -webkit-overflow-scrolling:touch;
   }
-  .sheet-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    margin-bottom:12px;
+  .modal .head{
+    display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;
+    position:sticky; top:0; background:var(--card); z-index:5; padding-bottom:6px
   }
-  .sheet-title{
-    margin:0;
-    font-size:20px;
-    font-weight:800;
-  }
-  .close-btn{
-    width:40px;
-    height:40px;
-    border-radius:12px;
-    border:none;
-    color:var(--text);
-    background:rgba(255,255,255,.05);
-  }
-  .form-grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:10px;
-  }
-  .form-grid .full{grid-column:1 / -1}
-  .field-wrap{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-  }
-  .field-wrap label{
-    font-size:13px;
-    color:var(--muted);
-    font-weight:700;
-  }
-  .sheet-actions{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:14px;
-  }
-  .save-btn{
-    flex:1 1 150px;
-    min-height:48px;
-    border:none;
-    border-radius:16px;
-    color:#fff;
-    font-weight:800;
-    background:linear-gradient(135deg, #38d6b9, #7b78ff);
-  }
-  .helper{
-    font-size:12px;
-    color:var(--muted);
-  }
-  .mono{
-    font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+  .modal .foot{
+    display:flex;gap:10px;justify-content:flex-end;margin-top:12px;
+    position:sticky; bottom:0;
+    background:linear-gradient(180deg, transparent, rgba(18,24,49,.9) 24px, rgba(18,24,49,1) 48px);
+    padding-top:12px; padding-bottom:6px;
   }
 
-  @media (max-width:360px){
-    .brand{font-size:22px}
-    .nav-btn{min-height:72px}
-    .compact-name{font-size:16px}
-    .detail-grid,.form-grid{grid-template-columns:1fr}
-    .top-right{min-width:130px}
-    .pill.near{font-size:16px}
+  .auth{
+    max-width:420px;margin:60px auto;
+    padding-left:max(16px, var(--safe-left));
+    padding-right:max(16px, var(--safe-right));
+  }
+  .logo{font-weight:900;letter-spacing:.5px}
+  .subtle{opacity:.66}
+
+  .badge-exp{background:#2a1a1a;color:#ffb3c0;border:1px solid #624}
+  .badge-ok{background:#14231b;color:#b9ffe9;border:1px solid #264}
+  .badge-warn{background:#2a2416;color:#ffe7a8;border:1px solid #684}
+  .badge-muted{background:#19213d;color:#cbd6ff;border:1px solid #34406e}
+
+  .row-expired td{background:rgba(255,91,115,.05)}
+  .row-near td{background:rgba(255,200,87,.05)}
+
+  .toast-wrap{
+    position:fixed; right:16px; bottom:calc(16px + var(--safe-bottom));
+    z-index:500; display:flex; flex-direction:column; gap:10px; max-width:360px;
+  }
+  .toast{
+    border:1px solid var(--border);
+    background:rgba(18,24,49,.98);
+    color:var(--ink);
+    border-radius:14px;
+    padding:12px 14px;
+    box-shadow:0 12px 28px rgba(0,0,0,.28);
+    font-size:14px;
+  }
+  .toast.info{border-color:#3450aa}
+  .toast.ok{border-color:#267b62}
+  .toast.warn{border-color:#8e6a16}
+  .toast.error{border-color:#8d2840}
+
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,"Roboto Mono",monospace}
+
+  @media (max-width: 760px){
+    .wrap{padding:16px}
+    .col{min-width:100%}
+    .kpi .big{font-size:22px}
+    .tabs .tab{padding:10px 10px}
+    .topbar .wrap{
+      padding-left:max(14px, var(--safe-left));
+      padding-right:max(14px, var(--safe-right));
+    }
+    .card{padding:14px}
+
+    .table-scroll{overflow:visible}
+    .grid, .grid thead, .grid tbody, .grid tr, .grid th, .grid td{
+      display:block;width:100%;min-width:0;
+    }
+    .grid thead{display:none}
+    .grid tbody{display:grid;gap:12px}
+    .grid tr{
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      background:#10162d;
+    }
+    .grid td{
+      border-bottom:1px solid #1d274e;
+      padding:10px 12px;
+    }
+    .grid td:last-child{border-bottom:none}
+    .grid td::before{
+      content:attr(data-label);
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:4px;
+      font-weight:700;
+      text-transform:none;
+    }
+  }
+
+  @media (max-width: 420px){
+    .tabs{gap:6px}
+    .top-stack{align-items:flex-start}
+    .toast-wrap{left:12px;right:12px;max-width:none}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{scroll-behavior:auto; transition:none!important}
   }
 </style>
 </head>
 <body>
-  <div class="app">
-    <div class="shell">
-      <header class="topbar card">
-        <div class="brand-wrap">
-          <div class="brand">Net + Cable • <span class="accent">Admin</span></div>
-          <div class="status-row">
-            <div class="pill connected">Connected</div>
+
+<!-- TOASTS -->
+<div id="toastWrap" class="toast-wrap"></div>
+
+<!-- AUTH VIEW -->
+<div id="authView" class="wrap auth">
+  <div class="card">
+    <h2 class="logo">Net + Cable <span class="subtle">• Admin Sign In</span></h2>
+    <p class="muted" style="margin-top:6px">Use your admin email & password from Firebase Auth.</p>
+    <label>Email</label>
+    <input id="authEmail" type="email" placeholder="you@company.com" />
+    <label>Password</label>
+    <input id="authPass" type="password" placeholder="********" />
+    <div class="flex" style="margin-top:12px">
+      <button class="btn ok" id="btnLogin" type="button">Sign In</button>
+      <button class="btn ghost" id="btnDemo" type="button">Open Demo (read-only)</button>
+    </div>
+    <p id="authMsg" class="muted" style="margin-top:10px"></p>
+    <hr style="border:none;border-top:1px solid var(--border);margin:16px 0">
+    <p class="muted">Tip: Create your own admin user in <strong>Firebase Console → Authentication</strong>. This code does not change your existing Firestore structure.</p>
+  </div>
+</div>
+
+<!-- APP VIEW -->
+<div id="appView" class="hidden">
+  <div class="topbar">
+    <div class="wrap">
+      <div class="flex">
+        <div class="logo">Net + Cable <span class="muted">• Admin</span></div>
+        <div id="envInfo" class="chip">Connected</div>
+      </div>
+      <div class="flex">
+        <div id="nearExpCount" class="pill muted">Near expiry: 0</div>
+        <button id="signOutBtn" class="btn secondary" type="button">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="tabs" style="margin-bottom:12px">
+      <div class="tab active" data-tab="dashboard">Dashboard</div>
+      <div class="tab" data-tab="customers">Customers</div>
+      <div class="tab" data-tab="plans">Plans</div>
+      <div class="tab" data-tab="reports">Reports</div>
+      <div class="tab" data-tab="settings">Settings</div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section id="tab-dashboard" class="card">
+      <div class="row">
+        <div class="col kpi">
+          <div class="muted">Total Customers</div>
+          <div id="kpiCustomers" class="big">0</div>
+        </div>
+        <div class="col kpi">
+          <div class="muted">Turnover (All-time)</div>
+          <div id="kpiTurnover" class="big">$0.00</div>
+        </div>
+        <div class="col kpi">
+          <div class="muted">Expense (All-time)</div>
+          <div id="kpiExpense" class="big">$0.00</div>
+        </div>
+        <div class="col kpi">
+          <div class="muted">Profit (All-time)</div>
+          <div id="kpiProfit" class="big">$0.00</div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:18px">
+        <h3>Near Expiry</h3>
+        <div class="flex">
+          <div class="muted">Show customers expiring within</div>
+          <select id="nearDays" class="pill" style="min-width:120px">
+            <option value="7">7 days</option>
+            <option value="14">14 days</option>
+            <option value="30" selected>30 days</option>
+            <option value="60">60 days</option>
+          </select>
+        </div>
+      </div>
+      <div class="helper" style="margin-bottom:8px">Quick list for customers who need follow-up soon.</div>
+      <div class="card table-scroll" style="padding:0">
+        <table class="grid" id="nearGrid">
+          <thead>
+            <tr>
+              <th>Name</th><th>Phone</th><th>Plan</th><th>Expiry</th><th>Days Left</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="section-title" style="margin-top:18px">
+        <h3>Top 20 Loyal Customers</h3>
+        <div id="vipMeta" class="helper">Best customers by tenure, renewals, and value.</div>
+      </div>
+      <div class="card table-scroll" style="padding:0">
+        <table class="grid" id="vipGrid">
+          <thead>
+            <tr>
+              <th>Name</th><th>Phone</th><th>Since</th><th>Renewals</th><th>Total Spent</th><th>Status</th><th>Suggested Offer</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CUSTOMERS -->
+    <section id="tab-customers" class="card hidden">
+      <div class="section-title">
+        <div class="grow">
+          <div class="flex grow">
+            <input id="searchCustomers" placeholder="Search by name, phone, email, MAC, user ID..." />
           </div>
         </div>
-        <div class="top-right">
-          <div class="pill near" id="nearExpiryPill">Near expiry: 0</div>
-          <button class="signout-btn" onclick="handleSignOut()">Sign Out</button>
+        <div class="flex">
+          <button id="btnAddCustomer" class="btn ok" type="button">+ Add Customer</button>
         </div>
-      </header>
-
-      <nav class="nav-grid">
-        <button class="nav-btn active" id="tab-dashboard" onclick="setTab('dashboard')">Dashboard</button>
-        <button class="nav-btn" id="tab-customers" onclick="setTab('customers')">Customers</button>
-        <button class="nav-btn" id="tab-plans" onclick="setTab('plans')">Plans</button>
-        <button class="nav-btn" id="sortBtn" onclick="cyclePeriod()">
-          <span>Sort</span>
-          <small id="sortLabel">Lifetime</small>
-        </button>
-        <button class="nav-btn" id="tab-reports" onclick="setTab('reports')">Reports</button>
-        <button class="nav-btn" id="tab-settings" onclick="setTab('settings')">Settings</button>
-      </nav>
-
-      <section class="section active" id="section-dashboard"></section>
-      <section class="section" id="section-customers"></section>
-      <section class="section" id="section-plans"></section>
-      <section class="section" id="section-reports"></section>
-      <section class="section" id="section-settings"></section>
-    </div>
-  </div>
-
-  <div class="modal" id="modal">
-    <div class="sheet">
-      <div class="sheet-head">
-        <h3 class="sheet-title" id="modalTitle">Edit</h3>
-        <button class="close-btn" onclick="closeModal()">✕</button>
       </div>
-      <div id="modalBody"></div>
+
+      <div class="flex" style="gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <select id="timeFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
+          <option value="7" selected>Last 7 Days</option>
+          <option value="30">Last 30 Days</option>
+          <option value="365">Last 365 Days</option>
+          <option value="lifetime">Lifetime</option>
+        </select>
+
+        <select id="expiryFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
+          <option value="all" selected>All Status</option>
+          <option value="active">Active</option>
+          <option value="near">Near Expiry</option>
+          <option value="expired">Expired</option>
+        </select>
+
+        <select id="statusFilter" class="pill" style="background:#121831;color:#fff;border:1px solid var(--border)">
+          <option value="all" selected>All Payments</option>
+          <option value="paid">Paid</option>
+          <option value="unpaid">Unpaid</option>
+        </select>
+      </div>
+
+      <div id="custMeta" class="helper" style="margin-bottom:10px">0 results</div>
+
+      <div class="card table-scroll" style="padding:0">
+        <table class="grid" id="custGrid">
+          <thead>
+            <tr>
+              <th>Name</th><th>Phone</th><th>Email</th><th>Plan</th><th>Status</th><th>Paid</th>
+              <th>Start</th><th>Expiry</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PLANS -->
+    <section id="tab-plans" class="card hidden">
+      <div class="section-title">
+        <h3>Plans</h3>
+        <div class="flex">
+          <button id="btnSeedPlans" class="btn ghost" type="button">Seed sample plans</button>
+          <button id="btnAddPlan" class="btn ok" type="button">+ Add Plan</button>
+        </div>
+      </div>
+      <div class="card table-scroll" style="padding:0">
+        <table class="grid" id="plansGrid">
+          <thead>
+            <tr>
+              <th>ID</th><th>Name</th><th>Duration (months)</th>
+              <th>Retail $</th><th>Wholesale $</th><th>Description</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section id="tab-reports" class="card hidden">
+      <div class="row">
+        <div class="col">
+          <label>Report Type</label>
+          <select id="repType">
+            <option value="monthly" selected>Monthly</option>
+            <option value="yearly">Yearly</option>
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
+        <div class="col" id="repMonthCol">
+          <label>Month</label>
+          <input id="repMonth" type="month">
+        </div>
+        <div class="col hidden" id="repYearCol">
+          <label>Year</label>
+          <input id="repYear" type="number" min="2000" max="2100" value="">
+        </div>
+        <div class="col hidden" id="repFromCol">
+          <label>From (start date)</label>
+          <input id="repFrom" type="date">
+        </div>
+        <div class="col hidden" id="repToCol">
+          <label>To (end date)</label>
+          <input id="repTo" type="date">
+        </div>
+      </div>
+
+      <div class="flex" style="margin-top:12px">
+        <button id="btnRunReport" class="btn" type="button">Run Report</button>
+        <button id="btnCsv" class="btn ghost" type="button">Export CSV</button>
+      </div>
+
+      <div class="row" style="margin-top:14px">
+        <div class="col kpi"><div class="muted">Turnover</div><div id="repTurnover" class="big">$0.00</div></div>
+        <div class="col kpi"><div class="muted">Expense</div><div id="repExpense" class="big">$0.00</div></div>
+        <div class="col kpi"><div class="muted">Profit</div><div id="repProfit" class="big">$0.00</div></div>
+      </div>
+
+      <h3 style="margin-top:18px">Included Plans in Period</h3>
+      <div class="card table-scroll" style="padding:0">
+        <table class="grid" id="repGrid">
+          <thead>
+            <tr>
+              <th>Date</th><th>Customer</th><th>Plan</th><th>Turnover $</th><th>Expense $</th><th>Profit $</th><th>Paid</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="tab-settings" class="card hidden">
+      <h3>Settings</h3>
+      <label>Near-expiry threshold (days)</label>
+      <input id="settingNearDays" type="number" min="1">
+      <p class="muted" style="margin-top:6px">This only affects frontend highlighting and filtering. No backend change.</p>
+      <hr style="border:none;border-top:1px solid var(--border);margin:14px 0">
+      <div class="flex">
+        <button id="btnCleanupOrphans" class="btn danger" type="button">🗑 Delete Orphan Renewals</button>
+        <span id="cleanupMsg" class="muted"></span>
+      </div>
+    </section>
+
+    <!-- CUSTOMER MODAL -->
+    <div id="modalCustomer" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="custModalTitle">Add Customer</h3>
+          <button class="btn ghost" id="xCust" type="button">✕</button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Name</label><input id="c_name">
+            <label>Phone</label><input id="c_phone">
+            <label>Email</label><input id="c_email" type="email">
+            <label>User ID (internal)</label><input id="c_userId" placeholder="e.g., CUST-001">
+            <label>MAC Address</label><input id="c_mac" placeholder="AA:BB:CC:DD:EE:FF">
+          </div>
+          <div class="col">
+            <label>Plan</label><select id="c_plan"></select>
+            <div class="muted" style="margin-top:6px">You can override retail/selling/wholesale values below.</div>
+            <label>Plan Actual Price</label><input id="c_actual" type="number" step="0.01" min="0" placeholder="e.g., 20.00">
+            <label>Selling Price (what customer pays)</label><input id="c_cost" type="number" step="0.01" min="0">
+            <label>Wholesale Rate (your cost)</label><input id="c_wholesale" type="number" step="0.01" min="0">
+            <label>Discount Name (optional)</label><input id="c_discName" placeholder="e.g., Diwali Offer, Combo Deal">
+            <label>Includes STB?</label>
+            <select id="c_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
+            <div id="stbBox" class="hidden">
+              <label>STB Actual Price</label><input id="c_stbActual" type="number" step="0.01" min="0" placeholder="e.g., 49.00">
+              <label>STB Selling Price</label><input id="c_stbCost" type="number" step="0.01" min="0">
+              <label>STB Wholesale</label><input id="c_stbWholesale" type="number" step="0.01" min="0">
+            </div>
+          </div>
+          <div class="col">
+            <label>Plan Start Date</label><input id="c_start" type="date">
+            <label>Plan Expiry Date</label><input id="c_expiry" type="date">
+            <label>Payment Received?</label>
+            <select id="c_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+            <div class="card" style="margin-top:10px">
+              <div class="muted">Totals Preview</div>
+              <div id="c_preview" class="muted">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">
+          <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
+            <input id="c_invoice" type="checkbox" checked> Open slip after save
+          </label>
+          <button type="button" class="btn secondary" id="btnSaveCustomer">Save</button>
+        </div>
+      </div>
     </div>
+
+    <!-- RENEW MODAL -->
+    <div id="modalRenew" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="renewTitle">Renew Plan</h3>
+          <button class="btn ghost" id="xRenew" type="button">✕</button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Plan</label><select id="r_plan"></select>
+            <label>Plan Actual Price</label><input id="r_actual" type="number" step="0.01" min="0">
+            <label>Plan Selling Price</label><input id="r_cost" type="number" step="0.01" min="0">
+            <label>Wholesale</label><input id="r_wholesale" type="number" step="0.01" min="0">
+            <label>Discount Name (optional)</label><input id="r_discName">
+          </div>
+          <div class="col">
+            <label>Includes STB?</label>
+            <select id="r_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
+            <div id="r_stbBox" class="hidden">
+              <label>STB Actual Price</label><input id="r_stbActual" type="number" step="0.01" min="0">
+              <label>STB Selling Price</label><input id="r_stbCost" type="number" step="0.01" min="0">
+              <label>STB Wholesale</label><input id="r_stbWholesale" type="number" step="0.01" min="0">
+            </div>
+            <label>Start Date</label><input id="r_start" type="date">
+            <label>Expiry Date</label><input id="r_expiry" type="date">
+            <label>Payment Received?</label>
+            <select id="r_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+          </div>
+        </div>
+        <div class="foot">
+          <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
+            <input id="r_invoice" type="checkbox" checked> Open slip after renewal
+          </label>
+          <button id="btnDoRenew" class="btn ok" type="button">Confirm Renewal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLAN MODAL -->
+    <div id="modalPlan" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="planTitle">Add Plan</h3>
+          <button class="btn ghost" id="xPlan" type="button">✕</button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Plan ID</label><input id="p_id" placeholder="PLN-1MO">
+            <label>Name</label><input id="p_name" placeholder="1 month">
+            <label>Duration (months)</label><input id="p_months" type="number" min="0" step="1" value="1">
+          </div>
+          <div class="col">
+            <label>Retail Price</label><input id="p_retail" type="number" step="0.01" min="0">
+            <label>Wholesale Cost</label><input id="p_wholesale" type="number" step="0.01" min="0">
+            <label>Description</label><input id="p_desc" placeholder="Most popular">
+          </div>
+        </div>
+        <div class="foot">
+          <button id="btnSavePlan" class="btn secondary" type="button">Save Plan</button>
+        </div>
+      </div>
+    </div>
+
   </div>
+</div>
 
-<script>
-const STORAGE_KEY = 'net_cable_admin_phone_v4';
-const LEGACY_KEYS = ['netCableCustomers', 'customers', 'netCableAdminData'];
-const PLAN_LIBRARY = {
-  'Smart 1 Month': { months:1, amount:30, cost:18 },
-  'Smart 3 Month': { months:3, amount:80, cost:48 },
-  'Smart 6 Month': { months:6, amount:150, cost:88 },
-  'Smart 12 Month': { months:12, amount:280, cost:165 },
-  'VIP 12 Month': { months:12, amount:460, cost:250 }
+<script type="module">
+/* =========================
+   Firebase Setup (ESM CDN)
+   ========================= */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore, collection, doc, setDoc, addDoc, updateDoc, deleteDoc,
+  query, orderBy, serverTimestamp, collectionGroup, writeBatch, getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* ---- Firebase Config ---- */
+const firebaseConfig = {
+  apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
+  authDomain: "netplustv-90b29.firebaseapp.com",
+  projectId: "netplustv-90b29",
+  storageBucket: "netplustv-90b29.firebasestorage.app",
+  messagingSenderId: "639722274355",
+  appId: "1:639722274355:web:ebe34fdf093f8191da2d46"
 };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-const state = {
-  tab: 'dashboard',
-  period: 'lifetime',
-  expiryWindow: 30,
-  loyaltySort: 'spent',
-  search: '',
-  customers: [],
-  expanded: {
-    near: {},
-    expired: {},
-    loyal: {},
-    customers: {}
-  }
-};
+/* =========================
+   Helpers
+   ========================= */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => document.querySelectorAll(sel);
+const fmt = n => (isNaN(+n) ? '$0.00' : '$' + (+n).toFixed(2));
+const todayISO = () => new Date().toISOString().slice(0,10);
+const toastWrap = $("#toastWrap");
 
-function todayIso(){
-  const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const da = String(d.getDate()).padStart(2,'0');
-  return `${y}-${m}-${da}`;
+function esc(v){
+  return String(v ?? '').replace(/[&<>"']/g, s => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'
+  }[s]));
 }
-function addMonths(iso, months){
-  const d = new Date(iso + 'T12:00:00');
-  const originalDate = d.getDate();
+
+function toast(message, type='info', timeout=2800){
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = message;
+  toastWrap.appendChild(el);
+  setTimeout(()=> {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(6px)';
+    setTimeout(()=> el.remove(), 220);
+  }, timeout);
+}
+
+function addMonthsISO(startISO, months){
+  if (!startISO) return "";
+  const d = new Date(startISO + "T00:00:00");
+  if (isNaN(d.getTime())) return "";
+  const day = d.getDate();
   d.setMonth(d.getMonth() + Number(months || 0));
-  if (d.getDate() !== originalDate) d.setDate(0);
+  if (d.getDate() !== day) d.setDate(0);
   return d.toISOString().slice(0,10);
 }
-function daysLeftFrom(expiryIso){
-  const now = new Date(todayIso() + 'T00:00:00');
-  const end = new Date((expiryIso || todayIso()) + 'T00:00:00');
-  const diff = Math.ceil((end - now) / 86400000);
-  return diff;
-}
-function dateInPeriod(dateIso, period){
-  if (!dateIso) return false;
-  if (period === 'lifetime') return true;
-  const d = new Date(dateIso + 'T12:00:00');
+
+function daysLeft(expISO){
+  if(!expISO) return Number.POSITIVE_INFINITY;
+  const end = new Date(expISO + "T23:59:59");
   const now = new Date();
-  if (period === 'year'){
-    return d.getFullYear() === now.getFullYear();
-  }
-  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+  return Math.ceil((end - now) / (1000*60*60*24));
 }
-function money(n){
-  return `$${Number(n || 0).toFixed(2)}`;
-}
-function formatDate(iso){
-  if (!iso) return '—';
-  return iso;
-}
-function esc(str){
-  return String(str ?? '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
-}
-function inferPlanMonths(plan){
-  return PLAN_LIBRARY[plan]?.months || 1;
-}
-function getDefaultPlan(plan){
-  return PLAN_LIBRARY[plan] || PLAN_LIBRARY['Smart 1 Month'];
-}
-function safeArray(value){
-  return Array.isArray(value) ? value : [];
-}
-function sum(arr, fn){
-  return arr.reduce((a,b)=>a + fn(b), 0);
-}
-function getPayments(customer){
-  return safeArray(customer.payments).map(p => ({
-    date: p.date || customer.startDate || todayIso(),
-    amount: Number(p.amount || 0),
-    cost: Number(p.cost || 0),
-    months: Number(p.months || inferPlanMonths(p.plan || customer.plan)),
-    plan: p.plan || customer.plan || 'Smart 1 Month',
-    type: p.type || 'new'
-  }));
-}
-function getRenewalCount(customer){
-  return getPayments(customer).filter(p => p.type === 'renewal').length;
-}
-function getTotalSpent(customer){
-  return sum(getPayments(customer), p => Number(p.amount || 0));
-}
-function normalizeCustomer(raw, index = 0){
-  const plan = raw.plan || raw.planName || 'Smart 1 Month';
-  const startDate = raw.startDate || raw.start || raw.createdAt || todayIso();
-  const expiryDate = raw.expiryDate || raw.expiry || addMonths(startDate, inferPlanMonths(plan));
-  let payments = [];
-  if (Array.isArray(raw.payments) && raw.payments.length){
-    payments = raw.payments;
-  } else if (Array.isArray(raw.renewalsLog) && raw.renewalsLog.length){
-    const baseAmount = Number(raw.amount || raw.totalPaid || raw.price || getDefaultPlan(plan).amount);
-    payments = [{
-      date: startDate,
-      amount: baseAmount,
-      cost: Number(raw.cost || getDefaultPlan(plan).cost),
-      months: inferPlanMonths(plan),
-      plan,
-      type: 'new'
-    }].concat(raw.renewalsLog.map(r => ({
-      date: r.date || r.startDate || todayIso(),
-      amount: Number(r.amount || getDefaultPlan(r.plan || plan).amount),
-      cost: Number(r.cost || getDefaultPlan(r.plan || plan).cost),
-      months: Number(r.months || inferPlanMonths(r.plan || plan)),
-      plan: r.plan || plan,
-      type: 'renewal'
-    })));
-  } else {
-    const baseAmount = Number(raw.totalSpent || raw.totalPaid || raw.amount || raw.price || getDefaultPlan(plan).amount);
-    payments = [{
-      date: startDate,
-      amount: baseAmount,
-      cost: Number(raw.cost || getDefaultPlan(plan).cost),
-      months: inferPlanMonths(plan),
-      plan,
-      type: 'new'
-    }];
-  }
 
-  return {
-    id: raw.id || `c_${Date.now()}_${index}`,
-    name: raw.name || raw.customerName || raw.fullName || 'Unnamed customer',
-    phone: raw.phone || raw.mobile || raw.whatsapp || 'Not given',
-    email: raw.email || '',
-    plan,
-    paid: raw.paid === undefined ? true : !!raw.paid,
-    startDate,
-    expiryDate,
-    customerSince: raw.customerSince || startDate,
-    payments
-  };
-}
-function seedCustomers(){
-  return [
-    {
-      id:'c1',
-      name:'Dilpreet Singh Amazon',
-      phone:'+1 (548) 883-0004',
-      email:'vattandeep44@gmail.com',
-      plan:'Smart 12 Month',
-      paid:true,
-      startDate:'2026-03-16',
-      expiryDate:'2027-03-16',
-      customerSince:'2025-03-16',
-      payments:[
-        {date:'2025-03-16', amount:150, cost:88, months:6, plan:'Smart 6 Month', type:'new'},
-        {date:'2025-09-16', amount:150, cost:88, months:6, plan:'Smart 6 Month', type:'renewal'},
-        {date:'2026-03-16', amount:280, cost:165, months:12, plan:'Smart 12 Month', type:'renewal'}
-      ]
-    },
-    {
-      id:'c2',
-      name:'Anil Sandhu',
-      phone:'Not given',
-      email:'',
-      plan:'Smart 1 Month',
-      paid:true,
-      startDate:'2026-02-16',
-      expiryDate:'2026-03-16',
-      customerSince:'2026-02-16',
-      payments:[
-        {date:'2026-02-16', amount:30, cost:18, months:1, plan:'Smart 1 Month', type:'new'}
-      ]
-    },
-    {
-      id:'c3',
-      name:'Salony Sachdeva',
-      phone:'4379970235',
-      email:'',
-      plan:'VIP 12 Month',
-      paid:true,
-      startDate:'2025-09-18',
-      expiryDate:addMonths('2025-09-18', 18),
-      customerSince:'2024-03-18',
-      payments:[
-        {date:'2024-03-18', amount:280, cost:165, months:12, plan:'Smart 12 Month', type:'new'},
-        {date:'2025-03-18', amount:460, cost:250, months:12, plan:'VIP 12 Month', type:'renewal'},
-        {date:'2025-09-18', amount:460, cost:250, months:12, plan:'VIP 12 Month', type:'renewal'}
-      ]
-    },
-    {
-      id:'c4',
-      name:'Bikalpa Bhattarai',
-      phone:'2265046568',
-      email:'',
-      plan:'Smart 6 Month',
-      paid:true,
-      startDate:'2025-10-29',
-      expiryDate:addMonths('2025-10-29', 6),
-      customerSince:'2025-10-29',
-      payments:[
-        {date:'2025-10-29', amount:150, cost:88, months:6, plan:'Smart 6 Month', type:'new'}
-      ]
-    },
-    {
-      id:'c5',
-      name:'Nirav Jitendra Langalia',
-      phone:'6478671853',
-      email:'',
-      plan:'Smart 3 Month',
-      paid:true,
-      startDate:'2025-12-01',
-      expiryDate:addMonths('2025-12-01', 3),
-      customerSince:'2025-12-01',
-      payments:[
-        {date:'2025-12-01', amount:80, cost:48, months:3, plan:'Smart 3 Month', type:'new'},
-        {date:'2026-03-01', amount:80, cost:48, months:3, plan:'Smart 3 Month', type:'renewal'}
-      ]
-    },
-    {
-      id:'c6',
-      name:'Harpreet Dhaliwal 3',
-      phone:'519-000-1111',
-      email:'',
-      plan:'Smart 12 Month',
-      paid:true,
-      startDate:'2026-01-04',
-      expiryDate:'2027-01-04',
-      customerSince:'2025-01-04',
-      payments:[
-        {date:'2025-01-04', amount:280, cost:165, months:12, plan:'Smart 12 Month', type:'new'},
-        {date:'2026-01-04', amount:280, cost:165, months:12, plan:'Smart 12 Month', type:'renewal'}
-      ]
-    },
-    {
-      id:'c7',
-      name:'Raman Gill',
-      phone:'519-333-2222',
-      email:'',
-      plan:'Smart 1 Month',
-      paid:false,
-      startDate:'2026-01-12',
-      expiryDate:'2026-02-12',
-      customerSince:'2026-01-12',
-      payments:[
-        {date:'2026-01-12', amount:30, cost:18, months:1, plan:'Smart 1 Month', type:'new'}
-      ]
-    },
-    {
-      id:'c8',
-      name:'Manveer Brar',
-      phone:'226-200-3000',
-      email:'',
-      plan:'Smart 3 Month',
-      paid:true,
-      startDate:'2026-02-20',
-      expiryDate:addMonths('2026-02-20', 3),
-      customerSince:'2024-11-20',
-      payments:[
-        {date:'2024-11-20', amount:80, cost:48, months:3, plan:'Smart 3 Month', type:'new'},
-        {date:'2025-02-20', amount:80, cost:48, months:3, plan:'Smart 3 Month', type:'renewal'},
-        {date:'2025-05-20', amount:80, cost:48, months:3, plan:'Smart 3 Month', type:'renewal'},
-        {date:'2025-11-20', amount:80, cost:48, months:3, plan:'Smart 3 Month', type:'renewal'},
-        {date:'2026-02-20', amount:80, cost:48, months:3, plan:'Smart 3 Month', type:'renewal'}
-      ]
-    }
-  ].map(normalizeCustomer);
-}
-function loadCustomers(){
-  try{
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved){
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length) return parsed.map(normalizeCustomer);
-    }
-    for (const key of LEGACY_KEYS){
-      const legacy = localStorage.getItem(key);
-      if (!legacy) continue;
-      const parsed = JSON.parse(legacy);
-      if (Array.isArray(parsed) && parsed.length) return parsed.map(normalizeCustomer);
-      if (parsed && Array.isArray(parsed.customers) && parsed.customers.length) return parsed.customers.map(normalizeCustomer);
-    }
-  }catch(e){}
-  return seedCustomers();
-}
-function saveCustomers(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.customers));
-}
-function getFinancials(period = state.period){
-  const payments = state.customers.flatMap(c => getPayments(c).map(p => ({...p, customerId:c.id, customerName:c.name})));
-  const filtered = payments.filter(p => dateInPeriod(p.date, period));
-  const turnover = sum(filtered, p => Number(p.amount || 0));
-  const expense = sum(filtered, p => Number(p.cost || 0));
+function calcFigures({ cost, wholesale, actual, stbIncluded, stbCost, stbWholesale, stbActual }){
+  const sellPlan = +cost || 0;
+  const whPlan = +wholesale || 0;
+  const msrpPlan = +actual || 0;
+  const sellSTB = +stbCost || 0;
+  const whSTB = +stbWholesale || 0;
+  const msrpSTB = +stbActual || 0;
+  const turnover = sellPlan + (stbIncluded === 'yes' ? sellSTB : 0);
+  const expense = whPlan + (stbIncluded === 'yes' ? whSTB : 0);
   const profit = turnover - expense;
-  return {payments:filtered, turnover, expense, profit};
+  const discountSaved =
+    Math.max(msrpPlan - sellPlan, 0) +
+    (stbIncluded === 'yes' ? Math.max(msrpSTB - sellSTB, 0) : 0);
+  return { turnover, expense, profit, discountSaved };
 }
-function getCounts(){
-  const total = state.customers.length;
-  const active = state.customers.filter(c => daysLeftFrom(c.expiryDate) >= 0).length;
-  const near = state.customers.filter(c => {
-    const d = daysLeftFrom(c.expiryDate);
-    return d >= 0 && d <= state.expiryWindow;
-  }).length;
-  const expired = state.customers.filter(c => daysLeftFrom(c.expiryDate) < 0).length;
-  return {total, active, near, expired};
-}
-function getNearExpiryCustomers(){
-  return [...state.customers]
-    .filter(c => {
-      const d = daysLeftFrom(c.expiryDate);
-      return d >= 0 && d <= state.expiryWindow;
-    })
-    .sort((a,b) => daysLeftFrom(a.expiryDate) - daysLeftFrom(b.expiryDate));
-}
-function getExpiredCustomers(){
-  return [...state.customers]
-    .filter(c => daysLeftFrom(c.expiryDate) < 0)
-    .sort((a,b) => daysLeftFrom(a.expiryDate) - daysLeftFrom(b.expiryDate));
-}
-function getLoyalCustomers(){
-  const list = [...state.customers].sort((a,b) => {
-    if (state.loyaltySort === 'renewals'){
-      const diff = getRenewalCount(b) - getRenewalCount(a);
-      if (diff !== 0) return diff;
-      return getTotalSpent(b) - getTotalSpent(a);
-    }
-    const diff = getTotalSpent(b) - getTotalSpent(a);
-    if (diff !== 0) return diff;
-    return getRenewalCount(b) - getRenewalCount(a);
-  });
-  return list.slice(0,20);
-}
-function getFilteredCustomers(){
-  const q = state.search.trim().toLowerCase();
-  const list = [...state.customers].sort((a,b) => a.name.localeCompare(b.name));
-  if (!q) return list;
-  return list.filter(c =>
-    c.name.toLowerCase().includes(q) ||
-    String(c.phone || '').toLowerCase().includes(q) ||
-    String(c.email || '').toLowerCase().includes(q) ||
-    String(c.plan || '').toLowerCase().includes(q)
-  );
-}
-function badgeForCustomer(c){
-  const d = daysLeftFrom(c.expiryDate);
-  if (d < 0) return {cls:'bad', text:`Expired ${Math.abs(d)}d ago`};
-  if (d <= state.expiryWindow) return {cls:'warn', text:`${d}d left`};
-  return {cls:'ok', text:`Active ${d}d`};
-}
-function toggleExpand(group, id){
-  state.expanded[group][id] = !state.expanded[group][id];
-  render();
-}
-function setTab(tab){
-  state.tab = tab;
-  render();
-}
-function cyclePeriod(){
-  const order = ['month','year','lifetime'];
-  const idx = order.indexOf(state.period);
-  state.period = order[(idx + 1) % order.length];
-  render();
-}
-function setExpiryWindow(days){
-  state.expiryWindow = days;
-  render();
-}
-function setLoyaltySort(mode){
-  state.loyaltySort = mode;
-  render();
-}
-function renderTopbarBits(){
-  const near = getNearExpiryCustomers().length;
-  document.getElementById('nearExpiryPill').textContent = `Near expiry: ${near}`;
-  document.getElementById('sortLabel').textContent =
-    state.period === 'month' ? 'Month' :
-    state.period === 'year' ? 'Year' : 'Lifetime';
-}
-function renderTabs(){
-  ['dashboard','customers','plans','reports','settings'].forEach(tab => {
-    const btn = document.getElementById(`tab-${tab}`);
-    const section = document.getElementById(`section-${tab}`);
-    if (!btn || !section) return;
-    btn.classList.toggle('active', state.tab === tab);
-    section.classList.toggle('active', state.tab === tab);
-  });
-}
-function renderDashboard(){
-  const counts = getCounts();
-  const f = getFinancials();
-  const maxMetric = Math.max(f.turnover, f.expense, Math.max(f.profit, 1));
-  const nearList = getNearExpiryCustomers();
-  const expiredList = getExpiredCustomers();
-  const loyal = getLoyalCustomers();
 
-  document.getElementById('section-dashboard').innerHTML = `
-    <div class="card panel">
-      <h2 class="panel-title">Dashboard</h2>
-      <p class="panel-sub">Phone-first layout. Sort button above changes these numbers for month, year, or lifetime.</p>
+function getExpiryStatus(expISO){
+  if(!expISO) return { key:'unknown', label:'No expiry', cls:'badge-muted', days:null };
+  const d = daysLeft(expISO);
+  if(d < 0) return { key:'expired', label:`Expired ${Math.abs(d)}d`, cls:'badge-exp', days:d };
+  if(d <= settingNear) return { key:'near', label:`Near expiry • ${d}d`, cls:'badge-warn', days:d };
+  return { key:'active', label:`Active • ${d}d`, cls:'badge-ok', days:d };
+}
 
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-label">Total Customers</div>
-          <div class="stat-value">${counts.total}</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Active</div>
-          <div class="stat-value">${counts.active}</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Near Expiry</div>
-          <div class="stat-value">${counts.near}</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Expired</div>
-          <div class="stat-value">${counts.expired}</div>
-        </div>
-      </div>
+function getPaidBadge(v){
+  return v === 'yes'
+    ? `<span class="pill badge-ok">Paid</span>`
+    : `<span class="pill badge-warn">Unpaid</span>`;
+}
 
-      <div class="metric-stack">
-        ${metricBarHtml('Profit', f.profit, maxMetric)}
-        ${metricBarHtml('Expense', f.expense, maxMetric)}
-        ${metricBarHtml('Turnover', f.turnover, maxMetric)}
-      </div>
-    </div>
+function daysLeftBadge(exp){
+  if(!exp) return '';
+  const s = getExpiryStatus(exp);
+  return ` <span class="pill ${s.cls}">${esc(s.label)}</span>`;
+}
 
-    <div class="card panel">
-      <h2 class="panel-title">Near Expiry</h2>
-      <p class="panel-sub">Compact bars only. Tap the bar to open full details.</p>
-      <div class="range-row">
-        ${[7,15,30].map(n => `<button class="chip ${state.expiryWindow===n?'active':''}" onclick="setExpiryWindow(${n})">${n} days</button>`).join('')}
-      </div>
-      <div class="stack">
-        ${nearList.length ? nearList.map(c => compactCustomerHtml(c,'near', true)).join('') : `<div class="list-empty">No customers expiring in the selected window.</div>`}
-      </div>
-    </div>
+function setEmptyRow(tbody, colSpan, message){
+  tbody.innerHTML = `<tr><td colspan="${colSpan}" class="empty-state">${esc(message)}</td></tr>`;
+}
 
-    <div class="card panel">
-      <h2 class="panel-title">Expired</h2>
-      <p class="panel-sub">Same compact style. Open only when you tap a bar.</p>
-      <div class="stack">
-        ${expiredList.length ? expiredList.map(c => compactCustomerHtml(c,'expired', true)).join('') : `<div class="list-empty">No expired customers right now.</div>`}
-      </div>
-    </div>
+function normalizeEmail(email){
+  return String(email || '').trim().toLowerCase();
+}
 
-    <div class="card panel">
-      <h2 class="panel-title">Top 20 Loyal Customers</h2>
-      <p class="panel-sub">Rank by who paid more or who renewed more.</p>
-      <div class="segmented">
-        <button class="chip ${state.loyaltySort==='spent'?'active':''}" onclick="setLoyaltySort('spent')">Paid more</button>
-        <button class="chip ${state.loyaltySort==='renewals'?'active':''}" onclick="setLoyaltySort('renewals')">Renewed more</button>
-      </div>
-      <div class="stack">
-        ${loyal.length ? loyal.map(c => compactLoyalHtml(c)).join('') : `<div class="list-empty">No loyalty data yet.</div>`}
-      </div>
-    </div>
-  `;
+function isValidEmail(email){
+  if(!email) return true;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(email));
 }
-function renderCustomers(){
-  const list = getFilteredCustomers();
-  document.getElementById('section-customers').innerHTML = `
-    <div class="card panel">
-      <h2 class="panel-title">Customers</h2>
-      <p class="panel-sub">Compact customer bars. Full details show only when you press a customer row.</p>
-      <div style="margin-top:12px;">
-        <input class="search-input" placeholder="Search name, phone, email, or plan" value="${esc(state.search)}" oninput="state.search=this.value; renderCustomersOnly()">
-      </div>
-      <div class="stack" style="margin-top:12px;">
-        ${list.length ? list.map(c => compactCustomerHtml(c,'customers', true)).join('') : `<div class="list-empty">No customer found.</div>`}
-      </div>
-    </div>
-  `;
-}
-function renderCustomersOnly(){
-  renderCustomers();
-}
-function renderPlans(){
-  const cards = Object.entries(PLAN_LIBRARY).map(([name,plan]) => `
-    <div class="small-card">
-      <h4>${esc(name)}</h4>
-      <p>${plan.months} month • Sale ${money(plan.amount)} • Expense ${money(plan.cost)} • Profit ${money(plan.amount - plan.cost)}</p>
-    </div>
-  `).join('');
-  document.getElementById('section-plans').innerHTML = `
-    <div class="card panel">
-      <h2 class="panel-title">Plans</h2>
-      <p class="panel-sub">Simple phone view for plan pricing used by renewals.</p>
-      <div class="stack">${cards}</div>
-    </div>
-  `;
-}
-function renderReports(){
-  const f = getFinancials();
-  const payments = f.payments.slice().sort((a,b) => String(b.date).localeCompare(String(a.date))).slice(0,10);
-  document.getElementById('section-reports').innerHTML = `
-    <div class="card panel">
-      <h2 class="panel-title">Reports</h2>
-      <p class="panel-sub">Quick numbers only for phone.</p>
-      <div class="stats-grid">
-        <div class="stat-box">
-          <div class="stat-label">Payments in ${periodLabel()}</div>
-          <div class="stat-value">${payments.length}</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Turnover</div>
-          <div class="stat-value">${money(f.turnover)}</div>
-        </div>
-      </div>
-      <div class="stack">
-        ${payments.length ? payments.map(p => `
-          <div class="small-card">
-            <h4>${esc(p.customerName)}</h4>
-            <p>${esc(p.plan)} • ${p.type} • ${p.date} • ${money(p.amount)}</p>
-          </div>
-        `).join('') : `<div class="list-empty">No payments in this time range.</div>`}
-      </div>
-    </div>
-  `;
-}
-function renderSettings(){
-  document.getElementById('section-settings').innerHTML = `
-    <div class="card panel">
-      <h2 class="panel-title">Settings</h2>
-      <p class="panel-sub">Small utility actions for the phone version.</p>
-      <div class="settings-stack">
-        <button class="secondary-btn" onclick="exportData()">Export customer data</button>
-        <button class="ghost-btn" onclick="importPrompt()">Import pasted JSON</button>
-        <button class="danger-btn" onclick="resetDemo()">Reset demo data</button>
-      </div>
-      <div class="small-card" style="margin-top:12px;">
-        <h4>Renewal logic</h4>
-        <p>Renewal count changes only when you press <b>Renew</b> and save. Editing a profile does not increase renewals.</p>
-      </div>
-    </div>
-  `;
-}
-function metricBarHtml(label, value, maxMetric){
-  const width = Math.max(6, Math.min(100, (Math.max(value,0) / (maxMetric || 1)) * 100));
-  return `
-    <div class="metric-bar">
-      <div class="metric-top">
-        <div class="metric-name">${label} (${periodLabel()})</div>
-        <div class="metric-value">${money(value)}</div>
-      </div>
-      <div class="track"><div class="fill" style="width:${width}%"></div></div>
-    </div>
-  `;
-}
-function compactCustomerHtml(c, group, showRenew){
-  const badge = badgeForCustomer(c);
-  const open = !!state.expanded[group][c.id];
-  const totalSpent = getTotalSpent(c);
-  const renewals = getRenewalCount(c);
-  return `
-    <div class="compact-item ${open ? 'open' : ''}">
-      <div class="compact-head" onclick="toggleExpand('${group}','${c.id}')">
-        <div class="compact-left">
-          <div class="compact-name">${esc(c.name)}</div>
-          <div class="compact-meta">
-            <span>${esc(c.plan)}</span>
-            <span>•</span>
-            <span>${esc(c.phone || 'Not given')}</span>
-          </div>
-          <div class="compact-meta">
-            <span class="mini-pill ${badge.cls}">${badge.text}</span>
-            <span class="mini-pill ${c.paid ? 'ok' : 'bad'}">${c.paid ? 'Paid' : 'Unpaid'}</span>
-          </div>
-        </div>
-        <div class="head-actions">
-          ${showRenew ? `<button class="renew-btn" onclick="event.stopPropagation(); openRenewModal('${c.id}')">Renew</button>` : ``}
-          <button class="icon-toggle" onclick="event.stopPropagation(); toggleExpand('${group}','${c.id}')">${open ? '−' : '+'}</button>
-        </div>
-      </div>
-      <div class="compact-body">
-        <div class="detail-grid">
-          <div class="detail-box">
-            <div class="detail-label">Email</div>
-            <div class="detail-value">${esc(c.email || 'Not given')}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Customer Since</div>
-            <div class="detail-value">${formatDate(c.customerSince)}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Start</div>
-            <div class="detail-value">${formatDate(c.startDate)}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Expiry</div>
-            <div class="detail-value">${formatDate(c.expiryDate)}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Total Paid</div>
-            <div class="detail-value">${money(totalSpent)}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Renewals</div>
-            <div class="detail-value">${renewals}</div>
-          </div>
-        </div>
-        <div class="actions-row">
-          <button class="ghost-btn" onclick="openEditModal('${c.id}')">Edit</button>
-          <button class="renew-btn" onclick="openRenewModal('${c.id}')">Renew</button>
-          <button class="secondary-btn" onclick="openSlipModal('${c.id}')">Slip</button>
-          <button class="danger-btn" onclick="deleteCustomer('${c.id}')">Delete</button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-function compactLoyalHtml(c){
-  const open = !!state.expanded.loyal[c.id];
-  const badge = badgeForCustomer(c);
-  const renewals = getRenewalCount(c);
-  const spent = getTotalSpent(c);
-  return `
-    <div class="compact-item ${open ? 'open' : ''}">
-      <div class="compact-head" onclick="toggleExpand('loyal','${c.id}')">
-        <div class="compact-left">
-          <div class="compact-name">${esc(c.name)}</div>
-          <div class="compact-meta">
-            <span class="mini-pill ok">Paid ${money(spent)}</span>
-            <span class="mini-pill warn">Renewals ${renewals}</span>
-            <span class="mini-pill ${badge.cls}">${badge.text}</span>
-          </div>
-        </div>
-        <div class="head-actions">
-          <button class="renew-btn" onclick="event.stopPropagation(); openRenewModal('${c.id}')">Renew</button>
-          <button class="icon-toggle" onclick="event.stopPropagation(); toggleExpand('loyal','${c.id}')">${open ? '−' : '+'}</button>
-        </div>
-      </div>
-      <div class="compact-body">
-        <div class="detail-grid">
-          <div class="detail-box">
-            <div class="detail-label">Phone</div>
-            <div class="detail-value">${esc(c.phone || 'Not given')}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Plan</div>
-            <div class="detail-value">${esc(c.plan)}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Customer Since</div>
-            <div class="detail-value">${formatDate(c.customerSince)}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Expiry</div>
-            <div class="detail-value">${formatDate(c.expiryDate)}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Total Spent</div>
-            <div class="detail-value">${money(spent)}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Renewals</div>
-            <div class="detail-value">${renewals}</div>
-          </div>
-        </div>
-        <div class="actions-row">
-          <button class="ghost-btn" onclick="openEditModal('${c.id}')">Edit</button>
-          <button class="renew-btn" onclick="openRenewModal('${c.id}')">Renew</button>
-          <button class="secondary-btn" onclick="openSlipModal('${c.id}')">Slip</button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-function periodLabel(){
-  return state.period === 'month' ? 'Month' : state.period === 'year' ? 'Year' : 'Lifetime';
-}
-function render(){
-  renderTopbarBits();
-  renderTabs();
-  renderDashboard();
-  renderCustomers();
-  renderPlans();
-  renderReports();
-  renderSettings();
-}
-function closeModal(){
-  document.getElementById('modal').classList.remove('show');
-  document.getElementById('modalTitle').textContent = '';
-  document.getElementById('modalBody').innerHTML = '';
-}
-function showModal(title, html){
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalBody').innerHTML = html;
-  document.getElementById('modal').classList.add('show');
-}
-function getCustomerById(id){
-  return state.customers.find(c => c.id === id);
-}
-function openRenewModal(id){
-  const c = getCustomerById(id);
-  if (!c) return;
-  const defaultPlan = c.plan || 'Smart 1 Month';
-  showModal('Renew Customer', `
-    <div class="form-grid">
-      <div class="field-wrap full">
-        <label>Customer</label>
-        <div class="small-card"><h4>${esc(c.name)}</h4><p>${esc(c.phone || 'Not given')} • Current plan ${esc(c.plan)}</p></div>
-      </div>
-      <div class="field-wrap full">
-        <label>Plan</label>
-        <select class="select" id="renewPlan" onchange="fillRenewDefaults()">
-          ${Object.keys(PLAN_LIBRARY).map(name => `<option value="${esc(name)}" ${name===defaultPlan?'selected':''}>${esc(name)}</option>`).join('')}
-        </select>
-      </div>
-      <div class="field-wrap">
-        <label>Amount</label>
-        <input class="field" id="renewAmount" type="number" step="0.01">
-      </div>
-      <div class="field-wrap">
-        <label>Expense</label>
-        <input class="field" id="renewCost" type="number" step="0.01">
-      </div>
-      <div class="field-wrap">
-        <label>Months</label>
-        <input class="field" id="renewMonths" type="number" min="1">
-      </div>
-      <div class="field-wrap">
-        <label>Renew date</label>
-        <input class="field" id="renewDate" type="date" value="${todayIso()}">
-      </div>
-      <div class="field-wrap full">
-        <label>Paid status</label>
-        <select class="select" id="renewPaid">
-          <option value="true" selected>Paid</option>
-          <option value="false">Unpaid</option>
-        </select>
-      </div>
-      <div class="field-wrap full">
-        <label>Note</label>
-        <div class="helper">Renewal count will increase only after you tap save below.</div>
-      </div>
-    </div>
-    <div class="sheet-actions">
-      <button class="save-btn" onclick="saveRenew('${c.id}')">Save Renewal</button>
-      <button class="ghost-btn" onclick="closeModal()">Cancel</button>
-    </div>
-  `);
-  fillRenewDefaults();
-}
-function fillRenewDefaults(){
-  const planName = document.getElementById('renewPlan')?.value;
-  const plan = PLAN_LIBRARY[planName] || PLAN_LIBRARY['Smart 1 Month'];
-  if (document.getElementById('renewAmount')) document.getElementById('renewAmount').value = plan.amount;
-  if (document.getElementById('renewCost')) document.getElementById('renewCost').value = plan.cost;
-  if (document.getElementById('renewMonths')) document.getElementById('renewMonths').value = plan.months;
-}
-function saveRenew(id){
-  const c = getCustomerById(id);
-  if (!c) return;
-  const plan = document.getElementById('renewPlan').value;
-  const amount = Number(document.getElementById('renewAmount').value || 0);
-  const cost = Number(document.getElementById('renewCost').value || 0);
-  const months = Number(document.getElementById('renewMonths').value || 1);
-  const renewDate = document.getElementById('renewDate').value || todayIso();
-  const paid = document.getElementById('renewPaid').value === 'true';
 
-  c.plan = plan;
-  c.startDate = renewDate;
-  c.expiryDate = addMonths(renewDate, months);
-  c.paid = paid;
-  c.payments = getPayments(c);
-  c.payments.push({
-    date: renewDate,
-    amount,
-    cost,
-    months,
-    plan,
-    type:'renewal'
-  });
+function isValidMac(mac){
+  if(!mac) return true;
+  return /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/.test(String(mac).trim());
+}
 
-  saveCustomers();
-  closeModal();
-  render();
+function nonNegativeNumber(v){
+  return !isNaN(+v) && +v >= 0;
 }
-function openEditModal(id){
-  const c = getCustomerById(id);
-  if (!c) return;
-  showModal('Edit Customer', `
-    <div class="form-grid">
-      <div class="field-wrap full">
-        <label>Name</label>
-        <input class="field" id="editName" value="${esc(c.name)}">
-      </div>
-      <div class="field-wrap">
-        <label>Phone</label>
-        <input class="field" id="editPhone" value="${esc(c.phone || '')}">
-      </div>
-      <div class="field-wrap">
-        <label>Email</label>
-        <input class="field" id="editEmail" value="${esc(c.email || '')}">
-      </div>
-      <div class="field-wrap full">
-        <label>Plan</label>
-        <select class="select" id="editPlan">
-          ${Object.keys(PLAN_LIBRARY).map(name => `<option value="${esc(name)}" ${name===c.plan?'selected':''}>${esc(name)}</option>`).join('')}
-        </select>
-      </div>
-      <div class="field-wrap">
-        <label>Start</label>
-        <input class="field" id="editStart" type="date" value="${esc(c.startDate)}">
-      </div>
-      <div class="field-wrap">
-        <label>Expiry</label>
-        <input class="field" id="editExpiry" type="date" value="${esc(c.expiryDate)}">
-      </div>
-      <div class="field-wrap full">
-        <label>Paid</label>
-        <select class="select" id="editPaid">
-          <option value="true" ${c.paid?'selected':''}>Paid</option>
-          <option value="false" ${!c.paid?'selected':''}>Unpaid</option>
-        </select>
-      </div>
-      <div class="field-wrap full">
-        <label>Important</label>
-        <div class="helper">Editing this customer will not change renewal count or total paid history.</div>
-      </div>
-    </div>
-    <div class="sheet-actions">
-      <button class="save-btn" onclick="saveEdit('${c.id}')">Save Changes</button>
-      <button class="ghost-btn" onclick="closeModal()">Cancel</button>
-    </div>
-  `);
-}
-function saveEdit(id){
-  const c = getCustomerById(id);
-  if (!c) return;
-  c.name = document.getElementById('editName').value.trim() || 'Unnamed customer';
-  c.phone = document.getElementById('editPhone').value.trim() || 'Not given';
-  c.email = document.getElementById('editEmail').value.trim();
-  c.plan = document.getElementById('editPlan').value;
-  c.startDate = document.getElementById('editStart').value || c.startDate;
-  c.expiryDate = document.getElementById('editExpiry').value || c.expiryDate;
-  c.paid = document.getElementById('editPaid').value === 'true';
 
-  saveCustomers();
-  closeModal();
-  render();
+function suggestOffer({ tenureDays, renewalCount, totalSpent, statusKey }){
+  if(statusKey === 'expired' && (renewalCount >= 3 || tenureDays >= 365)) return 'Win-back offer';
+  if(renewalCount >= 6 || totalSpent >= 200) return 'VIP loyalty offer';
+  if(tenureDays >= 365) return '1-year loyalty deal';
+  if(statusKey === 'near') return 'Early renewal offer';
+  return 'Standard renewal offer';
 }
-function openSlipModal(id){
-  const c = getCustomerById(id);
-  if (!c) return;
-  const payments = getPayments(c);
-  const last = payments[payments.length - 1];
-  const text = [
-    'NET + CABLE',
-    `Customer: ${c.name}`,
-    `Phone: ${c.phone || 'Not given'}`,
-    `Plan: ${c.plan}`,
-    `Paid: ${c.paid ? 'Paid' : 'Unpaid'}`,
-    `Start: ${c.startDate}`,
-    `Expiry: ${c.expiryDate}`,
-    `Last Amount: ${money(last?.amount || 0)}`,
-    `Renewals: ${getRenewalCount(c)}`
-  ].join('\n');
 
-  showModal('Payment Slip', `
-    <div class="small-card">
-      <h4>${esc(c.name)}</h4>
-      <p class="mono" style="white-space:pre-wrap">${esc(text)}</p>
-    </div>
-    <div class="sheet-actions">
-      <button class="save-btn" onclick="copySlip()">Copy Slip</button>
-      <button class="ghost-btn" onclick="closeModal()">Close</button>
-    </div>
-  `);
-  window.__slipText = text;
+function setEnvChip(){
+  const chip = $("#envInfo");
+  chip.textContent = demoMode ? "Demo • Read only" : "Connected";
+  chip.style.background = demoMode ? "#2c2347" : "#1a2244";
+  chip.style.borderColor = demoMode ? "#53428f" : "#2a3670";
 }
-async function copySlip(){
-  try{
-    await navigator.clipboard.writeText(window.__slipText || '');
-    alert('Slip copied');
-  }catch(e){
-    alert('Could not copy on this device');
+
+function assertWritable(label='This action'){
+  if(!demoMode) return true;
+  toast(`${label} is disabled in demo mode.`, 'warn');
+  return false;
+}
+
+/* =========================
+   Silent error reporter
+   ========================= */
+function showErr(label, err){
+  console.error(label, err);
+  // Intentionally not showing raw Firebase errors in visible UI.
+  // This keeps the admin panel clean while preserving debug logs.
+}
+
+async function safeGetDocs(qry, label){
+  try{ return await getDocs(qry); }
+  catch(e){ showErr(label, e); throw e; }
+}
+async function safeAddDoc(ref, data, label){
+  try{ return await addDoc(ref, data); }
+  catch(e){ showErr(label, e); throw e; }
+}
+async function safeSetDoc(ref, data, opts, label){
+  try{ return await setDoc(ref, data, opts); }
+  catch(e){ showErr(label, e); throw e; }
+}
+async function safeUpdateDoc(ref, data, label){
+  try{ return await updateDoc(ref, data); }
+  catch(e){ showErr(label, e); throw e; }
+}
+async function safeDeleteDoc(ref, label){
+  try{ return await deleteDoc(ref); }
+  catch(e){ showErr(label, e); throw e; }
+}
+
+/* =========================
+   iOS niceties
+   ========================= */
+(function iosTweaks(){
+  const topbar = document.querySelector('.topbar');
+  function setStickyOffset(){
+    const topH = topbar ? topbar.getBoundingClientRect().height : 0;
+    document.documentElement.style.setProperty('--sticky-offset', topH + 'px');
   }
-}
-function deleteCustomer(id){
-  const c = getCustomerById(id);
-  if (!c) return;
-  if (!confirm(`Delete ${c.name}?`)) return;
-  state.customers = state.customers.filter(item => item.id !== id);
-  saveCustomers();
-  closeModal();
-  render();
-}
-function exportData(){
-  const blob = new Blob([JSON.stringify(state.customers, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'net-cable-customers.json';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => {
-    URL.revokeObjectURL(a.href);
-    a.remove();
-  }, 1000);
-}
-function importPrompt(){
-  const pasted = prompt('Paste customer JSON here');
-  if (!pasted) return;
-  try{
-    const parsed = JSON.parse(pasted);
-    if (Array.isArray(parsed)){
-      state.customers = parsed.map(normalizeCustomer);
-    } else if (Array.isArray(parsed.customers)){
-      state.customers = parsed.customers.map(normalizeCustomer);
-    } else {
-      throw new Error('Invalid');
-    }
-    saveCustomers();
-    render();
-    alert('Imported');
-  }catch(e){
-    alert('Invalid JSON');
+  setStickyOffset();
+  window.addEventListener('resize', setStickyOffset);
+
+  const useVV = window.visualViewport;
+  if (useVV) {
+    const onVVChange = () => {
+      document.body.style.paddingBottom = `calc(${useVV.height < window.innerHeight ? '20vh' : '0px'} + var(--safe-bottom))`;
+    };
+    useVV.addEventListener('resize', onVVChange);
+    useVV.addEventListener('scroll', onVVChange);
   }
-}
-function resetDemo(){
-  if (!confirm('Reset and load demo customers?')) return;
-  state.customers = seedCustomers();
-  saveCustomers();
-  render();
-}
-function handleSignOut(){
-  localStorage.removeItem('netCableAdminSession');
-  localStorage.removeItem('adminLoggedIn');
-  alert('Signed out');
-}
-document.getElementById('modal').addEventListener('click', (e) => {
-  if (e.target.id === 'modal') closeModal();
+
+  document.addEventListener('focusin', (e)=>{
+    const el = e.target;
+    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT')) {
+      setTimeout(()=> el.scrollIntoView({ block:'center', behavior:'smooth' }), 100);
+    }
+  }, {passive:true});
+})();
+
+/* =========================
+   UI state / tabs
+   ========================= */
+const authView = $("#authView");
+const appView  = $("#appView");
+const tabs = $$(".tab");
+const sections = {
+  dashboard: $("#tab-dashboard"),
+  customers: $("#tab-customers"),
+  plans: $("#tab-plans"),
+  reports: $("#tab-reports"),
+  settings: $("#tab-settings"),
+};
+
+tabs.forEach(t=>{
+  t.addEventListener('click', ()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    Object.values(sections).forEach(s=>s.classList.add('hidden'));
+    sections[t.dataset.tab].classList.remove('hidden');
+  }, {passive:true});
 });
 
-state.customers = loadCustomers();
-render();
+/* =========================
+   State
+   ========================= */
+let plans = {};
+let customers = [];
+let renewals = [];
+let settingNear = 30;
+let demoMode = false;
+let uiBound = false;
+let editCustomerId = null;
+let renewCustomerId = null;
+
+/* =========================
+   AUTH
+   ========================= */
+const authEmail = $("#authEmail");
+const authPass = $("#authPass");
+const authMsg = $("#authMsg");
+
+$("#btnLogin").onclick = async ()=>{
+  authMsg.textContent = "Signing in...";
+  try{
+    demoMode = false;
+    await signInWithEmailAndPassword(auth, authEmail.value.trim(), authPass.value.trim());
+    authMsg.textContent = "Signed in.";
+  }catch(e){
+    showErr('[auth/login]', e);
+    authMsg.textContent = "Sign in failed. Please check email/password.";
+    toast("Sign in failed.", "error");
+  }
+};
+
+$("#btnDemo").onclick = async ()=>{
+  demoMode = true;
+  authView.classList.add('hidden');
+  appView.classList.remove('hidden');
+  setEnvChip();
+  await loadApp();
+  toast("Demo mode opened. Saving is disabled.", "warn");
+};
+
+$("#signOutBtn").onclick = async ()=>{
+  if(demoMode){
+    demoMode = false;
+    appView.classList.add('hidden');
+    authView.classList.remove('hidden');
+    setEnvChip();
+    return;
+  }
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, async (user)=>{
+  if(user){
+    demoMode = false;
+    authView.classList.add('hidden');
+    appView.classList.remove('hidden');
+    setEnvChip();
+    await loadApp(user);
+    setTimeout(()=> window.dispatchEvent(new Event('resize')), 0);
+  }else if(!demoMode){
+    appView.classList.add('hidden');
+    authView.classList.remove('hidden');
+  }
+});
+
+/* =========================
+   Bind UI once
+   ========================= */
+function bindUIOnce(){
+  if(uiBound) return;
+  uiBound = true;
+
+  $("#settingNearDays").addEventListener('change', ()=>{
+    settingNear = Math.max(1, +$("#settingNearDays").value || 30);
+    $("#nearDays").value = String(settingNear);
+    renderAll();
+  }, {passive:true});
+
+  $("#nearDays").addEventListener('change', ()=>{
+    settingNear = +$("#nearDays").value || 30;
+    $("#settingNearDays").value = settingNear;
+    renderAll();
+  }, {passive:true});
+
+  $("#btnAddCustomer").onclick = () => openCustomerModal(null);
+  $("#btnSeedPlans").onclick = seedPlans;
+  $("#btnAddPlan").onclick = ()=> openPlanModal();
+
+  $("#btnRunReport").addEventListener("click", (e) => {
+    e.preventDefault(); e.stopPropagation(); runReport();
+  });
+  $("#btnCsv").addEventListener("click", (e) => {
+    e.preventDefault(); e.stopPropagation(); exportCSV();
+  });
+
+  $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
+  $("#searchCustomers").addEventListener('input', renderCustomers);
+  $("#timeFilter").addEventListener('change', renderCustomers);
+  $("#statusFilter").addEventListener('change', renderCustomers);
+  $("#expiryFilter").addEventListener('change', renderCustomers);
+
+  $("#repType").addEventListener('change', onRepTypeChange, {passive:true});
+
+  $("#xCust").onclick = ()=>{ editCustomerId = null; $("#modalCustomer").classList.remove('open'); };
+  $("#xRenew").onclick = ()=> $("#modalRenew").classList.remove('open');
+  $("#xPlan").onclick = ()=> $("#modalPlan").classList.remove('open');
+
+  $("#c_stb").addEventListener('change', ()=>{
+    $("#stbBox").classList.toggle('hidden', $("#c_stb").value !== 'yes');
+    previewTotals();
+  });
+  ["#c_cost","#c_wholesale","#c_stbCost","#c_stbWholesale","#c_stb","#c_plan","#c_actual","#c_discName","#c_stbActual"].forEach(sel=>{
+    $(sel).addEventListener('input', previewTotals);
+    $(sel).addEventListener('change', previewTotals);
+  });
+
+  $("#c_plan").addEventListener('change', ()=>{
+    const pid = $("#c_plan").value;
+    const p = plans[pid] || {};
+    if(!editCustomerId){
+      $("#c_actual").value = p.retail_price ?? "";
+      $("#c_cost").value = p.retail_price ?? "";
+      $("#c_wholesale").value = p.wholesale_cost ?? "";
+    }
+    const dur = p.duration_months ?? 0;
+    $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
+    previewTotals();
+  });
+
+  $("#c_start").addEventListener('change', ()=>{
+    const pid = $("#c_plan").value;
+    const dur = plans[pid]?.duration_months ?? 0;
+    $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
+  });
+
+  $("#r_stb").addEventListener('change', ()=>{
+    $("#r_stbBox").classList.toggle('hidden', $("#r_stb").value !== 'yes');
+  });
+
+  const saveBtn = $("#btnSaveCustomer");
+  saveBtn.addEventListener('click', async (e) => {
+    e.preventDefault(); e.stopPropagation();
+    if(saveBtn.dataset.busy === '1') return;
+    if(!assertWritable("Saving customer")) return;
+    saveBtn.dataset.busy = '1';
+    const old = saveBtn.textContent;
+    saveBtn.textContent = 'Saving…';
+    saveBtn.disabled = true;
+    try{
+      await saveCustomerFromModal();
+      toast(editCustomerId ? "Customer updated." : "Customer saved.", "ok");
+    }catch(err){
+      showErr('[save customer]', err);
+      toast(err?.message || 'Failed to save customer.', 'error', 3400);
+    }finally{
+      saveBtn.disabled = false;
+      saveBtn.textContent = old;
+      saveBtn.dataset.busy = '0';
+    }
+  });
+
+  $("#btnDoRenew").onclick = doRenew;
+  $("#btnSavePlan").onclick = doSavePlan;
+}
+
+/* =========================
+   App load
+   ========================= */
+async function loadApp(){
+  bindUIOnce();
+  setEnvChip();
+
+  $("#settingNearDays").value = settingNear;
+  $("#nearDays").value = String(settingNear);
+
+  const now = new Date();
+  $("#repMonth").value = now.toISOString().slice(0,7);
+  $("#repYear").value = String(now.getFullYear());
+
+  setEmptyRow($("#nearGrid tbody"), 6, "Loading...");
+  setEmptyRow($("#vipGrid tbody"), 8, "Loading...");
+  setEmptyRow($("#custGrid tbody"), 9, "Loading...");
+  setEmptyRow($("#plansGrid tbody"), 7, "Loading...");
+  setEmptyRow($("#repGrid tbody"), 8, "Run a report to view results.");
+
+  try{
+    await Promise.all([loadPlans(), loadCustomers()]);
+    await loadRenewals();
+    onRepTypeChange();
+    renderAll();
+    runReport();
+  }catch(e){
+    showErr('[loadApp]', e);
+    toast("Some data could not load completely. Check console if needed.", "warn", 3500);
+  }
+}
+
+/* =========================
+   Firestore load/save
+   ========================= */
+async function loadPlans(){
+  plans = {};
+  const snap = await safeGetDocs(query(collection(db, "plans"), orderBy("id")), '[plans] getDocs');
+  snap.forEach(d=>{ plans[d.id] = d.data(); });
+  renderPlans();
+}
+
+async function savePlan(p){
+  const ref = doc(db, "plans", String(p.id));
+  await safeSetDoc(ref, p, {merge:true}, '[plans] setDoc');
+  plans[p.id] = p;
+  renderPlans();
+  refreshPlanSelects();
+}
+
+async function deletePlan(id){
+  await safeDeleteDoc(doc(db, "plans", String(id)), '[plans] deleteDoc');
+  delete plans[id];
+  renderPlans();
+  refreshPlanSelects();
+}
+
+async function loadCustomers(){
+  customers = [];
+  const snap = await safeGetDocs(query(collection(db,"customers"), orderBy("name")), '[customers] getDocs');
+  snap.forEach(d=> customers.push({id:d.id, ...d.data()}) );
+  renderCustomers();
+}
+
+async function saveCustomer(payload, existingId=null){
+  if(existingId){
+    const idStr = String(existingId);
+    const ref = doc(db,"customers", idStr);
+    payload.updatedAt = serverTimestamp();
+    await safeUpdateDoc(ref, payload, '[customers] updateDoc');
+    await loadCustomers();
+    return idStr;
+  }else{
+    const ref = await safeAddDoc(collection(db,"customers"), {
+      ...payload,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp()
+    }, '[customers] addDoc');
+    await loadCustomers();
+    return String(ref.id);
+  }
+}
+
+async function addRenewal(customerId, ren){
+  const ref = await safeAddDoc(
+    collection(db, "customers", String(customerId), "renewals"),
+    { ...ren, createdAt: serverTimestamp() },
+    '[renewals] addDoc'
+  );
+  await loadRenewals();
+  return String(ref.id);
+}
+
+async function loadRenewals(){
+  renewals = [];
+  try{
+    const snap = await safeGetDocs(collectionGroup(db, "renewals"), '[renewals] collectionGroup');
+    snap.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+  }catch(e){
+    showErr('[renewals] collectionGroup failed', e);
+    for (const c of customers){
+      try{
+        const rs = await safeGetDocs(collection(db, "customers", String(c.id), "renewals"), `[renewals] fallback ${c.id}`);
+        rs.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+      }catch(e2){
+        showErr(`[renewals] fallback ${c.id}`, e2);
+      }
+    }
+  }
+}
+
+async function setCustomerCurrentPlan(customerId, planFields){
+  const ref = doc(db, "customers", String(customerId));
+  await safeUpdateDoc(ref, { currentPlan: planFields, updatedAt: serverTimestamp() }, '[customers] set currentPlan');
+}
+
+async function deleteCustomerAndRenewals(customerId){
+  const idStr = String(customerId);
+  const renSnap = await safeGetDocs(collection(db, "customers", idStr, "renewals"), '[renewals] list before delete');
+  const batch = writeBatch(db);
+  renSnap.forEach(d => batch.delete(doc(db, "customers", idStr, "renewals", d.id)));
+  batch.delete(doc(db, "customers", idStr));
+  await batch.commit();
+  await loadCustomers();
+  await loadRenewals();
+  renderAll();
+}
+
+/* =========================
+   Render helpers
+   ========================= */
+function refreshPlanSelects(){
+  const selList = [$("#c_plan"), $("#r_plan")];
+  selList.forEach(sel=>{
+    if(!sel) return;
+    const curr = sel.value;
+    sel.innerHTML = "";
+    const ids = Object.keys(plans).sort();
+    ids.forEach(id=>{
+      const p = plans[id];
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = `${p.name} (${p.duration_months} mo)`;
+      sel.appendChild(opt);
+    });
+    if(curr && plans[curr]) sel.value = curr;
+  });
+}
+
+function renderAll(){
+  renderCustomers();
+  renderKPIs();
+  renderNearExpiry();
+  renderVIPCustomers();
+}
+
+function renderPlans(){
+  const tbody = $("#plansGrid tbody");
+  tbody.innerHTML = "";
+  const ids = Object.keys(plans).sort();
+
+  if(!ids.length){
+    setEmptyRow(tbody, 7, "No plans found. Add a plan or seed sample plans.");
+    refreshPlanSelects();
+    return;
+  }
+
+  ids.forEach(id=>{
+    const p = plans[id];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-label="ID">${esc(p.id)}</td>
+      <td data-label="Name">${esc(p.name || '')}</td>
+      <td data-label="Duration">${esc(p.duration_months || 0)}</td>
+      <td data-label="Retail">${(+p.retail_price || 0).toFixed(2)}</td>
+      <td data-label="Wholesale">${(+p.wholesale_cost || 0).toFixed(2)}</td>
+      <td data-label="Description">${esc(p.description || '')}</td>
+      <td data-label="Actions">
+        <div class="flex">
+          <button class="btn ghost" data-edit="${esc(p.id)}">Edit</button>
+          <button class="btn danger" data-del="${esc(p.id)}">Delete</button>
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll("[data-edit]").forEach(btn=>{
+    btn.onclick = ()=> openPlanModal(plans[btn.getAttribute('data-edit')]);
+  });
+
+  tbody.querySelectorAll("[data-del]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      if(!assertWritable("Deleting plan")) return;
+      const pid = btn.getAttribute('data-del');
+      if(confirm(`Delete plan ${pid}?`)){
+        try{
+          await deletePlan(pid);
+          toast("Plan deleted.", "ok");
+        }catch(e){
+          showErr('[plans] delete', e);
+          toast("Failed to delete plan.", "error");
+        }
+      }
+    };
+  });
+
+  refreshPlanSelects();
+}
+
+function renderCustomers(){
+  const q = ($("#searchCustomers").value || "").toLowerCase().trim();
+  const tVal = ($("#timeFilter").value) || "7";
+  const sVal = ($("#statusFilter").value) || "all";
+  const eVal = ($("#expiryFilter").value) || "all";
+
+  const now = new Date();
+  const dayLimit = (tVal === 'lifetime') ? Infinity : parseInt(tVal, 10);
+
+  const tbody = $("#custGrid tbody");
+  tbody.innerHTML = "";
+
+  const rows = customers.filter(c=>{
+    const plan = c.currentPlan || {};
+    const inText = `${c.name||''} ${c.phone||''} ${c.email||''} ${c.userId||''} ${c.mac||''}`.toLowerCase();
+    if(q && !inText.includes(q)) return false;
+
+    const startISO = plan.startDate || c.originalStartDate || "";
+    let withinTime = true;
+    if(dayLimit !== Infinity && startISO){
+      const start = new Date(startISO + "T00:00:00");
+      const diffDays = Math.floor((now - start) / (1000*60*60*24));
+      withinTime = diffDays <= dayLimit;
+    }else if(dayLimit !== Infinity && !startISO){
+      withinTime = false;
+    }
+    if(!withinTime) return false;
+
+    const paidStr = (plan.paymentReceived === 'yes') ? 'paid' : 'unpaid';
+    if(sVal !== 'all' && paidStr !== sVal) return false;
+
+    const expiryState = getExpiryStatus(plan.expiryDate).key;
+    if(eVal !== 'all' && expiryState !== eVal) return false;
+
+    return true;
+  });
+
+  $("#custMeta").textContent = `${rows.length} result${rows.length === 1 ? '' : 's'} shown`;
+
+  if(!rows.length){
+    setEmptyRow(tbody, 9, "No customers match your filters.");
+    $("#kpiCustomers").textContent = String(customers.length);
+    return;
+  }
+
+  rows.forEach(c=>{
+    const plan = c.currentPlan || {};
+    const exp = getExpiryStatus(plan.expiryDate);
+    const paidBadge = getPaidBadge(plan.paymentReceived);
+    const rowClass = exp.key === 'expired' ? 'row-expired' : (exp.key === 'near' ? 'row-near' : '');
+
+    const tr = document.createElement('tr');
+    tr.className = rowClass;
+    tr.innerHTML = `
+      <td data-label="Name">${esc(c.name || '')}</td>
+      <td data-label="Phone">${esc(c.phone || '')}</td>
+      <td data-label="Email">${esc(c.email || '')}</td>
+      <td data-label="Plan">${esc(plan.planName || '')}</td>
+      <td data-label="Status"><span class="pill ${exp.cls}">${esc(exp.label)}</span></td>
+      <td data-label="Paid">${paidBadge}</td>
+      <td data-label="Start">${esc(plan.startDate || '')}</td>
+      <td data-label="Expiry">${esc(plan.expiryDate || '')}</td>
+      <td data-label="Actions">
+        <div class="flex" style="gap:6px;flex-wrap:wrap">
+          <button class="btn ghost" data-view="${esc(c.id)}">View</button>
+          <button class="btn secondary" data-edit="${esc(c.id)}">Edit</button>
+          <button class="btn ok" data-renew="${esc(c.id)}">Renew</button>
+          <button class="btn" data-invoice="${esc(c.id)}">Slip</button>
+          <button class="btn danger" data-del="${esc(c.id)}">Delete</button>
+        </div>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+
+  $("#kpiCustomers").textContent = String(customers.length);
+
+  tbody.querySelectorAll("[data-edit]").forEach(btn=>{
+    btn.onclick = ()=> openCustomerModal(btn.getAttribute('data-edit'));
+  });
+  tbody.querySelectorAll("[data-del]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      if(!assertWritable("Deleting customer")) return;
+      const id = btn.getAttribute('data-del');
+      if(confirm("Delete this customer and all their renewals?")){
+        try{
+          await deleteCustomerAndRenewals(id);
+          toast("Customer deleted.", "ok");
+        }catch(e){
+          showErr('[customers] delete', e);
+          toast("Failed to delete customer.", "error");
+        }
+      }
+    };
+  });
+  tbody.querySelectorAll("[data-renew]").forEach(btn=>{
+    btn.onclick = ()=> openRenewModal(btn.getAttribute('data-renew'));
+  });
+  tbody.querySelectorAll("[data-view]").forEach(btn=>{
+    btn.onclick = ()=> viewCustomer(btn.getAttribute('data-view'));
+  });
+  tbody.querySelectorAll("[data-invoice]").forEach(btn=>{
+    btn.onclick = ()=> printInvoice(btn.getAttribute('data-invoice'));
+  });
+}
+
+function renderNearExpiry(){
+  const days = +$("#nearDays").value || 30;
+  const tbody = $("#nearGrid tbody");
+  tbody.innerHTML = "";
+
+  const list = customers
+    .map(c=> ({ c, plan: c.currentPlan || {} }))
+    .filter(x => x.plan.expiryDate)
+    .map(x => ({ ...x, left: daysLeft(x.plan.expiryDate) }))
+    .filter(x => x.left >= 0 && x.left <= days)
+    .sort((a,b)=> a.left - b.left);
+
+  $("#nearExpCount").textContent = `Near expiry: ${list.length}`;
+
+  if(!list.length){
+    setEmptyRow(tbody, 6, "No customers are expiring within the selected range.");
+    return;
+  }
+
+  list.forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.className = x.left <= settingNear ? 'row-near' : '';
+    tr.innerHTML = `
+      <td data-label="Name">${esc(x.c.name || '')}</td>
+      <td data-label="Phone">${esc(x.c.phone || '')}</td>
+      <td data-label="Plan">${esc(x.plan.planName || '')}</td>
+      <td data-label="Expiry">${esc(x.plan.expiryDate || '')}</td>
+      <td data-label="Days Left"><span class="pill badge-warn">${esc(x.left)}d</span></td>
+      <td data-label="Action"><button class="btn ok" data-renew="${esc(x.c.id)}">Renew</button></td>`;
+    tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll("[data-renew]").forEach(btn=>{
+    btn.onclick = ()=> openRenewModal(btn.getAttribute('data-renew'));
+  });
+}
+
+function renderVIPCustomers(){
+  const tbody = $("#vipGrid tbody");
+  tbody.innerHTML = "";
+
+  if(!customers.length){
+    setEmptyRow(tbody, 8, "No customers available yet.");
+    $("#vipMeta").textContent = "Best customers by tenure, renewals, and value.";
+    return;
+  }
+
+  const grouped = new Map();
+  for(const r of renewals){
+    const cid = String(r.customerId || '');
+    if(!cid) continue;
+    if(!grouped.has(cid)) grouped.set(cid, []);
+    grouped.get(cid).push(r);
+  }
+
+  const data = customers.map(c=>{
+    const list = grouped.get(String(c.id)) || [];
+    const currentPlan = c.currentPlan || {};
+    const firstDates = [
+      c.originalStartDate,
+      ...list.map(x => x.startDate).filter(Boolean)
+    ].filter(Boolean).sort();
+    const firstDate = firstDates[0] || currentPlan.startDate || "";
+    const lastDates = [
+      currentPlan.startDate,
+      ...list.map(x => x.startDate).filter(Boolean)
+    ].filter(Boolean).sort();
+    const lastDate = lastDates[lastDates.length - 1] || "";
+    const totalSpent = list.reduce((sum, r)=>{
+      const f = calcFigures({
+        cost:r.cost, wholesale:r.wholesale, actual:r.actual,
+        stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual
+      });
+      return sum + f.turnover;
+    }, 0);
+
+    const renewalCount = list.length;
+    const tenureDays = firstDate
+      ? Math.max(0, Math.floor((new Date() - new Date(firstDate + "T00:00:00")) / (1000*60*60*24)))
+      : 0;
+    const status = getExpiryStatus(currentPlan.expiryDate);
+    const score =
+      (tenureDays / 30) * 2 +
+      renewalCount * 12 +
+      totalSpent * 0.35 +
+      (status.key === 'active' ? 12 : 0) +
+      (status.key === 'near' ? 6 : 0);
+
+    return {
+      customer:c,
+      currentPlan,
+      firstDate,
+      lastDate,
+      renewalCount,
+      totalSpent,
+      tenureDays,
+      status,
+      score,
+      offer:suggestOffer({ tenureDays, renewalCount, totalSpent, statusKey: status.key })
+    };
+  })
+  .sort((a,b)=> b.score - a.score)
+  .slice(0, 20);
+
+  $("#vipMeta").textContent = `${data.length} customer${data.length === 1 ? '' : 's'} ranked using tenure, renewals, and value.`;
+
+  if(!data.length){
+    setEmptyRow(tbody, 8, "No loyalty data available yet.");
+    return;
+  }
+
+  data.forEach(item=>{
+    const tr = document.createElement('tr');
+    tr.className = item.status.key === 'expired' ? 'row-expired' : (item.status.key === 'near' ? 'row-near' : '');
+    tr.innerHTML = `
+      <td data-label="Name">${esc(item.customer.name || '')}</td>
+      <td data-label="Phone">${esc(item.customer.phone || '')}</td>
+      <td data-label="Since">${esc(item.firstDate || '-')}</td>
+      <td data-label="Renewals">${esc(item.renewalCount)}</td>
+      <td data-label="Total Spent">${fmt(item.totalSpent)}</td>
+      <td data-label="Status"><span class="pill ${item.status.cls}">${esc(item.status.label)}</span></td>
+      <td data-label="Suggested Offer">${esc(item.offer)}</td>
+      <td data-label="Action"><button class="btn ok" data-renew="${esc(item.customer.id)}">Renew</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll("[data-renew]").forEach(btn=>{
+    btn.onclick = ()=> openRenewModal(btn.getAttribute('data-renew'));
+  });
+}
+
+function renderKPIs(){
+  let turnover = 0, expense = 0, profit = 0;
+  renewals.forEach(r=>{
+    const f = calcFigures({
+      cost:r.cost, wholesale:r.wholesale,
+      stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale,
+      actual:r.actual, stbActual:r.stbActual
+    });
+    turnover += f.turnover;
+    expense += f.expense;
+    profit += f.profit;
+  });
+  $("#kpiTurnover").textContent = fmt(turnover);
+  $("#kpiExpense").textContent = fmt(expense);
+  $("#kpiProfit").textContent = fmt(profit);
+}
+
+/* =========================
+   Customers: Add/Edit
+   ========================= */
+function previewTotals(){
+  const stbIncluded = $("#c_stb").value;
+  const f = calcFigures({
+    cost:$("#c_cost").value,
+    wholesale:$("#c_wholesale").value,
+    actual:$("#c_actual").value,
+    stbIncluded,
+    stbCost:$("#c_stbCost").value,
+    stbWholesale:$("#c_stbWholesale").value,
+    stbActual:$("#c_stbActual").value
+  });
+  const discName = ($("#c_discName").value || "").trim();
+  $("#c_preview").innerHTML = `
+    Turnover: <strong>${fmt(f.turnover)}</strong><br>
+    Expense: <strong>${fmt(f.expense)}</strong><br>
+    Profit: <strong>${fmt(f.profit)}</strong><br>
+    ${f.discountSaved > 0
+      ? `Customer discount: <strong>${fmt(f.discountSaved)}</strong>${discName ? ` <span class="chip">${esc(discName)}</span>` : ''}`
+      : `<span class="muted">No discount</span>`}
+  `;
+}
+
+function openCustomerModal(id=null){
+  editCustomerId = (typeof id === 'string') ? id : null;
+  const custModal = $("#modalCustomer");
+  const custTitle = $("#custModalTitle");
+
+  custTitle.textContent = id ? "Edit Customer" : "Add Customer";
+  refreshPlanSelects();
+
+  const firstPlanId = Object.keys(plans)[0] || "";
+  const defaults = firstPlanId ? plans[firstPlanId] : null;
+
+  $("#c_name").value = "";
+  $("#c_phone").value = "";
+  $("#c_email").value = "";
+  $("#c_userId").value = "";
+  $("#c_mac").value = "";
+  $("#c_plan").value = firstPlanId;
+  $("#c_actual").value = defaults ? (defaults.retail_price || "") : "";
+  $("#c_cost").value = defaults ? (defaults.retail_price || "") : "";
+  $("#c_wholesale").value = defaults ? (defaults.wholesale_cost || "") : "";
+  $("#c_discName").value = "";
+  $("#c_stb").value = "no";
+  $("#stbBox").classList.add('hidden');
+  $("#c_stbActual").value = "";
+  $("#c_stbCost").value = "";
+  $("#c_stbWholesale").value = "";
+  $("#c_start").value = todayISO();
+  $("#c_expiry").value = defaults ? addMonthsISO($("#c_start").value, defaults.duration_months || 0) : $("#c_start").value;
+  $("#c_paid").value = "yes";
+  $("#c_preview").textContent = "—";
+
+  if(id){
+    const c = customers.find(x=> x.id === id);
+    if(c){
+      $("#c_name").value = c.name || "";
+      $("#c_phone").value = c.phone || "";
+      $("#c_email").value = c.email || "";
+      $("#c_userId").value = c.userId || "";
+      $("#c_mac").value = c.mac || "";
+      if(c.currentPlan){
+        $("#c_plan").value = c.currentPlan.planId || firstPlanId || "";
+        $("#c_actual").value = c.currentPlan.actual || "";
+        $("#c_cost").value = c.currentPlan.cost || "";
+        $("#c_wholesale").value = c.currentPlan.wholesale || "";
+        $("#c_discName").value = c.currentPlan.discountName || "";
+        $("#c_stb").value = c.currentPlan.stbIncluded || "no";
+        $("#stbBox").classList.toggle('hidden', $("#c_stb").value !== 'yes');
+        $("#c_stbActual").value = c.currentPlan.stbActual || "";
+        $("#c_stbCost").value = c.currentPlan.stbCost || "";
+        $("#c_stbWholesale").value = c.currentPlan.stbWholesale || "";
+        $("#c_start").value = c.currentPlan.startDate || todayISO();
+        $("#c_expiry").value = c.currentPlan.expiryDate || addMonthsISO($("#c_start").value, plans[$("#c_plan").value]?.duration_months || 0);
+        $("#c_paid").value = c.currentPlan.paymentReceived || "yes";
+      }
+    }
+  }
+
+  previewTotals();
+  custModal.classList.add('open');
+}
+
+function validateCustomerModal(){
+  const name = $("#c_name").value.trim();
+  const email = normalizeEmail($("#c_email").value);
+  const mac = $("#c_mac").value.trim();
+  const start = $("#c_start").value;
+  const expiry = $("#c_expiry").value;
+
+  if(!name) throw new Error("Name is required.");
+  if(email && !isValidEmail(email)) throw new Error("Please enter a valid email.");
+  if(mac && !isValidMac(mac)) throw new Error("MAC address format should look like AA:BB:CC:DD:EE:FF.");
+  if(!start || !expiry) throw new Error("Start and expiry dates are required.");
+  if(expiry < start) throw new Error("Expiry date cannot be before start date.");
+
+  ["#c_actual","#c_cost","#c_wholesale","#c_stbActual","#c_stbCost","#c_stbWholesale"].forEach(sel=>{
+    const val = $(sel).value;
+    if(val !== "" && !nonNegativeNumber(val)) throw new Error("Prices cannot be negative.");
+  });
+}
+
+async function getLatestRenewalRef(customerId){
+  const snap = await safeGetDocs(collection(db, "customers", String(customerId), "renewals"), '[renewals] list latest');
+  let latest = null;
+  snap.forEach(d => {
+    const r = d.data() || {};
+    const key = r.startDate || r.expiryDate || "";
+    if(!latest || key > latest.key) latest = { key, ref: d.ref, id: d.id, data: r };
+  });
+  return latest?.ref || null;
+}
+
+async function saveCustomerFromModal(){
+  validateCustomerModal();
+
+  const name = $("#c_name").value.trim();
+  const planId = $("#c_plan").value;
+  const p = plans[planId] || {};
+  const planName = p.name || "Custom";
+  const durationMonths = +p.duration_months || 0;
+
+  const start = $("#c_start").value;
+  let expiry = $("#c_expiry").value || addMonthsISO(start, durationMonths);
+
+  const currentPlan = {
+    planId, planName, durationMonths,
+    actual:+$("#c_actual").value || 0,
+    cost:+$("#c_cost").value || 0,
+    wholesale:+$("#c_wholesale").value || 0,
+    discountName:($("#c_discName").value || "").trim(),
+    stbIncluded:$("#c_stb").value,
+    stbActual:+$("#c_stbActual").value || 0,
+    stbCost:+$("#c_stbCost").value || 0,
+    stbWholesale:+$("#c_stbWholesale").value || 0,
+    startDate:start,
+    expiryDate:expiry,
+    paymentReceived:$("#c_paid").value
+  };
+
+  const payload = {
+    name,
+    phone:$("#c_phone").value.trim(),
+    email:normalizeEmail($("#c_email").value),
+    userId:$("#c_userId").value.trim(),
+    mac:$("#c_mac").value.trim().toUpperCase(),
+    originalStartDate: (editCustomerId
+      ? (customers.find(x=>x.id===editCustomerId)?.originalStartDate || start)
+      : start),
+    currentPlan
+  };
+
+  const existingIdForUpdate = editCustomerId;
+  const cid = await saveCustomer(payload, existingIdForUpdate ? String(existingIdForUpdate) : null);
+
+  if(!existingIdForUpdate){
+    await addRenewal(cid, {
+      customerId: cid,
+      customerName: name,
+      planId, planName, durationMonths,
+      actual: currentPlan.actual,
+      cost: currentPlan.cost,
+      wholesale: currentPlan.wholesale,
+      stbIncluded: currentPlan.stbIncluded,
+      stbActual: currentPlan.stbActual,
+      stbCost: currentPlan.stbCost,
+      stbWholesale: currentPlan.stbWholesale,
+      discountName: currentPlan.discountName,
+      startDate: start,
+      expiryDate: expiry,
+      paymentReceived: currentPlan.paymentReceived
+    });
+  }
+
+  $("#modalCustomer").classList.remove('open');
+  await loadCustomers();
+  await loadRenewals();
+  renderAll();
+
+  if(existingIdForUpdate){
+    const latestRef = await getLatestRenewalRef(existingIdForUpdate);
+    if(latestRef){
+      await safeUpdateDoc(latestRef, {
+        planId, planName, durationMonths,
+        actual: currentPlan.actual,
+        cost: currentPlan.cost,
+        wholesale: currentPlan.wholesale,
+        stbIncluded: currentPlan.stbIncluded,
+        stbActual: currentPlan.stbActual,
+        stbCost: currentPlan.stbCost,
+        stbWholesale: currentPlan.stbWholesale,
+        discountName: currentPlan.discountName,
+        startDate: currentPlan.startDate,
+        expiryDate: currentPlan.expiryDate,
+        paymentReceived: currentPlan.paymentReceived,
+        customerId: existingIdForUpdate,
+        customerName: name,
+        updatedAt: serverTimestamp()
+      }, '[renewals] update latest');
+    }else{
+      await addRenewal(existingIdForUpdate, {
+        customerId: existingIdForUpdate,
+        customerName: name,
+        planId, planName, durationMonths,
+        actual: currentPlan.actual,
+        cost: currentPlan.cost,
+        wholesale: currentPlan.wholesale,
+        stbIncluded: currentPlan.stbIncluded,
+        stbActual: currentPlan.stbActual,
+        stbCost: currentPlan.stbCost,
+        stbWholesale: currentPlan.stbWholesale,
+        discountName: currentPlan.discountName,
+        startDate: currentPlan.startDate,
+        expiryDate: currentPlan.expiryDate,
+        paymentReceived: currentPlan.paymentReceived
+      });
+    }
+  }
+
+  runReport();
+  if($("#c_invoice").checked) setTimeout(()=> printInvoice(cid), 200);
+  editCustomerId = null;
+}
+
+function viewCustomer(id){
+  const c = customers.find(x=>x.id===id);
+  if(!c){
+    toast("Customer not found.", "error");
+    return;
+  }
+  const cp = c.currentPlan || {};
+  const figs = calcFigures({
+    cost:cp.cost, wholesale:cp.wholesale, actual:cp.actual,
+    stbIncluded:cp.stbIncluded, stbCost:cp.stbCost, stbWholesale:cp.stbWholesale, stbActual:cp.stbActual
+  });
+
+  alert(
+`Customer: ${c.name}
+Phone: ${c.phone || '-'}  Email: ${c.email || '-'}
+User ID: ${c.userId || '-'}  MAC: ${c.mac || '-'}
+
+Original Start: ${c.originalStartDate || '-'}
+Current Plan: ${cp.planName || '-'} (${cp.durationMonths || 0} mo)
+This Plan Start: ${cp.startDate || '-'}  Expiry: ${cp.expiryDate || '-'}
+
+This Plan:
+  Turnover: ${fmt(figs.turnover)}
+  Expense:  ${fmt(figs.expense)}
+  Profit:   ${fmt(figs.profit)}
+  Discount: ${fmt(figs.discountSaved)}${cp.discountName ? ' — ' + cp.discountName : ''}
+
+Tip: Use "Reports" tab for totals across all renewals.`)
+}
+
+/* =========================
+   Renewals
+   ========================= */
+function openRenewModal(id){
+  renewCustomerId = id;
+  refreshPlanSelects();
+
+  const c = customers.find(x=>x.id===id);
+  $("#renewTitle").textContent = `Renew: ${c?.name || id}`;
+
+  const cp = c?.currentPlan || {};
+  $("#r_plan").value = cp.planId || Object.keys(plans)[0] || "";
+  const p = plans[$("#r_plan").value] || {};
+
+  $("#r_actual").value = cp.actual || p.retail_price || "";
+  $("#r_cost").value = cp.cost || p.retail_price || "";
+  $("#r_wholesale").value = cp.wholesale || p.wholesale_cost || "";
+  $("#r_discName").value = cp.discountName || "";
+  $("#r_stb").value = "no";
+  $("#r_stbBox").classList.add('hidden');
+  $("#r_stbActual").value = "";
+  $("#r_stbCost").value = "";
+  $("#r_stbWholesale").value = "";
+
+  const defStart = cp.expiryDate ? addMonthsISO(cp.expiryDate, 0) : todayISO();
+  $("#r_start").value = defStart;
+  $("#r_expiry").value = addMonthsISO(defStart, p.duration_months || 0);
+  $("#r_paid").value = "yes";
+
+  $("#r_plan").onchange = ()=>{
+    const p2 = plans[$("#r_plan").value] || {};
+    $("#r_expiry").value = addMonthsISO($("#r_start").value, p2.duration_months || 0);
+    if(!cp.actual) $("#r_actual").value = p2.retail_price || "";
+    if(!cp.cost) $("#r_cost").value = p2.retail_price || "";
+    if(!cp.wholesale) $("#r_wholesale").value = p2.wholesale_cost || "";
+  };
+
+  $("#r_start").onchange = ()=>{
+    const p2 = plans[$("#r_plan").value] || {};
+    $("#r_expiry").value = addMonthsISO($("#r_start").value, p2.duration_months || 0);
+  };
+
+  $("#modalRenew").classList.add('open');
+}
+
+function validateRenewModal(){
+  const start = $("#r_start").value;
+  const expiry = $("#r_expiry").value;
+  if(!start || !expiry) throw new Error("Start and expiry dates are required.");
+  if(expiry < start) throw new Error("Expiry date cannot be before start date.");
+
+  ["#r_actual","#r_cost","#r_wholesale","#r_stbActual","#r_stbCost","#r_stbWholesale"].forEach(sel=>{
+    const val = $(sel).value;
+    if(val !== "" && !nonNegativeNumber(val)) throw new Error("Prices cannot be negative.");
+  });
+}
+
+async function doRenew(){
+  if(!assertWritable("Renewing plan")) return;
+  try{
+    validateRenewModal();
+
+    const c = customers.find(x=>x.id===renewCustomerId);
+    if(!c) throw new Error("Missing customer.");
+
+    const planId = $("#r_plan").value;
+    const p = plans[planId] || {};
+    const planName = p.name || 'Custom';
+    const durationMonths = +p.duration_months || 0;
+    const start = $("#r_start").value;
+    const expiry = $("#r_expiry").value || addMonthsISO(start, durationMonths);
+
+    const ren = {
+      customerId:String(renewCustomerId),
+      customerName:c.name || '',
+      planId,
+      planName,
+      durationMonths,
+      actual:+$("#r_actual").value || 0,
+      cost:+$("#r_cost").value || 0,
+      wholesale:+$("#r_wholesale").value || 0,
+      stbIncluded:$("#r_stb").value,
+      stbActual:+$("#r_stbActual").value || 0,
+      stbCost:+$("#r_stbCost").value || 0,
+      stbWholesale:+$("#r_stbWholesale").value || 0,
+      discountName:($("#r_discName").value || "").trim(),
+      startDate:start,
+      expiryDate:expiry,
+      paymentReceived:$("#r_paid").value
+    };
+
+    const btn = $("#btnDoRenew");
+    const old = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Renewing…";
+
+    try{
+      await addRenewal(String(renewCustomerId), ren);
+      await setCustomerCurrentPlan(String(renewCustomerId), ren);
+    }finally{
+      btn.disabled = false;
+      btn.textContent = old;
+    }
+
+    $("#modalRenew").classList.remove('open');
+    await loadCustomers();
+    await loadRenewals();
+    renderAll();
+    runReport();
+    toast("Renewal saved.", "ok");
+
+    if($("#r_invoice").checked) setTimeout(()=> printInvoice(renewCustomerId), 200);
+  }catch(e){
+    showErr('[renewals] doRenew', e);
+    toast(e?.message || 'Failed to renew plan.', 'error');
+  }
+}
+
+/* =========================
+   Plan modal
+   ========================= */
+function openPlanModal(p=null){
+  $("#planTitle").textContent = p ? "Edit Plan" : "Add Plan";
+  $("#p_id").value = p?.id || "";
+  $("#p_name").value = p?.name || "";
+  $("#p_months").value = p?.duration_months || 1;
+  $("#p_retail").value = p?.retail_price || "";
+  $("#p_wholesale").value = p?.wholesale_cost || "";
+  $("#p_desc").value = p?.description || "";
+  $("#modalPlan").classList.add('open');
+}
+
+async function doSavePlan(){
+  if(!assertWritable("Saving plan")) return;
+  const pid = $("#p_id").value.trim();
+  if(!pid){
+    toast("Plan ID required.", "error");
+    return;
+  }
+
+  const retail = $("#p_retail").value;
+  const wholesale = $("#p_wholesale").value;
+  if((retail !== "" && !nonNegativeNumber(retail)) || (wholesale !== "" && !nonNegativeNumber(wholesale))){
+    toast("Plan prices cannot be negative.", "error");
+    return;
+  }
+
+  const btn = $("#btnSavePlan");
+  const old = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Saving…";
+
+  try{
+    await savePlan({
+      id: pid,
+      name: $("#p_name").value.trim(),
+      duration_months: +$("#p_months").value || 0,
+      retail_price: +retail || 0,
+      wholesale_cost: +wholesale || 0,
+      description: $("#p_desc").value.trim()
+    });
+    $("#modalPlan").classList.remove('open');
+    toast("Plan saved.", "ok");
+  }catch(e){
+    showErr('[plans] save', e);
+    toast("Failed to save plan.", "error");
+  }finally{
+    btn.disabled = false;
+    btn.textContent = old;
+  }
+}
+
+/* =========================
+   Seed sample plans
+   ========================= */
+async function seedPlans(){
+  if(!assertWritable("Seeding plans")) return;
+  const samples = [
+    {id:"PLN-1MO", name:"1 month", duration_months:1, retail_price:15, wholesale_cost:4.5, description:"Entry plan"},
+    {id:"PLN-3MO", name:"3 months", duration_months:3, retail_price:35, wholesale_cost:13.5, description:"Most popular"},
+    {id:"PLN-6MO", name:"6 months", duration_months:6, retail_price:60, wholesale_cost:25, description:"Value saver"}
+  ];
+  try{
+    for(const p of samples) await savePlan(p);
+    toast("Sample plans added.", "ok");
+  }catch(e){
+    showErr('[plans] seed', e);
+    toast("Failed to seed plans.", "error");
+  }
+}
+
+/* =========================
+   Reports
+   ========================= */
+function onRepTypeChange(){
+  const t = $("#repType").value;
+  $("#repMonthCol").classList.toggle('hidden', t !== "monthly");
+  $("#repYearCol").classList.toggle('hidden', t !== "yearly");
+  $("#repFromCol").classList.toggle('hidden', t !== "custom");
+  $("#repToCol").classList.toggle('hidden', t !== "custom");
+}
+
+function filterRenewalsByPeriod(){
+  const t = $("#repType").value;
+  let from, to;
+
+  if(t === "monthly"){
+    let ym = $("#repMonth").value || new Date().toISOString().slice(0,7);
+    $("#repMonth").value = ym;
+    from = ym + "-01";
+    const [y, m] = ym.split("-").map(Number);
+    const last = new Date(y, m, 0).getDate();
+    to = ym + "-" + String(last).padStart(2, "0");
+  }else if(t === "yearly"){
+    const y = +$("#repYear").value;
+    if(!y) return {arr: [], from: undefined, to: undefined};
+    from = y + "-01-01";
+    to = y + "-12-31";
+  }else{
+    from = $("#repFrom").value;
+    to = $("#repTo").value;
+    if(!from || !to) return {arr: [], from: undefined, to: undefined};
+  }
+
+  const arr = renewals.filter(r => r.startDate >= from && r.startDate <= to);
+  return {arr, from, to};
+}
+
+function runReport(){
+  const out = filterRenewalsByPeriod();
+  const tbody = $("#repGrid tbody");
+  tbody.innerHTML = "";
+
+  if(!out || !out.arr){
+    setEmptyRow(tbody, 8, "Select a valid period.");
+    $("#repTurnover").textContent = fmt(0);
+    $("#repExpense").textContent = fmt(0);
+    $("#repProfit").textContent = fmt(0);
+    return;
+  }
+
+  const rows = out.arr.sort((a,b)=> a.startDate.localeCompare(b.startDate));
+  let T = 0, E = 0, P = 0;
+
+  if(!rows.length){
+    setEmptyRow(tbody, 8, "No renewals found in this period.");
+    $("#repTurnover").textContent = fmt(0);
+    $("#repExpense").textContent = fmt(0);
+    $("#repProfit").textContent = fmt(0);
+    return;
+  }
+
+  rows.forEach(r=>{
+    const f = calcFigures({
+      cost:r.cost, wholesale:r.wholesale, actual:r.actual,
+      stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual
+    });
+
+    T += f.turnover;
+    E += f.expense;
+    P += f.profit;
+
+    const payload = {
+      id:r.id, customerId:r.customerId, customerName:r.customerName,
+      planId:r.planId, planName:r.planName, durationMonths:r.durationMonths,
+      actual:r.actual, cost:r.cost, wholesale:r.wholesale,
+      stbIncluded:r.stbIncluded, stbActual:r.stbActual, stbCost:r.stbCost, stbWholesale:r.stbWholesale,
+      discountName:r.discountName, startDate:r.startDate, expiryDate:r.expiryDate, paymentReceived:r.paymentReceived
+    };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td data-label="Date">${esc(r.startDate)}</td>
+      <td data-label="Customer">${esc(r.customerName || r.customerId)}</td>
+      <td data-label="Plan">${esc(r.planName || r.planId)} (${esc(r.durationMonths || 0)}mo)</td>
+      <td data-label="Turnover">${f.turnover.toFixed(2)}</td>
+      <td data-label="Expense">${f.expense.toFixed(2)}</td>
+      <td data-label="Profit">${f.profit.toFixed(2)}</td>
+      <td data-label="Paid">${r.paymentReceived === 'yes' ? 'Yes' : 'No'}</td>
+      <td data-label="Action"><button class="btn" data-inv-ren="${encoded}">Slip</button></td>`;
+    tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll("[data-inv-ren]").forEach(btn=>{
+    btn.onclick = ()=> printInvoiceFromRenewalData(btn.getAttribute("data-inv-ren"));
+  });
+
+  $("#repTurnover").textContent = fmt(T);
+  $("#repExpense").textContent = fmt(E);
+  $("#repProfit").textContent = fmt(P);
+}
+
+function exportCSV(){
+  const rows = [["Date","Customer","Plan","Turnover","Expense","Profit","Paid"]];
+  document.querySelectorAll("#repGrid tbody tr").forEach(tr=>{
+    const cols = [...tr.children].slice(0,7).map(td => td.textContent.trim());
+    if(cols.some(Boolean)) rows.push(cols);
+  });
+
+  const csvStr = "\uFEFF" + rows.map(r => r.map(x => `"${String(x).replaceAll('"','""')}"`).join(",")).join("\n");
+  const blob = new Blob([csvStr], { type: "text/csv;charset=utf-8;" });
+  const canDownloadAttr = "download" in HTMLAnchorElement.prototype;
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  if(canDownloadAttr && !isIOS){
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "report.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }else{
+    const dataUrl = "data:text/csv;charset=utf-8," + encodeURIComponent(csvStr);
+    window.open(dataUrl, "_blank");
+  }
+}
+
+/* =========================
+   Slip generation
+   ========================= */
+const LOGO_SVG = `
+<svg xmlns='http://www.w3.org/2000/svg' width='180' height='36' viewBox='0 0 430 86'>
+  <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+    <stop offset='0' stop-color='#6a8cff'/><stop offset='1' stop-color='#8a5fff'/></linearGradient></defs>
+  <rect rx='12' ry='12' width='86' height='86' fill='url(#g)'/>
+  <circle cx='43' cy='43' r='24' fill='none' stroke='white' stroke-width='8'/>
+  <path d='M108 62 h34 v-38 h-34 v38 M149 24 h14 v38 h-14 z' fill='url(#g)'/>
+  <text x='170' y='60' font-family='Segoe UI, Roboto, Arial' font-size='44' font-weight='800' fill='white' letter-spacing='.5'>Net + TV</text>
+</svg>`;
+const LOGO_URL = "data:image/svg+xml;utf8," + encodeURIComponent(LOGO_SVG);
+
+function buildSlipHTML({invNo, today, billTo, contactLine, metaLine, plan, lines, total, paidBadge, discountBlock}){
+  return `
+<!doctype html><html><head><meta charset="utf-8"><title>${invNo}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root{ --ink:#111; --muted:#666; --line:#e5e7eb; --bg:#fff; --pill:#f3f4f6; --ok:#16a34a; --warn:#b91c1c; --safe-bottom: env(safe-area-inset-bottom,0px); }
+  *{ box-sizing:border-box } body{ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial; color:var(--ink); background:#fff; margin:24px; padding-bottom: calc(24px + var(--safe-bottom)); }
+  .hdr{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap }
+  .brand{ display:flex; gap:12px; align-items:center } .brand img{ height:42px } .brand h2{ margin:0; font-size:22px }
+  .muted{ color:var(--muted) } .box{ border:1px solid var(--line); border-radius:10px; padding:14px; margin-top:14px }
+  .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px 16px; }
+  .grid .lbl{ color:var(--muted) } table{ width:100%; border-collapse:collapse; margin-top:12px }
+  th,td{ padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:14px } th{ background:#fafafa }
+  .right{ text-align:right } .totals td{ font-weight:700 } .badge{ display:inline-block; background:var(--pill); padding:4px 8px; border-radius:999px; font-size:12px }
+  .paid{ color:var(--ok) } .unpaid{ color:var(--warn) } .strike{ text-decoration: line-through; opacity:.7; margin-right:6px }
+  @media print{ button{ display:none } body{ margin:0; } }
+</style></head><body>
+  <div class="hdr">
+    <div class="brand">
+      <img src="${LOGO_URL}" alt="Net + TV">
+      <div><h2 style="margin:0">Sale Slip</h2><div class="muted">Net + TV</div></div>
+    </div>
+    <div class="right"><div><strong>${invNo}</strong></div><div>Date: ${today}</div></div>
+  </div>
+
+  <div class="box"><strong>Bill To</strong><br>${billTo}<br>${contactLine}${metaLine ? `<div class="muted">${metaLine}</div>` : ""}</div>
+
+  <div class="box">
+    <strong>Plan Details</strong>
+    <div class="grid" style="margin-top:8px">
+      <div class="lbl">Plan</div><div>${plan?.name || '-'}</div>
+      <div class="lbl">Duration</div><div>${(plan?.months ?? 0)} months</div>
+      <div class="lbl">Parental Pin</div><div>7274</div>
+      <div class="lbl">Start Date</div><div>${plan?.start || '-'}</div>
+      <div class="lbl">Expiry Date</div><div>${plan?.expiry || '-'}</div>
+      <div class="lbl">Payment</div><div>${plan?.paidText || '-'}</div>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th>Description</th><th class="right">Amount (CAD)</th></tr></thead>
+    <tbody>
+      ${lines.map(l=>`<tr><td>${l[0]}</td><td class="right">${(+l[1]||0).toFixed(2)}</td></tr>`).join("")}
+      ${discountBlock || ""}
+      <tr class="totals"><td>Total</td><td class="right">${(+total||0).toFixed(2)}</td></tr>
+    </tbody>
+  </table>
+
+  <div class="badge ${plan?.paidText==='Paid'?'paid':'unpaid'}" style="margin-top:8px">${paidBadge}</div>
+  <p class="muted">Thank you.</p>
+  <button onclick="window.print()">Print / Save as PDF</button>
+</body></html>`;
+}
+
+function openPrintWindow(html){
+  const w = window.open("", "_blank");
+  if(!w){
+    toast("Pop-up blocked. Please allow pop-ups for this site.", "warn", 3600);
+    return;
+  }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+  w.onload = ()=> w.print();
+}
+
+function printInvoice(customerId){
+  const c = customers.find(x=> String(x.id) === String(customerId));
+  if(!c){
+    toast("Customer not found.", "error");
+    return;
+  }
+
+  const p = c.currentPlan || {};
+  const f = calcFigures({
+    cost:p.cost, wholesale:p.wholesale, actual:p.actual,
+    stbIncluded:p.stbIncluded, stbCost:p.stbCost, stbWholesale:p.stbWholesale, stbActual:p.stbActual
+  });
+
+  const today = new Date().toISOString().slice(0,10);
+  const invNo = `SLIP-${String(customerId).slice(-6).toUpperCase()}-${today.replaceAll('-','')}`;
+  const planBlock = {
+    name: `${p.planName || 'Plan'}`,
+    months: +p.durationMonths || 0,
+    start: p.startDate || '-',
+    expiry: p.expiryDate || '-',
+    paidText: (p.paymentReceived === 'yes' ? 'Paid' : 'Unpaid')
+  };
+
+  const lines = [];
+  const planLineLabel = `Plan — ${esc(p.planName || 'Plan')} (${esc(p.durationMonths || 0)} mo)`;
+  if(+p.actual > 0){
+    lines.push([`${planLineLabel} <span class="muted"><span class="strike">${fmt(+p.actual)}</span> now</span>`, +p.cost || 0]);
+  }else{
+    lines.push([planLineLabel, +p.cost || 0]);
+  }
+
+  if(p.stbIncluded === 'yes'){
+    if(+p.stbActual > 0){
+      lines.push([`STB <span class="muted"><span class="strike">${fmt(+p.stbActual)}</span> now</span>`, +p.stbCost || 0]);
+    }else{
+      lines.push([`STB`, +p.stbCost || 0]);
+    }
+  }
+
+  const discountName = (p.discountName || "").trim();
+  const discountBlock = (f.discountSaved > 0)
+    ? `<tr><td>${discountName ? `Discount — ${esc(discountName)}` : 'Discount'}</td><td class="right">-${f.discountSaved.toFixed(2)}</td></tr>`
+    : "";
+
+  const html = buildSlipHTML({
+    invNo, today,
+    billTo: esc(c.name || "-"),
+    contactLine: esc([c.phone, c.email].filter(Boolean).join(" • ") || ""),
+    metaLine: esc([c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • ")),
+    plan: planBlock,
+    lines,
+    total: f.turnover,
+    paidBadge: (p.paymentReceived === 'yes' ? 'Paid' : 'Unpaid'),
+    discountBlock
+  });
+  openPrintWindow(html);
+}
+
+function printInvoiceFromRenewalData(encoded){
+  try{
+    const ren = JSON.parse(decodeURIComponent(escape(atob(encoded))));
+    const c = customers.find(x=> String(x.id) === String(ren.customerId)) || {};
+    const f = calcFigures({
+      cost:ren.cost, wholesale:ren.wholesale, actual:ren.actual,
+      stbIncluded:ren.stbIncluded, stbCost:ren.stbCost, stbWholesale:ren.stbWholesale, stbActual:ren.stbActual
+    });
+    const today = new Date().toISOString().slice(0,10);
+    const suffix = ren.id ? ren.id.slice(-6).toUpperCase() : (ren.startDate?.replaceAll('-','') || today.replaceAll('-',''));
+    const invNo = `SLIP-${String(ren.customerId).slice(-6).toUpperCase()}-${suffix}`;
+    const planBlock = {
+      name:`${ren.planName || 'Plan'}`,
+      months:+ren.durationMonths || 0,
+      start:ren.startDate || '-',
+      expiry:ren.expiryDate || '-',
+      paidText:(ren.paymentReceived === 'yes' ? 'Paid' : 'Unpaid')
+    };
+
+    const lines = [];
+    const planLineLabel = `Plan — ${esc(ren.planName || ren.planId || 'Plan')} (${esc(ren.durationMonths || 0)} mo)`;
+
+    if(+ren.actual > 0){
+      lines.push([`${planLineLabel} <span class="muted"><span class="strike">${fmt(+ren.actual)}</span> now</span>`, +ren.cost || 0]);
+    }else{
+      lines.push([planLineLabel, +ren.cost || 0]);
+    }
+
+    if(ren.stbIncluded === 'yes'){
+      if(+ren.stbActual > 0){
+        lines.push([`STB <span class="muted"><span class="strike">${fmt(+ren.stbActual)}</span> now</span>`, +ren.stbCost || 0]);
+      }else{
+        lines.push([`STB`, +ren.stbCost || 0]);
+      }
+    }
+
+    const discountName = (ren.discountName || "").trim();
+    const discountBlock = (f.discountSaved > 0)
+      ? `<tr><td>${discountName ? `Discount — ${esc(discountName)}` : 'Discount'}</td><td class="right">-${f.discountSaved.toFixed(2)}</td></tr>`
+      : "";
+
+    const html = buildSlipHTML({
+      invNo, today,
+      billTo: esc(ren.customerName || c.name || "-"),
+      contactLine: esc([c.phone, c.email].filter(Boolean).join(" • ")),
+      metaLine: esc([c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • ")),
+      plan: planBlock,
+      lines,
+      total: f.turnover,
+      paidBadge: (ren.paymentReceived === 'yes' ? 'Paid' : 'Unpaid'),
+      discountBlock
+    });
+    openPrintWindow(html);
+  }catch(e){
+    showErr('[print from renewal]', e);
+    toast("Could not open slip for this row.", "error");
+  }
+}
+
+/* =========================
+   Cleanup Orphan Renewals
+   ========================= */
+async function cleanupOrphanRenewals(){
+  if(!assertWritable("Cleanup")) return;
+
+  const msg = $("#cleanupMsg");
+  const btn = $("#btnCleanupOrphans");
+
+  try{
+    btn.disabled = true;
+    msg.textContent = "Scanning…";
+
+    await loadCustomers();
+    const existing = new Set(customers.map(c => String(c.id)));
+
+    const snap = await safeGetDocs(collectionGroup(db, "renewals"), "[cleanup] collectionGroup renewals");
+    const orphans = [];
+
+    snap.forEach(d => {
+      const data = d.data() || {};
+      const cid = String(data.customerId || "");
+      if(!existing.has(cid)) orphans.push(d.ref);
+    });
+
+    if(orphans.length === 0){
+      msg.textContent = "No orphan renewals found.";
+      toast("No orphan renewals found.", "info");
+      return;
+    }
+
+    msg.textContent = `Deleting ${orphans.length} orphan renewals…`;
+
+    const CHUNK = 400;
+    for(let i = 0; i < orphans.length; i += CHUNK){
+      const batch = writeBatch(db);
+      for(let j = i; j < Math.min(i + CHUNK, orphans.length); j++){
+        batch.delete(orphans[j]);
+      }
+      await batch.commit();
+    }
+
+    await loadRenewals();
+    renderKPIs();
+    renderVIPCustomers();
+    runReport();
+    msg.textContent = `Deleted ${orphans.length} orphan renewals.`;
+    toast(`Deleted ${orphans.length} orphan renewals.`, "ok");
+  }catch(err){
+    showErr("[cleanup orphans]", err);
+    msg.textContent = "Error during cleanup.";
+    toast(err?.message || "Failed to clean up orphan renewals.", "error", 3600);
+  }finally{
+    btn.disabled = false;
+  }
+}
 </script>
+
 </body>
 </html>
