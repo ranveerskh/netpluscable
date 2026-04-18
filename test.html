@@ -249,7 +249,13 @@
   }
   .detail-box{padding:12px;border-radius:14px;border:1px solid var(--border);background:#11183a;min-width:0}
   .detail-label{font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:700}
-  .detail-value{font-size:16px;font-weight:800;line-height:1.2;word-break:break-word}
+  .detail-value{
+    font-size:16px;
+    font-weight:800;
+    line-height:1.2;
+    word-break:break-word;
+    font-variant-numeric:tabular-nums;
+  }
   .detail-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 
   .table-scroll{overflow:auto;-webkit-overflow-scrolling:touch;border-radius:14px}
@@ -257,9 +263,45 @@
   .grid th,.grid td{padding:11px 10px;border-bottom:1px solid #1d274e;font-size:14px;vertical-align:top}
   .grid th{text-align:left;color:#c7d3ff;background:#121a3a;position:relative;top:auto;z-index:1}
 
-  .forecast-grid{
+  .forecast-shell{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin-top:12px;
+  }
+  .forecast-btn-grid{
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+  }
+  .forecast-main-card{
+    padding:16px;
+    border-radius:16px;
+    border:1px solid var(--border);
+    background:#121a3a;
+  }
+  .forecast-main-label{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:10px;
+  }
+  .forecast-main-value{
+    font-size:34px;
+    font-weight:900;
+    line-height:1.02;
+    margin-top:8px;
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  .forecast-note{
+    margin-top:10px;
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.45;
+  }
+  .forecast-stat-grid{
+    display:grid;
+    grid-template-columns:1fr;
     gap:10px;
     margin-top:12px;
   }
@@ -270,7 +312,13 @@
     background:#121a3a;
   }
   .forecast-card h4{margin:0 0 6px 0}
-  .forecast-big{font-size:24px;font-weight:900;margin-top:8px}
+  .forecast-big{
+    font-size:24px;
+    font-weight:900;
+    margin-top:8px;
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
   .plan-rate-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
   .plan-rate-item{padding:12px;border-radius:16px;border:1px solid var(--border);background:#121a3a}
   .segmented{
@@ -328,9 +376,16 @@
     .top-right{min-width:126px}
     .near-pill{font-size:15px}
     .nav-btn{min-height:74px;font-size:14px}
-    .stats-grid,.detail-grid,.control-grid,.control-grid.three,.forecast-grid,.segmented{grid-template-columns:1fr}
+    .stats-grid,.detail-grid,.control-grid,.control-grid.three,.segmented{grid-template-columns:1fr}
+    .forecast-btn-grid,.forecast-stat-grid{grid-template-columns:1fr}
     .accordion-head{grid-template-columns:1fr}
     .accordion-actions{justify-content:flex-start}
+    .forecast-main-value{font-size:30px}
+  }
+
+  @media (min-width: 768px){
+    .forecast-btn-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .forecast-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -743,8 +798,16 @@ let settingsPlansOpen = false;
 let loyaltySortMode = 'spent';
 let customerSortMode = 'expirySoon';
 let dashboardBottomView = '';
+let renewalsLoadedOnce = false;
+let forecastPeriodKey = 'month';
+let forecastMetricKey = 'revenue';
 let dashboardPeriod = { type:'year', year:new Date().getFullYear() };
 const accordionState = { dashboardView:new Set(), loyalty:new Set(), customers:new Set() };
+
+window.customerSearchValue = '';
+window.customerTimeFilter = 'currentYear';
+window.customerStatusFilter = 'all';
+window.customerExpiryFilter = 'all';
 
 const authEmail = $("#authEmail");
 const authPass = $("#authPass");
@@ -955,12 +1018,26 @@ async function loadApp(){
   $("#repMonth").value = now.toISOString().slice(0,7);
   $("#repYear").value = String(now.getFullYear());
   setEmptyTables();
+
+  sections.dashboard.innerHTML = `<div class="card"><div class="empty-state">Loading dashboard…</div></div>`;
+  sections.customers.innerHTML = `<div class="card"><div class="empty-state">Loading customers…</div></div>`;
+  sections.forecast.innerHTML = `<div class="card"><div class="empty-state">Loading forecast…</div></div>`;
+
   try{
+    renewalsLoadedOnce = false;
     await Promise.all([loadPlans(), loadCustomers()]);
-    await loadRenewals();
     onRepTypeChange();
     renderAll();
-    runReport();
+
+    try{
+      await loadRenewals();
+      renewalsLoadedOnce = true;
+      renderAll();
+    }catch(e){
+      showErr('[load renewals]', e);
+      toast("Renewal history loaded partially or slowly. Customers are still available.", "warn", 3800);
+      renderAll();
+    }
   }catch(e){
     showErr('[loadApp]', e);
     toast("Some data could not load completely. Check console if needed.", "warn", 3500);
@@ -1017,18 +1094,24 @@ async function addRenewal(customerId, ren){
 }
 async function loadRenewals(){
   renewals = [];
+  renewalsLoadedOnce = false;
   try{
     const snap = await safeGetDocs(collectionGroup(db, "renewals"), '[renewals] collectionGroup');
     snap.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
   }catch(e){
     showErr('[renewals] collectionGroup failed', e);
-    for (const c of customers){
-      try{
-        const rs = await safeGetDocs(collection(db, "customers", String(c.id), "renewals"), `[renewals] fallback ${c.id}`);
-        rs.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
-      }catch(e2){ showErr(`[renewals] fallback ${c.id}`, e2); }
-    }
+    const resultList = await Promise.allSettled(
+      customers.map(c => safeGetDocs(collection(db, "customers", String(c.id), "renewals"), `[renewals] fallback ${c.id}`))
+    );
+    resultList.forEach((result, index)=>{
+      if(result.status === 'fulfilled'){
+        result.value.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+      }else{
+        showErr(`[renewals] fallback ${customers[index]?.id || index}`, result.reason);
+      }
+    });
   }
+  renewalsLoadedOnce = true;
 }
 async function setCustomerCurrentPlan(customerId, planFields){
   const ref = doc(db, "customers", String(customerId));
@@ -1184,6 +1267,7 @@ function renderDashboard(){
         <div>
           <h2>Dashboard</h2>
           <div class="muted">Showing ${esc(periodText())}</div>
+          ${!renewalsLoadedOnce ? `<div class="helper" style="margin-top:4px">Renewal history is still loading. Customer boxes show first, financial bars fill in after that.</div>` : ``}
         </div>
       </div>
       <div class="stats-grid">
@@ -1369,6 +1453,7 @@ function renderCustomers(){
     return true;
   }).sort((a,b)=>{
     switch(sortMode){
+      case 'nameAsc': return (a.c.name || '').localeCompare(b.c.name || '');
       case 'nameDesc': return (b.c.name || '').localeCompare(a.c.name || '');
       case 'expirySoon': return (a.status.days ?? 99999) - (b.status.days ?? 99999);
       case 'expiryLate': return (b.status.days ?? -99999) - (a.status.days ?? -99999);
@@ -1386,6 +1471,7 @@ function renderCustomers(){
         <div class="grow">
           <h2>Customers</h2>
           <div class="helper">Current year is the default filter so your list appears on first load.</div>
+          ${!renewalsLoadedOnce ? `<div class="helper" style="margin-top:4px">Renewal totals will finish filling in after renewal history loads.</div>` : ``}
         </div>
         <button id="btnAddCustomerBar" class="btn ok" type="button">+ Add Customer</button>
       </div>
@@ -1590,11 +1676,67 @@ function forecastBundle(monthsAhead){
     newStats
   };
 }
+function forecastPeriodLabel(key){
+  return {
+    month:'This Month',
+    six:'6 Months',
+    year:'1 Year',
+    five:'5 Years'
+  }[key] || 'This Month';
+}
+function forecastMetricConfig(key){
+  return {
+    revenue: { label:'Predicted Revenue', value:b => fmt(b.predictedRevenue) },
+    profit: { label:'Predicted Profit', value:b => fmt(b.predictedProfit) },
+    renewals: { label:'Expected Renewals', value:b => (+b.renewalsExpected || 0).toFixed(2) },
+    newCustomers: { label:'Expected New Customers', value:b => (+b.newCustomers || 0).toFixed(2) }
+  }[key];
+}
+function forecastSupportRows(bundle){
+  if(forecastMetricKey === 'revenue'){
+    return [
+      ['Predicted profit', fmt(bundle.predictedProfit)],
+      ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
+      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
+      ['Renewal revenue', fmt(bundle.renewalRevenue)],
+      ['New customer revenue', fmt(bundle.newRevenue)]
+    ];
+  }
+  if(forecastMetricKey === 'profit'){
+    return [
+      ['Predicted revenue', fmt(bundle.predictedRevenue)],
+      ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
+      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
+      ['Renewal profit', fmt(bundle.renewalProfit)],
+      ['New customer profit', fmt(bundle.newProfit)]
+    ];
+  }
+  if(forecastMetricKey === 'renewals'){
+    return [
+      ['Predicted revenue', fmt(bundle.predictedRevenue)],
+      ['Predicted profit', fmt(bundle.predictedProfit)],
+      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
+      ['Renewal revenue', fmt(bundle.renewalRevenue)],
+      ['Renewal profit', fmt(bundle.renewalProfit)]
+    ];
+  }
+  return [
+    ['Predicted revenue', fmt(bundle.predictedRevenue)],
+    ['Predicted profit', fmt(bundle.predictedProfit)],
+    ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
+    ['New customer revenue', fmt(bundle.newRevenue)],
+    ['New customer profit', fmt(bundle.newProfit)]
+  ];
+}
 function renderForecast(){
-  const month = forecastBundle(1);
-  const six = forecastBundle(6);
-  const year = forecastBundle(12);
-  const five = forecastBundle(60);
+  const bundles = {
+    month: forecastBundle(1),
+    six: forecastBundle(6),
+    year: forecastBundle(12),
+    five: forecastBundle(60)
+  };
+  const bundle = bundles[forecastPeriodKey] || bundles.month;
+  const config = forecastMetricConfig(forecastMetricKey);
   const planStats = planTypeForecastStats();
   const rates = Object.keys(planStats).sort((a,b)=> +a - +b);
 
@@ -1603,68 +1745,96 @@ function renderForecast(){
       <div class="section-title">
         <div>
           <h2>Forecast</h2>
-          <div class="helper">Read-only forecast using past 6–12 month averages for new customers, plus plan-type renewal behavior from your existing data.</div>
-        </div>
-      </div>
-
-      <div class="forecast-grid">
-        ${forecastCard('This Month', month)}
-        ${forecastCard('6 Months', six)}
-        ${forecastCard('1 Year', year)}
-        ${forecastCard('5 Years', five)}
-      </div>
-
-      <div class="row" style="margin-top:14px">
-        <div class="col">
-          <div class="forecast-card">
-            <h4>What drives this</h4>
-            <div class="helper">New customers use your ${esc(month.newStats.sourceMonths)}. Renewals use plan type only, not customer-by-customer history.</div>
-            <div class="list-stack" style="margin-top:10px">
-              <div class="detail-box"><div class="detail-label">Avg new customers / month</div><div class="detail-value">${month.newStats.monthlyAvgNew.toFixed(2)}</div></div>
-              <div class="detail-box"><div class="detail-label">Avg new revenue / customer</div><div class="detail-value">${fmt(month.newStats.avgActivationTurnover)}</div></div>
-              <div class="detail-box"><div class="detail-label">Avg new profit / customer</div><div class="detail-value">${fmt(month.newStats.avgActivationProfit)}</div></div>
-            </div>
+          <div class="helper">
+            ${renewalsLoadedOnce
+              ? `Read-only forecast using past 6–12 month averages for new customers, plus plan-type renewal behavior from your existing data.`
+              : `Renewal history is still loading. Forecast starts with basic numbers and updates automatically.`}
           </div>
         </div>
-        <div class="col">
-          <div class="forecast-card">
-            <h4>Renewal Rate by Plan Type</h4>
-            <div class="plan-rate-list">
-              ${rates.length ? rates.map(m=> {
-                const s = planStats[m];
-                return `
-                  <div class="plan-rate-item">
-                    <div class="metric-top">
-                      <strong>${esc(m)} month plan</strong>
-                      <strong>${(s.renewalRate * 100).toFixed(0)}%</strong>
-                    </div>
-                    <div class="helper">Expired opportunities: ${s.opportunities} • Renewed: ${s.renewed} • Active now: ${s.activeCount}</div>
-                    <div class="track" style="margin-top:10px"><div class="fill" style="width:${metricWidth(s.renewalRate, 1)}%"></div></div>
-                    <div class="helper" style="margin-top:10px">Avg renewal revenue ${fmt(s.avgRenewalTurnover)} • Avg renewal profit ${fmt(s.avgRenewalProfit)}</div>
-                  </div>`;
-              }).join('') : `<div class="empty-state">No plan history found yet for forecasting.</div>`}
+      </div>
+
+      <div class="forecast-shell">
+        <div class="forecast-btn-grid">
+          <button class="btn ${forecastPeriodKey === 'month' ? 'ok' : 'ghost'}" data-forecast-period="month" type="button">This Month</button>
+          <button class="btn ${forecastPeriodKey === 'six' ? 'ok' : 'ghost'}" data-forecast-period="six" type="button">6 Months</button>
+          <button class="btn ${forecastPeriodKey === 'year' ? 'ok' : 'ghost'}" data-forecast-period="year" type="button">1 Year</button>
+          <button class="btn ${forecastPeriodKey === 'five' ? 'ok' : 'ghost'}" data-forecast-period="five" type="button">5 Years</button>
+        </div>
+
+        <div class="forecast-btn-grid">
+          <button class="btn ${forecastMetricKey === 'revenue' ? 'ok' : 'ghost'}" data-forecast-metric="revenue" type="button">Revenue</button>
+          <button class="btn ${forecastMetricKey === 'profit' ? 'ok' : 'ghost'}" data-forecast-metric="profit" type="button">Profit</button>
+          <button class="btn ${forecastMetricKey === 'renewals' ? 'ok' : 'ghost'}" data-forecast-metric="renewals" type="button">Renewals</button>
+          <button class="btn ${forecastMetricKey === 'newCustomers' ? 'ok' : 'ghost'}" data-forecast-metric="newCustomers" type="button">New Customers</button>
+        </div>
+
+        <div class="forecast-main-card">
+          <div class="chip">${esc(forecastPeriodLabel(forecastPeriodKey))}</div>
+          <div class="forecast-main-label">${esc(config.label)}</div>
+          <div class="forecast-main-value">${esc(config.value(bundle))}</div>
+          <div class="forecast-note">
+            One focused view at a time so mobile stays clean. Use the buttons above to switch period or metric.
+          </div>
+
+          <div class="forecast-stat-grid">
+            ${forecastSupportRows(bundle).map(([label, value]) => `
+              <div class="detail-box">
+                <div class="detail-label">${esc(label)}</div>
+                <div class="detail-value">${esc(value)}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="forecast-card">
+              <h4>What drives this</h4>
+              <div class="helper">New customers use your ${esc(bundle.newStats.sourceMonths)}. Renewals use plan type only, not customer-by-customer history.</div>
+              <div class="list-stack" style="margin-top:10px">
+                <div class="detail-box"><div class="detail-label">Avg new customers / month</div><div class="detail-value">${(+bundle.newStats.monthlyAvgNew || 0).toFixed(2)}</div></div>
+                <div class="detail-box"><div class="detail-label">Avg new revenue / customer</div><div class="detail-value">${fmt(bundle.newStats.avgActivationTurnover)}</div></div>
+                <div class="detail-box"><div class="detail-label">Avg new profit / customer</div><div class="detail-value">${fmt(bundle.newStats.avgActivationProfit)}</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="forecast-card">
+              <h4>Renewal Rate by Plan Type</h4>
+              <div class="plan-rate-list">
+                ${rates.length ? rates.map(m=> {
+                  const s = planStats[m];
+                  return `
+                    <div class="plan-rate-item">
+                      <div class="metric-top">
+                        <strong>${esc(m)} month plan</strong>
+                        <strong>${(s.renewalRate * 100).toFixed(0)}%</strong>
+                      </div>
+                      <div class="helper">Expired opportunities: ${s.opportunities} • Renewed: ${s.renewed} • Active now: ${s.activeCount}</div>
+                      <div class="track" style="margin-top:10px"><div class="fill" style="width:${metricWidth(s.renewalRate, 1)}%"></div></div>
+                      <div class="helper" style="margin-top:10px">Avg renewal revenue ${fmt(s.avgRenewalTurnover)} • Avg renewal profit ${fmt(s.avgRenewalProfit)}</div>
+                    </div>`;
+                }).join('') : `<div class="empty-state">No plan history found yet for forecasting.</div>`}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   `;
-}
-function forecastCard(title, data){
-  return `
-    <div class="forecast-card">
-      <h4>${esc(title)}</h4>
-      <div class="helper">Expected renewals ${data.renewalsExpected.toFixed(2)} • Expected new customers ${data.newCustomers.toFixed(2)}</div>
-      <div class="forecast-big">${fmt(data.predictedRevenue)}</div>
-      <div class="helper">Predicted revenue</div>
-      <div class="detail-grid" style="margin-top:10px">
-        <div class="detail-box"><div class="detail-label">Predicted profit</div><div class="detail-value">${fmt(data.predictedProfit)}</div></div>
-        <div class="detail-box"><div class="detail-label">Renewal revenue</div><div class="detail-value">${fmt(data.renewalRevenue)}</div></div>
-        <div class="detail-box"><div class="detail-label">New customer revenue</div><div class="detail-value">${fmt(data.newRevenue)}</div></div>
-        <div class="detail-box"><div class="detail-label">New customer profit</div><div class="detail-value">${fmt(data.newProfit)}</div></div>
-      </div>
-    </div>
-  `;
+
+  sections.forecast.querySelectorAll('[data-forecast-period]').forEach(btn=>{
+    btn.onclick = ()=>{
+      forecastPeriodKey = btn.dataset.forecastPeriod;
+      renderForecast();
+    };
+  });
+  sections.forecast.querySelectorAll('[data-forecast-metric]').forEach(btn=>{
+    btn.onclick = ()=>{
+      forecastMetricKey = btn.dataset.forecastMetric;
+      renderForecast();
+    };
+  });
 }
 
 function renderPlans(){
