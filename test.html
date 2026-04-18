@@ -74,15 +74,15 @@
   .btn:disabled{opacity:.6; cursor:not-allowed}
   .chip{display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:999px;background:#1a2244;border:1px solid #2a3670;color:#cfe2ff;font-size:12px;min-height:34px}
   .topbar{
-  position:relative;
-  top:auto;
-  z-index:1;
-  background:transparent;
-  -webkit-backdrop-filter:none;
-  backdrop-filter:none;
-  border-bottom:none;
-  padding-top: calc(var(--safe-top) * 1);
-}
+    position:relative;
+    top:auto;
+    z-index:1;
+    background:transparent;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+    border-bottom:none;
+    padding-top: calc(var(--safe-top) * 1);
+  }
   .topbar .wrap{padding-top:8px;padding-bottom:8px}
   .topbox{
     display:grid;
@@ -153,7 +153,7 @@
   }
   .nav-btn small{font-size:12px;color:#cfd8ff;font-weight:700;opacity:.86}
   .nav-btn.active{background:linear-gradient(135deg,#2c376f,#202b5e)}
-  .nav-btn.sort-nav small{font-size:13px}
+  .nav-btn.period-nav small{font-size:13px}
 
   .section-title{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
   .section-title h3,.section-title h2{margin:0}
@@ -236,7 +236,7 @@
   .accordion-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
   .mini-btn{
     appearance:none;border:1px solid var(--border);background:#141c42;color:#fff;
-    border-radius:12px;min-height:38px;padding:0 12px;font-weight:800
+    border-radius:12px;min-height:38px;padding:0 12px;font-weight:800;cursor:pointer
   }
   .mini-btn.ok{background:linear-gradient(135deg,#3cd6b5,#15a37f)}
   .mini-btn.ghost{background:transparent}
@@ -256,6 +256,28 @@
   .grid{width:100%;border-collapse:collapse;min-width:720px}
   .grid th,.grid td{padding:11px 10px;border-bottom:1px solid #1d274e;font-size:14px;vertical-align:top}
   .grid th{text-align:left;color:#c7d3ff;background:#121a3a;position:relative;top:auto;z-index:1}
+
+  .forecast-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    margin-top:12px;
+  }
+  .forecast-card{
+    padding:14px;
+    border-radius:16px;
+    border:1px solid var(--border);
+    background:#121a3a;
+  }
+  .forecast-card h4{margin:0 0 6px 0}
+  .forecast-big{font-size:24px;font-weight:900;margin-top:8px}
+  .plan-rate-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .plan-rate-item{padding:12px;border-radius:16px;border:1px solid var(--border);background:#121a3a}
+  .segmented{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+  }
 
   .modal{
     position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center;
@@ -306,7 +328,7 @@
     .top-right{min-width:126px}
     .near-pill{font-size:15px}
     .nav-btn{min-height:74px;font-size:14px}
-    .stats-grid,.detail-grid,.control-grid,.control-grid.three{grid-template-columns:1fr}
+    .stats-grid,.detail-grid,.control-grid,.control-grid.three,.forecast-grid,.segmented{grid-template-columns:1fr}
     .accordion-head{grid-template-columns:1fr}
     .accordion-actions{justify-content:flex-start}
   }
@@ -347,7 +369,7 @@
           <div class="status-pill" id="envInfo">Connected</div>
         </div>
         <div class="top-right">
-          <div id="nearExpCount" class="near-pill">Near expiry: 0</div>
+          <div id="nearExpCount" class="near-pill">Expiring soon: 0</div>
           <button id="signOutBtn" class="signout-btn" type="button">Sign Out</button>
         </div>
       </div>
@@ -355,8 +377,8 @@
       <div class="nav-grid" id="navGrid">
         <button class="nav-btn active" data-tab="dashboard" type="button">Dashboard</button>
         <button class="nav-btn" data-tab="customers" type="button">Customers</button>
-        <button class="nav-btn" data-tab="plans" type="button">Plans</button>
-        <button class="nav-btn sort-nav" id="dashboardSortBtn" type="button">Sort<small id="dashboardSortLabel">Lifetime</small></button>
+        <button class="nav-btn" data-tab="forecast" type="button">Forecast</button>
+        <button class="nav-btn period-nav" id="periodBtn" type="button">Period<small id="periodLabel">Year</small></button>
         <button class="nav-btn" data-tab="reports" type="button">Reports</button>
         <button class="nav-btn" data-tab="settings" type="button">Settings</button>
       </div>
@@ -366,27 +388,7 @@
   <div class="wrap" style="padding-top:0">
     <section id="tab-dashboard"></section>
     <section id="tab-customers" class="hidden"></section>
-
-    <section id="tab-plans" class="card hidden">
-      <div class="section-title">
-        <h3>Plans</h3>
-        <div class="flex">
-          <button id="btnSeedPlans" class="btn ghost" type="button">Seed sample plans</button>
-          <button id="btnAddPlan" class="btn ok" type="button">+ Add Plan</button>
-        </div>
-      </div>
-      <div class="card table-scroll" style="padding:0">
-        <table class="grid" id="plansGrid">
-          <thead>
-            <tr>
-              <th>ID</th><th>Name</th><th>Duration (months)</th>
-              <th>Retail $</th><th>Wholesale $</th><th>Description</th><th>Actions</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+    <section id="tab-forecast" class="hidden"></section>
 
     <section id="tab-reports" class="card hidden">
       <div class="row">
@@ -441,14 +443,41 @@
     </section>
 
     <section id="tab-settings" class="card hidden">
-      <h3>Settings</h3>
-      <label>Near-expiry threshold (days)</label>
+      <div class="section-title">
+        <div>
+          <h3>Settings</h3>
+          <div class="helper">Forecast below is read-only. It does not write to Firebase.</div>
+        </div>
+        <button id="btnTogglePlans" class="btn ghost" type="button">Manage Plans</button>
+      </div>
+      <label>Expiring soon threshold (days)</label>
       <input id="settingNearDays" type="number" min="1">
       <p class="muted" style="margin-top:6px">This only affects frontend highlighting and filtering. No backend change.</p>
       <hr style="border:none;border-top:1px solid var(--border);margin:14px 0">
       <div class="flex">
         <button id="btnCleanupOrphans" class="btn danger" type="button">🗑 Delete Orphan Renewals</button>
         <span id="cleanupMsg" class="muted"></span>
+      </div>
+
+      <div id="settingsPlansWrap" class="hidden" style="margin-top:16px">
+        <div class="section-title">
+          <h3>Manage Plans</h3>
+          <div class="flex">
+            <button id="btnSeedPlans" class="btn ghost" type="button">Seed sample plans</button>
+            <button id="btnAddPlan" class="btn ok" type="button">+ Add Plan</button>
+          </div>
+        </div>
+        <div class="card table-scroll" style="padding:0">
+          <table class="grid" id="plansGrid">
+            <thead>
+              <tr>
+                <th>ID</th><th>Name</th><th>Duration (months)</th>
+                <th>Retail $</th><th>Wholesale $</th><th>Description</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
@@ -561,6 +590,16 @@
         </div>
       </div>
     </div>
+
+    <div id="modalPeriod" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3>Choose dashboard period</h3>
+          <button class="btn ghost" id="xPeriod" type="button">✕</button>
+        </div>
+        <div id="periodOptions" class="list-stack"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -649,17 +688,22 @@ async function safeAddDoc(ref, data, label){ try{ return await addDoc(ref, data)
 async function safeSetDoc(ref, data, opts, label){ try{ return await setDoc(ref, data, opts); } catch(e){ showErr(label, e); throw e; } }
 async function safeUpdateDoc(ref, data, label){ try{ return await updateDoc(ref, data); } catch(e){ showErr(label, e); throw e; } }
 async function safeDeleteDoc(ref, label){ try{ return await deleteDoc(ref); } catch(e){ showErr(label, e); throw e; } }
-function inPeriod(dateStr, period){
-  if(period === 'lifetime') return true;
-  if(!dateStr) return false;
-  const d = new Date(dateStr + 'T00:00:00');
-  const now = new Date();
-  if(Number.isNaN(d.getTime())) return false;
-  if(period === 'year') return d.getFullYear() === now.getFullYear();
-  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
-}
-function periodLabel(period){ return period === 'month' ? 'Month' : period === 'year' ? 'Year' : 'Lifetime'; }
 function metricWidth(value, max){ if(max <= 0) return 8; return Math.max(8, Math.min(100, (value / max) * 100)); }
+function monthStart(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
+function addMonthsDate(date, months){ const d = new Date(date); const day = d.getDate(); d.setMonth(d.getMonth() + months); if(d.getDate() !== day) d.setDate(0); return d; }
+function monthsBetween(start, end){
+  let count = 0;
+  let cursor = monthStart(new Date(start));
+  const limit = monthStart(new Date(end));
+  while(cursor <= limit){ count += 1; cursor = new Date(cursor.getFullYear(), cursor.getMonth()+1, 1); }
+  return Math.max(1, count);
+}
+function firstDayOfCurrentMonth(){ const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); }
+function endOfCurrentMonth(){ const d = new Date(); return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+function isoToDate(iso){ return iso ? new Date(iso + 'T00:00:00') : null; }
+function dateToISO(d){ return new Date(d).toISOString().slice(0,10); }
+function clamp(num, min, max){ return Math.min(max, Math.max(min, num)); }
+function average(arr){ return arr.length ? arr.reduce((a,b)=> a + b, 0) / arr.length : 0; }
 
 (function iosTweaks(){
   const useVV = window.visualViewport;
@@ -681,7 +725,7 @@ const appView  = $("#appView");
 const sections = {
   dashboard: $("#tab-dashboard"),
   customers: $("#tab-customers"),
-  plans: $("#tab-plans"),
+  forecast: $("#tab-forecast"),
   reports: $("#tab-reports"),
   settings: $("#tab-settings"),
 };
@@ -695,10 +739,12 @@ let uiBound = false;
 let editCustomerId = null;
 let renewCustomerId = null;
 let activeTab = 'dashboard';
-let dashboardPeriod = 'lifetime';
+let settingsPlansOpen = false;
 let loyaltySortMode = 'spent';
-let customerSortMode = 'nameAsc';
-const accordionState = { dashboardNear:new Set(), dashboardExpired:new Set(), loyalty:new Set(), customers:new Set() };
+let customerSortMode = 'expirySoon';
+let dashboardBottomView = '';
+let dashboardPeriod = { type:'year', year:new Date().getFullYear() };
+const accordionState = { dashboardView:new Set(), loyalty:new Set(), customers:new Set() };
 
 const authEmail = $("#authEmail");
 const authPass = $("#authPass");
@@ -772,7 +818,8 @@ function bindUIOnce(){
   $$("#navGrid .nav-btn[data-tab]").forEach(btn=>{
     btn.addEventListener('click', ()=> setActiveTab(btn.dataset.tab));
   });
-  $("#dashboardSortBtn").addEventListener('click', cycleDashboardPeriod);
+  $("#periodBtn").addEventListener('click', openPeriodModal);
+  $("#xPeriod").addEventListener('click', ()=> $("#modalPeriod").classList.remove('open'));
 
   $("#btnSeedPlans").onclick = seedPlans;
   $("#btnAddPlan").onclick = ()=> openPlanModal();
@@ -780,6 +827,10 @@ function bindUIOnce(){
   $("#btnCsv").addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); exportCSV(); });
   $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
   $("#repType").addEventListener('change', onRepTypeChange, {passive:true});
+  $("#btnTogglePlans").addEventListener('click', ()=>{
+    settingsPlansOpen = !settingsPlansOpen;
+    renderSettingsPlansState();
+  });
 
   $("#xCust").onclick = ()=>{ editCustomerId = null; $("#modalCustomer").classList.remove('open'); };
   $("#xRenew").onclick = ()=> $("#modalRenew").classList.remove('open');
@@ -843,16 +894,63 @@ function setActiveTab(tab){
   $$("#navGrid .nav-btn[data-tab]").forEach(btn=> btn.classList.toggle('active', btn.dataset.tab === tab));
   Object.entries(sections).forEach(([key, el])=>{ el.classList.toggle('hidden', key !== tab); });
 }
-function cycleDashboardPeriod(){
-  dashboardPeriod = dashboardPeriod === 'month' ? 'year' : dashboardPeriod === 'year' ? 'lifetime' : 'month';
-  $("#dashboardSortLabel").textContent = periodLabel(dashboardPeriod);
-  renderDashboard();
+function periodMatches(dateStr, period = dashboardPeriod){
+  if(period.type === 'lifetime') return true;
+  if(!dateStr) return false;
+  const d = new Date(dateStr + 'T00:00:00');
+  if(Number.isNaN(d.getTime())) return false;
+  if(period.type === 'year') return d.getFullYear() === period.year;
+  return false;
+}
+function periodText(period = dashboardPeriod){
+  if(period.type === 'year') return String(period.year);
+  return 'Lifetime';
+}
+function availableYears(){
+  const set = new Set();
+  customers.forEach(c=>{
+    const dates = [c.originalStartDate, c.currentPlan?.startDate];
+    dates.forEach(v=>{
+      if(v && /^\d{4}-\d{2}-\d{2}$/.test(v)) set.add(Number(v.slice(0,4)));
+    });
+  });
+  renewals.forEach(r=>{
+    if(r.startDate && /^\d{4}-\d{2}-\d{2}$/.test(r.startDate)) set.add(Number(r.startDate.slice(0,4)));
+  });
+  const years = [...set].filter(Boolean).sort((a,b)=> b-a);
+  const nowYear = new Date().getFullYear();
+  if(!years.includes(nowYear)) years.unshift(nowYear);
+  return years;
+}
+function openPeriodModal(){
+  const wrap = $("#periodOptions");
+  const years = availableYears();
+  wrap.innerHTML = `
+    <button class="btn ${dashboardPeriod.type === 'year' && dashboardPeriod.year === new Date().getFullYear() ? 'ok' : 'ghost'}" data-period-type="year" data-period-year="${new Date().getFullYear()}" type="button">Current Year (${new Date().getFullYear()})</button>
+    ${years.map(y=> `<button class="btn ${dashboardPeriod.type === 'year' && dashboardPeriod.year === y ? 'ok' : 'ghost'}" data-period-type="year" data-period-year="${y}" type="button">${y}</button>`).join('')}
+    <button class="btn ${dashboardPeriod.type === 'lifetime' ? 'ok' : 'ghost'}" data-period-type="lifetime" type="button">Lifetime</button>
+  `;
+  wrap.querySelectorAll('[data-period-type]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const type = btn.dataset.periodType;
+      dashboardPeriod = type === 'year' ? { type:'year', year:+btn.dataset.periodYear } : { type:'lifetime' };
+      $("#periodLabel").textContent = periodText();
+      $("#modalPeriod").classList.remove('open');
+      renderDashboard();
+    };
+  });
+  $("#modalPeriod").classList.add('open');
+}
+function renderSettingsPlansState(){
+  $("#settingsPlansWrap").classList.toggle('hidden', !settingsPlansOpen);
+  $("#btnTogglePlans").textContent = settingsPlansOpen ? 'Hide Plans' : 'Manage Plans';
 }
 
 async function loadApp(){
   bindUIOnce();
   setEnvChip();
   $("#settingNearDays").value = settingNear;
+  $("#periodLabel").textContent = periodText();
   const now = new Date();
   $("#repMonth").value = now.toISOString().slice(0,7);
   $("#repYear").value = String(now.getFullYear());
@@ -1002,7 +1100,7 @@ function getExpiryStatus(expISO){
   if(!expISO) return { key:'unknown', label:'No expiry', cls:'badge-muted', days:null };
   const d = daysLeft(expISO);
   if(d < 0) return { key:'expired', label:`Expired ${Math.abs(d)}d`, cls:'badge-exp', days:d };
-  if(d <= settingNear) return { key:'near', label:`Near expiry • ${d}d`, cls:'badge-warn', days:d };
+  if(d <= settingNear) return { key:'near', label:`Expiring soon • ${d}d`, cls:'badge-warn', days:d };
   return { key:'active', label:`Active • ${d}d`, cls:'badge-ok', days:d };
 }
 function getPaidBadge(v){ return v === 'yes' ? `<span class="mini-badge badge-ok">Paid</span>` : `<span class="mini-badge badge-warn">Unpaid</span>`; }
@@ -1017,13 +1115,13 @@ function getDashboardBaseCustomers(){
   return customers.filter(c => {
     const currentPlan = c.currentPlan || {};
     const refDate = currentPlan.startDate || c.originalStartDate || '';
-    return inPeriod(refDate, dashboardPeriod);
+    return periodMatches(refDate);
   });
 }
 function dashboardFinancials(){
   const grouped = canonicalRenewalGroups();
   const rows = [];
-  grouped.forEach(list=> list.forEach(r=> { if(inPeriod(r.startDate || '', dashboardPeriod)) rows.push(r); }));
+  grouped.forEach(list=> list.forEach(r=> { if(periodMatches(r.startDate || '')) rows.push(r); }));
   let turnover = 0, expense = 0, profit = 0;
   rows.forEach(r=>{
     const f = calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual });
@@ -1033,14 +1131,16 @@ function dashboardFinancials(){
 }
 
 function renderAll(){
+  $("#periodLabel").textContent = periodText();
   renderDashboard();
   renderCustomers();
+  renderForecast();
   renderPlans();
   renderKPIs();
   runReport();
+  renderSettingsPlansState();
   $("#settingNearDays").value = settingNear;
-  $("#dashboardSortLabel").textContent = periodLabel(dashboardPeriod);
-  $("#nearExpCount").textContent = `Near expiry: ${customers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length}`;
+  $("#nearExpCount").textContent = `Expiring soon: ${customers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length}`;
 }
 
 function renderDashboard(){
@@ -1069,18 +1169,27 @@ function renderDashboard(){
     return b.history.renewalCount - a.history.renewalCount;
   }).slice(0,20);
 
+  let bottomContent = `<div class="empty-state">Choose one of the buttons above to view the list.</div>`;
+  if(dashboardBottomView === 'near'){
+    bottomContent = nearList.length ? nearList.map(item => dashboardAccordionHtml(item, 'dashboardView', true)).join('') : `<div class="empty-state">No customers are expiring soon.</div>`;
+  }else if(dashboardBottomView === 'expired'){
+    bottomContent = expiredList.length ? expiredList.map(item => dashboardAccordionHtml(item, 'dashboardView', true)).join('') : `<div class="empty-state">No expired customers right now.</div>`;
+  }else if(dashboardBottomView === 'top'){
+    bottomContent = loyaltyList.length ? loyaltyList.map(item => loyaltyAccordionHtml(item)).join('') : `<div class="empty-state">No loyalty data available yet.</div>`;
+  }
+
   sections.dashboard.innerHTML = `
     <div class="card">
       <div class="section-title">
         <div>
           <h2>Dashboard</h2>
-          <div class="muted">Sort button above switches this block between month, year, and lifetime.</div>
+          <div class="muted">Showing ${esc(periodText())}</div>
         </div>
       </div>
       <div class="stats-grid">
-        <div class="kpi-card"><div class="kpi-label">Customers (${periodLabel(dashboardPeriod)})</div><div class="kpi-value">${boxCustomers.length}</div></div>
+        <div class="kpi-card"><div class="kpi-label">Customers (${esc(periodText())})</div><div class="kpi-value">${boxCustomers.length}</div></div>
         <div class="kpi-card"><div class="kpi-label">Active</div><div class="kpi-value">${activeCount}</div></div>
-        <div class="kpi-card"><div class="kpi-label">Near Expiry</div><div class="kpi-value">${nearCount}</div></div>
+        <div class="kpi-card"><div class="kpi-label">Expiring Soon</div><div class="kpi-value">${nearCount}</div></div>
         <div class="kpi-card"><div class="kpi-label">Expired</div><div class="kpi-value">${expiredCount}</div></div>
       </div>
       <div class="metric-stack">
@@ -1093,56 +1202,28 @@ function renderDashboard(){
     <div class="card" style="margin-top:12px">
       <div class="section-title">
         <div>
-          <h3>Near Expiry</h3>
-          <div class="helper">Compact bars with name, days left, and renew. Tap a bar to open full details.</div>
-        </div>
-        <div style="min-width:120px">
-          <select id="nearDaysDashboard">
-            <option value="7" ${settingNear===7?'selected':''}>7 days</option>
-            <option value="14" ${settingNear===14?'selected':''}>14 days</option>
-            <option value="30" ${settingNear===30?'selected':''}>30 days</option>
-            <option value="60" ${settingNear===60?'selected':''}>60 days</option>
-          </select>
+          <h3>Customer Insights</h3>
+          <div class="helper">Lists open only after you press a button.</div>
         </div>
       </div>
-      <div class="list-stack">
-        ${nearList.length ? nearList.map(item => dashboardAccordionHtml(item, 'dashboardNear', true)).join('') : `<div class="empty-state">No customers are near expiry.</div>`}
+      <div class="segmented">
+        <button class="btn ${dashboardBottomView === 'near' ? 'ok' : 'ghost'}" id="dashBtnNear" type="button">Expiring Soon</button>
+        <button class="btn ${dashboardBottomView === 'expired' ? 'ok' : 'ghost'}" id="dashBtnExpired" type="button">Expired</button>
+        <button class="btn ${dashboardBottomView === 'top' ? 'ok' : 'ghost'}" id="dashBtnTop" type="button">Top Customers</button>
       </div>
-    </div>
-
-    <div class="card" style="margin-top:12px">
-      <div class="section-title">
-        <div>
-          <h3>Expired</h3>
-          <div class="helper">Same compact style. Expand only when you press a row.</div>
-        </div>
-      </div>
-      <div class="list-stack">
-        ${expiredList.length ? expiredList.map(item => dashboardAccordionHtml(item, 'dashboardExpired', true)).join('') : `<div class="empty-state">No expired customers right now.</div>`}
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:12px">
-      <div class="section-title">
-        <div>
-          <h3>Top 20 Loyal Customers</h3>
-          <div class="helper">Sort by who paid more or who renewed more.</div>
-        </div>
-        <div class="flex">
+      ${dashboardBottomView === 'top' ? `
+        <div class="flex" style="margin-top:12px">
           <button class="mini-btn ${loyaltySortMode === 'spent' ? 'ok' : 'ghost'}" id="loyalSortSpent" type="button">Paid more</button>
           <button class="mini-btn ${loyaltySortMode === 'renewals' ? 'ok' : 'ghost'}" id="loyalSortRenewals" type="button">Renewed more</button>
         </div>
-      </div>
-      <div class="list-stack">
-        ${loyaltyList.length ? loyaltyList.map(item => loyaltyAccordionHtml(item)).join('') : `<div class="empty-state">No loyalty data available yet.</div>`}
-      </div>
+      ` : ''}
+      <div class="list-stack" style="margin-top:12px">${bottomContent}</div>
     </div>
   `;
 
-  const nearSelect = $("#nearDaysDashboard");
-  if(nearSelect){
-    nearSelect.addEventListener('change', ()=>{ settingNear = +nearSelect.value || 30; renderAll(); }, {passive:true});
-  }
+  $("#dashBtnNear").onclick = ()=>{ dashboardBottomView = dashboardBottomView === 'near' ? '' : 'near'; renderDashboard(); };
+  $("#dashBtnExpired").onclick = ()=>{ dashboardBottomView = dashboardBottomView === 'expired' ? '' : 'expired'; renderDashboard(); };
+  $("#dashBtnTop").onclick = ()=>{ dashboardBottomView = dashboardBottomView === 'top' ? '' : 'top'; renderDashboard(); };
   const sortSpent = $("#loyalSortSpent");
   const sortRenewals = $("#loyalSortRenewals");
   if(sortSpent) sortSpent.onclick = ()=>{ loyaltySortMode = 'spent'; renderDashboard(); };
@@ -1153,7 +1234,7 @@ function renderMetricBar(label, value, maxMetric){
   return `
     <div class="metric-bar">
       <div class="metric-top">
-        <div><strong>${label}</strong><span> (${periodLabel(dashboardPeriod)})</span></div>
+        <div><strong>${label}</strong><span> (${esc(periodText())})</span></div>
         <strong>${fmt(value)}</strong>
       </div>
       <div class="track"><div class="fill" style="width:${metricWidth(Math.max(value, 0), maxMetric)}%"></div></div>
@@ -1262,23 +1343,25 @@ function bindAccordionClicks(root, scope){
 
 function renderCustomers(){
   const q = (window.customerSearchValue || '').toLowerCase().trim();
-  const timeFilter = window.customerTimeFilter || '7';
+  const timeFilter = window.customerTimeFilter || 'currentYear';
   const statusFilter = window.customerStatusFilter || 'all';
   const expiryFilter = window.customerExpiryFilter || 'all';
   const sortMode = customerSortMode;
   const now = new Date();
-  const dayLimit = (timeFilter === 'lifetime') ? Infinity : parseInt(timeFilter, 10);
+  const currentYear = now.getFullYear();
 
   const list = customers.map(customerSummary).filter(item=>{
     const inText = `${item.c.name||''} ${item.c.phone||''} ${item.c.email||''} ${item.c.userId||''} ${item.c.mac||''}`.toLowerCase();
     if(q && !inText.includes(q)) return false;
     const startISO = item.currentPlan.startDate || item.c.originalStartDate || "";
     let withinTime = true;
-    if(dayLimit !== Infinity && startISO){
-      const start = new Date(startISO + "T00:00:00");
-      const diffDays = Math.floor((now - start) / 86400000);
-      withinTime = diffDays <= dayLimit;
-    }else if(dayLimit !== Infinity && !startISO){ withinTime = false; }
+    if(timeFilter === 'currentYear'){
+      withinTime = !!startISO && new Date(startISO + "T00:00:00").getFullYear() === currentYear;
+    }else if(timeFilter === '30'){
+      withinTime = !!startISO && Math.floor((now - new Date(startISO + "T00:00:00")) / 86400000) <= 30;
+    }else if(timeFilter === '365'){
+      withinTime = !!startISO && Math.floor((now - new Date(startISO + "T00:00:00")) / 86400000) <= 365;
+    }
     if(!withinTime) return false;
     const paidStr = (item.currentPlan.paymentReceived === 'yes') ? 'paid' : 'unpaid';
     if(statusFilter !== 'all' && paidStr !== statusFilter) return false;
@@ -1293,7 +1376,7 @@ function renderCustomers(){
       case 'startOld': return (a.currentPlan.startDate || '').localeCompare(b.currentPlan.startDate || '');
       case 'paidMore': return b.history.totalSpent - a.history.totalSpent || (a.c.name || '').localeCompare(b.c.name || '');
       case 'renewedMore': return b.history.renewalCount - a.history.renewalCount || b.history.totalSpent - a.history.totalSpent;
-      default: return (a.c.name || '').localeCompare(b.c.name || '');
+      default: return (a.status.days ?? 99999) - (b.status.days ?? 99999) || (a.c.name || '').localeCompare(b.c.name || '');
     }
   });
 
@@ -1302,7 +1385,7 @@ function renderCustomers(){
       <div class="section-title">
         <div class="grow">
           <h2>Customers</h2>
-          <div class="helper">Compact customer bars. Full details only open when you press a row.</div>
+          <div class="helper">Current year is the default filter so your list appears on first load.</div>
         </div>
         <button id="btnAddCustomerBar" class="btn ok" type="button">+ Add Customer</button>
       </div>
@@ -1310,7 +1393,7 @@ function renderCustomers(){
       <div class="control-grid three" style="margin-top:10px">
         <input id="searchCustomersBar" placeholder="Search by name, phone, email, MAC, user ID..." value="${esc(window.customerSearchValue || '')}">
         <select id="timeFilterBar">
-          <option value="7" ${timeFilter==='7'?'selected':''}>Last 7 Days</option>
+          <option value="currentYear" ${timeFilter==='currentYear'?'selected':''}>Current Year</option>
           <option value="30" ${timeFilter==='30'?'selected':''}>Last 30 Days</option>
           <option value="365" ${timeFilter==='365'?'selected':''}>Last 365 Days</option>
           <option value="lifetime" ${timeFilter==='lifetime'?'selected':''}>Lifetime</option>
@@ -1318,7 +1401,7 @@ function renderCustomers(){
         <select id="expiryFilterBar">
           <option value="all" ${expiryFilter==='all'?'selected':''}>All Status</option>
           <option value="active" ${expiryFilter==='active'?'selected':''}>Active</option>
-          <option value="near" ${expiryFilter==='near'?'selected':''}>Near Expiry</option>
+          <option value="near" ${expiryFilter==='near'?'selected':''}>Expiring Soon</option>
           <option value="expired" ${expiryFilter==='expired'?'selected':''}>Expired</option>
         </select>
         <select id="statusFilterBar">
@@ -1327,9 +1410,9 @@ function renderCustomers(){
           <option value="unpaid" ${statusFilter==='unpaid'?'selected':''}>Unpaid</option>
         </select>
         <select id="customerSortBar">
+          <option value="expirySoon" ${sortMode==='expirySoon'?'selected':''}>Expiry Soonest</option>
           <option value="nameAsc" ${sortMode==='nameAsc'?'selected':''}>Name A–Z</option>
           <option value="nameDesc" ${sortMode==='nameDesc'?'selected':''}>Name Z–A</option>
-          <option value="expirySoon" ${sortMode==='expirySoon'?'selected':''}>Expiry Soonest</option>
           <option value="expiryLate" ${sortMode==='expiryLate'?'selected':''}>Expiry Latest</option>
           <option value="startNew" ${sortMode==='startNew'?'selected':''}>Newest Start</option>
           <option value="startOld" ${sortMode==='startOld'?'selected':''}>Oldest Start</option>
@@ -1389,6 +1472,201 @@ function customerAccordionHtml(item){
     </div>`;
 }
 
+function recordsForAverageWindow(months){
+  const end = endOfCurrentMonth();
+  const start = new Date(end.getFullYear(), end.getMonth() - (months - 1), 1);
+  const activationRows = [];
+  const grouped = canonicalRenewalGroups();
+  grouped.forEach(list=>{
+    list.forEach((r, idx)=>{
+      const startDate = isoToDate(r.startDate);
+      if(!startDate || startDate < start || startDate > end) return;
+      const typed = r.renewalType || r.recordType || (idx === 0 ? 'activation' : 'renewal');
+      if(typed === 'activation') activationRows.push(r);
+    });
+  });
+  return activationRows;
+}
+function planTypeForecastStats(){
+  const grouped = canonicalRenewalGroups();
+  const today = new Date();
+  const stats = {};
+  grouped.forEach(list=>{
+    for(let i=0;i<list.length;i++){
+      const row = list[i];
+      const duration = +row.durationMonths || +plans[row.planId]?.duration_months || 0;
+      if(!duration) continue;
+      if(!stats[duration]) stats[duration] = { opportunities:0, renewed:0, activeCount:0, avgRenewalTurnover:0, avgRenewalProfit:0, avgActivationTurnover:0, avgActivationProfit:0, renewalRows:[], activationRows:[] };
+      const expiry = isoToDate(row.expiryDate);
+      const next = list[i+1];
+      const type = row.renewalType || row.recordType || (i===0 ? 'activation' : 'renewal');
+      const figures = calcFigures({ cost:row.cost, wholesale:row.wholesale, actual:row.actual, stbIncluded:row.stbIncluded, stbCost:row.stbCost, stbWholesale:row.stbWholesale, stbActual:row.stbActual });
+      if(type === 'renewal') stats[duration].renewalRows.push(figures);
+      else stats[duration].activationRows.push(figures);
+      if(expiry && expiry <= today){
+        stats[duration].opportunities += 1;
+        if(next) stats[duration].renewed += 1;
+      }
+    }
+  });
+  customers.forEach(c=>{
+    const cp = c.currentPlan || {};
+    const duration = +cp.durationMonths || +plans[cp.planId]?.duration_months || 0;
+    if(!duration) return;
+    if(!stats[duration]) stats[duration] = { opportunities:0, renewed:0, activeCount:0, avgRenewalTurnover:0, avgRenewalProfit:0, avgActivationTurnover:0, avgActivationProfit:0, renewalRows:[], activationRows:[] };
+    if(getExpiryStatus(cp.expiryDate).key !== 'expired') stats[duration].activeCount += 1;
+  });
+  Object.keys(stats).forEach(k=>{
+    const s = stats[k];
+    const renewalRate = s.opportunities ? (s.renewed / s.opportunities) : 0.55;
+    s.renewalRate = clamp(renewalRate || 0.55, 0.05, 0.95);
+    s.avgRenewalTurnover = average(s.renewalRows.map(x=> x.turnover)) || average(s.activationRows.map(x=> x.turnover)) || 0;
+    s.avgRenewalProfit = average(s.renewalRows.map(x=> x.profit)) || average(s.activationRows.map(x=> x.profit)) || 0;
+    s.avgActivationTurnover = average(s.activationRows.map(x=> x.turnover)) || s.avgRenewalTurnover || 0;
+    s.avgActivationProfit = average(s.activationRows.map(x=> x.profit)) || s.avgRenewalProfit || 0;
+  });
+  return stats;
+}
+function newCustomerForecastStats(){
+  const act6 = recordsForAverageWindow(6);
+  const act12 = recordsForAverageWindow(12);
+  const monthlyAvg6 = act6.length / 6;
+  const monthlyAvg12 = act12.length / 12;
+  const monthlyAvg = act12.length ? (monthlyAvg6 + monthlyAvg12) / 2 : monthlyAvg6;
+  const avgTurnover = average([...act6, ...act12].map(r => calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).turnover));
+  const avgProfit = average([...act6, ...act12].map(r => calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).profit));
+  return {
+    monthlyAvgNew: monthlyAvg || 0,
+    avgActivationTurnover: avgTurnover || 0,
+    avgActivationProfit: avgProfit || 0,
+    sourceMonths: act12.length ? '6–12 month average' : 'last 6 month average'
+  };
+}
+function renewalForecastForMonths(monthsAhead){
+  const planStats = planTypeForecastStats();
+  const horizonEnd = addMonthsDate(firstDayOfCurrentMonth(), monthsAhead);
+  let renewalsExpected = 0;
+  let revenue = 0;
+  let profit = 0;
+  customers.forEach(c=>{
+    const cp = c.currentPlan || {};
+    const duration = +cp.durationMonths || +plans[cp.planId]?.duration_months || 0;
+    const expiry = isoToDate(cp.expiryDate);
+    if(!duration || !expiry) return;
+    const stat = planStats[duration];
+    if(!stat) return;
+    let due = new Date(expiry);
+    let carry = 1;
+    while(due < horizonEnd){
+      const rate = stat.renewalRate;
+      const expectedNow = carry * rate;
+      renewalsExpected += expectedNow;
+      revenue += expectedNow * stat.avgRenewalTurnover;
+      profit += expectedNow * stat.avgRenewalProfit;
+      carry = expectedNow;
+      due = addMonthsDate(due, duration);
+      if(carry < 0.01) break;
+    }
+  });
+  return { renewalsExpected, revenue, profit, planStats };
+}
+function forecastBundle(monthsAhead){
+  const newStats = newCustomerForecastStats();
+  const renStats = renewalForecastForMonths(monthsAhead);
+  const newCustomers = newStats.monthlyAvgNew * monthsAhead;
+  const newRevenue = newCustomers * newStats.avgActivationTurnover;
+  const newProfit = newCustomers * newStats.avgActivationProfit;
+  return {
+    monthsAhead,
+    newCustomers,
+    renewalsExpected: renStats.renewalsExpected,
+    predictedRevenue: renStats.revenue + newRevenue,
+    predictedProfit: renStats.profit + newProfit,
+    renewalRevenue: renStats.revenue,
+    renewalProfit: renStats.profit,
+    newRevenue,
+    newProfit,
+    planStats: renStats.planStats,
+    newStats
+  };
+}
+function renderForecast(){
+  const month = forecastBundle(1);
+  const six = forecastBundle(6);
+  const year = forecastBundle(12);
+  const five = forecastBundle(60);
+  const planStats = planTypeForecastStats();
+  const rates = Object.keys(planStats).sort((a,b)=> +a - +b);
+
+  sections.forecast.innerHTML = `
+    <div class="card">
+      <div class="section-title">
+        <div>
+          <h2>Forecast</h2>
+          <div class="helper">Read-only forecast using past 6–12 month averages for new customers, plus plan-type renewal behavior from your existing data.</div>
+        </div>
+      </div>
+
+      <div class="forecast-grid">
+        ${forecastCard('This Month', month)}
+        ${forecastCard('6 Months', six)}
+        ${forecastCard('1 Year', year)}
+        ${forecastCard('5 Years', five)}
+      </div>
+
+      <div class="row" style="margin-top:14px">
+        <div class="col">
+          <div class="forecast-card">
+            <h4>What drives this</h4>
+            <div class="helper">New customers use your ${esc(month.newStats.sourceMonths)}. Renewals use plan type only, not customer-by-customer history.</div>
+            <div class="list-stack" style="margin-top:10px">
+              <div class="detail-box"><div class="detail-label">Avg new customers / month</div><div class="detail-value">${month.newStats.monthlyAvgNew.toFixed(2)}</div></div>
+              <div class="detail-box"><div class="detail-label">Avg new revenue / customer</div><div class="detail-value">${fmt(month.newStats.avgActivationTurnover)}</div></div>
+              <div class="detail-box"><div class="detail-label">Avg new profit / customer</div><div class="detail-value">${fmt(month.newStats.avgActivationProfit)}</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="forecast-card">
+            <h4>Renewal Rate by Plan Type</h4>
+            <div class="plan-rate-list">
+              ${rates.length ? rates.map(m=> {
+                const s = planStats[m];
+                return `
+                  <div class="plan-rate-item">
+                    <div class="metric-top">
+                      <strong>${esc(m)} month plan</strong>
+                      <strong>${(s.renewalRate * 100).toFixed(0)}%</strong>
+                    </div>
+                    <div class="helper">Expired opportunities: ${s.opportunities} • Renewed: ${s.renewed} • Active now: ${s.activeCount}</div>
+                    <div class="track" style="margin-top:10px"><div class="fill" style="width:${metricWidth(s.renewalRate, 1)}%"></div></div>
+                    <div class="helper" style="margin-top:10px">Avg renewal revenue ${fmt(s.avgRenewalTurnover)} • Avg renewal profit ${fmt(s.avgRenewalProfit)}</div>
+                  </div>`;
+              }).join('') : `<div class="empty-state">No plan history found yet for forecasting.</div>`}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function forecastCard(title, data){
+  return `
+    <div class="forecast-card">
+      <h4>${esc(title)}</h4>
+      <div class="helper">Expected renewals ${data.renewalsExpected.toFixed(2)} • Expected new customers ${data.newCustomers.toFixed(2)}</div>
+      <div class="forecast-big">${fmt(data.predictedRevenue)}</div>
+      <div class="helper">Predicted revenue</div>
+      <div class="detail-grid" style="margin-top:10px">
+        <div class="detail-box"><div class="detail-label">Predicted profit</div><div class="detail-value">${fmt(data.predictedProfit)}</div></div>
+        <div class="detail-box"><div class="detail-label">Renewal revenue</div><div class="detail-value">${fmt(data.renewalRevenue)}</div></div>
+        <div class="detail-box"><div class="detail-label">New customer revenue</div><div class="detail-value">${fmt(data.newRevenue)}</div></div>
+        <div class="detail-box"><div class="detail-label">New customer profit</div><div class="detail-value">${fmt(data.newProfit)}</div></div>
+      </div>
+    </div>
+  `;
+}
+
 function renderPlans(){
   const tbody = $("#plansGrid tbody");
   tbody.innerHTML = "";
@@ -1422,9 +1700,8 @@ function renderPlans(){
 }
 
 function renderKPIs(){
-  const financials = dashboardFinancials();
   const topNear = customers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length;
-  $("#nearExpCount").textContent = `Near expiry: ${topNear}`;
+  $("#nearExpCount").textContent = `Expiring soon: ${topNear}`;
 }
 
 function previewTotals(){
@@ -1653,7 +1930,8 @@ async function seedPlans(){
   const samples = [
     {id:"PLN-1MO", name:"1 month", duration_months:1, retail_price:15, wholesale_cost:4.5, description:"Entry plan"},
     {id:"PLN-3MO", name:"3 months", duration_months:3, retail_price:35, wholesale_cost:13.5, description:"Most popular"},
-    {id:"PLN-6MO", name:"6 months", duration_months:6, retail_price:60, wholesale_cost:25, description:"Value saver"}
+    {id:"PLN-6MO", name:"6 months", duration_months:6, retail_price:60, wholesale_cost:25, description:"Value saver"},
+    {id:"PLN-12MO", name:"12 months", duration_months:12, retail_price:110, wholesale_cost:48, description:"Yearly plan"}
   ];
   try{ for(const p of samples) await savePlan(p); toast("Sample plans added.", "ok"); }
   catch(e){ showErr('[plans] seed', e); toast("Failed to seed plans.", "error"); }
