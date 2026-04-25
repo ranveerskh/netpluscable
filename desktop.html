@@ -1,0 +1,2515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Net + Cable • Admin</title>
+<style>
+  :root{
+    --bg:#f4f7fb;
+    --bg2:#eaf0ff;
+    --card:#ffffff;
+    --card2:#f8fafc;
+    --card3:#eef4ff;
+    --ink:#14213d;
+    --muted:#64748b;
+    --accent:#2563eb;
+    --accent2:#7c3aed;
+    --danger:#ef4444;
+    --ok:#10b981;
+    --border:#d8e0ee;
+    --warn:#f59e0b;
+    --shadow:0 18px 45px rgba(15,23,42,.08);
+    --shadow-soft:0 8px 24px rgba(15,23,42,.06);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --space:16px;
+    --radius:22px;
+    --tap:44px;
+    --shell:1280px;
+  }
+
+  html[data-theme="dark"]{
+    --bg:#0b1020;
+    --bg2:#101936;
+    --card:#121831;
+    --card2:#10162d;
+    --card3:#182041;
+    --ink:#e7ecff;
+    --muted:#9aa7d9;
+    --accent:#6a8cff;
+    --accent2:#8a5fff;
+    --danger:#ff647c;
+    --ok:#35d0a7;
+    --border:#23305b;
+    --warn:#ffc857;
+    --shadow:0 18px 45px rgba(0,0,0,.22);
+    --shadow-soft:0 8px 24px rgba(0,0,0,.16);
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:rgba(37,99,235,.08)}
+  html,body{min-height:100%}
+  body{
+    margin:0;
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    background:
+      radial-gradient(1000px 520px at 8% -8%,rgba(37,99,235,.12),transparent 62%),
+      radial-gradient(900px 500px at 92% 0%,rgba(124,58,237,.10),transparent 60%),
+      linear-gradient(180deg,var(--bg2),var(--bg) 300px,var(--bg));
+    color:var(--ink);
+    padding-bottom: calc(var(--safe-bottom) + 24px);
+    overscroll-behavior-y:none;
+  }
+
+  a{color:var(--accent)}
+  .wrap{
+    width:100%;
+    max-width:var(--shell);
+    margin:0 auto;
+    padding:18px 24px;
+    padding-left:max(24px, var(--safe-left));
+    padding-right:max(24px, var(--safe-right));
+  }
+
+  .card{
+    background:rgba(255,255,255,.92);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px;
+    box-shadow:var(--shadow-soft);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+  }
+  html[data-theme="dark"] .card{
+    background:linear-gradient(180deg, rgba(18,24,49,.96), rgba(16,22,45,.96));
+  }
+
+  .row{display:flex;gap:var(--space);flex-wrap:wrap}
+  .col{flex:1 1 320px; min-width:280px}
+
+  .btn{
+    appearance:none;
+    border:1px solid transparent;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;
+    padding:12px 18px;
+    border-radius:14px;
+    font-weight:800;
+    cursor:pointer;
+    min-height:var(--tap);
+    touch-action:manipulation;
+    transition:transform .08s ease, opacity .2s ease, filter .2s ease, box-shadow .2s ease;
+    box-shadow:0 10px 22px rgba(37,99,235,.16);
+  }
+  .btn.secondary{background:#334155;color:#fff;box-shadow:none}
+  .btn.ghost{
+    background:#fff;
+    border-color:var(--border);
+    color:var(--ink);
+    box-shadow:none;
+  }
+  html[data-theme="dark"] .btn.ghost{background:transparent}
+  .btn.warn{background:linear-gradient(135deg,#f59e0b,#ea580c)}
+  .btn.danger{background:linear-gradient(135deg,#f43f5e,#dc2626)}
+  .btn.ok{background:linear-gradient(135deg,#10b981,#059669)}
+  .btn:hover{filter:brightness(1.02);box-shadow:0 14px 26px rgba(37,99,235,.18)}
+  .btn.ghost:hover{box-shadow:0 10px 22px rgba(15,23,42,.06)}
+  .btn:active{transform:translateY(1px); opacity:.95}
+  .btn:disabled{opacity:.6; cursor:not-allowed}
+
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:7px 11px;
+    border-radius:999px;
+    background:#eef4ff;
+    border:1px solid #dbeafe;
+    color:#1d4ed8;
+    font-size:12px;
+    font-weight:800;
+    min-height:34px;
+  }
+  html[data-theme="dark"] .chip{background:#1a2244;border-color:#2a3670;color:#cfe2ff}
+
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(244,247,251,.78);
+    -webkit-backdrop-filter:blur(18px);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(216,224,238,.72);
+    padding-top:var(--safe-top);
+  }
+  html[data-theme="dark"] .topbar{
+    background:rgba(11,16,32,.78);
+    border-bottom:1px solid rgba(35,48,91,.72);
+  }
+  .topbar .wrap{padding-top:12px;padding-bottom:12px}
+
+  .topbox{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:18px;
+    align-items:center;
+    padding:16px 18px;
+    box-shadow:var(--shadow);
+  }
+  .brand-stack{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    min-width:0;
+    flex-wrap:wrap;
+  }
+  .brand{
+    font-size:28px;
+    line-height:1.05;
+    font-weight:950;
+    letter-spacing:-.4px;
+    word-break:break-word;
+  }
+  .brand .muted{color:#64748b}
+  html[data-theme="dark"] .brand .muted{color:#a9b7ff}
+  .top-right{
+    display:flex;
+    flex-direction:row;
+    gap:10px;
+    align-items:center;
+    justify-content:flex-end;
+    min-width:0;
+  }
+  .status-pill,.near-pill,.signout-btn{
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:#f8fafc;
+    color:var(--ink);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:42px;
+    padding:9px 15px;
+    font-weight:800;
+    white-space:nowrap;
+  }
+  html[data-theme="dark"] .status-pill,
+  html[data-theme="dark"] .near-pill,
+  html[data-theme="dark"] .signout-btn{background:#11183a}
+  .near-pill{font-size:15px;background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+  html[data-theme="dark"] .near-pill{background:#2a2416;color:#ffe7a8;border-color:#684}
+  .signout-btn{
+    min-height:44px;
+    border-radius:999px;
+    font-size:14px;
+    background:#0f172a;
+    color:#fff;
+    cursor:pointer;
+  }
+  html[data-theme="dark"] .signout-btn{background:linear-gradient(180deg,#1c2554,#161f48)}
+
+  .nav-grid{
+    display:grid;
+    grid-template-columns:repeat(6, minmax(0, 1fr));
+    gap:12px;
+    margin:14px 0 0;
+  }
+  .nav-btn{
+    min-height:66px;
+    border-radius:18px;
+    border:1px solid var(--border);
+    background:#ffffff;
+    color:var(--ink);
+    font-weight:900;
+    font-size:14px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    text-align:center;
+    padding:10px 8px;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(15,23,42,.05);
+    transition:transform .12s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .nav-btn:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(15,23,42,.08)}
+  .nav-btn small{font-size:12px;color:var(--muted);font-weight:800;opacity:.9}
+  .nav-btn.active{
+    color:#fff;
+    border-color:transparent;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:0 14px 28px rgba(37,99,235,.20);
+  }
+  .nav-btn.active small{color:#e0e7ff}
+  .nav-btn.period-nav small{font-size:13px}
+  html[data-theme="dark"] .nav-btn{background:linear-gradient(180deg,#121a3a,#0f1530);color:#fff}
+  html[data-theme="dark"] .nav-btn.active{background:linear-gradient(135deg,#2c376f,#202b5e)}
+
+  .section-title{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+  .section-title h3,.section-title h2{margin:0;letter-spacing:-.2px}
+  .section-title h2{font-size:26px}
+  .helper{font-size:13px;color:var(--muted);line-height:1.45}
+  .muted{color:var(--muted)}
+  .hidden{display:none!important}
+  .grow{flex:1}
+  .flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .right{text-align:right}
+  .center{text-align:center}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,"Roboto Mono",monospace}
+
+  input,select,textarea{
+    width:100%;
+    padding:12px 13px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:#ffffff;
+    color:var(--ink);
+    font-size:15px;
+    min-height:46px;
+    outline:none;
+    box-shadow:0 1px 0 rgba(15,23,42,.03);
+  }
+  html[data-theme="dark"] input,
+  html[data-theme="dark"] select,
+  html[data-theme="dark"] textarea{background:#0f1530;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{
+    border-color:#60a5fa;
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
+  }
+  label{display:block;margin-top:12px;margin-bottom:6px;color:#334155;font-size:13px;font-weight:800}
+  html[data-theme="dark"] label{color:#ccd6ff}
+
+  .stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:14px;
+    margin-top:12px;
+  }
+  .kpi-card{
+    padding:18px;
+    border-radius:18px;
+    border:1px solid var(--border);
+    background:linear-gradient(180deg,#fff,#f8fafc);
+    min-width:0;
+    box-shadow:0 8px 20px rgba(15,23,42,.04);
+  }
+  html[data-theme="dark"] .kpi-card{background:#121a3a}
+  .kpi-label{font-size:13px;color:var(--muted);line-height:1.25;font-weight:800}
+  .kpi-value{font-size:32px;font-weight:950;line-height:1.05;margin-top:8px;letter-spacing:-.7px}
+
+  .metric-stack{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:14px;
+    margin-top:14px;
+  }
+  .metric-bar{
+    padding:16px;
+    border:1px solid var(--border);
+    border-radius:18px;
+    background:linear-gradient(180deg,#fff,#f8fafc);
+    box-shadow:0 8px 20px rgba(15,23,42,.04);
+  }
+  html[data-theme="dark"] .metric-bar{background:#121a3a}
+  .metric-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .metric-top strong{font-size:15px}
+  .metric-top span{font-size:14px;color:var(--muted)}
+  .track{height:10px;border-radius:999px;background:#e2e8f0;border:1px solid #dbe3f0;overflow:hidden}
+  html[data-theme="dark"] .track{background:#0d1330;border-color:#1d2858}
+  .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#10b981,#2563eb,#7c3aed)}
+
+  .control-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
+  .control-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .list-stack{display:flex;flex-direction:column;gap:12px}
+  .empty-state{
+    text-align:center;
+    padding:24px;
+    color:var(--muted);
+    border:1px dashed var(--border);
+    border-radius:16px;
+    background:#f8fafc;
+  }
+  html[data-theme="dark"] .empty-state{background:#10162d}
+
+  .accordion-item{
+    border:1px solid var(--border);
+    border-radius:18px;
+    overflow:hidden;
+    background:#ffffff;
+    box-shadow:0 8px 20px rgba(15,23,42,.04);
+  }
+  html[data-theme="dark"] .accordion-item{background:#10162d}
+  .accordion-head{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:14px;
+    padding:14px 16px;
+    align-items:center;
+  }
+  .accordion-left{min-width:0;display:flex;flex-direction:column;gap:7px}
+  .accordion-name{font-size:19px;font-weight:950;line-height:1.1;word-break:break-word}
+  .accordion-meta{display:flex;gap:7px;flex-wrap:wrap;font-size:12px;color:var(--muted);align-items:center}
+  .mini-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:30px;
+    padding:5px 10px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    font-size:12px;
+    font-weight:850;
+  }
+  .badge-exp{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+  .badge-ok{background:#ecfdf5;color:#047857;border-color:#a7f3d0}
+  .badge-warn{background:#fffbeb;color:#92400e;border-color:#fde68a}
+  .badge-muted{background:#f1f5f9;color:#475569;border-color:#d8e0ee}
+  html[data-theme="dark"] .badge-exp{background:#2a1a1a;color:#ffb3c0;border-color:#624}
+  html[data-theme="dark"] .badge-ok{background:#14231b;color:#b9ffe9;border-color:#264}
+  html[data-theme="dark"] .badge-warn{background:#2a2416;color:#ffe7a8;border-color:#684}
+  html[data-theme="dark"] .badge-muted{background:#19213d;color:#cbd6ff;border-color:#34406e}
+
+  .accordion-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .mini-btn{
+    appearance:none;
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--ink);
+    border-radius:13px;
+    min-height:38px;
+    padding:0 13px;
+    font-weight:900;
+    cursor:pointer;
+  }
+  .mini-btn.ok{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:transparent}
+  .mini-btn.ghost{background:#fff}
+  html[data-theme="dark"] .mini-btn{background:#141c42;color:#fff}
+  html[data-theme="dark"] .mini-btn.ghost{background:transparent}
+  .accordion-body{display:none;padding:14px;border-top:1px solid var(--border);background:#f8fafc}
+  html[data-theme="dark"] .accordion-body{background:#0f1530}
+  .accordion-item.open .accordion-body{display:block}
+  .detail-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
+  }
+  .detail-box{
+    padding:13px;
+    border-radius:15px;
+    border:1px solid var(--border);
+    background:#ffffff;
+    min-width:0;
+  }
+  html[data-theme="dark"] .detail-box{background:#11183a}
+  .detail-label{font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:850}
+  .detail-value{
+    font-size:16px;
+    font-weight:900;
+    line-height:1.2;
+    word-break:break-word;
+    font-variant-numeric:tabular-nums;
+  }
+  .detail-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+  .table-scroll{
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+    border-radius:16px;
+  }
+  .grid{width:100%;border-collapse:separate;border-spacing:0;min-width:920px}
+  .grid th,.grid td{
+    padding:13px 12px;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
+    vertical-align:top;
+  }
+  .grid th{
+    text-align:left;
+    color:#334155;
+    background:#f1f5f9;
+    position:sticky;
+    top:0;
+    z-index:1;
+    font-weight:900;
+  }
+  html[data-theme="dark"] .grid th{color:#c7d3ff;background:#121a3a}
+  .grid tbody tr:hover td{background:rgba(37,99,235,.04)}
+
+  .forecast-shell{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    margin-top:12px;
+  }
+  .forecast-btn-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
+  }
+  .forecast-main-card{
+    padding:20px;
+    border-radius:20px;
+    border:1px solid var(--border);
+    background:linear-gradient(180deg,#fff,#f8fafc);
+    box-shadow:0 8px 20px rgba(15,23,42,.04);
+  }
+  html[data-theme="dark"] .forecast-main-card{background:#121a3a}
+  .forecast-main-label{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:12px;
+    font-weight:850;
+  }
+  .forecast-main-value{
+    font-size:44px;
+    font-weight:950;
+    line-height:1.02;
+    margin-top:8px;
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+    letter-spacing:-1px;
+  }
+  .forecast-note{
+    margin-top:12px;
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.45;
+  }
+  .forecast-stat-grid{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:12px;
+    margin-top:14px;
+  }
+  .forecast-card{
+    padding:16px;
+    border-radius:18px;
+    border:1px solid var(--border);
+    background:linear-gradient(180deg,#fff,#f8fafc);
+    box-shadow:0 8px 20px rgba(15,23,42,.04);
+  }
+  html[data-theme="dark"] .forecast-card{background:#121a3a}
+  .forecast-card h4{margin:0 0 6px 0}
+  .forecast-big{
+    font-size:24px;
+    font-weight:950;
+    margin-top:8px;
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  .plan-rate-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .plan-rate-item{padding:13px;border-radius:16px;border:1px solid var(--border);background:#ffffff}
+  html[data-theme="dark"] .plan-rate-item{background:#121a3a}
+  .segmented{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+  }
+
+  .modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:flex-start;
+    justify-content:center;
+    background:rgba(15,23,42,.48);
+    z-index:200;
+    padding:26px;
+    overflow:auto;
+    padding-top: calc(26px + var(--safe-top));
+    padding-bottom: calc(26px + var(--safe-bottom));
+  }
+  .modal.open{display:flex}
+  .modal .body{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:20px;
+    width:100%;
+    max-width:1100px;
+    max-height:90vh;
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+    box-shadow:0 30px 80px rgba(15,23,42,.24);
+  }
+  .modal .head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+    position:sticky;
+    top:0;
+    background:var(--card);
+    z-index:5;
+    padding-bottom:8px;
+  }
+  .modal .foot{
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+    margin-top:14px;
+    position:sticky;
+    bottom:0;
+    background:linear-gradient(180deg, transparent, rgba(255,255,255,.92) 24px, rgba(255,255,255,1) 48px);
+    padding-top:14px;
+    padding-bottom:6px;
+    flex-wrap:wrap;
+  }
+  html[data-theme="dark"] .modal .foot{
+    background:linear-gradient(180deg, transparent, rgba(18,24,49,.9) 24px, rgba(18,24,49,1) 48px);
+  }
+
+  .auth{
+    max-width:560px;
+    margin:80px auto;
+    padding-left:max(18px, var(--safe-left));
+    padding-right:max(18px, var(--safe-right));
+  }
+  .logo{font-weight:950;letter-spacing:.2px}
+  .subtle{opacity:.68}
+  .toast-wrap{
+    position:fixed;
+    left:24px;
+    right:24px;
+    bottom:calc(24px + var(--safe-bottom));
+    z-index:500;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    max-width:520px;
+    margin:0 auto;
+    pointer-events:none;
+  }
+  .toast{
+    pointer-events:auto;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.98);
+    color:var(--ink);
+    border-radius:16px;
+    padding:13px 15px;
+    box-shadow:0 16px 35px rgba(15,23,42,.16);
+    font-size:14px;
+    font-weight:700;
+  }
+  html[data-theme="dark"] .toast{background:rgba(18,24,49,.98)}
+  .toast.info{border-color:#93c5fd}
+  .toast.ok{border-color:#86efac}
+  .toast.warn{border-color:#fcd34d}
+  .toast.error{border-color:#fda4af}
+
+  @media (max-width: 1100px){
+    :root{--shell:980px}
+    .nav-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .metric-stack{grid-template-columns:1fr}
+    .detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .forecast-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+
+  @media (max-width: 760px){
+    :root{--shell:480px}
+    .wrap{padding:14px;padding-left:max(14px, var(--safe-left));padding-right:max(14px, var(--safe-right))}
+    .topbar{position:relative;background:transparent;border-bottom:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+    .topbox{grid-template-columns:1fr auto;align-items:start;padding:12px}
+    .brand-stack{display:flex;flex-direction:column;align-items:flex-start;gap:9px}
+    .brand{font-size:20px}
+    .top-right{flex-direction:column;align-items:stretch;min-width:128px}
+    .status-pill,.near-pill,.signout-btn{min-height:38px;padding:8px 12px}
+    .signout-btn{min-height:46px;border-radius:16px}
+    .nav-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 14px}
+    .nav-btn{min-height:74px;font-size:14px}
+    .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .metric-stack,.detail-grid,.control-grid,.control-grid.three,.segmented,.forecast-btn-grid,.forecast-stat-grid{grid-template-columns:1fr}
+    .accordion-head{grid-template-columns:1fr}
+    .accordion-actions{justify-content:flex-start}
+    .forecast-main-value{font-size:30px}
+    .modal{padding:14px;padding-top:calc(14px + var(--safe-top));padding-bottom:calc(14px + var(--safe-bottom))}
+    .modal .body{max-width:480px;padding:16px}
+    .toast-wrap{left:14px;right:14px;bottom:calc(14px + var(--safe-bottom));max-width:480px}
+  }
+
+  @media (max-width: 420px){
+    .brand{font-size:19px}
+    .near-pill{font-size:15px}
+    .stats-grid{grid-template-columns:1fr}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{scroll-behavior:auto; transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+<div id="toastWrap" class="toast-wrap"></div>
+
+<div id="authView" class="wrap auth">
+  <div class="card">
+    <h2 class="logo">Net + Cable <span class="subtle">• Admin Sign In</span></h2>
+    <p class="muted" style="margin-top:6px">Use your admin email & password from Firebase Auth.</p>
+    <label>Email</label>
+    <input id="authEmail" type="email" placeholder="you@company.com" />
+    <label>Password</label>
+    <input id="authPass" type="password" placeholder="********" />
+    <div class="flex" style="margin-top:12px">
+      <button class="btn ok" id="btnLogin" type="button">Sign In</button>
+      <button class="btn ghost" id="btnDemo" type="button">Open Demo (read-only)</button>
+    </div>
+    <p id="authMsg" class="muted" style="margin-top:10px"></p>
+    <hr style="border:none;border-top:1px solid var(--border);margin:16px 0">
+    <p class="muted">Tip: Create your own admin user in <strong>Firebase Console → Authentication</strong>. This code keeps your existing Firestore structure.</p>
+  </div>
+</div>
+
+<div id="appView" class="hidden">
+  <div class="topbar">
+    <div class="wrap">
+      <div class="card topbox">
+        <div class="brand-stack">
+          <div class="brand">Net + Cable • <span class="muted">Admin</span></div>
+          <div class="status-pill" id="envInfo">Connected</div>
+        </div>
+        <div class="top-right">
+          <div id="nearExpCount" class="near-pill">Expiring soon: 0</div>
+          <button id="signOutBtn" class="signout-btn" type="button">Sign Out</button>
+        </div>
+      </div>
+
+      <div class="nav-grid" id="navGrid">
+        <button class="nav-btn active" data-tab="dashboard" type="button">Dashboard</button>
+        <button class="nav-btn" data-tab="customers" type="button">Customers</button>
+        <button class="nav-btn" data-tab="forecast" type="button">Forecast</button>
+        <button class="nav-btn period-nav" id="periodBtn" type="button">Period<small id="periodLabel">Year</small></button>
+        <button class="nav-btn" data-tab="reports" type="button">Reports</button>
+        <button class="nav-btn" data-tab="settings" type="button">Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap" style="padding-top:0">
+    <section id="tab-dashboard"></section>
+    <section id="tab-customers" class="hidden"></section>
+    <section id="tab-forecast" class="hidden"></section>
+
+    <section id="tab-reports" class="card hidden">
+      <div class="row">
+        <div class="col">
+          <label>Report Type</label>
+          <select id="repType">
+            <option value="monthly" selected>Monthly</option>
+            <option value="yearly">Yearly</option>
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
+        <div class="col" id="repMonthCol">
+          <label>Month</label>
+          <input id="repMonth" type="month">
+        </div>
+        <div class="col hidden" id="repYearCol">
+          <label>Year</label>
+          <input id="repYear" type="number" min="2000" max="2100" value="">
+        </div>
+        <div class="col hidden" id="repFromCol">
+          <label>From (start date)</label>
+          <input id="repFrom" type="date">
+        </div>
+        <div class="col hidden" id="repToCol">
+          <label>To (end date)</label>
+          <input id="repTo" type="date">
+        </div>
+      </div>
+
+      <div class="flex" style="margin-top:12px">
+        <button id="btnRunReport" class="btn" type="button">Run Report</button>
+        <button id="btnCsv" class="btn ghost" type="button">Export CSV</button>
+      </div>
+
+      <div class="row" style="margin-top:14px">
+        <div class="col"><div class="kpi-card"><div class="kpi-label">Turnover</div><div id="repTurnover" class="kpi-value">$0.00</div></div></div>
+        <div class="col"><div class="kpi-card"><div class="kpi-label">Expense</div><div id="repExpense" class="kpi-value">$0.00</div></div></div>
+        <div class="col"><div class="kpi-card"><div class="kpi-label">Profit</div><div id="repProfit" class="kpi-value">$0.00</div></div></div>
+      </div>
+
+      <h3 style="margin-top:18px">Included Plans in Period</h3>
+      <div class="card table-scroll" style="padding:0">
+        <table class="grid" id="repGrid">
+          <thead>
+            <tr>
+              <th>Date</th><th>Customer</th><th>Plan</th><th>Turnover $</th><th>Expense $</th><th>Profit $</th><th>Paid</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="tab-settings" class="card hidden">
+      <div class="section-title">
+        <div>
+          <h3>Settings</h3>
+          <div class="helper">Forecast below is read-only. It does not write to Firebase.</div>
+        </div>
+        <button id="btnTogglePlans" class="btn ghost" type="button">Manage Plans</button>
+      </div>
+      <label>Expiring soon threshold (days)</label>
+      <input id="settingNearDays" type="number" min="1">
+      <p class="muted" style="margin-top:6px">This only affects frontend highlighting and filtering. No backend change.</p>
+      <hr style="border:none;border-top:1px solid var(--border);margin:14px 0">
+      <div class="flex">
+        <button id="btnCleanupOrphans" class="btn danger" type="button">🗑 Delete Orphan Renewals</button>
+        <span id="cleanupMsg" class="muted"></span>
+      </div>
+
+      <div id="settingsPlansWrap" class="hidden" style="margin-top:16px">
+        <div class="section-title">
+          <h3>Manage Plans</h3>
+          <div class="flex">
+            <button id="btnSeedPlans" class="btn ghost" type="button">Seed sample plans</button>
+            <button id="btnAddPlan" class="btn ok" type="button">+ Add Plan</button>
+          </div>
+        </div>
+        <div class="card table-scroll" style="padding:0">
+          <table class="grid" id="plansGrid">
+            <thead>
+              <tr>
+                <th>ID</th><th>Name</th><th>Duration (months)</th>
+                <th>Retail $</th><th>Wholesale $</th><th>Description</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <div id="modalCustomer" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="custModalTitle">Add Customer</h3>
+          <button class="btn ghost" id="xCust" type="button">✕</button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Name</label><input id="c_name">
+            <label>Phone</label><input id="c_phone">
+            <label>Email</label><input id="c_email" type="email">
+            <label>User ID (internal)</label><input id="c_userId" placeholder="e.g., CUST-001">
+            <label>MAC Address</label><input id="c_mac" placeholder="AA:BB:CC:DD:EE:FF">
+          </div>
+          <div class="col">
+            <label>Plan</label><select id="c_plan"></select>
+            <div class="muted" style="margin-top:6px">You can override retail, selling, and wholesale values below.</div>
+            <label>Plan Actual Price</label><input id="c_actual" type="number" step="0.01" min="0" placeholder="e.g., 20.00">
+            <label>Selling Price (what customer pays)</label><input id="c_cost" type="number" step="0.01" min="0">
+            <label>Wholesale Rate (your cost)</label><input id="c_wholesale" type="number" step="0.01" min="0">
+            <label>Discount Name (optional)</label><input id="c_discName" placeholder="e.g., Diwali Offer, Combo Deal">
+            <label>Includes STB?</label>
+            <select id="c_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
+            <div id="stbBox" class="hidden">
+              <label>STB Actual Price</label><input id="c_stbActual" type="number" step="0.01" min="0" placeholder="e.g., 49.00">
+              <label>STB Selling Price</label><input id="c_stbCost" type="number" step="0.01" min="0">
+              <label>STB Wholesale</label><input id="c_stbWholesale" type="number" step="0.01" min="0">
+            </div>
+          </div>
+          <div class="col">
+            <label>Plan Start Date</label><input id="c_start" type="date">
+            <label>Plan Expiry Date</label><input id="c_expiry" type="date">
+            <label>Payment Received?</label>
+            <select id="c_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+            <div class="card" style="margin-top:10px">
+              <div class="muted">Totals Preview</div>
+              <div id="c_preview" class="muted">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="foot">
+          <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
+            <input id="c_invoice" type="checkbox" checked> Open slip after save
+          </label>
+          <button type="button" class="btn secondary" id="btnSaveCustomer">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalRenew" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="renewTitle">Renew Plan</h3>
+          <button class="btn ghost" id="xRenew" type="button">✕</button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Plan</label><select id="r_plan"></select>
+            <label>Plan Actual Price</label><input id="r_actual" type="number" step="0.01" min="0">
+            <label>Plan Selling Price</label><input id="r_cost" type="number" step="0.01" min="0">
+            <label>Wholesale</label><input id="r_wholesale" type="number" step="0.01" min="0">
+            <label>Discount Name (optional)</label><input id="r_discName">
+          </div>
+          <div class="col">
+            <label>Includes STB?</label>
+            <select id="r_stb"><option value="no" selected>No</option><option value="yes">Yes</option></select>
+            <div id="r_stbBox" class="hidden">
+              <label>STB Actual Price</label><input id="r_stbActual" type="number" step="0.01" min="0">
+              <label>STB Selling Price</label><input id="r_stbCost" type="number" step="0.01" min="0">
+              <label>STB Wholesale</label><input id="r_stbWholesale" type="number" step="0.01" min="0">
+            </div>
+            <label>Start Date</label><input id="r_start" type="date">
+            <label>Expiry Date</label><input id="r_expiry" type="date">
+            <label>Payment Received?</label>
+            <select id="r_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+          </div>
+        </div>
+        <div class="foot">
+          <label class="flex" style="gap:8px;align-items:center;margin-right:auto">
+            <input id="r_invoice" type="checkbox" checked> Open slip after renewal
+          </label>
+          <button id="btnDoRenew" class="btn ok" type="button">Confirm Renewal</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalPlan" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3 id="planTitle">Add Plan</h3>
+          <button class="btn ghost" id="xPlan" type="button">✕</button>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label>Plan ID</label><input id="p_id" placeholder="PLN-1MO">
+            <label>Name</label><input id="p_name" placeholder="1 month">
+            <label>Duration (months)</label><input id="p_months" type="number" min="0" step="1" value="1">
+          </div>
+          <div class="col">
+            <label>Retail Price</label><input id="p_retail" type="number" step="0.01" min="0">
+            <label>Wholesale Cost</label><input id="p_wholesale" type="number" step="0.01" min="0">
+            <label>Description</label><input id="p_desc" placeholder="Most popular">
+          </div>
+        </div>
+        <div class="foot">
+          <button id="btnSavePlan" class="btn secondary" type="button">Save Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modalPeriod" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3>Choose dashboard period</h3>
+          <button class="btn ghost" id="xPeriod" type="button">✕</button>
+        </div>
+        <div id="periodOptions" class="list-stack"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore, collection, doc, setDoc, addDoc, updateDoc, deleteDoc,
+  query, orderBy, serverTimestamp, collectionGroup, writeBatch, getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBOEuLTwXHlgwCeUJk-8zHLjtsljr-5CFM",
+  authDomain: "netplustv-90b29.firebaseapp.com",
+  projectId: "netplustv-90b29",
+  storageBucket: "netplustv-90b29.firebasestorage.app",
+  messagingSenderId: "639722274355",
+  appId: "1:639722274355:web:ebe34fdf093f8191da2d46"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const $ = sel => document.querySelector(sel);
+const $$ = sel => document.querySelectorAll(sel);
+const fmt = n => (isNaN(+n) ? '$0.00' : '$' + (+n).toFixed(2));
+const todayISO = () => new Date().toISOString().slice(0,10);
+const toastWrap = $("#toastWrap");
+
+function esc(v){
+  return String(v ?? '').replace(/[&<>"']/g, s => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;' }[s]));
+}
+function toast(message, type='info', timeout=2800){
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = message;
+  toastWrap.appendChild(el);
+  setTimeout(()=> {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(6px)';
+    setTimeout(()=> el.remove(), 220);
+  }, timeout);
+}
+function addMonthsISO(startISO, months){
+  if (!startISO) return "";
+  const d = new Date(startISO + "T00:00:00");
+  if (isNaN(d.getTime())) return "";
+  const day = d.getDate();
+  d.setMonth(d.getMonth() + Number(months || 0));
+  if (d.getDate() !== day) d.setDate(0);
+  return d.toISOString().slice(0,10);
+}
+function daysLeft(expISO){
+  if(!expISO) return Number.POSITIVE_INFINITY;
+  const end = new Date(expISO + "T23:59:59");
+  const now = new Date();
+  return Math.ceil((end - now) / (1000*60*60*24));
+}
+function calcFigures({ cost, wholesale, actual, stbIncluded, stbCost, stbWholesale, stbActual }){
+  const sellPlan = +cost || 0;
+  const whPlan = +wholesale || 0;
+  const msrpPlan = +actual || 0;
+  const sellSTB = +stbCost || 0;
+  const whSTB = +stbWholesale || 0;
+  const msrpSTB = +stbActual || 0;
+  const turnover = sellPlan + (stbIncluded === 'yes' ? sellSTB : 0);
+  const expense = whPlan + (stbIncluded === 'yes' ? whSTB : 0);
+  const profit = turnover - expense;
+  const discountSaved = Math.max(msrpPlan - sellPlan, 0) + (stbIncluded === 'yes' ? Math.max(msrpSTB - sellSTB, 0) : 0);
+  return { turnover, expense, profit, discountSaved };
+}
+function normalizeEmail(email){ return String(email || '').trim().toLowerCase(); }
+function isValidEmail(email){ if(!email) return true; return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(email)); }
+function isValidMac(mac){ if(!mac) return true; return /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/.test(String(mac).trim()); }
+function nonNegativeNumber(v){ return !isNaN(+v) && +v >= 0; }
+function suggestOffer({ tenureDays, renewalCount, totalSpent, statusKey }){
+  if(statusKey === 'expired' && (renewalCount >= 3 || tenureDays >= 365)) return 'Win-back offer';
+  if(renewalCount >= 6 || totalSpent >= 200) return 'VIP loyalty offer';
+  if(tenureDays >= 365) return '1-year loyalty deal';
+  if(statusKey === 'near') return 'Early renewal offer';
+  return 'Standard renewal offer';
+}
+function showErr(label, err){ console.error(label, err); }
+async function safeGetDocs(qry, label){ try{ return await getDocs(qry); } catch(e){ showErr(label, e); throw e; } }
+async function safeAddDoc(ref, data, label){ try{ return await addDoc(ref, data); } catch(e){ showErr(label, e); throw e; } }
+async function safeSetDoc(ref, data, opts, label){ try{ return await setDoc(ref, data, opts); } catch(e){ showErr(label, e); throw e; } }
+async function safeUpdateDoc(ref, data, label){ try{ return await updateDoc(ref, data); } catch(e){ showErr(label, e); throw e; } }
+async function safeDeleteDoc(ref, label){ try{ return await deleteDoc(ref); } catch(e){ showErr(label, e); throw e; } }
+function metricWidth(value, max){ if(max <= 0) return 8; return Math.max(8, Math.min(100, (value / max) * 100)); }
+function monthStart(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
+function addMonthsDate(date, months){ const d = new Date(date); const day = d.getDate(); d.setMonth(d.getMonth() + months); if(d.getDate() !== day) d.setDate(0); return d; }
+function monthsBetween(start, end){
+  let count = 0;
+  let cursor = monthStart(new Date(start));
+  const limit = monthStart(new Date(end));
+  while(cursor <= limit){ count += 1; cursor = new Date(cursor.getFullYear(), cursor.getMonth()+1, 1); }
+  return Math.max(1, count);
+}
+function firstDayOfCurrentMonth(){ const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); }
+function endOfCurrentMonth(){ const d = new Date(); return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+function isoToDate(iso){ return iso ? new Date(iso + 'T00:00:00') : null; }
+function dateToISO(d){ return new Date(d).toISOString().slice(0,10); }
+function clamp(num, min, max){ return Math.min(max, Math.max(min, num)); }
+function average(arr){ return arr.length ? arr.reduce((a,b)=> a + b, 0) / arr.length : 0; }
+
+(function iosTweaks(){
+  const useVV = window.visualViewport;
+  if (useVV) {
+    const onVVChange = () => { document.body.style.paddingBottom = `calc(${useVV.height < window.innerHeight ? '20vh' : '12px'} + var(--safe-bottom))`; };
+    useVV.addEventListener('resize', onVVChange);
+    useVV.addEventListener('scroll', onVVChange);
+  }
+  document.addEventListener('focusin', (e)=>{
+    const el = e.target;
+    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT')) {
+      setTimeout(()=> el.scrollIntoView({ block:'center', behavior:'smooth' }), 100);
+    }
+  }, {passive:true});
+})();
+
+const authView = $("#authView");
+const appView  = $("#appView");
+const sections = {
+  dashboard: $("#tab-dashboard"),
+  customers: $("#tab-customers"),
+  forecast: $("#tab-forecast"),
+  reports: $("#tab-reports"),
+  settings: $("#tab-settings"),
+};
+
+let plans = {};
+let customers = [];
+let renewals = [];
+let settingNear = 30;
+let demoMode = false;
+let uiBound = false;
+let editCustomerId = null;
+let renewCustomerId = null;
+let activeTab = 'dashboard';
+let settingsPlansOpen = false;
+let loyaltySortMode = 'spent';
+let customerSortMode = 'expirySoon';
+let dashboardBottomView = '';
+let renewalsLoadedOnce = false;
+let forecastPeriodKey = 'month';
+let forecastMetricKey = 'revenue';
+let dashboardPeriod = { type:'year', year:new Date().getFullYear() };
+const accordionState = { dashboardView:new Set(), loyalty:new Set(), customers:new Set() };
+
+window.customerSearchValue = '';
+window.customerTimeFilter = 'currentYear';
+window.customerStatusFilter = 'all';
+window.customerExpiryFilter = 'all';
+
+const authEmail = $("#authEmail");
+const authPass = $("#authPass");
+const authMsg = $("#authMsg");
+
+$("#btnLogin").onclick = async ()=>{
+  authMsg.textContent = "Signing in...";
+  try{
+    demoMode = false;
+    await signInWithEmailAndPassword(auth, authEmail.value.trim(), authPass.value.trim());
+    authMsg.textContent = "Signed in.";
+  }catch(e){
+    showErr('[auth/login]', e);
+    authMsg.textContent = "Sign in failed. Please check email/password.";
+    toast("Sign in failed.", "error");
+  }
+};
+
+$("#btnDemo").onclick = async ()=>{
+  demoMode = true;
+  authView.classList.add('hidden');
+  appView.classList.remove('hidden');
+  setEnvChip();
+  await loadApp();
+  toast("Demo mode opened. Saving is disabled.", "warn");
+};
+
+$("#signOutBtn").onclick = async ()=>{
+  if(demoMode){
+    demoMode = false;
+    appView.classList.add('hidden');
+    authView.classList.remove('hidden');
+    setEnvChip();
+    return;
+  }
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, async (user)=>{
+  if(user){
+    demoMode = false;
+    authView.classList.add('hidden');
+    appView.classList.remove('hidden');
+    setEnvChip();
+    await loadApp(user);
+  }else if(!demoMode){
+    appView.classList.add('hidden');
+    authView.classList.remove('hidden');
+  }
+});
+
+function setEnvChip(){
+  const chip = $("#envInfo");
+  chip.textContent = demoMode ? "Demo • Read only" : "Connected";
+}
+function assertWritable(label='This action'){
+  if(!demoMode) return true;
+  toast(`${label} is disabled in demo mode.`, 'warn');
+  return false;
+}
+
+function bindUIOnce(){
+  if(uiBound) return;
+  uiBound = true;
+
+  $("#settingNearDays").addEventListener('change', ()=>{
+    settingNear = Math.max(1, +$("#settingNearDays").value || 30);
+    renderAll();
+  }, {passive:true});
+
+  $$("#navGrid .nav-btn[data-tab]").forEach(btn=>{
+    btn.addEventListener('click', ()=> setActiveTab(btn.dataset.tab));
+  });
+  $("#periodBtn").addEventListener('click', openPeriodModal);
+  $("#xPeriod").addEventListener('click', ()=> $("#modalPeriod").classList.remove('open'));
+
+  $("#btnSeedPlans").onclick = seedPlans;
+  $("#btnAddPlan").onclick = ()=> openPlanModal();
+  $("#btnRunReport").addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); runReport(); });
+  $("#btnCsv").addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); exportCSV(); });
+  $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
+  $("#repType").addEventListener('change', onRepTypeChange, {passive:true});
+  $("#btnTogglePlans").addEventListener('click', ()=>{
+    settingsPlansOpen = !settingsPlansOpen;
+    renderSettingsPlansState();
+  });
+
+  $("#xCust").onclick = ()=>{ editCustomerId = null; $("#modalCustomer").classList.remove('open'); };
+  $("#xRenew").onclick = ()=> $("#modalRenew").classList.remove('open');
+  $("#xPlan").onclick = ()=> $("#modalPlan").classList.remove('open');
+
+  $("#c_stb").addEventListener('change', ()=>{ $("#stbBox").classList.toggle('hidden', $("#c_stb").value !== 'yes'); previewTotals(); });
+  ["#c_cost","#c_wholesale","#c_stbCost","#c_stbWholesale","#c_stb","#c_plan","#c_actual","#c_discName","#c_stbActual"].forEach(sel=>{
+    $(sel).addEventListener('input', previewTotals);
+    $(sel).addEventListener('change', previewTotals);
+  });
+
+  $("#c_plan").addEventListener('change', ()=>{
+    const pid = $("#c_plan").value;
+    const p = plans[pid] || {};
+    if(!editCustomerId){
+      $("#c_actual").value = p.retail_price ?? "";
+      $("#c_cost").value = p.retail_price ?? "";
+      $("#c_wholesale").value = p.wholesale_cost ?? "";
+    }
+    const dur = p.duration_months ?? 0;
+    $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
+    previewTotals();
+  });
+
+  $("#c_start").addEventListener('change', ()=>{
+    const pid = $("#c_plan").value;
+    const dur = plans[pid]?.duration_months ?? 0;
+    $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
+  });
+
+  $("#r_stb").addEventListener('change', ()=>{ $("#r_stbBox").classList.toggle('hidden', $("#r_stb").value !== 'yes'); });
+
+  const saveBtn = $("#btnSaveCustomer");
+  saveBtn.addEventListener('click', async (e) => {
+    e.preventDefault(); e.stopPropagation();
+    if(saveBtn.dataset.busy === '1') return;
+    if(!assertWritable("Saving customer")) return;
+    saveBtn.dataset.busy = '1';
+    const old = saveBtn.textContent;
+    saveBtn.textContent = 'Saving…';
+    saveBtn.disabled = true;
+    try{
+      await saveCustomerFromModal();
+      toast(editCustomerId ? "Customer updated." : "Customer saved.", "ok");
+    }catch(err){
+      showErr('[save customer]', err);
+      toast(err?.message || 'Failed to save customer.', 'error', 3400);
+    }finally{
+      saveBtn.disabled = false;
+      saveBtn.textContent = old;
+      saveBtn.dataset.busy = '0';
+    }
+  });
+
+  $("#btnDoRenew").onclick = doRenew;
+  $("#btnSavePlan").onclick = doSavePlan;
+}
+
+function setActiveTab(tab){
+  activeTab = tab;
+  $$("#navGrid .nav-btn[data-tab]").forEach(btn=> btn.classList.toggle('active', btn.dataset.tab === tab));
+  Object.entries(sections).forEach(([key, el])=>{ el.classList.toggle('hidden', key !== tab); });
+}
+function periodMatches(dateStr, period = dashboardPeriod){
+  if(period.type === 'lifetime') return true;
+  if(!dateStr) return false;
+  const d = new Date(dateStr + 'T00:00:00');
+  if(Number.isNaN(d.getTime())) return false;
+  if(period.type === 'year') return d.getFullYear() === period.year;
+  return false;
+}
+function periodText(period = dashboardPeriod){
+  if(period.type === 'year') return String(period.year);
+  return 'Lifetime';
+}
+function availableYears(){
+  const set = new Set();
+  customers.forEach(c=>{
+    const dates = [c.originalStartDate, c.currentPlan?.startDate];
+    dates.forEach(v=>{
+      if(v && /^\d{4}-\d{2}-\d{2}$/.test(v)) set.add(Number(v.slice(0,4)));
+    });
+  });
+  renewals.forEach(r=>{
+    if(r.startDate && /^\d{4}-\d{2}-\d{2}$/.test(r.startDate)) set.add(Number(r.startDate.slice(0,4)));
+  });
+  const years = [...set].filter(Boolean).sort((a,b)=> b-a);
+  const nowYear = new Date().getFullYear();
+  if(!years.includes(nowYear)) years.unshift(nowYear);
+  return years;
+}
+function openPeriodModal(){
+  const wrap = $("#periodOptions");
+  const years = availableYears();
+  wrap.innerHTML = `
+    <button class="btn ${dashboardPeriod.type === 'year' && dashboardPeriod.year === new Date().getFullYear() ? 'ok' : 'ghost'}" data-period-type="year" data-period-year="${new Date().getFullYear()}" type="button">Current Year (${new Date().getFullYear()})</button>
+    ${years.map(y=> `<button class="btn ${dashboardPeriod.type === 'year' && dashboardPeriod.year === y ? 'ok' : 'ghost'}" data-period-type="year" data-period-year="${y}" type="button">${y}</button>`).join('')}
+    <button class="btn ${dashboardPeriod.type === 'lifetime' ? 'ok' : 'ghost'}" data-period-type="lifetime" type="button">Lifetime</button>
+  `;
+  wrap.querySelectorAll('[data-period-type]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const type = btn.dataset.periodType;
+      dashboardPeriod = type === 'year' ? { type:'year', year:+btn.dataset.periodYear } : { type:'lifetime' };
+      $("#periodLabel").textContent = periodText();
+      $("#modalPeriod").classList.remove('open');
+      renderDashboard();
+    };
+  });
+  $("#modalPeriod").classList.add('open');
+}
+function renderSettingsPlansState(){
+  $("#settingsPlansWrap").classList.toggle('hidden', !settingsPlansOpen);
+  $("#btnTogglePlans").textContent = settingsPlansOpen ? 'Hide Plans' : 'Manage Plans';
+}
+
+async function loadApp(){
+  bindUIOnce();
+  setEnvChip();
+  $("#settingNearDays").value = settingNear;
+  $("#periodLabel").textContent = periodText();
+  const now = new Date();
+  $("#repMonth").value = now.toISOString().slice(0,7);
+  $("#repYear").value = String(now.getFullYear());
+  setEmptyTables();
+
+  sections.dashboard.innerHTML = `<div class="card"><div class="empty-state">Loading dashboard…</div></div>`;
+  sections.customers.innerHTML = `<div class="card"><div class="empty-state">Loading customers…</div></div>`;
+  sections.forecast.innerHTML = `<div class="card"><div class="empty-state">Loading forecast…</div></div>`;
+
+  try{
+    renewalsLoadedOnce = false;
+    await Promise.all([loadPlans(), loadCustomers()]);
+    onRepTypeChange();
+    renderAll();
+
+    try{
+      await loadRenewals();
+      renewalsLoadedOnce = true;
+      renderAll();
+    }catch(e){
+      showErr('[load renewals]', e);
+      toast("Renewal history loaded partially or slowly. Customers are still available.", "warn", 3800);
+      renderAll();
+    }
+  }catch(e){
+    showErr('[loadApp]', e);
+    toast("Some data could not load completely. Check console if needed.", "warn", 3500);
+  }
+}
+function setEmptyTables(){
+  setEmptyRow($("#plansGrid tbody"), 7, "Loading...");
+  setEmptyRow($("#repGrid tbody"), 8, "Run a report to view results.");
+}
+function setEmptyRow(tbody, colSpan, message){ tbody.innerHTML = `<tr><td colspan="${colSpan}" class="empty-state">${esc(message)}</td></tr>`; }
+
+async function loadPlans(){
+  plans = {};
+  const snap = await safeGetDocs(query(collection(db, "plans"), orderBy("id")), '[plans] getDocs');
+  snap.forEach(d=>{ plans[d.id] = d.data(); });
+  renderPlans();
+}
+async function savePlan(p){
+  const ref = doc(db, "plans", String(p.id));
+  await safeSetDoc(ref, p, {merge:true}, '[plans] setDoc');
+  plans[p.id] = p;
+  renderPlans();
+  refreshPlanSelects();
+}
+async function deletePlan(id){
+  await safeDeleteDoc(doc(db, "plans", String(id)), '[plans] deleteDoc');
+  delete plans[id];
+  renderPlans();
+  refreshPlanSelects();
+}
+async function loadCustomers(){
+  customers = [];
+  const snap = await safeGetDocs(query(collection(db,"customers"), orderBy("name")), '[customers] getDocs');
+  snap.forEach(d=> customers.push({id:d.id, ...d.data()}) );
+}
+async function saveCustomer(payload, existingId=null){
+  if(existingId){
+    const idStr = String(existingId);
+    const ref = doc(db,"customers", idStr);
+    payload.updatedAt = serverTimestamp();
+    await safeUpdateDoc(ref, payload, '[customers] updateDoc');
+    await loadCustomers();
+    return idStr;
+  }else{
+    const ref = await safeAddDoc(collection(db,"customers"), { ...payload, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }, '[customers] addDoc');
+    await loadCustomers();
+    return String(ref.id);
+  }
+}
+async function addRenewal(customerId, ren){
+  const ref = await safeAddDoc(collection(db, "customers", String(customerId), "renewals"), { ...ren, createdAt: serverTimestamp() }, '[renewals] addDoc');
+  await loadRenewals();
+  return String(ref.id);
+}
+async function loadRenewals(){
+  renewals = [];
+  renewalsLoadedOnce = false;
+  try{
+    const snap = await safeGetDocs(collectionGroup(db, "renewals"), '[renewals] collectionGroup');
+    snap.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+  }catch(e){
+    showErr('[renewals] collectionGroup failed', e);
+    const resultList = await Promise.allSettled(
+      customers.map(c => safeGetDocs(collection(db, "customers", String(c.id), "renewals"), `[renewals] fallback ${c.id}`))
+    );
+    resultList.forEach((result, index)=>{
+      if(result.status === 'fulfilled'){
+        result.value.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+      }else{
+        showErr(`[renewals] fallback ${customers[index]?.id || index}`, result.reason);
+      }
+    });
+  }
+  renewalsLoadedOnce = true;
+}
+async function setCustomerCurrentPlan(customerId, planFields){
+  const ref = doc(db, "customers", String(customerId));
+  await safeUpdateDoc(ref, { currentPlan: planFields, updatedAt: serverTimestamp() }, '[customers] set currentPlan');
+}
+async function deleteCustomerAndRenewals(customerId){
+  const idStr = String(customerId);
+  const renSnap = await safeGetDocs(collection(db, "customers", idStr, "renewals"), '[renewals] list before delete');
+  const batch = writeBatch(db);
+  renSnap.forEach(d => batch.delete(doc(db, "customers", idStr, "renewals", d.id)));
+  batch.delete(doc(db, "customers", idStr));
+  await batch.commit();
+  await loadCustomers();
+  await loadRenewals();
+  renderAll();
+}
+
+function refreshPlanSelects(){
+  const selList = [$("#c_plan"), $("#r_plan")];
+  selList.forEach(sel=>{
+    if(!sel) return;
+    const curr = sel.value;
+    sel.innerHTML = "";
+    const ids = Object.keys(plans).sort();
+    ids.forEach(id=>{
+      const p = plans[id];
+      const opt = document.createElement('option');
+      opt.value = id;
+      opt.textContent = `${p.name} (${p.duration_months} mo)`;
+      sel.appendChild(opt);
+    });
+    if(curr && plans[curr]) sel.value = curr;
+  });
+}
+
+function renewalQuality(r){
+  return ['cost','wholesale','actual','startDate','expiryDate','planId','durationMonths','paymentReceived','discountName'].reduce((s,k)=> s + (r[k] !== undefined && r[k] !== '' ? 1 : 0), 0) + (r.renewalType ? 4 : 0);
+}
+function canonicalRenewalGroups(){
+  const sigMap = new Map();
+  for(const r of renewals){
+    const cid = String(r.customerId || '');
+    if(!cid) continue;
+    const signature = [cid, r.startDate || '', r.expiryDate || '', r.planId || '', r.cost || 0, r.stbIncluded || 'no', r.stbCost || 0, r.paymentReceived || ''].join('|');
+    const existing = sigMap.get(signature);
+    if(!existing || renewalQuality(r) >= renewalQuality(existing)) sigMap.set(signature, r);
+  }
+  const grouped = new Map();
+  [...sigMap.values()].forEach(r=>{
+    const cid = String(r.customerId || '');
+    if(!grouped.has(cid)) grouped.set(cid, []);
+    grouped.get(cid).push(r);
+  });
+  grouped.forEach(list=> list.sort((a,b)=> (a.startDate || '').localeCompare(b.startDate || '') || (a.expiryDate || '').localeCompare(b.expiryDate || '')));
+  return grouped;
+}
+function customerHistory(customerId){
+  const grouped = canonicalRenewalGroups();
+  const list = grouped.get(String(customerId)) || [];
+  const hasTyped = list.some(r => !!(r.renewalType || r.recordType));
+  const renewalOnly = hasTyped ? list.filter(r => (r.renewalType || r.recordType) === 'renewal') : list.filter((_, idx) => idx > 0);
+  const totalSpent = list.reduce((sum, r)=> sum + calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).turnover, 0);
+  const totalExpense = list.reduce((sum, r)=> sum + calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).expense, 0);
+  const firstDate = list[0]?.startDate || '';
+  const lastDate = list[list.length - 1]?.startDate || '';
+  return { list, renewalOnly, renewalCount: renewalOnly.length, totalSpent, totalExpense, firstDate, lastDate };
+}
+function getExpiryStatus(expISO){
+  if(!expISO) return { key:'unknown', label:'No expiry', cls:'badge-muted', days:null };
+  const d = daysLeft(expISO);
+  if(d < 0) return { key:'expired', label:`Expired ${Math.abs(d)}d`, cls:'badge-exp', days:d };
+  if(d <= settingNear) return { key:'near', label:`Expiring soon • ${d}d`, cls:'badge-warn', days:d };
+  return { key:'active', label:`Active • ${d}d`, cls:'badge-ok', days:d };
+}
+function getPaidBadge(v){ return v === 'yes' ? `<span class="mini-badge badge-ok">Paid</span>` : `<span class="mini-badge badge-warn">Unpaid</span>`; }
+function customerSummary(c){
+  const currentPlan = c.currentPlan || {};
+  const status = getExpiryStatus(currentPlan.expiryDate);
+  const history = customerHistory(c.id);
+  const tenureDays = history.firstDate ? Math.max(0, Math.floor((new Date() - new Date(history.firstDate + 'T00:00:00')) / 86400000)) : 0;
+  return { c, currentPlan, status, history, tenureDays };
+}
+function getDashboardBaseCustomers(){
+  return customers.filter(c => {
+    const currentPlan = c.currentPlan || {};
+    const refDate = currentPlan.startDate || c.originalStartDate || '';
+    return periodMatches(refDate);
+  });
+}
+function dashboardFinancials(){
+  const grouped = canonicalRenewalGroups();
+  const rows = [];
+  grouped.forEach(list=> list.forEach(r=> { if(periodMatches(r.startDate || '')) rows.push(r); }));
+  let turnover = 0, expense = 0, profit = 0;
+  rows.forEach(r=>{
+    const f = calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual });
+    turnover += f.turnover; expense += f.expense; profit += f.profit;
+  });
+  return { rows, turnover, expense, profit };
+}
+
+function renderAll(){
+  $("#periodLabel").textContent = periodText();
+  renderDashboard();
+  renderCustomers();
+  renderForecast();
+  renderPlans();
+  renderKPIs();
+  runReport();
+  renderSettingsPlansState();
+  $("#settingNearDays").value = settingNear;
+  $("#nearExpCount").textContent = `Expiring soon: ${customers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length}`;
+}
+
+function renderDashboard(){
+  const boxCustomers = getDashboardBaseCustomers();
+  const activeCount = boxCustomers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0; }).length;
+  const nearCount = boxCustomers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length;
+  const expiredCount = boxCustomers.filter(c => daysLeft((c.currentPlan || {}).expiryDate) < 0).length;
+  const financials = dashboardFinancials();
+  const maxMetric = Math.max(financials.turnover, financials.expense, financials.profit, 1);
+
+  const nearList = customers.map(customerSummary)
+    .filter(x => x.status.key === 'near')
+    .sort((a,b)=> (a.status.days ?? 9999) - (b.status.days ?? 9999));
+  const expiredList = customers.map(customerSummary)
+    .filter(x => x.status.key === 'expired')
+    .sort((a,b)=> (a.status.days ?? 0) - (b.status.days ?? 0));
+
+  const loyaltyList = customers.map(customerSummary).sort((a,b)=>{
+    if(loyaltySortMode === 'renewals'){
+      const diff = b.history.renewalCount - a.history.renewalCount;
+      if(diff !== 0) return diff;
+      return b.history.totalSpent - a.history.totalSpent;
+    }
+    const diff = b.history.totalSpent - a.history.totalSpent;
+    if(diff !== 0) return diff;
+    return b.history.renewalCount - a.history.renewalCount;
+  }).slice(0,20);
+
+  let bottomContent = `<div class="empty-state">Choose one of the buttons above to view the list.</div>`;
+  if(dashboardBottomView === 'near'){
+    bottomContent = nearList.length ? nearList.map(item => dashboardAccordionHtml(item, 'dashboardView', true)).join('') : `<div class="empty-state">No customers are expiring soon.</div>`;
+  }else if(dashboardBottomView === 'expired'){
+    bottomContent = expiredList.length ? expiredList.map(item => dashboardAccordionHtml(item, 'dashboardView', true)).join('') : `<div class="empty-state">No expired customers right now.</div>`;
+  }else if(dashboardBottomView === 'top'){
+    bottomContent = loyaltyList.length ? loyaltyList.map(item => loyaltyAccordionHtml(item)).join('') : `<div class="empty-state">No loyalty data available yet.</div>`;
+  }
+
+  sections.dashboard.innerHTML = `
+    <div class="card">
+      <div class="section-title">
+        <div>
+          <h2>Dashboard</h2>
+          <div class="muted">Showing ${esc(periodText())}</div>
+          ${!renewalsLoadedOnce ? `<div class="helper" style="margin-top:4px">Renewal history is still loading. Customer boxes show first, financial bars fill in after that.</div>` : ``}
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="kpi-card"><div class="kpi-label">Customers (${esc(periodText())})</div><div class="kpi-value">${boxCustomers.length}</div></div>
+        <div class="kpi-card"><div class="kpi-label">Active</div><div class="kpi-value">${activeCount}</div></div>
+        <div class="kpi-card"><div class="kpi-label">Expiring Soon</div><div class="kpi-value">${nearCount}</div></div>
+        <div class="kpi-card"><div class="kpi-label">Expired</div><div class="kpi-value">${expiredCount}</div></div>
+      </div>
+      <div class="metric-stack">
+        ${renderMetricBar('Profit', financials.profit, maxMetric)}
+        ${renderMetricBar('Expense', financials.expense, maxMetric)}
+        ${renderMetricBar('Turnover', financials.turnover, maxMetric)}
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <div class="section-title">
+        <div>
+          <h3>Customer Insights</h3>
+          <div class="helper">Lists open only after you press a button.</div>
+        </div>
+      </div>
+      <div class="segmented">
+        <button class="btn ${dashboardBottomView === 'near' ? 'ok' : 'ghost'}" id="dashBtnNear" type="button">Expiring Soon</button>
+        <button class="btn ${dashboardBottomView === 'expired' ? 'ok' : 'ghost'}" id="dashBtnExpired" type="button">Expired</button>
+        <button class="btn ${dashboardBottomView === 'top' ? 'ok' : 'ghost'}" id="dashBtnTop" type="button">Top Customers</button>
+      </div>
+      ${dashboardBottomView === 'top' ? `
+        <div class="flex" style="margin-top:12px">
+          <button class="mini-btn ${loyaltySortMode === 'spent' ? 'ok' : 'ghost'}" id="loyalSortSpent" type="button">Paid more</button>
+          <button class="mini-btn ${loyaltySortMode === 'renewals' ? 'ok' : 'ghost'}" id="loyalSortRenewals" type="button">Renewed more</button>
+        </div>
+      ` : ''}
+      <div class="list-stack" style="margin-top:12px">${bottomContent}</div>
+    </div>
+  `;
+
+  $("#dashBtnNear").onclick = ()=>{ dashboardBottomView = dashboardBottomView === 'near' ? '' : 'near'; renderDashboard(); };
+  $("#dashBtnExpired").onclick = ()=>{ dashboardBottomView = dashboardBottomView === 'expired' ? '' : 'expired'; renderDashboard(); };
+  $("#dashBtnTop").onclick = ()=>{ dashboardBottomView = dashboardBottomView === 'top' ? '' : 'top'; renderDashboard(); };
+  const sortSpent = $("#loyalSortSpent");
+  const sortRenewals = $("#loyalSortRenewals");
+  if(sortSpent) sortSpent.onclick = ()=>{ loyaltySortMode = 'spent'; renderDashboard(); };
+  if(sortRenewals) sortRenewals.onclick = ()=>{ loyaltySortMode = 'renewals'; renderDashboard(); };
+  bindAccordionClicks(sections.dashboard, 'dashboard');
+}
+function renderMetricBar(label, value, maxMetric){
+  return `
+    <div class="metric-bar">
+      <div class="metric-top">
+        <div><strong>${label}</strong><span> (${esc(periodText())})</span></div>
+        <strong>${fmt(value)}</strong>
+      </div>
+      <div class="track"><div class="fill" style="width:${metricWidth(Math.max(value, 0), maxMetric)}%"></div></div>
+    </div>`;
+}
+function dashboardAccordionHtml(item, stateKey, includeRenew){
+  const open = accordionState[stateKey].has(String(item.c.id));
+  const cp = item.currentPlan;
+  const statusText = item.status.key === 'expired' ? `Expired ${Math.abs(item.status.days)}d` : `${item.status.days}d left`;
+  return `
+    <div class="accordion-item ${open ? 'open' : ''}" data-acc="${stateKey}" data-id="${esc(item.c.id)}">
+      <div class="accordion-head">
+        <div class="accordion-left">
+          <div class="accordion-name">${esc(item.c.name || '')}</div>
+          <div class="accordion-meta">
+            <span>${esc(cp.planName || cp.planId || '-')}</span>
+            <span>•</span>
+            <span>${esc(item.c.phone || 'No phone')}</span>
+          </div>
+          <div class="accordion-meta">
+            <span class="mini-badge ${item.status.cls}">${esc(statusText)}</span>
+            ${getPaidBadge(cp.paymentReceived)}
+          </div>
+        </div>
+        <div class="accordion-actions">
+          ${includeRenew ? `<button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>` : ''}
+          <button class="mini-btn ghost" data-action="toggle" data-state="${stateKey}" data-id="${esc(item.c.id)}" type="button">${open ? 'Hide' : 'Open'}</button>
+        </div>
+      </div>
+      <div class="accordion-body">
+        ${detailGridHtml(item)}
+        <div class="detail-actions">
+          <button class="mini-btn ghost" data-action="view" data-id="${esc(item.c.id)}" type="button">View</button>
+          <button class="mini-btn ghost" data-action="edit" data-id="${esc(item.c.id)}" type="button">Edit</button>
+          <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
+          <button class="mini-btn ghost" data-action="invoice" data-id="${esc(item.c.id)}" type="button">Slip</button>
+        </div>
+      </div>
+    </div>`;
+}
+function loyaltyAccordionHtml(item){
+  const open = accordionState.loyalty.has(String(item.c.id));
+  return `
+    <div class="accordion-item ${open ? 'open' : ''}" data-acc="loyalty" data-id="${esc(item.c.id)}">
+      <div class="accordion-head">
+        <div class="accordion-left">
+          <div class="accordion-name">${esc(item.c.name || '')}</div>
+          <div class="accordion-meta">
+            <span class="mini-badge badge-ok">Paid ${esc(fmt(item.history.totalSpent))}</span>
+            <span class="mini-badge badge-warn">Renewals ${esc(item.history.renewalCount)}</span>
+            <span class="mini-badge ${item.status.cls}">${esc(item.status.label)}</span>
+          </div>
+        </div>
+        <div class="accordion-actions">
+          <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
+          <button class="mini-btn ghost" data-action="toggle" data-state="loyalty" data-id="${esc(item.c.id)}" type="button">${open ? 'Hide' : 'Open'}</button>
+        </div>
+      </div>
+      <div class="accordion-body">
+        ${detailGridHtml(item, suggestOffer({ tenureDays:item.tenureDays, renewalCount:item.history.renewalCount, totalSpent:item.history.totalSpent, statusKey:item.status.key }))}
+        <div class="detail-actions">
+          <button class="mini-btn ghost" data-action="view" data-id="${esc(item.c.id)}" type="button">View</button>
+          <button class="mini-btn ghost" data-action="edit" data-id="${esc(item.c.id)}" type="button">Edit</button>
+          <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
+          <button class="mini-btn ghost" data-action="invoice" data-id="${esc(item.c.id)}" type="button">Slip</button>
+        </div>
+      </div>
+    </div>`;
+}
+function detailGridHtml(item, offer=''){
+  const cp = item.currentPlan || {};
+  const figs = calcFigures({ cost:cp.cost, wholesale:cp.wholesale, actual:cp.actual, stbIncluded:cp.stbIncluded, stbCost:cp.stbCost, stbWholesale:cp.stbWholesale, stbActual:cp.stbActual });
+  return `
+    <div class="detail-grid">
+      <div class="detail-box"><div class="detail-label">Email</div><div class="detail-value">${esc(item.c.email || 'Not given')}</div></div>
+      <div class="detail-box"><div class="detail-label">User ID / MAC</div><div class="detail-value">${esc([item.c.userId, item.c.mac].filter(Boolean).join(' • ') || 'Not given')}</div></div>
+      <div class="detail-box"><div class="detail-label">Start</div><div class="detail-value">${esc(cp.startDate || '-')}</div></div>
+      <div class="detail-box"><div class="detail-label">Expiry</div><div class="detail-value">${esc(cp.expiryDate || '-')}</div></div>
+      <div class="detail-box"><div class="detail-label">Total Paid</div><div class="detail-value">${esc(fmt(item.history.totalSpent))}</div></div>
+      <div class="detail-box"><div class="detail-label">Renewals</div><div class="detail-value">${esc(item.history.renewalCount)}</div></div>
+      <div class="detail-box"><div class="detail-label">This Plan Profit</div><div class="detail-value">${esc(fmt(figs.profit))}</div></div>
+      <div class="detail-box"><div class="detail-label">Suggested Offer</div><div class="detail-value">${esc(offer || suggestOffer({ tenureDays:item.tenureDays, renewalCount:item.history.renewalCount, totalSpent:item.history.totalSpent, statusKey:item.status.key }))}</div></div>
+    </div>`;
+}
+function bindAccordionClicks(root, scope){
+  root.querySelectorAll('[data-action="toggle"]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const stateKey = btn.dataset.state;
+      const id = String(btn.dataset.id);
+      if(accordionState[stateKey].has(id)) accordionState[stateKey].delete(id); else accordionState[stateKey].add(id);
+      if(scope === 'dashboard') renderDashboard(); else renderCustomers();
+    };
+  });
+  root.querySelectorAll('[data-action="renew"]').forEach(btn=> btn.onclick = ()=> openRenewModal(btn.dataset.id));
+  root.querySelectorAll('[data-action="edit"]').forEach(btn=> btn.onclick = ()=> openCustomerModal(btn.dataset.id));
+  root.querySelectorAll('[data-action="view"]').forEach(btn=> btn.onclick = ()=> viewCustomer(btn.dataset.id));
+  root.querySelectorAll('[data-action="invoice"]').forEach(btn=> btn.onclick = ()=> printInvoice(btn.dataset.id));
+  root.querySelectorAll('[data-action="delete"]').forEach(btn=> btn.onclick = async ()=>{
+    if(!assertWritable("Deleting customer")) return;
+    if(confirm("Delete this customer and all their renewals?")){
+      try{ await deleteCustomerAndRenewals(btn.dataset.id); toast("Customer deleted.", "ok"); }
+      catch(e){ showErr('[customers] delete', e); toast("Failed to delete customer.", "error"); }
+    }
+  });
+}
+
+function renderCustomers(){
+  const q = (window.customerSearchValue || '').toLowerCase().trim();
+  const timeFilter = window.customerTimeFilter || 'currentYear';
+  const statusFilter = window.customerStatusFilter || 'all';
+  const expiryFilter = window.customerExpiryFilter || 'all';
+  const sortMode = customerSortMode;
+  const now = new Date();
+  const currentYear = now.getFullYear();
+
+  const list = customers.map(customerSummary).filter(item=>{
+    const inText = `${item.c.name||''} ${item.c.phone||''} ${item.c.email||''} ${item.c.userId||''} ${item.c.mac||''}`.toLowerCase();
+    if(q && !inText.includes(q)) return false;
+    const startISO = item.currentPlan.startDate || item.c.originalStartDate || "";
+    let withinTime = true;
+    if(timeFilter === 'currentYear'){
+      withinTime = !!startISO && new Date(startISO + "T00:00:00").getFullYear() === currentYear;
+    }else if(timeFilter === '30'){
+      withinTime = !!startISO && Math.floor((now - new Date(startISO + "T00:00:00")) / 86400000) <= 30;
+    }else if(timeFilter === '365'){
+      withinTime = !!startISO && Math.floor((now - new Date(startISO + "T00:00:00")) / 86400000) <= 365;
+    }
+    if(!withinTime) return false;
+    const paidStr = (item.currentPlan.paymentReceived === 'yes') ? 'paid' : 'unpaid';
+    if(statusFilter !== 'all' && paidStr !== statusFilter) return false;
+    if(expiryFilter !== 'all' && item.status.key !== expiryFilter) return false;
+    return true;
+  }).sort((a,b)=>{
+    switch(sortMode){
+      case 'nameAsc': return (a.c.name || '').localeCompare(b.c.name || '');
+      case 'nameDesc': return (b.c.name || '').localeCompare(a.c.name || '');
+      case 'expirySoon': return (a.status.days ?? 99999) - (b.status.days ?? 99999);
+      case 'expiryLate': return (b.status.days ?? -99999) - (a.status.days ?? -99999);
+      case 'startNew': return (b.currentPlan.startDate || '').localeCompare(a.currentPlan.startDate || '');
+      case 'startOld': return (a.currentPlan.startDate || '').localeCompare(b.currentPlan.startDate || '');
+      case 'paidMore': return b.history.totalSpent - a.history.totalSpent || (a.c.name || '').localeCompare(b.c.name || '');
+      case 'renewedMore': return b.history.renewalCount - a.history.renewalCount || b.history.totalSpent - a.history.totalSpent;
+      default: return (a.status.days ?? 99999) - (b.status.days ?? 99999) || (a.c.name || '').localeCompare(b.c.name || '');
+    }
+  });
+
+  sections.customers.innerHTML = `
+    <div class="card">
+      <div class="section-title">
+        <div class="grow">
+          <h2>Customers</h2>
+          <div class="helper">Current year is the default filter so your list appears on first load.</div>
+          ${!renewalsLoadedOnce ? `<div class="helper" style="margin-top:4px">Renewal totals will finish filling in after renewal history loads.</div>` : ``}
+        </div>
+        <button id="btnAddCustomerBar" class="btn ok" type="button">+ Add Customer</button>
+      </div>
+
+      <div class="control-grid three" style="margin-top:10px">
+        <input id="searchCustomersBar" placeholder="Search by name, phone, email, MAC, user ID..." value="${esc(window.customerSearchValue || '')}">
+        <select id="timeFilterBar">
+          <option value="currentYear" ${timeFilter==='currentYear'?'selected':''}>Current Year</option>
+          <option value="30" ${timeFilter==='30'?'selected':''}>Last 30 Days</option>
+          <option value="365" ${timeFilter==='365'?'selected':''}>Last 365 Days</option>
+          <option value="lifetime" ${timeFilter==='lifetime'?'selected':''}>Lifetime</option>
+        </select>
+        <select id="expiryFilterBar">
+          <option value="all" ${expiryFilter==='all'?'selected':''}>All Status</option>
+          <option value="active" ${expiryFilter==='active'?'selected':''}>Active</option>
+          <option value="near" ${expiryFilter==='near'?'selected':''}>Expiring Soon</option>
+          <option value="expired" ${expiryFilter==='expired'?'selected':''}>Expired</option>
+        </select>
+        <select id="statusFilterBar">
+          <option value="all" ${statusFilter==='all'?'selected':''}>All Payments</option>
+          <option value="paid" ${statusFilter==='paid'?'selected':''}>Paid</option>
+          <option value="unpaid" ${statusFilter==='unpaid'?'selected':''}>Unpaid</option>
+        </select>
+        <select id="customerSortBar">
+          <option value="expirySoon" ${sortMode==='expirySoon'?'selected':''}>Expiry Soonest</option>
+          <option value="nameAsc" ${sortMode==='nameAsc'?'selected':''}>Name A–Z</option>
+          <option value="nameDesc" ${sortMode==='nameDesc'?'selected':''}>Name Z–A</option>
+          <option value="expiryLate" ${sortMode==='expiryLate'?'selected':''}>Expiry Latest</option>
+          <option value="startNew" ${sortMode==='startNew'?'selected':''}>Newest Start</option>
+          <option value="startOld" ${sortMode==='startOld'?'selected':''}>Oldest Start</option>
+          <option value="paidMore" ${sortMode==='paidMore'?'selected':''}>Paid More</option>
+          <option value="renewedMore" ${sortMode==='renewedMore'?'selected':''}>Renewed More</option>
+        </select>
+        <div class="card" style="padding:12px"><div class="helper">${list.length} result${list.length === 1 ? '' : 's'} shown</div></div>
+      </div>
+
+      <div class="list-stack" style="margin-top:12px">
+        ${list.length ? list.map(item => customerAccordionHtml(item)).join('') : `<div class="empty-state">No customers match your filters.</div>`}
+      </div>
+    </div>`;
+
+  $("#btnAddCustomerBar").onclick = ()=> openCustomerModal(null);
+  $("#searchCustomersBar").addEventListener('input', e=>{ window.customerSearchValue = e.target.value; renderCustomers(); });
+  $("#timeFilterBar").addEventListener('change', e=>{ window.customerTimeFilter = e.target.value; renderCustomers(); }, {passive:true});
+  $("#expiryFilterBar").addEventListener('change', e=>{ window.customerExpiryFilter = e.target.value; renderCustomers(); }, {passive:true});
+  $("#statusFilterBar").addEventListener('change', e=>{ window.customerStatusFilter = e.target.value; renderCustomers(); }, {passive:true});
+  $("#customerSortBar").addEventListener('change', e=>{ customerSortMode = e.target.value; renderCustomers(); }, {passive:true});
+  bindAccordionClicks(sections.customers, 'customers');
+}
+function customerAccordionHtml(item){
+  const open = accordionState.customers.has(String(item.c.id));
+  const cp = item.currentPlan || {};
+  return `
+    <div class="accordion-item ${open ? 'open' : ''}" data-acc="customers" data-id="${esc(item.c.id)}">
+      <div class="accordion-head">
+        <div class="accordion-left">
+          <div class="accordion-name">${esc(item.c.name || '')}</div>
+          <div class="accordion-meta">
+            <span>${esc(cp.planName || cp.planId || '-')}</span>
+            <span>•</span>
+            <span>${esc(item.c.phone || 'No phone')}</span>
+          </div>
+          <div class="accordion-meta">
+            <span class="mini-badge ${item.status.cls}">${esc(item.status.label)}</span>
+            ${getPaidBadge(cp.paymentReceived)}
+            <span class="mini-badge badge-muted">Paid ${esc(fmt(item.history.totalSpent))}</span>
+          </div>
+        </div>
+        <div class="accordion-actions">
+          <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
+          <button class="mini-btn ghost" data-action="toggle" data-state="customers" data-id="${esc(item.c.id)}" type="button">${open ? 'Hide' : 'Open'}</button>
+        </div>
+      </div>
+      <div class="accordion-body">
+        ${detailGridHtml(item)}
+        <div class="detail-actions">
+          <button class="mini-btn ghost" data-action="view" data-id="${esc(item.c.id)}" type="button">View</button>
+          <button class="mini-btn ghost" data-action="edit" data-id="${esc(item.c.id)}" type="button">Edit</button>
+          <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
+          <button class="mini-btn ghost" data-action="invoice" data-id="${esc(item.c.id)}" type="button">Slip</button>
+          <button class="mini-btn ghost" data-action="delete" data-id="${esc(item.c.id)}" type="button">Delete</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function recordsForAverageWindow(months){
+  const end = endOfCurrentMonth();
+  const start = new Date(end.getFullYear(), end.getMonth() - (months - 1), 1);
+  const activationRows = [];
+  const grouped = canonicalRenewalGroups();
+  grouped.forEach(list=>{
+    list.forEach((r, idx)=>{
+      const startDate = isoToDate(r.startDate);
+      if(!startDate || startDate < start || startDate > end) return;
+      const typed = r.renewalType || r.recordType || (idx === 0 ? 'activation' : 'renewal');
+      if(typed === 'activation') activationRows.push(r);
+    });
+  });
+  return activationRows;
+}
+function planTypeForecastStats(){
+  const grouped = canonicalRenewalGroups();
+  const today = new Date();
+  const stats = {};
+  grouped.forEach(list=>{
+    for(let i=0;i<list.length;i++){
+      const row = list[i];
+      const duration = +row.durationMonths || +plans[row.planId]?.duration_months || 0;
+      if(!duration) continue;
+      if(!stats[duration]) stats[duration] = { opportunities:0, renewed:0, activeCount:0, avgRenewalTurnover:0, avgRenewalProfit:0, avgActivationTurnover:0, avgActivationProfit:0, renewalRows:[], activationRows:[] };
+      const expiry = isoToDate(row.expiryDate);
+      const next = list[i+1];
+      const type = row.renewalType || row.recordType || (i===0 ? 'activation' : 'renewal');
+      const figures = calcFigures({ cost:row.cost, wholesale:row.wholesale, actual:row.actual, stbIncluded:row.stbIncluded, stbCost:row.stbCost, stbWholesale:row.stbWholesale, stbActual:row.stbActual });
+      if(type === 'renewal') stats[duration].renewalRows.push(figures);
+      else stats[duration].activationRows.push(figures);
+      if(expiry && expiry <= today){
+        stats[duration].opportunities += 1;
+        if(next) stats[duration].renewed += 1;
+      }
+    }
+  });
+  customers.forEach(c=>{
+    const cp = c.currentPlan || {};
+    const duration = +cp.durationMonths || +plans[cp.planId]?.duration_months || 0;
+    if(!duration) return;
+    if(!stats[duration]) stats[duration] = { opportunities:0, renewed:0, activeCount:0, avgRenewalTurnover:0, avgRenewalProfit:0, avgActivationTurnover:0, avgActivationProfit:0, renewalRows:[], activationRows:[] };
+    if(getExpiryStatus(cp.expiryDate).key !== 'expired') stats[duration].activeCount += 1;
+  });
+  Object.keys(stats).forEach(k=>{
+    const s = stats[k];
+    const renewalRate = s.opportunities ? (s.renewed / s.opportunities) : 0.55;
+    s.renewalRate = clamp(renewalRate || 0.55, 0.05, 0.95);
+    s.avgRenewalTurnover = average(s.renewalRows.map(x=> x.turnover)) || average(s.activationRows.map(x=> x.turnover)) || 0;
+    s.avgRenewalProfit = average(s.renewalRows.map(x=> x.profit)) || average(s.activationRows.map(x=> x.profit)) || 0;
+    s.avgActivationTurnover = average(s.activationRows.map(x=> x.turnover)) || s.avgRenewalTurnover || 0;
+    s.avgActivationProfit = average(s.activationRows.map(x=> x.profit)) || s.avgRenewalProfit || 0;
+  });
+  return stats;
+}
+function newCustomerForecastStats(){
+  const act6 = recordsForAverageWindow(6);
+  const act12 = recordsForAverageWindow(12);
+  const monthlyAvg6 = act6.length / 6;
+  const monthlyAvg12 = act12.length / 12;
+  const monthlyAvg = act12.length ? (monthlyAvg6 + monthlyAvg12) / 2 : monthlyAvg6;
+  const avgTurnover = average([...act6, ...act12].map(r => calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).turnover));
+  const avgProfit = average([...act6, ...act12].map(r => calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).profit));
+  return {
+    monthlyAvgNew: monthlyAvg || 0,
+    avgActivationTurnover: avgTurnover || 0,
+    avgActivationProfit: avgProfit || 0,
+    sourceMonths: act12.length ? '6–12 month average' : 'last 6 month average'
+  };
+}
+function renewalForecastForMonths(monthsAhead){
+  const planStats = planTypeForecastStats();
+  const horizonEnd = addMonthsDate(firstDayOfCurrentMonth(), monthsAhead);
+  let renewalsExpected = 0;
+  let revenue = 0;
+  let profit = 0;
+  customers.forEach(c=>{
+    const cp = c.currentPlan || {};
+    const duration = +cp.durationMonths || +plans[cp.planId]?.duration_months || 0;
+    const expiry = isoToDate(cp.expiryDate);
+    if(!duration || !expiry) return;
+    const stat = planStats[duration];
+    if(!stat) return;
+    let due = new Date(expiry);
+    let carry = 1;
+    while(due < horizonEnd){
+      const rate = stat.renewalRate;
+      const expectedNow = carry * rate;
+      renewalsExpected += expectedNow;
+      revenue += expectedNow * stat.avgRenewalTurnover;
+      profit += expectedNow * stat.avgRenewalProfit;
+      carry = expectedNow;
+      due = addMonthsDate(due, duration);
+      if(carry < 0.01) break;
+    }
+  });
+  return { renewalsExpected, revenue, profit, planStats };
+}
+function forecastBundle(monthsAhead){
+  const newStats = newCustomerForecastStats();
+  const renStats = renewalForecastForMonths(monthsAhead);
+  const newCustomers = newStats.monthlyAvgNew * monthsAhead;
+  const newRevenue = newCustomers * newStats.avgActivationTurnover;
+  const newProfit = newCustomers * newStats.avgActivationProfit;
+  return {
+    monthsAhead,
+    newCustomers,
+    renewalsExpected: renStats.renewalsExpected,
+    predictedRevenue: renStats.revenue + newRevenue,
+    predictedProfit: renStats.profit + newProfit,
+    renewalRevenue: renStats.revenue,
+    renewalProfit: renStats.profit,
+    newRevenue,
+    newProfit,
+    planStats: renStats.planStats,
+    newStats
+  };
+}
+function forecastPeriodLabel(key){
+  return {
+    month:'This Month',
+    six:'6 Months',
+    year:'1 Year',
+    five:'5 Years'
+  }[key] || 'This Month';
+}
+function forecastMetricConfig(key){
+  return {
+    revenue: { label:'Predicted Revenue', value:b => fmt(b.predictedRevenue) },
+    profit: { label:'Predicted Profit', value:b => fmt(b.predictedProfit) },
+    renewals: { label:'Expected Renewals', value:b => (+b.renewalsExpected || 0).toFixed(2) },
+    newCustomers: { label:'Expected New Customers', value:b => (+b.newCustomers || 0).toFixed(2) }
+  }[key];
+}
+function forecastSupportRows(bundle){
+  if(forecastMetricKey === 'revenue'){
+    return [
+      ['Predicted profit', fmt(bundle.predictedProfit)],
+      ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
+      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
+      ['Renewal revenue', fmt(bundle.renewalRevenue)],
+      ['New customer revenue', fmt(bundle.newRevenue)]
+    ];
+  }
+  if(forecastMetricKey === 'profit'){
+    return [
+      ['Predicted revenue', fmt(bundle.predictedRevenue)],
+      ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
+      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
+      ['Renewal profit', fmt(bundle.renewalProfit)],
+      ['New customer profit', fmt(bundle.newProfit)]
+    ];
+  }
+  if(forecastMetricKey === 'renewals'){
+    return [
+      ['Predicted revenue', fmt(bundle.predictedRevenue)],
+      ['Predicted profit', fmt(bundle.predictedProfit)],
+      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
+      ['Renewal revenue', fmt(bundle.renewalRevenue)],
+      ['Renewal profit', fmt(bundle.renewalProfit)]
+    ];
+  }
+  return [
+    ['Predicted revenue', fmt(bundle.predictedRevenue)],
+    ['Predicted profit', fmt(bundle.predictedProfit)],
+    ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
+    ['New customer revenue', fmt(bundle.newRevenue)],
+    ['New customer profit', fmt(bundle.newProfit)]
+  ];
+}
+function renderForecast(){
+  const bundles = {
+    month: forecastBundle(1),
+    six: forecastBundle(6),
+    year: forecastBundle(12),
+    five: forecastBundle(60)
+  };
+  const bundle = bundles[forecastPeriodKey] || bundles.month;
+  const config = forecastMetricConfig(forecastMetricKey);
+  const planStats = planTypeForecastStats();
+  const rates = Object.keys(planStats).sort((a,b)=> +a - +b);
+
+  sections.forecast.innerHTML = `
+    <div class="card">
+      <div class="section-title">
+        <div>
+          <h2>Forecast</h2>
+          <div class="helper">
+            ${renewalsLoadedOnce
+              ? `Read-only forecast using past 6–12 month averages for new customers, plus plan-type renewal behavior from your existing data.`
+              : `Renewal history is still loading. Forecast starts with basic numbers and updates automatically.`}
+          </div>
+        </div>
+      </div>
+
+      <div class="forecast-shell">
+        <div class="forecast-btn-grid">
+          <button class="btn ${forecastPeriodKey === 'month' ? 'ok' : 'ghost'}" data-forecast-period="month" type="button">This Month</button>
+          <button class="btn ${forecastPeriodKey === 'six' ? 'ok' : 'ghost'}" data-forecast-period="six" type="button">6 Months</button>
+          <button class="btn ${forecastPeriodKey === 'year' ? 'ok' : 'ghost'}" data-forecast-period="year" type="button">1 Year</button>
+          <button class="btn ${forecastPeriodKey === 'five' ? 'ok' : 'ghost'}" data-forecast-period="five" type="button">5 Years</button>
+        </div>
+
+        <div class="forecast-btn-grid">
+          <button class="btn ${forecastMetricKey === 'revenue' ? 'ok' : 'ghost'}" data-forecast-metric="revenue" type="button">Revenue</button>
+          <button class="btn ${forecastMetricKey === 'profit' ? 'ok' : 'ghost'}" data-forecast-metric="profit" type="button">Profit</button>
+          <button class="btn ${forecastMetricKey === 'renewals' ? 'ok' : 'ghost'}" data-forecast-metric="renewals" type="button">Renewals</button>
+          <button class="btn ${forecastMetricKey === 'newCustomers' ? 'ok' : 'ghost'}" data-forecast-metric="newCustomers" type="button">New Customers</button>
+        </div>
+
+        <div class="forecast-main-card">
+          <div class="chip">${esc(forecastPeriodLabel(forecastPeriodKey))}</div>
+          <div class="forecast-main-label">${esc(config.label)}</div>
+          <div class="forecast-main-value">${esc(config.value(bundle))}</div>
+          <div class="forecast-note">
+            One focused view at a time so mobile stays clean. Use the buttons above to switch period or metric.
+          </div>
+
+          <div class="forecast-stat-grid">
+            ${forecastSupportRows(bundle).map(([label, value]) => `
+              <div class="detail-box">
+                <div class="detail-label">${esc(label)}</div>
+                <div class="detail-value">${esc(value)}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="forecast-card">
+              <h4>What drives this</h4>
+              <div class="helper">New customers use your ${esc(bundle.newStats.sourceMonths)}. Renewals use plan type only, not customer-by-customer history.</div>
+              <div class="list-stack" style="margin-top:10px">
+                <div class="detail-box"><div class="detail-label">Avg new customers / month</div><div class="detail-value">${(+bundle.newStats.monthlyAvgNew || 0).toFixed(2)}</div></div>
+                <div class="detail-box"><div class="detail-label">Avg new revenue / customer</div><div class="detail-value">${fmt(bundle.newStats.avgActivationTurnover)}</div></div>
+                <div class="detail-box"><div class="detail-label">Avg new profit / customer</div><div class="detail-value">${fmt(bundle.newStats.avgActivationProfit)}</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="forecast-card">
+              <h4>Renewal Rate by Plan Type</h4>
+              <div class="plan-rate-list">
+                ${rates.length ? rates.map(m=> {
+                  const s = planStats[m];
+                  return `
+                    <div class="plan-rate-item">
+                      <div class="metric-top">
+                        <strong>${esc(m)} month plan</strong>
+                        <strong>${(s.renewalRate * 100).toFixed(0)}%</strong>
+                      </div>
+                      <div class="helper">Expired opportunities: ${s.opportunities} • Renewed: ${s.renewed} • Active now: ${s.activeCount}</div>
+                      <div class="track" style="margin-top:10px"><div class="fill" style="width:${metricWidth(s.renewalRate, 1)}%"></div></div>
+                      <div class="helper" style="margin-top:10px">Avg renewal revenue ${fmt(s.avgRenewalTurnover)} • Avg renewal profit ${fmt(s.avgRenewalProfit)}</div>
+                    </div>`;
+                }).join('') : `<div class="empty-state">No plan history found yet for forecasting.</div>`}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  sections.forecast.querySelectorAll('[data-forecast-period]').forEach(btn=>{
+    btn.onclick = ()=>{
+      forecastPeriodKey = btn.dataset.forecastPeriod;
+      renderForecast();
+    };
+  });
+  sections.forecast.querySelectorAll('[data-forecast-metric]').forEach(btn=>{
+    btn.onclick = ()=>{
+      forecastMetricKey = btn.dataset.forecastMetric;
+      renderForecast();
+    };
+  });
+}
+
+function renderPlans(){
+  const tbody = $("#plansGrid tbody");
+  tbody.innerHTML = "";
+  const ids = Object.keys(plans).sort();
+  if(!ids.length){ setEmptyRow(tbody, 7, "No plans found. Add a plan or seed sample plans."); refreshPlanSelects(); return; }
+  ids.forEach(id=>{
+    const p = plans[id];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${esc(p.id)}</td>
+      <td>${esc(p.name || '')}</td>
+      <td>${esc(p.duration_months || 0)}</td>
+      <td>${(+p.retail_price || 0).toFixed(2)}</td>
+      <td>${(+p.wholesale_cost || 0).toFixed(2)}</td>
+      <td>${esc(p.description || '')}</td>
+      <td><div class="flex"><button class="btn ghost" data-edit="${esc(p.id)}">Edit</button><button class="btn danger" data-del="${esc(p.id)}">Delete</button></div></td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll("[data-edit]").forEach(btn=>{ btn.onclick = ()=> openPlanModal(plans[btn.getAttribute('data-edit')]); });
+  tbody.querySelectorAll("[data-del]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      if(!assertWritable("Deleting plan")) return;
+      const pid = btn.getAttribute('data-del');
+      if(confirm(`Delete plan ${pid}?`)){
+        try{ await deletePlan(pid); toast("Plan deleted.", "ok"); }
+        catch(e){ showErr('[plans] delete', e); toast("Failed to delete plan.", "error"); }
+      }
+    };
+  });
+  refreshPlanSelects();
+}
+
+function renderKPIs(){
+  const topNear = customers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length;
+  $("#nearExpCount").textContent = `Expiring soon: ${topNear}`;
+}
+
+function previewTotals(){
+  const stbIncluded = $("#c_stb").value;
+  const f = calcFigures({
+    cost:$("#c_cost").value, wholesale:$("#c_wholesale").value, actual:$("#c_actual").value,
+    stbIncluded, stbCost:$("#c_stbCost").value, stbWholesale:$("#c_stbWholesale").value, stbActual:$("#c_stbActual").value
+  });
+  const discName = ($("#c_discName").value || "").trim();
+  $("#c_preview").innerHTML = `
+    Turnover: <strong>${fmt(f.turnover)}</strong><br>
+    Expense: <strong>${fmt(f.expense)}</strong><br>
+    Profit: <strong>${fmt(f.profit)}</strong><br>
+    ${f.discountSaved > 0 ? `Customer discount: <strong>${fmt(f.discountSaved)}</strong>${discName ? ` <span class="chip">${esc(discName)}</span>` : ''}` : `<span class="muted">No discount</span>`}
+  `;
+}
+
+function openCustomerModal(id=null){
+  editCustomerId = (typeof id === 'string') ? id : null;
+  const custModal = $("#modalCustomer");
+  $("#custModalTitle").textContent = id ? "Edit Customer" : "Add Customer";
+  refreshPlanSelects();
+  const firstPlanId = Object.keys(plans)[0] || "";
+  const defaults = firstPlanId ? plans[firstPlanId] : null;
+  $("#c_name").value = ""; $("#c_phone").value = ""; $("#c_email").value = ""; $("#c_userId").value = ""; $("#c_mac").value = "";
+  $("#c_plan").value = firstPlanId; $("#c_actual").value = defaults ? (defaults.retail_price || "") : ""; $("#c_cost").value = defaults ? (defaults.retail_price || "") : ""; $("#c_wholesale").value = defaults ? (defaults.wholesale_cost || "") : "";
+  $("#c_discName").value = ""; $("#c_stb").value = "no"; $("#stbBox").classList.add('hidden'); $("#c_stbActual").value = ""; $("#c_stbCost").value = ""; $("#c_stbWholesale").value = "";
+  $("#c_start").value = todayISO(); $("#c_expiry").value = defaults ? addMonthsISO($("#c_start").value, defaults.duration_months || 0) : $("#c_start").value; $("#c_paid").value = "yes"; $("#c_preview").textContent = "—";
+  if(id){
+    const c = customers.find(x=> x.id === id);
+    if(c){
+      $("#c_name").value = c.name || ""; $("#c_phone").value = c.phone || ""; $("#c_email").value = c.email || ""; $("#c_userId").value = c.userId || ""; $("#c_mac").value = c.mac || "";
+      if(c.currentPlan){
+        $("#c_plan").value = c.currentPlan.planId || firstPlanId || "";
+        $("#c_actual").value = c.currentPlan.actual || "";
+        $("#c_cost").value = c.currentPlan.cost || "";
+        $("#c_wholesale").value = c.currentPlan.wholesale || "";
+        $("#c_discName").value = c.currentPlan.discountName || "";
+        $("#c_stb").value = c.currentPlan.stbIncluded || "no";
+        $("#stbBox").classList.toggle('hidden', $("#c_stb").value !== 'yes');
+        $("#c_stbActual").value = c.currentPlan.stbActual || "";
+        $("#c_stbCost").value = c.currentPlan.stbCost || "";
+        $("#c_stbWholesale").value = c.currentPlan.stbWholesale || "";
+        $("#c_start").value = c.currentPlan.startDate || todayISO();
+        $("#c_expiry").value = c.currentPlan.expiryDate || addMonthsISO($("#c_start").value, plans[$("#c_plan").value]?.duration_months || 0);
+        $("#c_paid").value = c.currentPlan.paymentReceived || "yes";
+      }
+    }
+  }
+  previewTotals();
+  custModal.classList.add('open');
+}
+function validateCustomerModal(){
+  const name = $("#c_name").value.trim();
+  const email = normalizeEmail($("#c_email").value);
+  const mac = $("#c_mac").value.trim();
+  const start = $("#c_start").value;
+  const expiry = $("#c_expiry").value;
+  if(!name) throw new Error("Name is required.");
+  if(email && !isValidEmail(email)) throw new Error("Please enter a valid email.");
+  if(mac && !isValidMac(mac)) throw new Error("MAC address format should look like AA:BB:CC:DD:EE:FF.");
+  if(!start || !expiry) throw new Error("Start and expiry dates are required.");
+  if(expiry < start) throw new Error("Expiry date cannot be before start date.");
+  ["#c_actual","#c_cost","#c_wholesale","#c_stbActual","#c_stbCost","#c_stbWholesale"].forEach(sel=>{ const val = $(sel).value; if(val !== "" && !nonNegativeNumber(val)) throw new Error("Prices cannot be negative."); });
+}
+async function getLatestRenewalDoc(customerId){
+  const snap = await safeGetDocs(collection(db, "customers", String(customerId), "renewals"), '[renewals] list latest');
+  let latest = null;
+  snap.forEach(d => {
+    const r = d.data() || {};
+    const key = [r.startDate || '', r.expiryDate || '', d.id].join('|');
+    if(!latest || key > latest.key) latest = { key, ref: d.ref, id: d.id, data: r };
+  });
+  return latest || null;
+}
+async function saveCustomerFromModal(){
+  validateCustomerModal();
+  const name = $("#c_name").value.trim();
+  const planId = $("#c_plan").value;
+  const p = plans[planId] || {};
+  const planName = p.name || "Custom";
+  const durationMonths = +p.duration_months || 0;
+  const start = $("#c_start").value;
+  const expiry = $("#c_expiry").value || addMonthsISO(start, durationMonths);
+  const currentPlan = {
+    planId, planName, durationMonths,
+    actual:+$("#c_actual").value || 0,
+    cost:+$("#c_cost").value || 0,
+    wholesale:+$("#c_wholesale").value || 0,
+    discountName:($("#c_discName").value || "").trim(),
+    stbIncluded:$("#c_stb").value,
+    stbActual:+$("#c_stbActual").value || 0,
+    stbCost:+$("#c_stbCost").value || 0,
+    stbWholesale:+$("#c_stbWholesale").value || 0,
+    startDate:start,
+    expiryDate:expiry,
+    paymentReceived:$("#c_paid").value
+  };
+  const payload = {
+    name,
+    phone:$("#c_phone").value.trim(),
+    email:normalizeEmail($("#c_email").value),
+    userId:$("#c_userId").value.trim(),
+    mac:$("#c_mac").value.trim().toUpperCase(),
+    originalStartDate: (editCustomerId ? (customers.find(x=>x.id===editCustomerId)?.originalStartDate || start) : start),
+    currentPlan
+  };
+  const existingIdForUpdate = editCustomerId;
+  const cid = await saveCustomer(payload, existingIdForUpdate ? String(existingIdForUpdate) : null);
+  if(!existingIdForUpdate){
+    await addRenewal(cid, { customerId: cid, customerName: name, planId, planName, durationMonths, actual: currentPlan.actual, cost: currentPlan.cost, wholesale: currentPlan.wholesale, stbIncluded: currentPlan.stbIncluded, stbActual: currentPlan.stbActual, stbCost: currentPlan.stbCost, stbWholesale: currentPlan.stbWholesale, discountName: currentPlan.discountName, startDate: start, expiryDate: expiry, paymentReceived: currentPlan.paymentReceived, renewalType:'activation' });
+  } else {
+    const latest = await getLatestRenewalDoc(existingIdForUpdate);
+    if(latest){
+      await safeUpdateDoc(latest.ref, {
+        planId, planName, durationMonths,
+        actual: currentPlan.actual, cost: currentPlan.cost, wholesale: currentPlan.wholesale,
+        stbIncluded: currentPlan.stbIncluded, stbActual: currentPlan.stbActual, stbCost: currentPlan.stbCost, stbWholesale: currentPlan.stbWholesale,
+        discountName: currentPlan.discountName, startDate: currentPlan.startDate, expiryDate: currentPlan.expiryDate,
+        paymentReceived: currentPlan.paymentReceived, customerId: existingIdForUpdate, customerName: name, updatedAt: serverTimestamp(),
+        renewalType: latest.data.renewalType || 'activation'
+      }, '[renewals] update latest');
+    } else {
+      await addRenewal(existingIdForUpdate, { customerId: existingIdForUpdate, customerName: name, planId, planName, durationMonths, actual: currentPlan.actual, cost: currentPlan.cost, wholesale: currentPlan.wholesale, stbIncluded: currentPlan.stbIncluded, stbActual: currentPlan.stbActual, stbCost: currentPlan.stbCost, stbWholesale: currentPlan.stbWholesale, discountName: currentPlan.discountName, startDate: currentPlan.startDate, expiryDate: currentPlan.expiryDate, paymentReceived: currentPlan.paymentReceived, renewalType:'activation' });
+    }
+  }
+  $("#modalCustomer").classList.remove('open');
+  await loadCustomers();
+  await loadRenewals();
+  renderAll();
+  if($("#c_invoice").checked) setTimeout(()=> printInvoice(cid), 200);
+  editCustomerId = null;
+}
+function viewCustomer(id){
+  const c = customers.find(x=>x.id===id);
+  if(!c){ toast("Customer not found.", "error"); return; }
+  const cp = c.currentPlan || {};
+  const figs = calcFigures({ cost:cp.cost, wholesale:cp.wholesale, actual:cp.actual, stbIncluded:cp.stbIncluded, stbCost:cp.stbCost, stbWholesale:cp.stbWholesale, stbActual:cp.stbActual });
+  const hist = customerHistory(c.id);
+  alert(`Customer: ${c.name}\nPhone: ${c.phone || '-'}  Email: ${c.email || '-'}\nUser ID: ${c.userId || '-'}  MAC: ${c.mac || '-'}\n\nOriginal Start: ${c.originalStartDate || '-'}\nCurrent Plan: ${cp.planName || '-'} (${cp.durationMonths || 0} mo)\nThis Plan Start: ${cp.startDate || '-'}  Expiry: ${cp.expiryDate || '-'}\nRenewal Count: ${hist.renewalCount}\nTotal Paid: ${fmt(hist.totalSpent)}\n\nThis Plan:\n  Turnover: ${fmt(figs.turnover)}\n  Expense:  ${fmt(figs.expense)}\n  Profit:   ${fmt(figs.profit)}\n  Discount: ${fmt(figs.discountSaved)}${cp.discountName ? ' — ' + cp.discountName : ''}`);
+}
+
+function openRenewModal(id){
+  renewCustomerId = id;
+  refreshPlanSelects();
+  const c = customers.find(x=>x.id===id);
+  $("#renewTitle").textContent = `Renew: ${c?.name || id}`;
+  const cp = c?.currentPlan || {};
+  $("#r_plan").value = cp.planId || Object.keys(plans)[0] || "";
+  const p = plans[$("#r_plan").value] || {};
+  $("#r_actual").value = cp.actual || p.retail_price || "";
+  $("#r_cost").value = cp.cost || p.retail_price || "";
+  $("#r_wholesale").value = cp.wholesale || p.wholesale_cost || "";
+  $("#r_discName").value = cp.discountName || "";
+  $("#r_stb").value = "no"; $("#r_stbBox").classList.add('hidden'); $("#r_stbActual").value = ""; $("#r_stbCost").value = ""; $("#r_stbWholesale").value = "";
+  const defStart = cp.expiryDate ? addMonthsISO(cp.expiryDate, 0) : todayISO();
+  $("#r_start").value = defStart;
+  $("#r_expiry").value = addMonthsISO(defStart, p.duration_months || 0);
+  $("#r_paid").value = "yes";
+  $("#r_plan").onchange = ()=>{
+    const p2 = plans[$("#r_plan").value] || {};
+    $("#r_expiry").value = addMonthsISO($("#r_start").value, p2.duration_months || 0);
+    if(!cp.actual) $("#r_actual").value = p2.retail_price || "";
+    if(!cp.cost) $("#r_cost").value = p2.retail_price || "";
+    if(!cp.wholesale) $("#r_wholesale").value = p2.wholesale_cost || "";
+  };
+  $("#r_start").onchange = ()=>{ const p2 = plans[$("#r_plan").value] || {}; $("#r_expiry").value = addMonthsISO($("#r_start").value, p2.duration_months || 0); };
+  $("#modalRenew").classList.add('open');
+}
+function validateRenewModal(){
+  const start = $("#r_start").value;
+  const expiry = $("#r_expiry").value;
+  if(!start || !expiry) throw new Error("Start and expiry dates are required.");
+  if(expiry < start) throw new Error("Expiry date cannot be before start date.");
+  ["#r_actual","#r_cost","#r_wholesale","#r_stbActual","#r_stbCost","#r_stbWholesale"].forEach(sel=>{ const val = $(sel).value; if(val !== "" && !nonNegativeNumber(val)) throw new Error("Prices cannot be negative."); });
+}
+async function doRenew(){
+  if(!assertWritable("Renewing plan")) return;
+  try{
+    validateRenewModal();
+    const c = customers.find(x=>x.id===renewCustomerId);
+    if(!c) throw new Error("Missing customer.");
+    const planId = $("#r_plan").value;
+    const p = plans[planId] || {};
+    const planName = p.name || 'Custom';
+    const durationMonths = +p.duration_months || 0;
+    const start = $("#r_start").value;
+    const expiry = $("#r_expiry").value || addMonthsISO(start, durationMonths);
+    const ren = {
+      customerId:String(renewCustomerId), customerName:c.name || '', planId, planName, durationMonths,
+      actual:+$("#r_actual").value || 0, cost:+$("#r_cost").value || 0, wholesale:+$("#r_wholesale").value || 0,
+      stbIncluded:$("#r_stb").value, stbActual:+$("#r_stbActual").value || 0, stbCost:+$("#r_stbCost").value || 0, stbWholesale:+$("#r_stbWholesale").value || 0,
+      discountName:($("#r_discName").value || "").trim(), startDate:start, expiryDate:expiry, paymentReceived:$("#r_paid").value, renewalType:'renewal'
+    };
+    const btn = $("#btnDoRenew");
+    const old = btn.textContent; btn.disabled = true; btn.textContent = "Renewing…";
+    try{ await addRenewal(String(renewCustomerId), ren); await setCustomerCurrentPlan(String(renewCustomerId), ren); }
+    finally{ btn.disabled = false; btn.textContent = old; }
+    $("#modalRenew").classList.remove('open');
+    await loadCustomers(); await loadRenewals(); renderAll(); toast("Renewal saved.", "ok");
+    if($("#r_invoice").checked) setTimeout(()=> printInvoice(renewCustomerId), 200);
+  }catch(e){ showErr('[renewals] doRenew', e); toast(e?.message || 'Failed to renew plan.', 'error'); }
+}
+
+function openPlanModal(p=null){
+  $("#planTitle").textContent = p ? "Edit Plan" : "Add Plan";
+  $("#p_id").value = p?.id || ""; $("#p_name").value = p?.name || ""; $("#p_months").value = p?.duration_months || 1; $("#p_retail").value = p?.retail_price || ""; $("#p_wholesale").value = p?.wholesale_cost || ""; $("#p_desc").value = p?.description || "";
+  $("#modalPlan").classList.add('open');
+}
+async function doSavePlan(){
+  if(!assertWritable("Saving plan")) return;
+  const pid = $("#p_id").value.trim();
+  if(!pid){ toast("Plan ID required.", "error"); return; }
+  const retail = $("#p_retail").value;
+  const wholesale = $("#p_wholesale").value;
+  if((retail !== "" && !nonNegativeNumber(retail)) || (wholesale !== "" && !nonNegativeNumber(wholesale))){ toast("Plan prices cannot be negative.", "error"); return; }
+  const btn = $("#btnSavePlan"); const old = btn.textContent; btn.disabled = true; btn.textContent = "Saving…";
+  try{
+    await savePlan({ id: pid, name: $("#p_name").value.trim(), duration_months: +$("#p_months").value || 0, retail_price: +retail || 0, wholesale_cost: +wholesale || 0, description: $("#p_desc").value.trim() });
+    $("#modalPlan").classList.remove('open'); toast("Plan saved.", "ok");
+  }catch(e){ showErr('[plans] save', e); toast("Failed to save plan.", "error"); }
+  finally{ btn.disabled = false; btn.textContent = old; }
+}
+async function seedPlans(){
+  if(!assertWritable("Seeding plans")) return;
+  const samples = [
+    {id:"PLN-1MO", name:"1 month", duration_months:1, retail_price:15, wholesale_cost:4.5, description:"Entry plan"},
+    {id:"PLN-3MO", name:"3 months", duration_months:3, retail_price:35, wholesale_cost:13.5, description:"Most popular"},
+    {id:"PLN-6MO", name:"6 months", duration_months:6, retail_price:60, wholesale_cost:25, description:"Value saver"},
+    {id:"PLN-12MO", name:"12 months", duration_months:12, retail_price:110, wholesale_cost:48, description:"Yearly plan"}
+  ];
+  try{ for(const p of samples) await savePlan(p); toast("Sample plans added.", "ok"); }
+  catch(e){ showErr('[plans] seed', e); toast("Failed to seed plans.", "error"); }
+}
+
+function onRepTypeChange(){
+  const t = $("#repType").value;
+  $("#repMonthCol").classList.toggle('hidden', t !== "monthly");
+  $("#repYearCol").classList.toggle('hidden', t !== "yearly");
+  $("#repFromCol").classList.toggle('hidden', t !== "custom");
+  $("#repToCol").classList.toggle('hidden', t !== "custom");
+}
+function filteredCanonicalRenewals(){
+  const grouped = canonicalRenewalGroups();
+  const rows = [];
+  grouped.forEach(list => list.forEach(r => rows.push(r)));
+  return rows;
+}
+function filterRenewalsByPeriod(){
+  const t = $("#repType").value;
+  let from, to;
+  if(t === "monthly"){
+    let ym = $("#repMonth").value || new Date().toISOString().slice(0,7);
+    $("#repMonth").value = ym;
+    from = ym + "-01";
+    const [y, m] = ym.split("-").map(Number);
+    const last = new Date(y, m, 0).getDate();
+    to = ym + "-" + String(last).padStart(2, "0");
+  }else if(t === "yearly"){
+    const y = +$("#repYear").value;
+    if(!y) return {arr: [], from: undefined, to: undefined};
+    from = y + "-01-01"; to = y + "-12-31";
+  }else{
+    from = $("#repFrom").value; to = $("#repTo").value; if(!from || !to) return {arr: [], from: undefined, to: undefined};
+  }
+  const arr = filteredCanonicalRenewals().filter(r => r.startDate >= from && r.startDate <= to);
+  return {arr, from, to};
+}
+function runReport(){
+  const out = filterRenewalsByPeriod();
+  const tbody = $("#repGrid tbody");
+  tbody.innerHTML = "";
+  if(!out || !out.arr){ setEmptyRow(tbody, 8, "Select a valid period."); $("#repTurnover").textContent = fmt(0); $("#repExpense").textContent = fmt(0); $("#repProfit").textContent = fmt(0); return; }
+  const rows = out.arr.sort((a,b)=> a.startDate.localeCompare(b.startDate));
+  let T = 0, E = 0, P = 0;
+  if(!rows.length){ setEmptyRow(tbody, 8, "No renewals found in this period."); $("#repTurnover").textContent = fmt(0); $("#repExpense").textContent = fmt(0); $("#repProfit").textContent = fmt(0); return; }
+  rows.forEach(r=>{
+    const f = calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual });
+    T += f.turnover; E += f.expense; P += f.profit;
+    const payload = { id:r.id, customerId:r.customerId, customerName:r.customerName, planId:r.planId, planName:r.planName, durationMonths:r.durationMonths, actual:r.actual, cost:r.cost, wholesale:r.wholesale, stbIncluded:r.stbIncluded, stbActual:r.stbActual, stbCost:r.stbCost, stbWholesale:r.stbWholesale, discountName:r.discountName, startDate:r.startDate, expiryDate:r.expiryDate, paymentReceived:r.paymentReceived };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${esc(r.startDate)}</td>
+      <td>${esc(r.customerName || r.customerId)}</td>
+      <td>${esc(r.planName || r.planId)} (${esc(r.durationMonths || 0)}mo)</td>
+      <td>${f.turnover.toFixed(2)}</td>
+      <td>${f.expense.toFixed(2)}</td>
+      <td>${f.profit.toFixed(2)}</td>
+      <td>${r.paymentReceived === 'yes' ? 'Yes' : 'No'}</td>
+      <td><button class="btn" data-inv-ren="${encoded}">Slip</button></td>`;
+    tbody.appendChild(tr);
+  });
+  tbody.querySelectorAll("[data-inv-ren]").forEach(btn=>{ btn.onclick = ()=> printInvoiceFromRenewalData(btn.getAttribute("data-inv-ren")); });
+  $("#repTurnover").textContent = fmt(T); $("#repExpense").textContent = fmt(E); $("#repProfit").textContent = fmt(P);
+}
+function exportCSV(){
+  const rows = [["Date","Customer","Plan","Turnover","Expense","Profit","Paid"]];
+  document.querySelectorAll("#repGrid tbody tr").forEach(tr=>{ const cols = [...tr.children].slice(0,7).map(td => td.textContent.trim()); if(cols.some(Boolean)) rows.push(cols); });
+  const csvStr = "\uFEFF" + rows.map(r => r.map(x => `"${String(x).replaceAll('"','""')}"`).join(",")).join("\n");
+  const blob = new Blob([csvStr], { type: "text/csv;charset=utf-8;" });
+  const canDownloadAttr = "download" in HTMLAnchorElement.prototype;
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if(canDownloadAttr && !isIOS){
+    const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "report.csv"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }else{
+    const dataUrl = "data:text/csv;charset=utf-8," + encodeURIComponent(csvStr); window.open(dataUrl, "_blank");
+  }
+}
+
+const LOGO_SVG = `<svg xmlns='http://www.w3.org/2000/svg' width='180' height='36' viewBox='0 0 430 86'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#6a8cff'/><stop offset='1' stop-color='#8a5fff'/></linearGradient></defs><rect rx='12' ry='12' width='86' height='86' fill='url(#g)'/><circle cx='43' cy='43' r='24' fill='none' stroke='white' stroke-width='8'/><path d='M108 62 h34 v-38 h-34 v38 M149 24 h14 v38 h-14 z' fill='url(#g)'/><text x='170' y='60' font-family='Segoe UI, Roboto, Arial' font-size='44' font-weight='800' fill='white' letter-spacing='.5'>Net + TV</text></svg>`;
+const LOGO_URL = "data:image/svg+xml;utf8," + encodeURIComponent(LOGO_SVG);
+function buildSlipHTML({invNo, today, billTo, contactLine, metaLine, plan, lines, total, paidBadge, discountBlock}){
+  return `<!doctype html><html><head><meta charset="utf-8"><title>${invNo}</title><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><style>:root{ --ink:#111; --muted:#666; --line:#e5e7eb; --bg:#fff; --pill:#f3f4f6; --ok:#16a34a; --warn:#b91c1c; --safe-bottom: env(safe-area-inset-bottom,0px); }*{ box-sizing:border-box } body{ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial; color:var(--ink); background:#fff; margin:24px; padding-bottom: calc(24px + var(--safe-bottom)); }.hdr{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap }.brand{ display:flex; gap:12px; align-items:center } .brand img{ height:42px } .brand h2{ margin:0; font-size:22px }.muted{ color:var(--muted) } .box{ border:1px solid var(--line); border-radius:10px; padding:14px; margin-top:14px }.grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px 16px; }.grid .lbl{ color:var(--muted) } table{ width:100%; border-collapse:collapse; margin-top:12px } th,td{ padding:10px; border-bottom:1px solid var(--line); text-align:left; font-size:14px } th{ background:#fafafa }.right{ text-align:right } .totals td{ font-weight:700 } .badge{ display:inline-block; background:var(--pill); padding:4px 8px; border-radius:999px; font-size:12px }.paid{ color:var(--ok) } .unpaid{ color:var(--warn) } .strike{ text-decoration: line-through; opacity:.7; margin-right:6px } @media print{ button{ display:none } body{ margin:0; } }</style></head><body><div class="hdr"><div class="brand"><img src="${LOGO_URL}" alt="Net + TV"><div><h2 style="margin:0">Sale Slip</h2><div class="muted">Net + TV</div></div></div><div class="right"><div><strong>${invNo}</strong></div><div>Date: ${today}</div></div></div><div class="box"><strong>Bill To</strong><br>${billTo}<br>${contactLine}${metaLine ? `<div class="muted">${metaLine}</div>` : ""}</div><div class="box"><strong>Plan Details</strong><div class="grid" style="margin-top:8px"><div class="lbl">Plan</div><div>${plan?.name || '-'}</div><div class="lbl">Duration</div><div>${(plan?.months ?? 0)} months</div><div class="lbl">Parental Pin</div><div>7274</div><div class="lbl">Start Date</div><div>${plan?.start || '-'}</div><div class="lbl">Expiry Date</div><div>${plan?.expiry || '-'}</div><div class="lbl">Payment</div><div>${plan?.paidText || '-'}</div></div></div><table><thead><tr><th>Description</th><th class="right">Amount (CAD)</th></tr></thead><tbody>${lines.map(l=>`<tr><td>${l[0]}</td><td class="right">${(+l[1]||0).toFixed(2)}</td></tr>`).join("")}${discountBlock || ""}<tr class="totals"><td>Total</td><td class="right">${(+total||0).toFixed(2)}</td></tr></tbody></table><div class="badge ${plan?.paidText==='Paid'?'paid':'unpaid'}" style="margin-top:8px">${paidBadge}</div><p class="muted">Thank you.</p><button onclick="window.print()">Print / Save as PDF</button></body></html>`;
+}
+function openPrintWindow(html){ const w = window.open("", "_blank"); if(!w){ toast("Pop-up blocked. Please allow pop-ups for this site.", "warn", 3600); return; } w.document.open(); w.document.write(html); w.document.close(); w.onload = ()=> w.print(); }
+function printInvoice(customerId){
+  const c = customers.find(x=> String(x.id) === String(customerId));
+  if(!c){ toast("Customer not found.", "error"); return; }
+  const p = c.currentPlan || {};
+  const f = calcFigures({ cost:p.cost, wholesale:p.wholesale, actual:p.actual, stbIncluded:p.stbIncluded, stbCost:p.stbCost, stbWholesale:p.stbWholesale, stbActual:p.stbActual });
+  const today = new Date().toISOString().slice(0,10);
+  const invNo = `SLIP-${String(customerId).slice(-6).toUpperCase()}-${today.replaceAll('-','')}`;
+  const planBlock = { name: `${p.planName || 'Plan'}`, months: +p.durationMonths || 0, start: p.startDate || '-', expiry: p.expiryDate || '-', paidText: (p.paymentReceived === 'yes' ? 'Paid' : 'Unpaid') };
+  const lines = [];
+  const planLineLabel = `Plan — ${esc(p.planName || 'Plan')} (${esc(p.durationMonths || 0)} mo)`;
+  if(+p.actual > 0){ lines.push([`${planLineLabel} <span class="muted"><span class="strike">${fmt(+p.actual)}</span> now</span>`, +p.cost || 0]); }
+  else { lines.push([planLineLabel, +p.cost || 0]); }
+  if(p.stbIncluded === 'yes'){
+    if(+p.stbActual > 0) lines.push([`STB <span class="muted"><span class="strike">${fmt(+p.stbActual)}</span> now</span>`, +p.stbCost || 0]);
+    else lines.push([`STB`, +p.stbCost || 0]);
+  }
+  const discountName = (p.discountName || "").trim();
+  const discountBlock = (f.discountSaved > 0) ? `<tr><td>${discountName ? `Discount — ${esc(discountName)}` : 'Discount'}</td><td class="right">-${f.discountSaved.toFixed(2)}</td></tr>` : "";
+  const html = buildSlipHTML({ invNo, today, billTo: esc(c.name || "-"), contactLine: esc([c.phone, c.email].filter(Boolean).join(" • ") || ""), metaLine: esc([c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • ")), plan: planBlock, lines, total: f.turnover, paidBadge: (p.paymentReceived === 'yes' ? 'Paid' : 'Unpaid'), discountBlock });
+  openPrintWindow(html);
+}
+function printInvoiceFromRenewalData(encoded){
+  try{
+    const ren = JSON.parse(decodeURIComponent(escape(atob(encoded))));
+    const c = customers.find(x=> String(x.id) === String(ren.customerId)) || {};
+    const f = calcFigures({ cost:ren.cost, wholesale:ren.wholesale, actual:ren.actual, stbIncluded:ren.stbIncluded, stbCost:ren.stbCost, stbWholesale:ren.stbWholesale, stbActual:ren.stbActual });
+    const today = new Date().toISOString().slice(0,10);
+    const suffix = ren.id ? ren.id.slice(-6).toUpperCase() : (ren.startDate?.replaceAll('-','') || today.replaceAll('-',''));
+    const invNo = `SLIP-${String(ren.customerId).slice(-6).toUpperCase()}-${suffix}`;
+    const planBlock = { name:`${ren.planName || 'Plan'}`, months:+ren.durationMonths || 0, start:ren.startDate || '-', expiry:ren.expiryDate || '-', paidText:(ren.paymentReceived === 'yes' ? 'Paid' : 'Unpaid') };
+    const lines = [];
+    const planLineLabel = `Plan — ${esc(ren.planName || ren.planId || 'Plan')} (${esc(ren.durationMonths || 0)} mo)`;
+    if(+ren.actual > 0) lines.push([`${planLineLabel} <span class="muted"><span class="strike">${fmt(+ren.actual)}</span> now</span>`, +ren.cost || 0]);
+    else lines.push([planLineLabel, +ren.cost || 0]);
+    if(ren.stbIncluded === 'yes'){
+      if(+ren.stbActual > 0) lines.push([`STB <span class="muted"><span class="strike">${fmt(+ren.stbActual)}</span> now</span>`, +ren.stbCost || 0]);
+      else lines.push([`STB`, +ren.stbCost || 0]);
+    }
+    const discountName = (ren.discountName || "").trim();
+    const discountBlock = (f.discountSaved > 0) ? `<tr><td>${discountName ? `Discount — ${esc(discountName)}` : 'Discount'}</td><td class="right">-${f.discountSaved.toFixed(2)}</td></tr>` : "";
+    const html = buildSlipHTML({ invNo, today, billTo: esc(ren.customerName || c.name || "-"), contactLine: esc([c.phone, c.email].filter(Boolean).join(" • ")), metaLine: esc([c.userId && `User ID: ${c.userId}`, c.mac && `MAC: ${c.mac}`].filter(Boolean).join(" • ")), plan: planBlock, lines, total: f.turnover, paidBadge: (ren.paymentReceived === 'yes' ? 'Paid' : 'Unpaid'), discountBlock });
+    openPrintWindow(html);
+  }catch(e){ showErr('[print from renewal]', e); toast("Could not open slip for this row.", "error"); }
+}
+
+async function cleanupOrphanRenewals(){
+  if(!assertWritable("Cleanup")) return;
+  const msg = $("#cleanupMsg");
+  const btn = $("#btnCleanupOrphans");
+  try{
+    btn.disabled = true; msg.textContent = "Scanning…"; await loadCustomers();
+    const existing = new Set(customers.map(c => String(c.id)));
+    const snap = await safeGetDocs(collectionGroup(db, "renewals"), "[cleanup] collectionGroup renewals");
+    const orphans = [];
+    snap.forEach(d => { const data = d.data() || {}; const cid = String(data.customerId || ""); if(!existing.has(cid)) orphans.push(d.ref); });
+    if(orphans.length === 0){ msg.textContent = "No orphan renewals found."; toast("No orphan renewals found.", "info"); return; }
+    msg.textContent = `Deleting ${orphans.length} orphan renewals…`;
+    const CHUNK = 400;
+    for(let i = 0; i < orphans.length; i += CHUNK){ const batch = writeBatch(db); for(let j = i; j < Math.min(i + CHUNK, orphans.length); j++){ batch.delete(orphans[j]); } await batch.commit(); }
+    await loadRenewals(); renderAll(); msg.textContent = `Deleted ${orphans.length} orphan renewals.`; toast(`Deleted ${orphans.length} orphan renewals.`, "ok");
+  }catch(err){ showErr("[cleanup orphans]", err); msg.textContent = "Error during cleanup."; toast(err?.message || "Failed to clean up orphan renewals.", "error", 3600); }
+  finally{ btn.disabled = false; }
+}
+</script>
+</body>
+</html>
