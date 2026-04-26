@@ -1240,50 +1240,119 @@ window.customerExpiryFilter = 'all';
 const authEmail = $("#authEmail");
 const authPass = $("#authPass");
 const authMsg = $("#authMsg");
+const btnLogin = $("#btnLogin");
+let appLoadKey = "";
+let appLoadPromise = null;
 
-$("#btnLogin").onclick = async ()=>{
-  authMsg.textContent = "Signing in...";
-  try{
-    demoMode = false;
-    await signInWithEmailAndPassword(auth, authEmail.value.trim(), authPass.value.trim());
-    authMsg.textContent = "Signed in.";
-  }catch(e){
-    showErr('[auth/login]', e);
-    authMsg.textContent = "Sign in failed. Please check email/password.";
-    toast("Sign in failed.", "error");
-  }
-};
+function authErrorMessage(e){
+  const code = e?.code || '';
+  if(code === 'auth/invalid-credential') return 'Wrong email or password.';
+  if(code === 'auth/user-not-found') return 'No Firebase user found with this email.';
+  if(code === 'auth/wrong-password') return 'Wrong password.';
+  if(code === 'auth/too-many-requests') return 'Too many failed attempts. Try again later.';
+  if(code === 'auth/unauthorized-domain') return 'This website domain is not added in Firebase Authorized domains.';
+  if(code === 'auth/network-request-failed') return 'Network error. Check internet or Firebase connection.';
+  if(code === 'auth/operation-not-allowed') return 'Email/password login is not enabled in Firebase Authentication.';
+  return `${code || 'Login error'}${e?.message ? ' — ' + e.message : ''}`;
+}
 
-$("#btnDemo").onclick = async ()=>{
-  demoMode = true;
+async function enterApp(user=null, key='auth'){
+  const loadKey = demoMode ? 'demo' : String(user?.uid || key || 'auth');
   authView.classList.add('hidden');
   appView.classList.remove('hidden');
   setEnvChip();
-  await loadApp();
+
+  if(appLoadPromise && appLoadKey === loadKey) return appLoadPromise;
+  appLoadKey = loadKey;
+  appLoadPromise = (async ()=>{
+    try{
+      await loadApp(user);
+    }catch(e){
+      showErr('[enterApp/loadApp]', e);
+      toast('Logged in, but dashboard could not load. Check Firestore permissions or console.', 'error', 6000);
+      sections.dashboard.innerHTML = `<div class="card"><div class="empty-state">Logged in, but dashboard could not load. Check Firestore permissions or browser console.</div></div>`;
+    }
+  })();
+  return appLoadPromise;
+}
+
+async function handleLogin(){
+  const email = authEmail.value.trim();
+  const pass = authPass.value.trim();
+  if(!email || !pass){
+    authMsg.textContent = 'Enter email and password.';
+    toast('Enter email and password.', 'warn');
+    return;
+  }
+
+  btnLogin.disabled = true;
+  const oldText = btnLogin.textContent;
+  btnLogin.textContent = 'Signing in…';
+  authMsg.textContent = 'Signing in…';
+
+  try{
+    demoMode = false;
+    const cred = await signInWithEmailAndPassword(auth, email, pass);
+    authMsg.textContent = 'Signed in. Loading dashboard…';
+    await enterApp(cred.user, 'login');
+  }catch(e){
+    showErr('[auth/login]', e);
+    const msg = authErrorMessage(e);
+    authMsg.textContent = msg;
+    toast(msg, 'error', 6000);
+  }finally{
+    btnLogin.disabled = false;
+    btnLogin.textContent = oldText;
+  }
+}
+
+btnLogin.onclick = handleLogin;
+[authEmail, authPass].forEach(input=>{
+  input.addEventListener('keydown', e=>{
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      handleLogin();
+    }
+  });
+});
+
+$("#btnDemo").onclick = async ()=>{
+  demoMode = true;
+  authMsg.textContent = '';
+  await enterApp(null, 'demo');
   toast("Demo mode opened. Saving is disabled.", "warn");
 };
 
 $("#signOutBtn").onclick = async ()=>{
   if(demoMode){
     demoMode = false;
+    appLoadKey = '';
+    appLoadPromise = null;
     appView.classList.add('hidden');
     authView.classList.remove('hidden');
     setEnvChip();
     return;
   }
+  appLoadKey = '';
+  appLoadPromise = null;
   await signOut(auth);
 };
 
 onAuthStateChanged(auth, async (user)=>{
-  if(user){
-    demoMode = false;
-    authView.classList.add('hidden');
-    appView.classList.remove('hidden');
-    setEnvChip();
-    await loadApp(user);
-  }else if(!demoMode){
-    appView.classList.add('hidden');
-    authView.classList.remove('hidden');
+  try{
+    if(user){
+      demoMode = false;
+      await enterApp(user, 'state');
+    }else if(!demoMode){
+      appLoadKey = '';
+      appLoadPromise = null;
+      appView.classList.add('hidden');
+      authView.classList.remove('hidden');
+      authMsg.textContent = '';
+    }
+  }catch(e){
+    showErr('[auth/state]', e);
+    toast('Login succeeded, but app loading failed. Check console.', 'error', 6000);
   }
 });
 
@@ -2939,4 +3008,9 @@ async function cleanupOrphanRenewals(){
     const CHUNK = 400;
     for(let i = 0; i < orphans.length; i += CHUNK){ const batch = writeBatch(db); for(let j = i; j < Math.min(i + CHUNK, orphans.length); j++){ batch.delete(orphans[j]); } await batch.commit(); }
     await loadRenewals(); renderAll(); msg.textContent = `Deleted ${orphans.length} orphan renewals.`; toast(`Deleted ${orphans.length} orphan renewals.`, "ok");
-  }catch
+  }catch(err){ showErr("[cleanup orphans]", err); msg.textContent = "Error during cleanup."; toast(err?.message || "Failed to clean up orphan renewals.", "error", 3600); }
+  finally{ btn.disabled = false; }
+}
+</script>
+</body>
+</html>
