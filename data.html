@@ -6,9 +6,37 @@
 <title>Net + Cable • Admin</title>
 <style>
   :root{
+    --bg:#f4f7fb;
+    --bg2:#eaf0ff;
+    --card:#ffffff;
+    --card2:#f8fafc;
+    --card3:#eef4ff;
+    --ink:#14213d;
+    --muted:#64748b;
+    --accent:#2563eb;
+    --accent2:#7c3aed;
+    --danger:#ef4444;
+    --ok:#10b981;
+    --border:#d8e0ee;
+    --warn:#f59e0b;
+    --shadow:0 18px 45px rgba(15,23,42,.08);
+    --shadow-soft:0 8px 24px rgba(15,23,42,.06);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --space:16px;
+    --radius:22px;
+    --tap:44px;
+    --shell:1280px;
+  }
+
+  html[data-theme="dark"]{
     --bg:#0b1020;
+    --bg2:#101936;
     --card:#121831;
     --card2:#10162d;
+    --card3:#182041;
     --ink:#e7ecff;
     --muted:#9aa7d9;
     --accent:#6a8cff;
@@ -17,132 +45,226 @@
     --ok:#35d0a7;
     --border:#23305b;
     --warn:#ffc857;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-    --safe-left: env(safe-area-inset-left, 0px);
-    --safe-right: env(safe-area-inset-right, 0px);
-    --space:14px;
-    --radius:18px;
-    --tap:44px;
-    --shell:480px;
+    --shadow:0 18px 45px rgba(0,0,0,.22);
+    --shadow-soft:0 8px 24px rgba(0,0,0,.16);
   }
 
-  *{box-sizing:border-box;-webkit-tap-highlight-color:rgba(255,255,255,0)}
-  html,body{height:100%}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:rgba(37,99,235,.08)}
+  html,body{min-height:100%}
   body{
     margin:0;
     font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
     background:
-      radial-gradient(1300px 800px at 80% -10%,rgba(138,91,255,.15),transparent 60%),
-      radial-gradient(900px 700px at 0% 0%,rgba(106,140,255,.18),transparent 55%),
-      linear-gradient(180deg,#0b1020,#0b1020 30%,#0b1020);
+      radial-gradient(1000px 520px at 8% -8%,rgba(37,99,235,.12),transparent 62%),
+      radial-gradient(900px 500px at 92% 0%,rgba(124,58,237,.10),transparent 60%),
+      linear-gradient(180deg,var(--bg2),var(--bg) 300px,var(--bg));
     color:var(--ink);
-    padding-bottom: calc(var(--safe-bottom) + 12px);
+    padding-bottom: calc(var(--safe-bottom) + 24px);
     overscroll-behavior-y:none;
   }
+
   a{color:var(--accent)}
   .wrap{
     width:100%;
     max-width:var(--shell);
     margin:0 auto;
-    padding:14px;
-    padding-left:max(14px, var(--safe-left));
-    padding-right:max(14px, var(--safe-right));
+    padding:18px 24px;
+    padding-left:max(24px, var(--safe-left));
+    padding-right:max(24px, var(--safe-right));
   }
+
   .card{
-    background:linear-gradient(180deg, rgba(18,24,49,.96), rgba(16,22,45,.96));
+    background:rgba(255,255,255,.92);
     border:1px solid var(--border);
     border-radius:var(--radius);
-    padding:14px;
-    box-shadow:0 10px 30px rgba(0,0,0,.18);
+    padding:18px;
+    box-shadow:var(--shadow-soft);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
   }
+  html[data-theme="dark"] .card{
+    background:linear-gradient(180deg, rgba(18,24,49,.96), rgba(16,22,45,.96));
+  }
+
   .row{display:flex;gap:var(--space);flex-wrap:wrap}
-  .col{flex:1 1 280px; min-width:260px}
+  .col{flex:1 1 320px; min-width:280px}
+
   .btn{
-    appearance:none;border:1px solid var(--border);
+    appearance:none;
+    border:1px solid transparent;
     background:linear-gradient(135deg,var(--accent),var(--accent2));
-    color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer;
-    min-height:var(--tap); touch-action:manipulation;
-    transition:transform .08s ease, opacity .2s ease, filter .2s ease;
+    color:#fff;
+    padding:12px 18px;
+    border-radius:14px;
+    font-weight:800;
+    cursor:pointer;
+    min-height:var(--tap);
+    touch-action:manipulation;
+    transition:transform .08s ease, opacity .2s ease, filter .2s ease, box-shadow .2s ease;
+    box-shadow:0 10px 22px rgba(37,99,235,.16);
   }
-  .btn.secondary{background:#182041}
-  .btn.ghost{background:transparent;border-color:var(--border);color:var(--ink)}
-  .btn.warn{background:linear-gradient(135deg,#ff9d00,#ff6800)}
-  .btn.danger{background:linear-gradient(135deg,#ff5b73,#ff1f49)}
-  .btn.ok{background:linear-gradient(135deg,#3cd6b5,#15a37f)}
+  .btn.secondary{background:#334155;color:#fff;box-shadow:none}
+  .btn.ghost{
+    background:#fff;
+    border-color:var(--border);
+    color:var(--ink);
+    box-shadow:none;
+  }
+  html[data-theme="dark"] .btn.ghost{background:transparent}
+  .btn.warn{background:linear-gradient(135deg,#f59e0b,#ea580c)}
+  .btn.danger{background:linear-gradient(135deg,#f43f5e,#dc2626)}
+  .btn.ok{background:linear-gradient(135deg,#10b981,#059669)}
+  .btn:hover{filter:brightness(1.02);box-shadow:0 14px 26px rgba(37,99,235,.18)}
+  .btn.ghost:hover{box-shadow:0 10px 22px rgba(15,23,42,.06)}
   .btn:active{transform:translateY(1px); opacity:.95}
   .btn:disabled{opacity:.6; cursor:not-allowed}
-  .chip{display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:999px;background:#1a2244;border:1px solid #2a3670;color:#cfe2ff;font-size:12px;min-height:34px}
+
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:7px 11px;
+    border-radius:999px;
+    background:#eef4ff;
+    border:1px solid #dbeafe;
+    color:#1d4ed8;
+    font-size:12px;
+    font-weight:800;
+    min-height:34px;
+  }
+  html[data-theme="dark"] .chip{background:#1a2244;border-color:#2a3670;color:#cfe2ff}
+
   .topbar{
-  position:relative;
-  top:auto;
-  z-index:1;
-  background:transparent;
-  -webkit-backdrop-filter:none;
-  backdrop-filter:none;
-  border-bottom:none;
-  padding-top: calc(var(--safe-top) * 1);
-}
-  .topbar .wrap{padding-top:8px;padding-bottom:8px}
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(244,247,251,.78);
+    -webkit-backdrop-filter:blur(18px);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(216,224,238,.72);
+    padding-top:var(--safe-top);
+  }
+  html[data-theme="dark"] .topbar{
+    background:rgba(11,16,32,.78);
+    border-bottom:1px solid rgba(35,48,91,.72);
+  }
+  .topbar .wrap{padding-top:12px;padding-bottom:12px}
+
   .topbox{
     display:grid;
     grid-template-columns:minmax(0,1fr) auto;
-    gap:12px;
-    align-items:start;
-    padding:10px 12px;
+    gap:18px;
+    align-items:center;
+    padding:16px 18px;
+    box-shadow:var(--shadow);
   }
-  .brand-stack{display:flex;flex-direction:column;gap:10px;min-width:0}
+  .brand-stack{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    min-width:0;
+    flex-wrap:wrap;
+  }
   .brand{
-    font-size:21px;
+    font-size:28px;
     line-height:1.05;
-    font-weight:900;
-    letter-spacing:.2px;
+    font-weight:950;
+    letter-spacing:-.4px;
     word-break:break-word;
   }
-  .brand .muted{color:#a9b7ff}
+  .brand .muted{color:#64748b}
+  html[data-theme="dark"] .brand .muted{color:#a9b7ff}
   .top-right{
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     gap:10px;
-    align-items:stretch;
-    min-width:136px;
+    align-items:center;
+    justify-content:flex-end;
+    min-width:0;
   }
   .status-pill,.near-pill,.signout-btn{
     border:1px solid var(--border);
     border-radius:999px;
-    background:#11183a;
+    background:#f8fafc;
     color:var(--ink);
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    min-height:38px;
-    padding:8px 14px;
-    font-weight:600;
+    min-height:42px;
+    padding:9px 15px;
+    font-weight:800;
     white-space:nowrap;
   }
-  .near-pill{min-height:42px;padding:8px 16px;font-size:16px}
+  html[data-theme="dark"] .status-pill,
+  html[data-theme="dark"] .near-pill,
+  html[data-theme="dark"] .signout-btn{background:#11183a}
+  .near-pill{font-size:15px;background:#fff7ed;border-color:#fed7aa;color:#9a3412}
+  html[data-theme="dark"] .near-pill{background:#2a2416;color:#ffe7a8;border-color:#684}
   .signout-btn{
-    min-height:52px;
-    border-radius:16px;
-    font-size:16px;
-    font-weight:800;
-    background:linear-gradient(180deg,#1c2554,#161f48);
+    min-height:44px;
+    border-radius:999px;
+    font-size:14px;
+    background:#0f172a;
+    color:#fff;
+    cursor:pointer;
+  }
+  html[data-theme="dark"] .signout-btn{background:linear-gradient(180deg,#1c2554,#161f48)}
+  .theme-btn{
+    border:1px solid var(--border);
+    border-radius:999px;
+    background:#ffffff;
+    color:var(--ink);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:42px;
+    padding:9px 15px;
+    font-weight:900;
+    white-space:nowrap;
+    cursor:pointer;
+  }
+  html[data-theme="dark"] .theme-btn{background:#11183a;color:var(--ink)}
+  .mini-btn.whatsapp{
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    color:#fff;
+    border-color:transparent;
+  }
+  .backup-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+    margin-top:12px;
+  }
+  .warning-note{
+    margin-top:10px;
+    padding:10px 12px;
+    border-radius:14px;
+    border:1px solid #fed7aa;
+    background:#fff7ed;
+    color:#9a3412;
+    font-size:13px;
+    line-height:1.45;
+  }
+  html[data-theme="dark"] .warning-note{
+    border-color:#684;
+    background:#2a2416;
+    color:#ffe7a8;
   }
 
   .nav-grid{
     display:grid;
-    grid-template-columns:repeat(3, minmax(0, 1fr));
-    gap:10px;
-    margin:12px 0 14px;
+    grid-template-columns:repeat(6, minmax(0, 1fr));
+    gap:12px;
+    margin:14px 0 0;
   }
   .nav-btn{
-    min-height:78px;
-    border-radius:20px;
+    min-height:66px;
+    border-radius:18px;
     border:1px solid var(--border);
-    background:linear-gradient(180deg,#121a3a,#0f1530);
-    color:#fff;
-    font-weight:800;
-    font-size:15px;
+    background:#ffffff;
+    color:var(--ink);
+    font-weight:900;
+    font-size:14px;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -150,14 +272,34 @@
     gap:3px;
     text-align:center;
     padding:10px 8px;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(15,23,42,.05);
+    transition:transform .12s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
   }
-  .nav-btn small{font-size:12px;color:#cfd8ff;font-weight:700;opacity:.86}
-  .nav-btn.active{background:linear-gradient(135deg,#2c376f,#202b5e)}
-  .nav-btn.sort-nav small{font-size:13px}
+  .nav-btn:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(15,23,42,.08)}
+  .nav-btn small{font-size:12px;color:var(--muted);font-weight:800;opacity:.9}
+  .nav-btn.active{
+    color:#fff;
+    border-color:transparent;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:0 14px 28px rgba(37,99,235,.20);
+  }
+  .nav-btn.active small{color:#e0e7ff}
+  .nav-btn.period-nav small{font-size:13px}
+  html[data-theme="dark"] .nav-btn{background:linear-gradient(180deg,#121a3a,#0f1530);color:#fff}
+  html[data-theme="dark"] .nav-btn.active{background:linear-gradient(135deg,#2c376f,#202b5e)}
 
-  .section-title{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-  .section-title h3,.section-title h2{margin:0}
-  .helper{font-size:12px;color:var(--muted)}
+  .section-title{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+  .section-title h3,.section-title h2{margin:0;letter-spacing:-.2px}
+  .section-title h2{font-size:26px}
+  .helper{font-size:13px;color:var(--muted);line-height:1.45}
   .muted{color:var(--muted)}
   .hidden{display:none!important}
   .grow{flex:1}
@@ -167,148 +309,425 @@
   .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,"Roboto Mono",monospace}
 
   input,select,textarea{
-    width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);
-    background:#0f1530;color:var(--ink);font-size:16px;min-height:44px;outline:none;
+    width:100%;
+    padding:12px 13px;
+    border-radius:14px;
+    border:1px solid var(--border);
+    background:#ffffff;
+    color:var(--ink);
+    font-size:15px;
+    min-height:46px;
+    outline:none;
+    box-shadow:0 1px 0 rgba(15,23,42,.03);
   }
+  html[data-theme="dark"] input,
+  html[data-theme="dark"] select,
+  html[data-theme="dark"] textarea{background:#0f1530;color:var(--ink)}
   input:focus,select:focus,textarea:focus{
-    border-color:#4b69d6;box-shadow:0 0 0 3px rgba(106,140,255,.15);
+    border-color:#60a5fa;
+    box-shadow:0 0 0 4px rgba(37,99,235,.12);
   }
-  label{display:block;margin-top:10px;margin-bottom:6px;color:#ccd6ff;font-size:13px}
+  label{display:block;margin-top:12px;margin-bottom:6px;color:#334155;font-size:13px;font-weight:800}
+  html[data-theme="dark"] label{color:#ccd6ff}
 
   .stats-grid{
     display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:10px;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:14px;
     margin-top:12px;
   }
   .kpi-card{
-    padding:14px;
-    border-radius:16px;
+    padding:18px;
+    border-radius:18px;
     border:1px solid var(--border);
-    background:#121a3a;
+    background:linear-gradient(180deg,#fff,#f8fafc);
     min-width:0;
+    box-shadow:0 8px 20px rgba(15,23,42,.04);
   }
-  .kpi-label{font-size:13px;color:var(--muted);line-height:1.25}
-  .kpi-value{font-size:26px;font-weight:900;line-height:1.05;margin-top:7px}
+  html[data-theme="dark"] .kpi-card{background:#121a3a}
+  .kpi-label{font-size:13px;color:var(--muted);line-height:1.25;font-weight:800}
+  .kpi-value{font-size:32px;font-weight:950;line-height:1.05;margin-top:8px;letter-spacing:-.7px}
 
-  .metric-stack{display:flex;flex-direction:column;gap:10px;margin-top:12px}
-  .metric-bar{padding:12px;border:1px solid var(--border);border-radius:16px;background:#121a3a}
-  .metric-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .metric-stack{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:14px;
+    margin-top:14px;
+  }
+  .metric-bar{
+    padding:16px;
+    border:1px solid var(--border);
+    border-radius:18px;
+    background:linear-gradient(180deg,#fff,#f8fafc);
+    box-shadow:0 8px 20px rgba(15,23,42,.04);
+  }
+  html[data-theme="dark"] .metric-bar{background:#121a3a}
+  .metric-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
   .metric-top strong{font-size:15px}
   .metric-top span{font-size:14px;color:var(--muted)}
-  .track{height:10px;border-radius:999px;background:#0d1330;border:1px solid #1d2858;overflow:hidden}
-  .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#3dd9b7,#7f8bff,#9b70ff)}
+  .track{height:10px;border-radius:999px;background:#e2e8f0;border:1px solid #dbe3f0;overflow:hidden}
+  html[data-theme="dark"] .track{background:#0d1330;border-color:#1d2858}
+  .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#10b981,#2563eb,#7c3aed)}
 
   .control-grid{
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:10px;
+    gap:12px;
   }
   .control-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-
-  .list-stack{display:flex;flex-direction:column;gap:10px}
-  .empty-state{text-align:center;padding:18px;color:var(--muted);border:1px dashed var(--border);border-radius:14px;background:#10162d}
+  .list-stack{display:flex;flex-direction:column;gap:12px}
+  .empty-state{
+    text-align:center;
+    padding:24px;
+    color:var(--muted);
+    border:1px dashed var(--border);
+    border-radius:16px;
+    background:#f8fafc;
+  }
+  html[data-theme="dark"] .empty-state{background:#10162d}
 
   .accordion-item{
     border:1px solid var(--border);
-    border-radius:16px;
+    border-radius:18px;
     overflow:hidden;
-    background:#10162d;
+    background:#ffffff;
+    box-shadow:0 8px 20px rgba(15,23,42,.04);
   }
+  html[data-theme="dark"] .accordion-item{background:#10162d}
   .accordion-head{
     display:grid;
     grid-template-columns:minmax(0,1fr) auto;
-    gap:10px;
-    padding:12px;
+    gap:14px;
+    padding:14px 16px;
     align-items:center;
   }
-  .accordion-left{min-width:0;display:flex;flex-direction:column;gap:6px}
-  .accordion-name{font-size:18px;font-weight:800;line-height:1.1;word-break:break-word}
-  .accordion-meta{display:flex;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+  .accordion-left{min-width:0;display:flex;flex-direction:column;gap:7px}
+  .accordion-name{font-size:19px;font-weight:950;line-height:1.1;word-break:break-word}
+  .accordion-meta{display:flex;gap:7px;flex-wrap:wrap;font-size:12px;color:var(--muted);align-items:center}
   .mini-badge{
-    display:inline-flex;align-items:center;justify-content:center;
-    min-height:30px;padding:5px 10px;border-radius:999px;border:1px solid var(--border);font-size:12px;font-weight:700
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:30px;
+    padding:5px 10px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    font-size:12px;
+    font-weight:850;
   }
-  .badge-exp{background:#2a1a1a;color:#ffb3c0;border-color:#624}
-  .badge-ok{background:#14231b;color:#b9ffe9;border-color:#264}
-  .badge-warn{background:#2a2416;color:#ffe7a8;border-color:#684}
-  .badge-muted{background:#19213d;color:#cbd6ff;border-color:#34406e}
+  .badge-exp{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+  .badge-ok{background:#ecfdf5;color:#047857;border-color:#a7f3d0}
+  .badge-warn{background:#fffbeb;color:#92400e;border-color:#fde68a}
+  .badge-muted{background:#f1f5f9;color:#475569;border-color:#d8e0ee}
+  html[data-theme="dark"] .badge-exp{background:#2a1a1a;color:#ffb3c0;border-color:#624}
+  html[data-theme="dark"] .badge-ok{background:#14231b;color:#b9ffe9;border-color:#264}
+  html[data-theme="dark"] .badge-warn{background:#2a2416;color:#ffe7a8;border-color:#684}
+  html[data-theme="dark"] .badge-muted{background:#19213d;color:#cbd6ff;border-color:#34406e}
+
   .accordion-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
   .mini-btn{
-    appearance:none;border:1px solid var(--border);background:#141c42;color:#fff;
-    border-radius:12px;min-height:38px;padding:0 12px;font-weight:800
+    appearance:none;
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--ink);
+    border-radius:13px;
+    min-height:38px;
+    padding:0 13px;
+    font-weight:900;
+    cursor:pointer;
   }
-  .mini-btn.ok{background:linear-gradient(135deg,#3cd6b5,#15a37f)}
-  .mini-btn.ghost{background:transparent}
-  .accordion-body{display:none;padding:12px;border-top:1px solid var(--border);background:#0f1530}
+  .mini-btn.ok{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border-color:transparent}
+  .mini-btn.ghost{background:#fff}
+  html[data-theme="dark"] .mini-btn{background:#141c42;color:#fff}
+  html[data-theme="dark"] .mini-btn.ghost{background:transparent}
+  .accordion-body{display:none;padding:14px;border-top:1px solid var(--border);background:#f8fafc}
+  html[data-theme="dark"] .accordion-body{background:#0f1530}
   .accordion-item.open .accordion-body{display:block}
   .detail-grid{
     display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:10px;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
   }
-  .detail-box{padding:12px;border-radius:14px;border:1px solid var(--border);background:#11183a;min-width:0}
-  .detail-label{font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:700}
-  .detail-value{font-size:16px;font-weight:800;line-height:1.2;word-break:break-word}
-  .detail-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .detail-box{
+    padding:13px;
+    border-radius:15px;
+    border:1px solid var(--border);
+    background:#ffffff;
+    min-width:0;
+  }
+  html[data-theme="dark"] .detail-box{background:#11183a}
+  .detail-label{font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:850}
+  .detail-value{
+    font-size:16px;
+    font-weight:900;
+    line-height:1.2;
+    word-break:break-word;
+    font-variant-numeric:tabular-nums;
+  }
+  .detail-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .renewal-history{
+    margin-top:14px;
+    border:1px solid var(--border);
+    border-radius:18px;
+    overflow:hidden;
+    background:#ffffff;
+  }
+  html[data-theme="dark"] .renewal-history{background:#11183a}
+  .renewal-history-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    flex-wrap:wrap;
+    padding:13px 14px;
+    border-bottom:1px solid var(--border);
+    background:#f8fafc;
+  }
+  html[data-theme="dark"] .renewal-history-head{background:#0f1530}
+  .renewal-history-head strong{font-size:15px}
+  .renewal-list{display:flex;flex-direction:column}
+  .renewal-row{
+    display:grid;
+    grid-template-columns:minmax(180px,1.1fr) minmax(120px,.7fr) minmax(120px,.7fr) minmax(130px,.75fr) minmax(120px,.65fr) auto;
+    gap:10px;
+    align-items:center;
+    padding:12px 14px;
+    border-bottom:1px solid var(--border);
+  }
+  .renewal-row:last-child{border-bottom:none}
+  .renewal-main{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .renewal-plan{font-weight:950;line-height:1.15;word-break:break-word}
+  .renewal-meta{font-size:12px;color:var(--muted);font-weight:800}
+  .renewal-cell-label{font-size:11px;color:var(--muted);font-weight:850;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+  .renewal-cell-value{font-weight:900;font-variant-numeric:tabular-nums;word-break:break-word}
+  .renewal-danger{background:#fff1f2;color:#be123c;border-color:#fecdd3}
+  html[data-theme="dark"] .renewal-danger{background:#2a1a1a;color:#ffb3c0;border-color:#624}
+  .renewal-current{outline:2px solid rgba(16,185,129,.22);outline-offset:-2px}
 
-  .table-scroll{overflow:auto;-webkit-overflow-scrolling:touch;border-radius:14px}
-  .grid{width:100%;border-collapse:collapse;min-width:720px}
-  .grid th,.grid td{padding:11px 10px;border-bottom:1px solid #1d274e;font-size:14px;vertical-align:top}
-  .grid th{text-align:left;color:#c7d3ff;background:#121a3a;position:relative;top:auto;z-index:1}
+  .table-scroll{
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+    border-radius:16px;
+  }
+  .grid{width:100%;border-collapse:separate;border-spacing:0;min-width:920px}
+  .grid th,.grid td{
+    padding:13px 12px;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
+    vertical-align:top;
+  }
+  .grid th{
+    text-align:left;
+    color:#334155;
+    background:#f1f5f9;
+    position:sticky;
+    top:0;
+    z-index:1;
+    font-weight:900;
+  }
+  html[data-theme="dark"] .grid th{color:#c7d3ff;background:#121a3a}
+  .grid tbody tr:hover td{background:rgba(37,99,235,.04)}
+
+  .forecast-shell{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    margin-top:12px;
+  }
+  .forecast-btn-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
+  }
+  .forecast-main-card{
+    padding:20px;
+    border-radius:20px;
+    border:1px solid var(--border);
+    background:linear-gradient(180deg,#fff,#f8fafc);
+    box-shadow:0 8px 20px rgba(15,23,42,.04);
+  }
+  html[data-theme="dark"] .forecast-main-card{background:#121a3a}
+  .forecast-main-label{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:12px;
+    font-weight:850;
+  }
+  .forecast-main-value{
+    font-size:44px;
+    font-weight:950;
+    line-height:1.02;
+    margin-top:8px;
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+    letter-spacing:-1px;
+  }
+  .forecast-note{
+    margin-top:12px;
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.45;
+  }
+  .forecast-stat-grid{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:12px;
+    margin-top:14px;
+  }
+  .forecast-card{
+    padding:16px;
+    border-radius:18px;
+    border:1px solid var(--border);
+    background:linear-gradient(180deg,#fff,#f8fafc);
+    box-shadow:0 8px 20px rgba(15,23,42,.04);
+  }
+  html[data-theme="dark"] .forecast-card{background:#121a3a}
+  .forecast-card h4{margin:0 0 6px 0}
+  .forecast-big{
+    font-size:24px;
+    font-weight:950;
+    margin-top:8px;
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+  .plan-rate-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+  .plan-rate-item{padding:13px;border-radius:16px;border:1px solid var(--border);background:#ffffff}
+  html[data-theme="dark"] .plan-rate-item{background:#121a3a}
+  .segmented{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+  }
 
   .modal{
-    position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center;
-    background:rgba(0,0,0,.55); z-index:200; padding:16px; overflow:auto;
-    padding-top: calc(16px + var(--safe-top));
-    padding-bottom: calc(16px + var(--safe-bottom));
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:flex-start;
+    justify-content:center;
+    background:rgba(15,23,42,.48);
+    z-index:200;
+    padding:26px;
+    overflow:auto;
+    padding-top: calc(26px + var(--safe-top));
+    padding-bottom: calc(26px + var(--safe-bottom));
   }
   .modal.open{display:flex}
   .modal .body{
-    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-    padding:16px; width:100%; max-width:var(--shell); max-height:90vh; overflow:auto; -webkit-overflow-scrolling:touch;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:20px;
+    width:100%;
+    max-width:1100px;
+    max-height:90vh;
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+    box-shadow:0 30px 80px rgba(15,23,42,.24);
   }
   .modal .head{
-    display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;
-    position:sticky; top:0; background:var(--card); z-index:5; padding-bottom:6px
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+    position:sticky;
+    top:0;
+    background:var(--card);
+    z-index:5;
+    padding-bottom:8px;
   }
   .modal .foot{
-    display:flex;gap:10px;justify-content:flex-end;margin-top:12px;
-    position:sticky; bottom:0;
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+    margin-top:14px;
+    position:sticky;
+    bottom:0;
+    background:linear-gradient(180deg, transparent, rgba(255,255,255,.92) 24px, rgba(255,255,255,1) 48px);
+    padding-top:14px;
+    padding-bottom:6px;
+    flex-wrap:wrap;
+  }
+  html[data-theme="dark"] .modal .foot{
     background:linear-gradient(180deg, transparent, rgba(18,24,49,.9) 24px, rgba(18,24,49,1) 48px);
-    padding-top:12px; padding-bottom:6px; flex-wrap:wrap;
   }
 
-  .auth{max-width:var(--shell);margin:60px auto;padding-left:max(16px, var(--safe-left));padding-right:max(16px, var(--safe-right))}
-  .logo{font-weight:900;letter-spacing:.5px}
-  .subtle{opacity:.66}
+  .auth{
+    max-width:560px;
+    margin:80px auto;
+    padding-left:max(18px, var(--safe-left));
+    padding-right:max(18px, var(--safe-right));
+  }
+  .logo{font-weight:950;letter-spacing:.2px}
+  .subtle{opacity:.68}
   .toast-wrap{
-    position:fixed; left:14px; right:14px; bottom:calc(14px + var(--safe-bottom));
-    z-index:500; display:flex; flex-direction:column; gap:10px; max-width:var(--shell); margin:0 auto; pointer-events:none;
+    position:fixed;
+    left:24px;
+    right:24px;
+    bottom:calc(24px + var(--safe-bottom));
+    z-index:500;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    max-width:520px;
+    margin:0 auto;
+    pointer-events:none;
   }
   .toast{
     pointer-events:auto;
     border:1px solid var(--border);
-    background:rgba(18,24,49,.98);
+    background:rgba(255,255,255,.98);
     color:var(--ink);
-    border-radius:14px;
-    padding:12px 14px;
-    box-shadow:0 12px 28px rgba(0,0,0,.28);
+    border-radius:16px;
+    padding:13px 15px;
+    box-shadow:0 16px 35px rgba(15,23,42,.16);
     font-size:14px;
+    font-weight:700;
   }
-  .toast.info{border-color:#3450aa}
-  .toast.ok{border-color:#267b62}
-  .toast.warn{border-color:#8e6a16}
-  .toast.error{border-color:#8d2840}
+  html[data-theme="dark"] .toast{background:rgba(18,24,49,.98)}
+  .toast.info{border-color:#93c5fd}
+  .toast.ok{border-color:#86efac}
+  .toast.warn{border-color:#fcd34d}
+  .toast.error{border-color:#fda4af}
+
+  @media (max-width: 1100px){
+    :root{--shell:980px}
+    .nav-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .metric-stack{grid-template-columns:1fr}
+    .detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .renewal-row{grid-template-columns:minmax(180px,1fr) repeat(2,minmax(120px,.7fr)) auto}
+    .forecast-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+
+  @media (max-width: 760px){
+    :root{--shell:480px}
+    .wrap{padding:14px;padding-left:max(14px, var(--safe-left));padding-right:max(14px, var(--safe-right))}
+    .topbar{position:relative;background:transparent;border-bottom:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+    .topbox{grid-template-columns:1fr auto;align-items:start;padding:12px}
+    .brand-stack{display:flex;flex-direction:column;align-items:flex-start;gap:9px}
+    .brand{font-size:20px}
+    .top-right{flex-direction:column;align-items:stretch;min-width:128px}
+    .backup-grid{grid-template-columns:1fr}
+    .status-pill,.near-pill,.signout-btn,.theme-btn{min-height:38px;padding:8px 12px}
+    .signout-btn{min-height:46px;border-radius:16px}
+    .nav-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 14px}
+    .nav-btn{min-height:74px;font-size:14px}
+    .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .metric-stack,.detail-grid,.control-grid,.control-grid.three,.segmented,.forecast-btn-grid,.forecast-stat-grid{grid-template-columns:1fr}
+    .renewal-row{grid-template-columns:1fr}
+    .renewal-row .accordion-actions{justify-content:flex-start}
+    .accordion-head{grid-template-columns:1fr}
+    .accordion-actions{justify-content:flex-start}
+    .forecast-main-value{font-size:30px}
+    .modal{padding:14px;padding-top:calc(14px + var(--safe-top));padding-bottom:calc(14px + var(--safe-bottom))}
+    .modal .body{max-width:480px;padding:16px}
+    .toast-wrap{left:14px;right:14px;bottom:calc(14px + var(--safe-bottom));max-width:480px}
+  }
 
   @media (max-width: 420px){
     .brand{font-size:19px}
-    .top-right{min-width:126px}
     .near-pill{font-size:15px}
-    .nav-btn{min-height:74px;font-size:14px}
-    .stats-grid,.detail-grid,.control-grid,.control-grid.three{grid-template-columns:1fr}
-    .accordion-head{grid-template-columns:1fr}
-    .accordion-actions{justify-content:flex-start}
+    .stats-grid{grid-template-columns:1fr}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -347,7 +766,8 @@
           <div class="status-pill" id="envInfo">Connected</div>
         </div>
         <div class="top-right">
-          <div id="nearExpCount" class="near-pill">Near expiry: 0</div>
+          <div id="nearExpCount" class="near-pill">Expiring soon: 0</div>
+          <button id="themeToggle" class="theme-btn" type="button">🌙 Dark</button>
           <button id="signOutBtn" class="signout-btn" type="button">Sign Out</button>
         </div>
       </div>
@@ -355,8 +775,8 @@
       <div class="nav-grid" id="navGrid">
         <button class="nav-btn active" data-tab="dashboard" type="button">Dashboard</button>
         <button class="nav-btn" data-tab="customers" type="button">Customers</button>
-        <button class="nav-btn" data-tab="plans" type="button">Plans</button>
-        <button class="nav-btn sort-nav" id="dashboardSortBtn" type="button">Sort<small id="dashboardSortLabel">Lifetime</small></button>
+        <button class="nav-btn" data-tab="forecast" type="button">Forecast</button>
+        <button class="nav-btn period-nav" id="periodBtn" type="button">Period<small id="periodLabel">Year</small></button>
         <button class="nav-btn" data-tab="reports" type="button">Reports</button>
         <button class="nav-btn" data-tab="settings" type="button">Settings</button>
       </div>
@@ -366,27 +786,7 @@
   <div class="wrap" style="padding-top:0">
     <section id="tab-dashboard"></section>
     <section id="tab-customers" class="hidden"></section>
-
-    <section id="tab-plans" class="card hidden">
-      <div class="section-title">
-        <h3>Plans</h3>
-        <div class="flex">
-          <button id="btnSeedPlans" class="btn ghost" type="button">Seed sample plans</button>
-          <button id="btnAddPlan" class="btn ok" type="button">+ Add Plan</button>
-        </div>
-      </div>
-      <div class="card table-scroll" style="padding:0">
-        <table class="grid" id="plansGrid">
-          <thead>
-            <tr>
-              <th>ID</th><th>Name</th><th>Duration (months)</th>
-              <th>Retail $</th><th>Wholesale $</th><th>Description</th><th>Actions</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </section>
+    <section id="tab-forecast" class="hidden"></section>
 
     <section id="tab-reports" class="card hidden">
       <div class="row">
@@ -441,14 +841,56 @@
     </section>
 
     <section id="tab-settings" class="card hidden">
-      <h3>Settings</h3>
-      <label>Near-expiry threshold (days)</label>
+      <div class="section-title">
+        <div>
+          <h3>Settings</h3>
+          <div class="helper">Forecast below is read-only. It does not write to Firebase.</div>
+        </div>
+        <button id="btnTogglePlans" class="btn ghost" type="button">Manage Plans</button>
+      </div>
+      <label>Expiring soon threshold (days)</label>
       <input id="settingNearDays" type="number" min="1">
       <p class="muted" style="margin-top:6px">This only affects frontend highlighting and filtering. No backend change.</p>
       <hr style="border:none;border-top:1px solid var(--border);margin:14px 0">
       <div class="flex">
         <button id="btnCleanupOrphans" class="btn danger" type="button">🗑 Delete Orphan Renewals</button>
         <span id="cleanupMsg" class="muted"></span>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="section-title">
+          <div>
+            <h3>Backup / Export Data</h3>
+            <div class="helper">Downloads CSV from the data already loaded in this admin panel. No Firebase rule or database change.</div>
+          </div>
+        </div>
+        <div class="backup-grid">
+          <button id="btnExportCustomersBackup" class="btn ghost" type="button">Export Customers</button>
+          <button id="btnExportRenewalsBackup" class="btn ghost" type="button">Export Renewals</button>
+          <button id="btnExportPlansBackup" class="btn ghost" type="button">Export Plans</button>
+        </div>
+        <div class="warning-note">Before any big update, download these backups once. It gives you a safe copy of customers, renewals, and plans.</div>
+      </div>
+
+      <div id="settingsPlansWrap" class="hidden" style="margin-top:16px">
+        <div class="section-title">
+          <h3>Manage Plans</h3>
+          <div class="flex">
+            <button id="btnSeedPlans" class="btn ghost" type="button">Seed sample plans</button>
+            <button id="btnAddPlan" class="btn ok" type="button">+ Add Plan</button>
+          </div>
+        </div>
+        <div class="card table-scroll" style="padding:0">
+          <table class="grid" id="plansGrid">
+            <thead>
+              <tr>
+                <th>ID</th><th>Name</th><th>Duration (months)</th>
+                <th>Retail $</th><th>Wholesale $</th><th>Description</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
@@ -527,6 +969,10 @@
             <label>Expiry Date</label><input id="r_expiry" type="date">
             <label>Payment Received?</label>
             <select id="r_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
+            <div class="card" style="margin-top:10px">
+              <div class="muted">Renewal Preview</div>
+              <div id="r_preview" class="muted">—</div>
+            </div>
           </div>
         </div>
         <div class="foot">
@@ -559,6 +1005,16 @@
         <div class="foot">
           <button id="btnSavePlan" class="btn secondary" type="button">Save Plan</button>
         </div>
+      </div>
+    </div>
+
+    <div id="modalPeriod" class="modal">
+      <div class="body">
+        <div class="head">
+          <h3>Choose dashboard period</h3>
+          <button class="btn ghost" id="xPeriod" type="button">✕</button>
+        </div>
+        <div id="periodOptions" class="list-stack"></div>
       </div>
     </div>
   </div>
@@ -603,6 +1059,72 @@ function toast(message, type='info', timeout=2800){
     el.style.transform = 'translateY(6px)';
     setTimeout(()=> el.remove(), 220);
   }, timeout);
+}
+function currentTheme(){
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+}
+function refreshThemeButton(){
+  const btn = $("#themeToggle");
+  if(!btn) return;
+  btn.textContent = currentTheme() === 'dark' ? '☀️ Light' : '🌙 Dark';
+}
+function applyTheme(theme){
+  const safeTheme = theme === 'dark' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', safeTheme);
+  try{ localStorage.setItem('netCableTheme', safeTheme); }catch(e){}
+  refreshThemeButton();
+}
+applyTheme((()=>{ try{ return localStorage.getItem('netCableTheme') || 'light'; }catch(e){ return 'light'; } })());
+function humanDate(iso){
+  if(!iso) return '-';
+  const d = new Date(iso + 'T00:00:00');
+  if(isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString('en-CA', { year:'numeric', month:'long', day:'numeric' });
+}
+function normalizePhoneLoose(v){
+  let d = String(v || '').replace(/\D/g, '');
+  if(d.length === 11 && d.startsWith('1')) d = d.slice(1);
+  return d;
+}
+function normalizeWhatsAppPhone(v){
+  let d = String(v || '').replace(/\D/g, '');
+  if(d.length === 10) d = '1' + d;
+  return d;
+}
+function buildWhatsAppExpiryMessage(c){
+  const cp = c?.currentPlan || {};
+  const name = (c?.name || 'there').trim();
+  const expiry = humanDate(cp.expiryDate);
+  const expired = daysLeft(cp.expiryDate) < 0;
+  return expired
+    ? `Hi ${name}, your Net + Cable plan expired on ${expiry}. Please contact us to renew. Thank you.`
+    : `Hi ${name}, your Net + Cable plan will expire on ${expiry}. Please contact us to renew. Thank you.`;
+}
+function sendWhatsAppReminder(customerId){
+  const c = customers.find(x => String(x.id) === String(customerId));
+  if(!c){ toast('Customer not found.', 'error'); return; }
+  const phone = normalizeWhatsAppPhone(c.phone);
+  if(!phone || phone.length < 10){
+    toast('This customer does not have a valid phone number for WhatsApp.', 'warn', 3600);
+    return;
+  }
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(buildWhatsAppExpiryMessage(c))}`;
+  window.open(url, '_blank');
+}
+function csvCell(v){
+  return `"${String(v ?? '').replaceAll('"','""')}"`;
+}
+function downloadCSVFile(filename, rows){
+  const csvStr = "\uFEFF" + rows.map(row => row.map(csvCell).join(',')).join('\n');
+  const blob = new Blob([csvStr], { type:'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 function addMonthsISO(startISO, months){
   if (!startISO) return "";
@@ -649,17 +1171,22 @@ async function safeAddDoc(ref, data, label){ try{ return await addDoc(ref, data)
 async function safeSetDoc(ref, data, opts, label){ try{ return await setDoc(ref, data, opts); } catch(e){ showErr(label, e); throw e; } }
 async function safeUpdateDoc(ref, data, label){ try{ return await updateDoc(ref, data); } catch(e){ showErr(label, e); throw e; } }
 async function safeDeleteDoc(ref, label){ try{ return await deleteDoc(ref); } catch(e){ showErr(label, e); throw e; } }
-function inPeriod(dateStr, period){
-  if(period === 'lifetime') return true;
-  if(!dateStr) return false;
-  const d = new Date(dateStr + 'T00:00:00');
-  const now = new Date();
-  if(Number.isNaN(d.getTime())) return false;
-  if(period === 'year') return d.getFullYear() === now.getFullYear();
-  return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
-}
-function periodLabel(period){ return period === 'month' ? 'Month' : period === 'year' ? 'Year' : 'Lifetime'; }
 function metricWidth(value, max){ if(max <= 0) return 8; return Math.max(8, Math.min(100, (value / max) * 100)); }
+function monthStart(d){ return new Date(d.getFullYear(), d.getMonth(), 1); }
+function addMonthsDate(date, months){ const d = new Date(date); const day = d.getDate(); d.setMonth(d.getMonth() + months); if(d.getDate() !== day) d.setDate(0); return d; }
+function monthsBetween(start, end){
+  let count = 0;
+  let cursor = monthStart(new Date(start));
+  const limit = monthStart(new Date(end));
+  while(cursor <= limit){ count += 1; cursor = new Date(cursor.getFullYear(), cursor.getMonth()+1, 1); }
+  return Math.max(1, count);
+}
+function firstDayOfCurrentMonth(){ const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); }
+function endOfCurrentMonth(){ const d = new Date(); return new Date(d.getFullYear(), d.getMonth()+1, 0); }
+function isoToDate(iso){ return iso ? new Date(iso + 'T00:00:00') : null; }
+function dateToISO(d){ return new Date(d).toISOString().slice(0,10); }
+function clamp(num, min, max){ return Math.min(max, Math.max(min, num)); }
+function average(arr){ return arr.length ? arr.reduce((a,b)=> a + b, 0) / arr.length : 0; }
 
 (function iosTweaks(){
   const useVV = window.visualViewport;
@@ -681,7 +1208,7 @@ const appView  = $("#appView");
 const sections = {
   dashboard: $("#tab-dashboard"),
   customers: $("#tab-customers"),
-  plans: $("#tab-plans"),
+  forecast: $("#tab-forecast"),
   reports: $("#tab-reports"),
   settings: $("#tab-settings"),
 };
@@ -695,10 +1222,20 @@ let uiBound = false;
 let editCustomerId = null;
 let renewCustomerId = null;
 let activeTab = 'dashboard';
-let dashboardPeriod = 'lifetime';
+let settingsPlansOpen = false;
 let loyaltySortMode = 'spent';
-let customerSortMode = 'nameAsc';
-const accordionState = { dashboardNear:new Set(), dashboardExpired:new Set(), loyalty:new Set(), customers:new Set() };
+let customerSortMode = 'expirySoon';
+let dashboardBottomView = '';
+let renewalsLoadedOnce = false;
+let forecastPeriodKey = 'month';
+let forecastMetricKey = 'revenue';
+let dashboardPeriod = { type:'year', year:new Date().getFullYear() };
+const accordionState = { dashboardView:new Set(), loyalty:new Set(), customers:new Set() };
+
+window.customerSearchValue = '';
+window.customerTimeFilter = 'currentYear';
+window.customerStatusFilter = 'all';
+window.customerExpiryFilter = 'all';
 
 const authEmail = $("#authEmail");
 const authPass = $("#authPass");
@@ -772,14 +1309,27 @@ function bindUIOnce(){
   $$("#navGrid .nav-btn[data-tab]").forEach(btn=>{
     btn.addEventListener('click', ()=> setActiveTab(btn.dataset.tab));
   });
-  $("#dashboardSortBtn").addEventListener('click', cycleDashboardPeriod);
+  $("#periodBtn").addEventListener('click', openPeriodModal);
+  $("#xPeriod").addEventListener('click', ()=> $("#modalPeriod").classList.remove('open'));
+  const themeToggle = $("#themeToggle");
+  if(themeToggle){
+    refreshThemeButton();
+    themeToggle.onclick = ()=> applyTheme(currentTheme() === 'dark' ? 'light' : 'dark');
+  }
 
   $("#btnSeedPlans").onclick = seedPlans;
   $("#btnAddPlan").onclick = ()=> openPlanModal();
   $("#btnRunReport").addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); runReport(); });
   $("#btnCsv").addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); exportCSV(); });
+  $("#btnExportCustomersBackup").onclick = exportCustomersBackup;
+  $("#btnExportRenewalsBackup").onclick = exportRenewalsBackup;
+  $("#btnExportPlansBackup").onclick = exportPlansBackup;
   $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
   $("#repType").addEventListener('change', onRepTypeChange, {passive:true});
+  $("#btnTogglePlans").addEventListener('click', ()=>{
+    settingsPlansOpen = !settingsPlansOpen;
+    renderSettingsPlansState();
+  });
 
   $("#xCust").onclick = ()=>{ editCustomerId = null; $("#modalCustomer").classList.remove('open'); };
   $("#xRenew").onclick = ()=> $("#modalRenew").classList.remove('open');
@@ -810,7 +1360,11 @@ function bindUIOnce(){
     $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
   });
 
-  $("#r_stb").addEventListener('change', ()=>{ $("#r_stbBox").classList.toggle('hidden', $("#r_stb").value !== 'yes'); });
+  $("#r_stb").addEventListener('change', ()=>{ $("#r_stbBox").classList.toggle('hidden', $("#r_stb").value !== 'yes'); previewRenewal(); });
+  ["#r_actual","#r_cost","#r_wholesale","#r_discName","#r_stbActual","#r_stbCost","#r_stbWholesale","#r_start","#r_expiry","#r_paid"].forEach(sel=>{
+    $(sel).addEventListener('input', previewRenewal);
+    $(sel).addEventListener('change', previewRenewal);
+  });
 
   const saveBtn = $("#btnSaveCustomer");
   saveBtn.addEventListener('click', async (e) => {
@@ -843,26 +1397,87 @@ function setActiveTab(tab){
   $$("#navGrid .nav-btn[data-tab]").forEach(btn=> btn.classList.toggle('active', btn.dataset.tab === tab));
   Object.entries(sections).forEach(([key, el])=>{ el.classList.toggle('hidden', key !== tab); });
 }
-function cycleDashboardPeriod(){
-  dashboardPeriod = dashboardPeriod === 'month' ? 'year' : dashboardPeriod === 'year' ? 'lifetime' : 'month';
-  $("#dashboardSortLabel").textContent = periodLabel(dashboardPeriod);
-  renderDashboard();
+function periodMatches(dateStr, period = dashboardPeriod){
+  if(period.type === 'lifetime') return true;
+  if(!dateStr) return false;
+  const d = new Date(dateStr + 'T00:00:00');
+  if(Number.isNaN(d.getTime())) return false;
+  if(period.type === 'year') return d.getFullYear() === period.year;
+  return false;
+}
+function periodText(period = dashboardPeriod){
+  if(period.type === 'year') return String(period.year);
+  return 'Lifetime';
+}
+function availableYears(){
+  const set = new Set();
+  customers.forEach(c=>{
+    const dates = [c.originalStartDate, c.currentPlan?.startDate];
+    dates.forEach(v=>{
+      if(v && /^\d{4}-\d{2}-\d{2}$/.test(v)) set.add(Number(v.slice(0,4)));
+    });
+  });
+  renewals.forEach(r=>{
+    if(r.startDate && /^\d{4}-\d{2}-\d{2}$/.test(r.startDate)) set.add(Number(r.startDate.slice(0,4)));
+  });
+  const years = [...set].filter(Boolean).sort((a,b)=> b-a);
+  const nowYear = new Date().getFullYear();
+  if(!years.includes(nowYear)) years.unshift(nowYear);
+  return years;
+}
+function openPeriodModal(){
+  const wrap = $("#periodOptions");
+  const years = availableYears();
+  wrap.innerHTML = `
+    <button class="btn ${dashboardPeriod.type === 'year' && dashboardPeriod.year === new Date().getFullYear() ? 'ok' : 'ghost'}" data-period-type="year" data-period-year="${new Date().getFullYear()}" type="button">Current Year (${new Date().getFullYear()})</button>
+    ${years.map(y=> `<button class="btn ${dashboardPeriod.type === 'year' && dashboardPeriod.year === y ? 'ok' : 'ghost'}" data-period-type="year" data-period-year="${y}" type="button">${y}</button>`).join('')}
+    <button class="btn ${dashboardPeriod.type === 'lifetime' ? 'ok' : 'ghost'}" data-period-type="lifetime" type="button">Lifetime</button>
+  `;
+  wrap.querySelectorAll('[data-period-type]').forEach(btn=>{
+    btn.onclick = ()=>{
+      const type = btn.dataset.periodType;
+      dashboardPeriod = type === 'year' ? { type:'year', year:+btn.dataset.periodYear } : { type:'lifetime' };
+      $("#periodLabel").textContent = periodText();
+      $("#modalPeriod").classList.remove('open');
+      renderDashboard();
+    };
+  });
+  $("#modalPeriod").classList.add('open');
+}
+function renderSettingsPlansState(){
+  $("#settingsPlansWrap").classList.toggle('hidden', !settingsPlansOpen);
+  $("#btnTogglePlans").textContent = settingsPlansOpen ? 'Hide Plans' : 'Manage Plans';
 }
 
 async function loadApp(){
   bindUIOnce();
   setEnvChip();
   $("#settingNearDays").value = settingNear;
+  $("#periodLabel").textContent = periodText();
   const now = new Date();
   $("#repMonth").value = now.toISOString().slice(0,7);
   $("#repYear").value = String(now.getFullYear());
   setEmptyTables();
+
+  sections.dashboard.innerHTML = `<div class="card"><div class="empty-state">Loading dashboard…</div></div>`;
+  sections.customers.innerHTML = `<div class="card"><div class="empty-state">Loading customers…</div></div>`;
+  sections.forecast.innerHTML = `<div class="card"><div class="empty-state">Loading forecast…</div></div>`;
+
   try{
+    renewalsLoadedOnce = false;
     await Promise.all([loadPlans(), loadCustomers()]);
-    await loadRenewals();
     onRepTypeChange();
     renderAll();
-    runReport();
+
+    try{
+      await loadRenewals();
+      renewalsLoadedOnce = true;
+      renderAll();
+    }catch(e){
+      showErr('[load renewals]', e);
+      toast("Renewal history loaded partially or slowly. Customers are still available.", "warn", 3800);
+      renderAll();
+    }
   }catch(e){
     showErr('[loadApp]', e);
     toast("Some data could not load completely. Check console if needed.", "warn", 3500);
@@ -919,18 +1534,24 @@ async function addRenewal(customerId, ren){
 }
 async function loadRenewals(){
   renewals = [];
+  renewalsLoadedOnce = false;
   try{
     const snap = await safeGetDocs(collectionGroup(db, "renewals"), '[renewals] collectionGroup');
     snap.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
   }catch(e){
     showErr('[renewals] collectionGroup failed', e);
-    for (const c of customers){
-      try{
-        const rs = await safeGetDocs(collection(db, "customers", String(c.id), "renewals"), `[renewals] fallback ${c.id}`);
-        rs.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
-      }catch(e2){ showErr(`[renewals] fallback ${c.id}`, e2); }
-    }
+    const resultList = await Promise.allSettled(
+      customers.map(c => safeGetDocs(collection(db, "customers", String(c.id), "renewals"), `[renewals] fallback ${c.id}`))
+    );
+    resultList.forEach((result, index)=>{
+      if(result.status === 'fulfilled'){
+        result.value.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+      }else{
+        showErr(`[renewals] fallback ${customers[index]?.id || index}`, result.reason);
+      }
+    });
   }
+  renewalsLoadedOnce = true;
 }
 async function setCustomerCurrentPlan(customerId, planFields){
   const ref = doc(db, "customers", String(customerId));
@@ -998,11 +1619,156 @@ function customerHistory(customerId){
   const lastDate = list[list.length - 1]?.startDate || '';
   return { list, renewalOnly, renewalCount: renewalOnly.length, totalSpent, totalExpense, firstDate, lastDate };
 }
+function rawCustomerRenewals(customerId){
+  const cid = String(customerId || '');
+  return renewals
+    .filter(r => String(r.customerId || '') === cid || (r._path && String(r._path).startsWith(`customers/${cid}/renewals/`)))
+    .map(r => ({...r, customerId: r.customerId || cid}))
+    .sort((a,b)=> renewalSortKey(a).localeCompare(renewalSortKey(b)));
+}
+function renewalSortKey(r){
+  const created = r.createdAt?.seconds ? String(r.createdAt.seconds).padStart(12,'0') : '';
+  return [r.startDate || '', r.expiryDate || '', created, r.id || ''].join('|');
+}
+function renewalDocParts(customerId, renewal){
+  if(renewal?._path) return String(renewal._path).split('/').filter(Boolean);
+  return ['customers', String(customerId), 'renewals', String(renewal?.id || '')];
+}
+function currentPlanFromRenewal(r){
+  return {
+    planId:r.planId || '',
+    planName:r.planName || plans[r.planId]?.name || 'Plan',
+    durationMonths:+r.durationMonths || +plans[r.planId]?.duration_months || 0,
+    actual:+r.actual || 0,
+    cost:+r.cost || 0,
+    wholesale:+r.wholesale || 0,
+    discountName:r.discountName || '',
+    stbIncluded:r.stbIncluded || 'no',
+    stbActual:+r.stbActual || 0,
+    stbCost:+r.stbCost || 0,
+    stbWholesale:+r.stbWholesale || 0,
+    startDate:r.startDate || '',
+    expiryDate:r.expiryDate || '',
+    paymentReceived:r.paymentReceived || 'yes'
+  };
+}
+function renewalMatchesCurrentPlan(customer, renewal){
+  const cp = customer?.currentPlan || {};
+  return String(cp.startDate || '') === String(renewal.startDate || '') &&
+    String(cp.expiryDate || '') === String(renewal.expiryDate || '') &&
+    String(cp.planId || '') === String(renewal.planId || '') &&
+    Number(cp.cost || 0) === Number(renewal.cost || 0);
+}
+function renewalTypeText(r, sortedAscIndex){
+  const type = String(r.renewalType || r.recordType || '').toLowerCase();
+  if(type === 'activation') return 'Activation';
+  if(type === 'renewal') return 'Renewal';
+  return sortedAscIndex === 0 ? 'First record' : 'History';
+}
+function renewalHistoryHtml(item){
+  const rawAsc = rawCustomerRenewals(item.c.id);
+  if(!renewalsLoadedOnce){
+    return `<div class="renewal-history"><div class="renewal-history-head"><strong>Renewal History</strong><span class="helper">Loading renewal history…</span></div></div>`;
+  }
+  if(!rawAsc.length){
+    return `<div class="renewal-history"><div class="renewal-history-head"><strong>Renewal History</strong><span class="helper">No renewal records found for this customer.</span></div></div>`;
+  }
+  const latestKey = renewalSortKey(rawAsc[rawAsc.length - 1]);
+  const rawDesc = [...rawAsc].reverse();
+  return `
+    <div class="renewal-history">
+      <div class="renewal-history-head">
+        <div>
+          <strong>Renewal History</strong>
+          <div class="helper">Delete only fake/wrong rows. If you delete the latest row, current plan will restore from the previous record.</div>
+        </div>
+        <span class="chip">${rawAsc.length} record${rawAsc.length === 1 ? '' : 's'}</span>
+      </div>
+      <div class="renewal-list">
+        ${rawDesc.map((r, descIndex)=>{
+          const ascIndex = rawAsc.findIndex(x => (x._path || `${x.customerId}/${x.id}`) === (r._path || `${r.customerId}/${r.id}`));
+          const f = calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual });
+          const isCurrent = renewalMatchesCurrentPlan(item.c, r) || renewalSortKey(r) === latestKey;
+          const rowPath = r._path || '';
+          return `
+            <div class="renewal-row ${isCurrent ? 'renewal-current' : ''}">
+              <div class="renewal-main">
+                <div class="renewal-plan">${esc(r.planName || r.planId || 'Plan')}</div>
+                <div class="renewal-meta">${esc(renewalTypeText(r, ascIndex))}${isCurrent ? ' • Current/Latest' : ''}</div>
+              </div>
+              <div><div class="renewal-cell-label">Start</div><div class="renewal-cell-value">${esc(r.startDate || '-')}</div></div>
+              <div><div class="renewal-cell-label">Expiry</div><div class="renewal-cell-value">${esc(r.expiryDate || '-')}</div></div>
+              <div><div class="renewal-cell-label">Amount</div><div class="renewal-cell-value">${esc(fmt(f.turnover))}</div></div>
+              <div><div class="renewal-cell-label">Payment</div><div class="renewal-cell-value">${r.paymentReceived === 'yes' ? 'Paid' : 'Unpaid'}</div></div>
+              <div class="accordion-actions">
+                <button class="mini-btn renewal-danger" data-action="delete-renewal" data-customer-id="${esc(item.c.id)}" data-renewal-id="${esc(r.id || '')}" data-renewal-path="${esc(rowPath)}" type="button">Delete Wrong</button>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+async function deleteRenewalHistoryItem(customerId, renewalId, renewalPath=''){
+  if(!assertWritable('Deleting renewal history')) return;
+  const cid = String(customerId || '');
+  const c = customers.find(x => String(x.id) === cid);
+  if(!c){ toast('Customer not found.', 'error'); return; }
+  const rawAsc = rawCustomerRenewals(cid);
+  const target = rawAsc.find(r => (renewalPath && String(r._path || '') === String(renewalPath)) || String(r.id || '') === String(renewalId || ''));
+  if(!target){ toast('Renewal record not found. Refresh and try again.', 'error'); return; }
+  const latest = rawAsc[rawAsc.length - 1];
+  const isLatest = latest && renewalSortKey(latest) === renewalSortKey(target) && String(latest.id || '') === String(target.id || '');
+  const isCurrent = renewalMatchesCurrentPlan(c, target) || isLatest;
+  const f = calcFigures({ cost:target.cost, wholesale:target.wholesale, actual:target.actual, stbIncluded:target.stbIncluded, stbCost:target.stbCost, stbWholesale:target.stbWholesale, stbActual:target.stbActual });
+  let msg = `Delete this renewal history row?
+
+Customer: ${c.name || ''}
+Plan: ${target.planName || target.planId || 'Plan'}
+Start: ${target.startDate || '-'}
+Expiry: ${target.expiryDate || '-'}
+Amount: ${fmt(f.turnover)}
+
+This cannot be undone.`;
+  if(isCurrent){
+    msg += `
+
+Important: This looks like the latest/current plan. After deleting it, the app will restore the customer current plan from the previous remaining renewal.`;
+  }
+  if(rawAsc.length <= 1){
+    msg += `
+
+Warning: This is the only renewal/activation record. Deleting it will clear this customer's current plan.`;
+  }
+  if(!confirm(msg)) return;
+  try{
+    const parts = renewalDocParts(cid, target);
+    if(parts.length < 4 || !parts[3]) throw new Error('Missing renewal document path.');
+    await safeDeleteDoc(doc(db, ...parts), '[renewals] delete single history row');
+
+    await loadRenewals();
+    const remainingAsc = rawCustomerRenewals(cid);
+    if(isCurrent || rawAsc.length <= 1){
+      const replacement = remainingAsc[remainingAsc.length - 1];
+      if(replacement){
+        await setCustomerCurrentPlan(cid, currentPlanFromRenewal(replacement));
+      }else{
+        await safeUpdateDoc(doc(db, 'customers', cid), { currentPlan:{}, updatedAt: serverTimestamp() }, '[customers] clear currentPlan after renewal delete');
+      }
+    }
+    await loadCustomers();
+    await loadRenewals();
+    renderAll();
+    toast('Wrong renewal deleted safely.', 'ok');
+  }catch(e){
+    showErr('[renewals] delete history row', e);
+    toast(e?.message || 'Could not delete renewal history.', 'error', 3600);
+  }
+}
 function getExpiryStatus(expISO){
   if(!expISO) return { key:'unknown', label:'No expiry', cls:'badge-muted', days:null };
   const d = daysLeft(expISO);
   if(d < 0) return { key:'expired', label:`Expired ${Math.abs(d)}d`, cls:'badge-exp', days:d };
-  if(d <= settingNear) return { key:'near', label:`Near expiry • ${d}d`, cls:'badge-warn', days:d };
+  if(d <= settingNear) return { key:'near', label:`Expiring soon • ${d}d`, cls:'badge-warn', days:d };
   return { key:'active', label:`Active • ${d}d`, cls:'badge-ok', days:d };
 }
 function getPaidBadge(v){ return v === 'yes' ? `<span class="mini-badge badge-ok">Paid</span>` : `<span class="mini-badge badge-warn">Unpaid</span>`; }
@@ -1017,13 +1783,13 @@ function getDashboardBaseCustomers(){
   return customers.filter(c => {
     const currentPlan = c.currentPlan || {};
     const refDate = currentPlan.startDate || c.originalStartDate || '';
-    return inPeriod(refDate, dashboardPeriod);
+    return periodMatches(refDate);
   });
 }
 function dashboardFinancials(){
   const grouped = canonicalRenewalGroups();
   const rows = [];
-  grouped.forEach(list=> list.forEach(r=> { if(inPeriod(r.startDate || '', dashboardPeriod)) rows.push(r); }));
+  grouped.forEach(list=> list.forEach(r=> { if(periodMatches(r.startDate || '')) rows.push(r); }));
   let turnover = 0, expense = 0, profit = 0;
   rows.forEach(r=>{
     const f = calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual });
@@ -1033,14 +1799,16 @@ function dashboardFinancials(){
 }
 
 function renderAll(){
+  $("#periodLabel").textContent = periodText();
   renderDashboard();
   renderCustomers();
+  renderForecast();
   renderPlans();
   renderKPIs();
   runReport();
+  renderSettingsPlansState();
   $("#settingNearDays").value = settingNear;
-  $("#dashboardSortLabel").textContent = periodLabel(dashboardPeriod);
-  $("#nearExpCount").textContent = `Near expiry: ${customers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length}`;
+  $("#nearExpCount").textContent = `Expiring soon: ${customers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length}`;
 }
 
 function renderDashboard(){
@@ -1069,18 +1837,28 @@ function renderDashboard(){
     return b.history.renewalCount - a.history.renewalCount;
   }).slice(0,20);
 
+  let bottomContent = `<div class="empty-state">Choose one of the buttons above to view the list.</div>`;
+  if(dashboardBottomView === 'near'){
+    bottomContent = nearList.length ? nearList.map(item => dashboardAccordionHtml(item, 'dashboardView', true)).join('') : `<div class="empty-state">No customers are expiring soon.</div>`;
+  }else if(dashboardBottomView === 'expired'){
+    bottomContent = expiredList.length ? expiredList.map(item => dashboardAccordionHtml(item, 'dashboardView', true)).join('') : `<div class="empty-state">No expired customers right now.</div>`;
+  }else if(dashboardBottomView === 'top'){
+    bottomContent = loyaltyList.length ? loyaltyList.map(item => loyaltyAccordionHtml(item)).join('') : `<div class="empty-state">No loyalty data available yet.</div>`;
+  }
+
   sections.dashboard.innerHTML = `
     <div class="card">
       <div class="section-title">
         <div>
           <h2>Dashboard</h2>
-          <div class="muted">Sort button above switches this block between month, year, and lifetime.</div>
+          <div class="muted">Showing ${esc(periodText())}</div>
+          ${!renewalsLoadedOnce ? `<div class="helper" style="margin-top:4px">Renewal history is still loading. Customer boxes show first, financial bars fill in after that.</div>` : ``}
         </div>
       </div>
       <div class="stats-grid">
-        <div class="kpi-card"><div class="kpi-label">Customers (${periodLabel(dashboardPeriod)})</div><div class="kpi-value">${boxCustomers.length}</div></div>
+        <div class="kpi-card"><div class="kpi-label">Customers (${esc(periodText())})</div><div class="kpi-value">${boxCustomers.length}</div></div>
         <div class="kpi-card"><div class="kpi-label">Active</div><div class="kpi-value">${activeCount}</div></div>
-        <div class="kpi-card"><div class="kpi-label">Near Expiry</div><div class="kpi-value">${nearCount}</div></div>
+        <div class="kpi-card"><div class="kpi-label">Expiring Soon</div><div class="kpi-value">${nearCount}</div></div>
         <div class="kpi-card"><div class="kpi-label">Expired</div><div class="kpi-value">${expiredCount}</div></div>
       </div>
       <div class="metric-stack">
@@ -1093,56 +1871,28 @@ function renderDashboard(){
     <div class="card" style="margin-top:12px">
       <div class="section-title">
         <div>
-          <h3>Near Expiry</h3>
-          <div class="helper">Compact bars with name, days left, and renew. Tap a bar to open full details.</div>
-        </div>
-        <div style="min-width:120px">
-          <select id="nearDaysDashboard">
-            <option value="7" ${settingNear===7?'selected':''}>7 days</option>
-            <option value="14" ${settingNear===14?'selected':''}>14 days</option>
-            <option value="30" ${settingNear===30?'selected':''}>30 days</option>
-            <option value="60" ${settingNear===60?'selected':''}>60 days</option>
-          </select>
+          <h3>Customer Insights</h3>
+          <div class="helper">Lists open only after you press a button.</div>
         </div>
       </div>
-      <div class="list-stack">
-        ${nearList.length ? nearList.map(item => dashboardAccordionHtml(item, 'dashboardNear', true)).join('') : `<div class="empty-state">No customers are near expiry.</div>`}
+      <div class="segmented">
+        <button class="btn ${dashboardBottomView === 'near' ? 'ok' : 'ghost'}" id="dashBtnNear" type="button">Expiring Soon</button>
+        <button class="btn ${dashboardBottomView === 'expired' ? 'ok' : 'ghost'}" id="dashBtnExpired" type="button">Expired</button>
+        <button class="btn ${dashboardBottomView === 'top' ? 'ok' : 'ghost'}" id="dashBtnTop" type="button">Top Customers</button>
       </div>
-    </div>
-
-    <div class="card" style="margin-top:12px">
-      <div class="section-title">
-        <div>
-          <h3>Expired</h3>
-          <div class="helper">Same compact style. Expand only when you press a row.</div>
-        </div>
-      </div>
-      <div class="list-stack">
-        ${expiredList.length ? expiredList.map(item => dashboardAccordionHtml(item, 'dashboardExpired', true)).join('') : `<div class="empty-state">No expired customers right now.</div>`}
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:12px">
-      <div class="section-title">
-        <div>
-          <h3>Top 20 Loyal Customers</h3>
-          <div class="helper">Sort by who paid more or who renewed more.</div>
-        </div>
-        <div class="flex">
+      ${dashboardBottomView === 'top' ? `
+        <div class="flex" style="margin-top:12px">
           <button class="mini-btn ${loyaltySortMode === 'spent' ? 'ok' : 'ghost'}" id="loyalSortSpent" type="button">Paid more</button>
           <button class="mini-btn ${loyaltySortMode === 'renewals' ? 'ok' : 'ghost'}" id="loyalSortRenewals" type="button">Renewed more</button>
         </div>
-      </div>
-      <div class="list-stack">
-        ${loyaltyList.length ? loyaltyList.map(item => loyaltyAccordionHtml(item)).join('') : `<div class="empty-state">No loyalty data available yet.</div>`}
-      </div>
+      ` : ''}
+      <div class="list-stack" style="margin-top:12px">${bottomContent}</div>
     </div>
   `;
 
-  const nearSelect = $("#nearDaysDashboard");
-  if(nearSelect){
-    nearSelect.addEventListener('change', ()=>{ settingNear = +nearSelect.value || 30; renderAll(); }, {passive:true});
-  }
+  $("#dashBtnNear").onclick = ()=>{ dashboardBottomView = dashboardBottomView === 'near' ? '' : 'near'; renderDashboard(); };
+  $("#dashBtnExpired").onclick = ()=>{ dashboardBottomView = dashboardBottomView === 'expired' ? '' : 'expired'; renderDashboard(); };
+  $("#dashBtnTop").onclick = ()=>{ dashboardBottomView = dashboardBottomView === 'top' ? '' : 'top'; renderDashboard(); };
   const sortSpent = $("#loyalSortSpent");
   const sortRenewals = $("#loyalSortRenewals");
   if(sortSpent) sortSpent.onclick = ()=>{ loyaltySortMode = 'spent'; renderDashboard(); };
@@ -1153,7 +1903,7 @@ function renderMetricBar(label, value, maxMetric){
   return `
     <div class="metric-bar">
       <div class="metric-top">
-        <div><strong>${label}</strong><span> (${periodLabel(dashboardPeriod)})</span></div>
+        <div><strong>${label}</strong><span> (${esc(periodText())})</span></div>
         <strong>${fmt(value)}</strong>
       </div>
       <div class="track"><div class="fill" style="width:${metricWidth(Math.max(value, 0), maxMetric)}%"></div></div>
@@ -1179,6 +1929,7 @@ function dashboardAccordionHtml(item, stateKey, includeRenew){
           </div>
         </div>
         <div class="accordion-actions">
+          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp</button>
           ${includeRenew ? `<button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>` : ''}
           <button class="mini-btn ghost" data-action="toggle" data-state="${stateKey}" data-id="${esc(item.c.id)}" type="button">${open ? 'Hide' : 'Open'}</button>
         </div>
@@ -1190,6 +1941,7 @@ function dashboardAccordionHtml(item, stateKey, includeRenew){
           <button class="mini-btn ghost" data-action="edit" data-id="${esc(item.c.id)}" type="button">Edit</button>
           <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
           <button class="mini-btn ghost" data-action="invoice" data-id="${esc(item.c.id)}" type="button">Slip</button>
+          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp Reminder</button>
         </div>
       </div>
     </div>`;
@@ -1208,6 +1960,7 @@ function loyaltyAccordionHtml(item){
           </div>
         </div>
         <div class="accordion-actions">
+          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp</button>
           <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
           <button class="mini-btn ghost" data-action="toggle" data-state="loyalty" data-id="${esc(item.c.id)}" type="button">${open ? 'Hide' : 'Open'}</button>
         </div>
@@ -1219,6 +1972,7 @@ function loyaltyAccordionHtml(item){
           <button class="mini-btn ghost" data-action="edit" data-id="${esc(item.c.id)}" type="button">Edit</button>
           <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
           <button class="mini-btn ghost" data-action="invoice" data-id="${esc(item.c.id)}" type="button">Slip</button>
+          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp Reminder</button>
         </div>
       </div>
     </div>`;
@@ -1236,7 +1990,8 @@ function detailGridHtml(item, offer=''){
       <div class="detail-box"><div class="detail-label">Renewals</div><div class="detail-value">${esc(item.history.renewalCount)}</div></div>
       <div class="detail-box"><div class="detail-label">This Plan Profit</div><div class="detail-value">${esc(fmt(figs.profit))}</div></div>
       <div class="detail-box"><div class="detail-label">Suggested Offer</div><div class="detail-value">${esc(offer || suggestOffer({ tenureDays:item.tenureDays, renewalCount:item.history.renewalCount, totalSpent:item.history.totalSpent, statusKey:item.status.key }))}</div></div>
-    </div>`;
+    </div>
+    ${renewalHistoryHtml(item)}`;
 }
 function bindAccordionClicks(root, scope){
   root.querySelectorAll('[data-action="toggle"]').forEach(btn=>{
@@ -1251,6 +2006,10 @@ function bindAccordionClicks(root, scope){
   root.querySelectorAll('[data-action="edit"]').forEach(btn=> btn.onclick = ()=> openCustomerModal(btn.dataset.id));
   root.querySelectorAll('[data-action="view"]').forEach(btn=> btn.onclick = ()=> viewCustomer(btn.dataset.id));
   root.querySelectorAll('[data-action="invoice"]').forEach(btn=> btn.onclick = ()=> printInvoice(btn.dataset.id));
+  root.querySelectorAll('[data-action="whatsapp"]').forEach(btn=> btn.onclick = ()=> sendWhatsAppReminder(btn.dataset.id));
+  root.querySelectorAll('[data-action="delete-renewal"]').forEach(btn=> btn.onclick = async ()=>{
+    await deleteRenewalHistoryItem(btn.dataset.customerId, btn.dataset.renewalId, btn.dataset.renewalPath || '');
+  });
   root.querySelectorAll('[data-action="delete"]').forEach(btn=> btn.onclick = async ()=>{
     if(!assertWritable("Deleting customer")) return;
     if(confirm("Delete this customer and all their renewals?")){
@@ -1262,23 +2021,25 @@ function bindAccordionClicks(root, scope){
 
 function renderCustomers(){
   const q = (window.customerSearchValue || '').toLowerCase().trim();
-  const timeFilter = window.customerTimeFilter || '7';
+  const timeFilter = window.customerTimeFilter || 'currentYear';
   const statusFilter = window.customerStatusFilter || 'all';
   const expiryFilter = window.customerExpiryFilter || 'all';
   const sortMode = customerSortMode;
   const now = new Date();
-  const dayLimit = (timeFilter === 'lifetime') ? Infinity : parseInt(timeFilter, 10);
+  const currentYear = now.getFullYear();
 
   const list = customers.map(customerSummary).filter(item=>{
     const inText = `${item.c.name||''} ${item.c.phone||''} ${item.c.email||''} ${item.c.userId||''} ${item.c.mac||''}`.toLowerCase();
     if(q && !inText.includes(q)) return false;
     const startISO = item.currentPlan.startDate || item.c.originalStartDate || "";
     let withinTime = true;
-    if(dayLimit !== Infinity && startISO){
-      const start = new Date(startISO + "T00:00:00");
-      const diffDays = Math.floor((now - start) / 86400000);
-      withinTime = diffDays <= dayLimit;
-    }else if(dayLimit !== Infinity && !startISO){ withinTime = false; }
+    if(timeFilter === 'currentYear'){
+      withinTime = !!startISO && new Date(startISO + "T00:00:00").getFullYear() === currentYear;
+    }else if(timeFilter === '30'){
+      withinTime = !!startISO && Math.floor((now - new Date(startISO + "T00:00:00")) / 86400000) <= 30;
+    }else if(timeFilter === '365'){
+      withinTime = !!startISO && Math.floor((now - new Date(startISO + "T00:00:00")) / 86400000) <= 365;
+    }
     if(!withinTime) return false;
     const paidStr = (item.currentPlan.paymentReceived === 'yes') ? 'paid' : 'unpaid';
     if(statusFilter !== 'all' && paidStr !== statusFilter) return false;
@@ -1286,6 +2047,7 @@ function renderCustomers(){
     return true;
   }).sort((a,b)=>{
     switch(sortMode){
+      case 'nameAsc': return (a.c.name || '').localeCompare(b.c.name || '');
       case 'nameDesc': return (b.c.name || '').localeCompare(a.c.name || '');
       case 'expirySoon': return (a.status.days ?? 99999) - (b.status.days ?? 99999);
       case 'expiryLate': return (b.status.days ?? -99999) - (a.status.days ?? -99999);
@@ -1293,7 +2055,7 @@ function renderCustomers(){
       case 'startOld': return (a.currentPlan.startDate || '').localeCompare(b.currentPlan.startDate || '');
       case 'paidMore': return b.history.totalSpent - a.history.totalSpent || (a.c.name || '').localeCompare(b.c.name || '');
       case 'renewedMore': return b.history.renewalCount - a.history.renewalCount || b.history.totalSpent - a.history.totalSpent;
-      default: return (a.c.name || '').localeCompare(b.c.name || '');
+      default: return (a.status.days ?? 99999) - (b.status.days ?? 99999) || (a.c.name || '').localeCompare(b.c.name || '');
     }
   });
 
@@ -1302,7 +2064,8 @@ function renderCustomers(){
       <div class="section-title">
         <div class="grow">
           <h2>Customers</h2>
-          <div class="helper">Compact customer bars. Full details only open when you press a row.</div>
+          <div class="helper">Current year is the default filter so your list appears on first load.</div>
+          ${!renewalsLoadedOnce ? `<div class="helper" style="margin-top:4px">Renewal totals will finish filling in after renewal history loads.</div>` : ``}
         </div>
         <button id="btnAddCustomerBar" class="btn ok" type="button">+ Add Customer</button>
       </div>
@@ -1310,7 +2073,7 @@ function renderCustomers(){
       <div class="control-grid three" style="margin-top:10px">
         <input id="searchCustomersBar" placeholder="Search by name, phone, email, MAC, user ID..." value="${esc(window.customerSearchValue || '')}">
         <select id="timeFilterBar">
-          <option value="7" ${timeFilter==='7'?'selected':''}>Last 7 Days</option>
+          <option value="currentYear" ${timeFilter==='currentYear'?'selected':''}>Current Year</option>
           <option value="30" ${timeFilter==='30'?'selected':''}>Last 30 Days</option>
           <option value="365" ${timeFilter==='365'?'selected':''}>Last 365 Days</option>
           <option value="lifetime" ${timeFilter==='lifetime'?'selected':''}>Lifetime</option>
@@ -1318,7 +2081,7 @@ function renderCustomers(){
         <select id="expiryFilterBar">
           <option value="all" ${expiryFilter==='all'?'selected':''}>All Status</option>
           <option value="active" ${expiryFilter==='active'?'selected':''}>Active</option>
-          <option value="near" ${expiryFilter==='near'?'selected':''}>Near Expiry</option>
+          <option value="near" ${expiryFilter==='near'?'selected':''}>Expiring Soon</option>
           <option value="expired" ${expiryFilter==='expired'?'selected':''}>Expired</option>
         </select>
         <select id="statusFilterBar">
@@ -1327,9 +2090,9 @@ function renderCustomers(){
           <option value="unpaid" ${statusFilter==='unpaid'?'selected':''}>Unpaid</option>
         </select>
         <select id="customerSortBar">
+          <option value="expirySoon" ${sortMode==='expirySoon'?'selected':''}>Expiry Soonest</option>
           <option value="nameAsc" ${sortMode==='nameAsc'?'selected':''}>Name A–Z</option>
           <option value="nameDesc" ${sortMode==='nameDesc'?'selected':''}>Name Z–A</option>
-          <option value="expirySoon" ${sortMode==='expirySoon'?'selected':''}>Expiry Soonest</option>
           <option value="expiryLate" ${sortMode==='expiryLate'?'selected':''}>Expiry Latest</option>
           <option value="startNew" ${sortMode==='startNew'?'selected':''}>Newest Start</option>
           <option value="startOld" ${sortMode==='startOld'?'selected':''}>Oldest Start</option>
@@ -1372,6 +2135,7 @@ function customerAccordionHtml(item){
           </div>
         </div>
         <div class="accordion-actions">
+          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp</button>
           <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
           <button class="mini-btn ghost" data-action="toggle" data-state="customers" data-id="${esc(item.c.id)}" type="button">${open ? 'Hide' : 'Open'}</button>
         </div>
@@ -1384,9 +2148,289 @@ function customerAccordionHtml(item){
           <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
           <button class="mini-btn ghost" data-action="invoice" data-id="${esc(item.c.id)}" type="button">Slip</button>
           <button class="mini-btn ghost" data-action="delete" data-id="${esc(item.c.id)}" type="button">Delete</button>
+          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp Reminder</button>
         </div>
       </div>
     </div>`;
+}
+
+function recordsForAverageWindow(months){
+  const end = endOfCurrentMonth();
+  const start = new Date(end.getFullYear(), end.getMonth() - (months - 1), 1);
+  const activationRows = [];
+  const grouped = canonicalRenewalGroups();
+  grouped.forEach(list=>{
+    list.forEach((r, idx)=>{
+      const startDate = isoToDate(r.startDate);
+      if(!startDate || startDate < start || startDate > end) return;
+      const typed = r.renewalType || r.recordType || (idx === 0 ? 'activation' : 'renewal');
+      if(typed === 'activation') activationRows.push(r);
+    });
+  });
+  return activationRows;
+}
+function planTypeForecastStats(){
+  const grouped = canonicalRenewalGroups();
+  const today = new Date();
+  const stats = {};
+  grouped.forEach(list=>{
+    for(let i=0;i<list.length;i++){
+      const row = list[i];
+      const duration = +row.durationMonths || +plans[row.planId]?.duration_months || 0;
+      if(!duration) continue;
+      if(!stats[duration]) stats[duration] = { opportunities:0, renewed:0, activeCount:0, avgRenewalTurnover:0, avgRenewalProfit:0, avgActivationTurnover:0, avgActivationProfit:0, renewalRows:[], activationRows:[] };
+      const expiry = isoToDate(row.expiryDate);
+      const next = list[i+1];
+      const type = row.renewalType || row.recordType || (i===0 ? 'activation' : 'renewal');
+      const figures = calcFigures({ cost:row.cost, wholesale:row.wholesale, actual:row.actual, stbIncluded:row.stbIncluded, stbCost:row.stbCost, stbWholesale:row.stbWholesale, stbActual:row.stbActual });
+      if(type === 'renewal') stats[duration].renewalRows.push(figures);
+      else stats[duration].activationRows.push(figures);
+      if(expiry && expiry <= today){
+        stats[duration].opportunities += 1;
+        if(next) stats[duration].renewed += 1;
+      }
+    }
+  });
+  customers.forEach(c=>{
+    const cp = c.currentPlan || {};
+    const duration = +cp.durationMonths || +plans[cp.planId]?.duration_months || 0;
+    if(!duration) return;
+    if(!stats[duration]) stats[duration] = { opportunities:0, renewed:0, activeCount:0, avgRenewalTurnover:0, avgRenewalProfit:0, avgActivationTurnover:0, avgActivationProfit:0, renewalRows:[], activationRows:[] };
+    if(getExpiryStatus(cp.expiryDate).key !== 'expired') stats[duration].activeCount += 1;
+  });
+  Object.keys(stats).forEach(k=>{
+    const s = stats[k];
+    const renewalRate = s.opportunities ? (s.renewed / s.opportunities) : 0.55;
+    s.renewalRate = clamp(renewalRate || 0.55, 0.05, 0.95);
+    s.avgRenewalTurnover = average(s.renewalRows.map(x=> x.turnover)) || average(s.activationRows.map(x=> x.turnover)) || 0;
+    s.avgRenewalProfit = average(s.renewalRows.map(x=> x.profit)) || average(s.activationRows.map(x=> x.profit)) || 0;
+    s.avgActivationTurnover = average(s.activationRows.map(x=> x.turnover)) || s.avgRenewalTurnover || 0;
+    s.avgActivationProfit = average(s.activationRows.map(x=> x.profit)) || s.avgRenewalProfit || 0;
+  });
+  return stats;
+}
+function newCustomerForecastStats(){
+  const act6 = recordsForAverageWindow(6);
+  const act12 = recordsForAverageWindow(12);
+  const monthlyAvg6 = act6.length / 6;
+  const monthlyAvg12 = act12.length / 12;
+  const monthlyAvg = act12.length ? (monthlyAvg6 + monthlyAvg12) / 2 : monthlyAvg6;
+  const avgTurnover = average([...act6, ...act12].map(r => calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).turnover));
+  const avgProfit = average([...act6, ...act12].map(r => calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).profit));
+  return {
+    monthlyAvgNew: monthlyAvg || 0,
+    avgActivationTurnover: avgTurnover || 0,
+    avgActivationProfit: avgProfit || 0,
+    sourceMonths: act12.length ? '6–12 month average' : 'last 6 month average'
+  };
+}
+function renewalForecastForMonths(monthsAhead){
+  const planStats = planTypeForecastStats();
+  const horizonEnd = addMonthsDate(firstDayOfCurrentMonth(), monthsAhead);
+  let renewalsExpected = 0;
+  let revenue = 0;
+  let profit = 0;
+  customers.forEach(c=>{
+    const cp = c.currentPlan || {};
+    const duration = +cp.durationMonths || +plans[cp.planId]?.duration_months || 0;
+    const expiry = isoToDate(cp.expiryDate);
+    if(!duration || !expiry) return;
+    const stat = planStats[duration];
+    if(!stat) return;
+    let due = new Date(expiry);
+    let carry = 1;
+    while(due < horizonEnd){
+      const rate = stat.renewalRate;
+      const expectedNow = carry * rate;
+      renewalsExpected += expectedNow;
+      revenue += expectedNow * stat.avgRenewalTurnover;
+      profit += expectedNow * stat.avgRenewalProfit;
+      carry = expectedNow;
+      due = addMonthsDate(due, duration);
+      if(carry < 0.01) break;
+    }
+  });
+  return { renewalsExpected, revenue, profit, planStats };
+}
+function forecastBundle(monthsAhead){
+  const newStats = newCustomerForecastStats();
+  const renStats = renewalForecastForMonths(monthsAhead);
+  const newCustomers = newStats.monthlyAvgNew * monthsAhead;
+  const newRevenue = newCustomers * newStats.avgActivationTurnover;
+  const newProfit = newCustomers * newStats.avgActivationProfit;
+  return {
+    monthsAhead,
+    newCustomers,
+    renewalsExpected: renStats.renewalsExpected,
+    predictedRevenue: renStats.revenue + newRevenue,
+    predictedProfit: renStats.profit + newProfit,
+    renewalRevenue: renStats.revenue,
+    renewalProfit: renStats.profit,
+    newRevenue,
+    newProfit,
+    planStats: renStats.planStats,
+    newStats
+  };
+}
+function forecastPeriodLabel(key){
+  return {
+    month:'This Month',
+    six:'6 Months',
+    year:'1 Year',
+    five:'5 Years'
+  }[key] || 'This Month';
+}
+function forecastMetricConfig(key){
+  return {
+    revenue: { label:'Predicted Revenue', value:b => fmt(b.predictedRevenue) },
+    profit: { label:'Predicted Profit', value:b => fmt(b.predictedProfit) },
+    renewals: { label:'Expected Renewals', value:b => (+b.renewalsExpected || 0).toFixed(2) },
+    newCustomers: { label:'Expected New Customers', value:b => (+b.newCustomers || 0).toFixed(2) }
+  }[key];
+}
+function forecastSupportRows(bundle){
+  if(forecastMetricKey === 'revenue'){
+    return [
+      ['Predicted profit', fmt(bundle.predictedProfit)],
+      ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
+      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
+      ['Renewal revenue', fmt(bundle.renewalRevenue)],
+      ['New customer revenue', fmt(bundle.newRevenue)]
+    ];
+  }
+  if(forecastMetricKey === 'profit'){
+    return [
+      ['Predicted revenue', fmt(bundle.predictedRevenue)],
+      ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
+      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
+      ['Renewal profit', fmt(bundle.renewalProfit)],
+      ['New customer profit', fmt(bundle.newProfit)]
+    ];
+  }
+  if(forecastMetricKey === 'renewals'){
+    return [
+      ['Predicted revenue', fmt(bundle.predictedRevenue)],
+      ['Predicted profit', fmt(bundle.predictedProfit)],
+      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
+      ['Renewal revenue', fmt(bundle.renewalRevenue)],
+      ['Renewal profit', fmt(bundle.renewalProfit)]
+    ];
+  }
+  return [
+    ['Predicted revenue', fmt(bundle.predictedRevenue)],
+    ['Predicted profit', fmt(bundle.predictedProfit)],
+    ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
+    ['New customer revenue', fmt(bundle.newRevenue)],
+    ['New customer profit', fmt(bundle.newProfit)]
+  ];
+}
+function renderForecast(){
+  const bundles = {
+    month: forecastBundle(1),
+    six: forecastBundle(6),
+    year: forecastBundle(12),
+    five: forecastBundle(60)
+  };
+  const bundle = bundles[forecastPeriodKey] || bundles.month;
+  const config = forecastMetricConfig(forecastMetricKey);
+  const planStats = planTypeForecastStats();
+  const rates = Object.keys(planStats).sort((a,b)=> +a - +b);
+
+  sections.forecast.innerHTML = `
+    <div class="card">
+      <div class="section-title">
+        <div>
+          <h2>Forecast</h2>
+          <div class="helper">
+            ${renewalsLoadedOnce
+              ? `Read-only forecast using past 6–12 month averages for new customers, plus plan-type renewal behavior from your existing data.`
+              : `Renewal history is still loading. Forecast starts with basic numbers and updates automatically.`}
+          </div>
+        </div>
+      </div>
+
+      <div class="forecast-shell">
+        <div class="forecast-btn-grid">
+          <button class="btn ${forecastPeriodKey === 'month' ? 'ok' : 'ghost'}" data-forecast-period="month" type="button">This Month</button>
+          <button class="btn ${forecastPeriodKey === 'six' ? 'ok' : 'ghost'}" data-forecast-period="six" type="button">6 Months</button>
+          <button class="btn ${forecastPeriodKey === 'year' ? 'ok' : 'ghost'}" data-forecast-period="year" type="button">1 Year</button>
+          <button class="btn ${forecastPeriodKey === 'five' ? 'ok' : 'ghost'}" data-forecast-period="five" type="button">5 Years</button>
+        </div>
+
+        <div class="forecast-btn-grid">
+          <button class="btn ${forecastMetricKey === 'revenue' ? 'ok' : 'ghost'}" data-forecast-metric="revenue" type="button">Revenue</button>
+          <button class="btn ${forecastMetricKey === 'profit' ? 'ok' : 'ghost'}" data-forecast-metric="profit" type="button">Profit</button>
+          <button class="btn ${forecastMetricKey === 'renewals' ? 'ok' : 'ghost'}" data-forecast-metric="renewals" type="button">Renewals</button>
+          <button class="btn ${forecastMetricKey === 'newCustomers' ? 'ok' : 'ghost'}" data-forecast-metric="newCustomers" type="button">New Customers</button>
+        </div>
+
+        <div class="forecast-main-card">
+          <div class="chip">${esc(forecastPeriodLabel(forecastPeriodKey))}</div>
+          <div class="forecast-main-label">${esc(config.label)}</div>
+          <div class="forecast-main-value">${esc(config.value(bundle))}</div>
+          <div class="forecast-note">
+            One focused view at a time so mobile stays clean. Use the buttons above to switch period or metric.
+          </div>
+
+          <div class="forecast-stat-grid">
+            ${forecastSupportRows(bundle).map(([label, value]) => `
+              <div class="detail-box">
+                <div class="detail-label">${esc(label)}</div>
+                <div class="detail-value">${esc(value)}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <div class="forecast-card">
+              <h4>What drives this</h4>
+              <div class="helper">New customers use your ${esc(bundle.newStats.sourceMonths)}. Renewals use plan type only, not customer-by-customer history.</div>
+              <div class="list-stack" style="margin-top:10px">
+                <div class="detail-box"><div class="detail-label">Avg new customers / month</div><div class="detail-value">${(+bundle.newStats.monthlyAvgNew || 0).toFixed(2)}</div></div>
+                <div class="detail-box"><div class="detail-label">Avg new revenue / customer</div><div class="detail-value">${fmt(bundle.newStats.avgActivationTurnover)}</div></div>
+                <div class="detail-box"><div class="detail-label">Avg new profit / customer</div><div class="detail-value">${fmt(bundle.newStats.avgActivationProfit)}</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="forecast-card">
+              <h4>Renewal Rate by Plan Type</h4>
+              <div class="plan-rate-list">
+                ${rates.length ? rates.map(m=> {
+                  const s = planStats[m];
+                  return `
+                    <div class="plan-rate-item">
+                      <div class="metric-top">
+                        <strong>${esc(m)} month plan</strong>
+                        <strong>${(s.renewalRate * 100).toFixed(0)}%</strong>
+                      </div>
+                      <div class="helper">Expired opportunities: ${s.opportunities} • Renewed: ${s.renewed} • Active now: ${s.activeCount}</div>
+                      <div class="track" style="margin-top:10px"><div class="fill" style="width:${metricWidth(s.renewalRate, 1)}%"></div></div>
+                      <div class="helper" style="margin-top:10px">Avg renewal revenue ${fmt(s.avgRenewalTurnover)} • Avg renewal profit ${fmt(s.avgRenewalProfit)}</div>
+                    </div>`;
+                }).join('') : `<div class="empty-state">No plan history found yet for forecasting.</div>`}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  sections.forecast.querySelectorAll('[data-forecast-period]').forEach(btn=>{
+    btn.onclick = ()=>{
+      forecastPeriodKey = btn.dataset.forecastPeriod;
+      renderForecast();
+    };
+  });
+  sections.forecast.querySelectorAll('[data-forecast-metric]').forEach(btn=>{
+    btn.onclick = ()=>{
+      forecastMetricKey = btn.dataset.forecastMetric;
+      renderForecast();
+    };
+  });
 }
 
 function renderPlans(){
@@ -1422,9 +2466,8 @@ function renderPlans(){
 }
 
 function renderKPIs(){
-  const financials = dashboardFinancials();
   const topNear = customers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length;
-  $("#nearExpCount").textContent = `Near expiry: ${topNear}`;
+  $("#nearExpCount").textContent = `Expiring soon: ${topNear}`;
 }
 
 function previewTotals(){
@@ -1490,6 +2533,31 @@ function validateCustomerModal(){
   if(expiry < start) throw new Error("Expiry date cannot be before start date.");
   ["#c_actual","#c_cost","#c_wholesale","#c_stbActual","#c_stbCost","#c_stbWholesale"].forEach(sel=>{ const val = $(sel).value; if(val !== "" && !nonNegativeNumber(val)) throw new Error("Prices cannot be negative."); });
 }
+function findDuplicateCustomers(payload){
+  const currentId = editCustomerId ? String(editCustomerId) : '';
+  const email = normalizeEmail(payload.email);
+  const phone = normalizePhoneLoose(payload.phone);
+  const mac = String(payload.mac || '').replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
+  const userId = String(payload.userId || '').trim().toLowerCase();
+  const hits = [];
+  customers.forEach(c=>{
+    if(String(c.id) === currentId) return;
+    const fields = [];
+    if(phone && normalizePhoneLoose(c.phone) === phone) fields.push('phone');
+    if(email && normalizeEmail(c.email) === email) fields.push('email');
+    const cMac = String(c.mac || '').replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
+    if(mac && cMac === mac) fields.push('MAC');
+    if(userId && String(c.userId || '').trim().toLowerCase() === userId) fields.push('User ID');
+    if(fields.length) hits.push({ customer:c, fields });
+  });
+  return hits;
+}
+function confirmDuplicateIfNeeded(payload){
+  const hits = findDuplicateCustomers(payload);
+  if(!hits.length) return true;
+  const detail = hits.slice(0,5).map(h => `• ${h.customer.name || 'Unknown'} matched by ${h.fields.join(', ')}`).join('\n');
+  return confirm(`Possible duplicate customer found:\n\n${detail}\n\nContinue saving anyway?`);
+}
 async function getLatestRenewalDoc(customerId){
   const snap = await safeGetDocs(collection(db, "customers", String(customerId), "renewals"), '[renewals] list latest');
   let latest = null;
@@ -1532,6 +2600,7 @@ async function saveCustomerFromModal(){
     originalStartDate: (editCustomerId ? (customers.find(x=>x.id===editCustomerId)?.originalStartDate || start) : start),
     currentPlan
   };
+  if(!confirmDuplicateIfNeeded(payload)) return;
   const existingIdForUpdate = editCustomerId;
   const cid = await saveCustomer(payload, existingIdForUpdate ? String(existingIdForUpdate) : null);
   if(!existingIdForUpdate){
@@ -1567,6 +2636,29 @@ function viewCustomer(id){
   alert(`Customer: ${c.name}\nPhone: ${c.phone || '-'}  Email: ${c.email || '-'}\nUser ID: ${c.userId || '-'}  MAC: ${c.mac || '-'}\n\nOriginal Start: ${c.originalStartDate || '-'}\nCurrent Plan: ${cp.planName || '-'} (${cp.durationMonths || 0} mo)\nThis Plan Start: ${cp.startDate || '-'}  Expiry: ${cp.expiryDate || '-'}\nRenewal Count: ${hist.renewalCount}\nTotal Paid: ${fmt(hist.totalSpent)}\n\nThis Plan:\n  Turnover: ${fmt(figs.turnover)}\n  Expense:  ${fmt(figs.expense)}\n  Profit:   ${fmt(figs.profit)}\n  Discount: ${fmt(figs.discountSaved)}${cp.discountName ? ' — ' + cp.discountName : ''}`);
 }
 
+function previewRenewal(){
+  const out = $("#r_preview");
+  if(!out) return;
+  const c = customers.find(x=> String(x.id) === String(renewCustomerId));
+  const oldExpiry = c?.currentPlan?.expiryDate || '';
+  const f = calcFigures({
+    cost:$("#r_cost").value,
+    wholesale:$("#r_wholesale").value,
+    actual:$("#r_actual").value,
+    stbIncluded:$("#r_stb").value,
+    stbCost:$("#r_stbCost").value,
+    stbWholesale:$("#r_stbWholesale").value,
+    stbActual:$("#r_stbActual").value
+  });
+  const discName = ($("#r_discName").value || '').trim();
+  out.innerHTML = `
+    Current expiry: <strong>${esc(humanDate(oldExpiry))}</strong><br>
+    New start: <strong>${esc(humanDate($("#r_start").value))}</strong><br>
+    New expiry: <strong>${esc(humanDate($("#r_expiry").value))}</strong><br>
+    Turnover: <strong>${fmt(f.turnover)}</strong> • Expense: <strong>${fmt(f.expense)}</strong> • Profit: <strong>${fmt(f.profit)}</strong><br>
+    ${f.discountSaved > 0 ? `Customer discount: <strong>${fmt(f.discountSaved)}</strong>${discName ? ` <span class="chip">${esc(discName)}</span>` : ''}` : `<span class="muted">No discount</span>`}
+  `;
+}
 function openRenewModal(id){
   renewCustomerId = id;
   refreshPlanSelects();
@@ -1590,8 +2682,10 @@ function openRenewModal(id){
     if(!cp.actual) $("#r_actual").value = p2.retail_price || "";
     if(!cp.cost) $("#r_cost").value = p2.retail_price || "";
     if(!cp.wholesale) $("#r_wholesale").value = p2.wholesale_cost || "";
+    previewRenewal();
   };
-  $("#r_start").onchange = ()=>{ const p2 = plans[$("#r_plan").value] || {}; $("#r_expiry").value = addMonthsISO($("#r_start").value, p2.duration_months || 0); };
+  $("#r_start").onchange = ()=>{ const p2 = plans[$("#r_plan").value] || {}; $("#r_expiry").value = addMonthsISO($("#r_start").value, p2.duration_months || 0); previewRenewal(); };
+  previewRenewal();
   $("#modalRenew").classList.add('open');
 }
 function validateRenewModal(){
@@ -1653,12 +2747,57 @@ async function seedPlans(){
   const samples = [
     {id:"PLN-1MO", name:"1 month", duration_months:1, retail_price:15, wholesale_cost:4.5, description:"Entry plan"},
     {id:"PLN-3MO", name:"3 months", duration_months:3, retail_price:35, wholesale_cost:13.5, description:"Most popular"},
-    {id:"PLN-6MO", name:"6 months", duration_months:6, retail_price:60, wholesale_cost:25, description:"Value saver"}
+    {id:"PLN-6MO", name:"6 months", duration_months:6, retail_price:60, wholesale_cost:25, description:"Value saver"},
+    {id:"PLN-12MO", name:"12 months", duration_months:12, retail_price:110, wholesale_cost:48, description:"Yearly plan"}
   ];
   try{ for(const p of samples) await savePlan(p); toast("Sample plans added.", "ok"); }
   catch(e){ showErr('[plans] seed', e); toast("Failed to seed plans.", "error"); }
 }
 
+function exportCustomersBackup(){
+  const rows = [[
+    'Customer ID','Name','Phone','Email','User ID','MAC','Original Start',
+    'Current Plan ID','Current Plan Name','Duration Months','Start Date','Expiry Date',
+    'Plan Actual','Selling Price','Wholesale','STB Included','STB Actual','STB Selling','STB Wholesale',
+    'Payment Received','Discount Name','Status'
+  ]];
+  customers.forEach(c=>{
+    const cp = c.currentPlan || {};
+    rows.push([
+      c.id, c.name, c.phone, c.email, c.userId, c.mac, c.originalStartDate,
+      cp.planId, cp.planName, cp.durationMonths, cp.startDate, cp.expiryDate,
+      cp.actual, cp.cost, cp.wholesale, cp.stbIncluded, cp.stbActual, cp.stbCost, cp.stbWholesale,
+      cp.paymentReceived, cp.discountName, getExpiryStatus(cp.expiryDate).label
+    ]);
+  });
+  downloadCSVFile(`net-cable-customers-backup-${todayISO()}.csv`, rows);
+  toast('Customers backup downloaded.', 'ok');
+}
+function exportRenewalsBackup(){
+  const rows = [[
+    'Renewal ID','Customer ID','Customer Name','Plan ID','Plan Name','Duration Months',
+    'Start Date','Expiry Date','Plan Actual','Selling Price','Wholesale',
+    'STB Included','STB Actual','STB Selling','STB Wholesale','Payment Received','Discount Name','Type'
+  ]];
+  filteredCanonicalRenewals().sort((a,b)=> (a.startDate || '').localeCompare(b.startDate || '')).forEach(r=>{
+    rows.push([
+      r.id, r.customerId, r.customerName, r.planId, r.planName, r.durationMonths,
+      r.startDate, r.expiryDate, r.actual, r.cost, r.wholesale,
+      r.stbIncluded, r.stbActual, r.stbCost, r.stbWholesale, r.paymentReceived, r.discountName, r.renewalType || r.recordType || ''
+    ]);
+  });
+  downloadCSVFile(`net-cable-renewals-backup-${todayISO()}.csv`, rows);
+  toast('Renewals backup downloaded.', 'ok');
+}
+function exportPlansBackup(){
+  const rows = [['Plan ID','Name','Duration Months','Retail Price','Wholesale Cost','Description']];
+  Object.keys(plans).sort().forEach(id=>{
+    const p = plans[id] || {};
+    rows.push([p.id || id, p.name, p.duration_months, p.retail_price, p.wholesale_cost, p.description]);
+  });
+  downloadCSVFile(`net-cable-plans-backup-${todayISO()}.csv`, rows);
+  toast('Plans backup downloaded.', 'ok');
+}
 function onRepTypeChange(){
   const t = $("#repType").value;
   $("#repMonthCol").classList.toggle('hidden', t !== "monthly");
@@ -1800,9 +2939,4 @@ async function cleanupOrphanRenewals(){
     const CHUNK = 400;
     for(let i = 0; i < orphans.length; i += CHUNK){ const batch = writeBatch(db); for(let j = i; j < Math.min(i + CHUNK, orphans.length); j++){ batch.delete(orphans[j]); } await batch.commit(); }
     await loadRenewals(); renderAll(); msg.textContent = `Deleted ${orphans.length} orphan renewals.`; toast(`Deleted ${orphans.length} orphan renewals.`, "ok");
-  }catch(err){ showErr("[cleanup orphans]", err); msg.textContent = "Error during cleanup."; toast(err?.message || "Failed to clean up orphan renewals.", "error", 3600); }
-  finally{ btn.disabled = false; }
-}
-</script>
-</body>
-</html>
+  }catch
