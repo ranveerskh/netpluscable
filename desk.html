@@ -209,47 +209,6 @@
     cursor:pointer;
   }
   html[data-theme="dark"] .signout-btn{background:linear-gradient(180deg,#1c2554,#161f48)}
-  .theme-btn{
-    border:1px solid var(--border);
-    border-radius:999px;
-    background:#ffffff;
-    color:var(--ink);
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    min-height:42px;
-    padding:9px 15px;
-    font-weight:900;
-    white-space:nowrap;
-    cursor:pointer;
-  }
-  html[data-theme="dark"] .theme-btn{background:#11183a;color:var(--ink)}
-  .mini-btn.whatsapp{
-    background:linear-gradient(135deg,#22c55e,#16a34a);
-    color:#fff;
-    border-color:transparent;
-  }
-  .backup-grid{
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:10px;
-    margin-top:12px;
-  }
-  .warning-note{
-    margin-top:10px;
-    padding:10px 12px;
-    border-radius:14px;
-    border:1px solid #fed7aa;
-    background:#fff7ed;
-    color:#9a3412;
-    font-size:13px;
-    line-height:1.45;
-  }
-  html[data-theme="dark"] .warning-note{
-    border-color:#684;
-    background:#2a2416;
-    color:#ffe7a8;
-  }
 
   .nav-grid{
     display:grid;
@@ -652,6 +611,41 @@
   .toast.warn{border-color:#fcd34d}
   .toast.error{border-color:#fda4af}
 
+
+
+  .smart-paste-shell{
+    margin-bottom:14px;
+    border:1px dashed rgba(37,99,235,.32);
+    background:linear-gradient(180deg,rgba(239,246,255,.88),rgba(248,250,252,.9));
+  }
+  html[data-theme="dark"] .smart-paste-shell{
+    background:linear-gradient(180deg,rgba(18,26,58,.92),rgba(15,21,48,.92));
+    border-color:rgba(106,140,255,.34);
+  }
+  .smart-paste-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .smart-paste-title{
+    font-size:15px;
+    font-weight:950;
+    margin:0;
+  }
+  .smart-paste-panel{
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid var(--border);
+  }
+  #c_smartPaste{
+    min-height:175px;
+    font-size:13px;
+    line-height:1.45;
+    resize:vertical;
+  }
+
   @media (max-width: 1100px){
     :root{--shell:980px}
     .nav-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -668,8 +662,7 @@
     .brand-stack{display:flex;flex-direction:column;align-items:flex-start;gap:9px}
     .brand{font-size:20px}
     .top-right{flex-direction:column;align-items:stretch;min-width:128px}
-    .backup-grid{grid-template-columns:1fr}
-    .status-pill,.near-pill,.signout-btn,.theme-btn{min-height:38px;padding:8px 12px}
+    .status-pill,.near-pill,.signout-btn{min-height:38px;padding:8px 12px}
     .signout-btn{min-height:46px;border-radius:16px}
     .nav-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 14px}
     .nav-btn{min-height:74px;font-size:14px}
@@ -726,7 +719,6 @@
         </div>
         <div class="top-right">
           <div id="nearExpCount" class="near-pill">Expiring soon: 0</div>
-          <button id="themeToggle" class="theme-btn" type="button">🌙 Dark</button>
           <button id="signOutBtn" class="signout-btn" type="button">Sign Out</button>
         </div>
       </div>
@@ -816,21 +808,6 @@
         <span id="cleanupMsg" class="muted"></span>
       </div>
 
-      <div class="card" style="margin-top:16px">
-        <div class="section-title">
-          <div>
-            <h3>Backup / Export Data</h3>
-            <div class="helper">Downloads CSV from the data already loaded in this admin panel. No Firebase rule or database change.</div>
-          </div>
-        </div>
-        <div class="backup-grid">
-          <button id="btnExportCustomersBackup" class="btn ghost" type="button">Export Customers</button>
-          <button id="btnExportRenewalsBackup" class="btn ghost" type="button">Export Renewals</button>
-          <button id="btnExportPlansBackup" class="btn ghost" type="button">Export Plans</button>
-        </div>
-        <div class="warning-note">Before any big update, download these backups once. It gives you a safe copy of customers, renewals, and plans.</div>
-      </div>
-
       <div id="settingsPlansWrap" class="hidden" style="margin-top:16px">
         <div class="section-title">
           <h3>Manage Plans</h3>
@@ -859,11 +836,32 @@
           <h3 id="custModalTitle">Add Customer</h3>
           <button class="btn ghost" id="xCust" type="button">✕</button>
         </div>
+
+        <div id="smartPasteShell" class="card smart-paste-shell">
+          <div class="smart-paste-top">
+            <div>
+              <p class="smart-paste-title">Quick Customer Import</p>
+              <div class="helper">Paste copied customer info, press Enter or Auto Fill, then check and save.</div>
+            </div>
+            <button id="btnToggleSmartPaste" class="btn ghost" type="button">Paste Info</button>
+          </div>
+          <div id="smartPastePanel" class="smart-paste-panel hidden">
+            <textarea id="c_smartPaste" class="mono" placeholder="Paste customer details here..."></textarea>
+            <div class="flex" style="margin-top:10px">
+              <button id="btnSmartPaste" class="btn ok" type="button">Enter / Auto Fill</button>
+              <button id="btnClearSmartPaste" class="btn ghost" type="button">Clear</button>
+              <span id="smartPasteMsg" class="muted"></span>
+            </div>
+            <div class="helper" style="margin-top:8px">Tip: Press Enter after pasting to auto-fill. Use Shift + Enter only if you need a new line.</div>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col">
             <label>Name</label><input id="c_name">
             <label>Phone</label><input id="c_phone">
             <label>Email</label><input id="c_email" type="email">
+            <label>Comments</label><textarea id="c_comments" rows="2" placeholder="Notes / email from source comments"></textarea>
             <label>User ID (internal)</label><input id="c_userId" placeholder="e.g., CUST-001">
             <label>MAC Address</label><input id="c_mac" placeholder="AA:BB:CC:DD:EE:FF">
           </div>
@@ -928,10 +926,6 @@
             <label>Expiry Date</label><input id="r_expiry" type="date">
             <label>Payment Received?</label>
             <select id="r_paid"><option value="yes" selected>Yes</option><option value="no">No</option></select>
-            <div class="card" style="margin-top:10px">
-              <div class="muted">Renewal Preview</div>
-              <div id="r_preview" class="muted">—</div>
-            </div>
           </div>
         </div>
         <div class="foot">
@@ -1018,72 +1012,6 @@ function toast(message, type='info', timeout=2800){
     el.style.transform = 'translateY(6px)';
     setTimeout(()=> el.remove(), 220);
   }, timeout);
-}
-function currentTheme(){
-  return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-}
-function refreshThemeButton(){
-  const btn = $("#themeToggle");
-  if(!btn) return;
-  btn.textContent = currentTheme() === 'dark' ? '☀️ Light' : '🌙 Dark';
-}
-function applyTheme(theme){
-  const safeTheme = theme === 'dark' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', safeTheme);
-  try{ localStorage.setItem('netCableTheme', safeTheme); }catch(e){}
-  refreshThemeButton();
-}
-applyTheme((()=>{ try{ return localStorage.getItem('netCableTheme') || 'light'; }catch(e){ return 'light'; } })());
-function humanDate(iso){
-  if(!iso) return '-';
-  const d = new Date(iso + 'T00:00:00');
-  if(isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString('en-CA', { year:'numeric', month:'long', day:'numeric' });
-}
-function normalizePhoneLoose(v){
-  let d = String(v || '').replace(/\D/g, '');
-  if(d.length === 11 && d.startsWith('1')) d = d.slice(1);
-  return d;
-}
-function normalizeWhatsAppPhone(v){
-  let d = String(v || '').replace(/\D/g, '');
-  if(d.length === 10) d = '1' + d;
-  return d;
-}
-function buildWhatsAppExpiryMessage(c){
-  const cp = c?.currentPlan || {};
-  const name = (c?.name || 'there').trim();
-  const expiry = humanDate(cp.expiryDate);
-  const expired = daysLeft(cp.expiryDate) < 0;
-  return expired
-    ? `Hi ${name}, your Net + Cable plan expired on ${expiry}. Please contact us to renew. Thank you.`
-    : `Hi ${name}, your Net + Cable plan will expire on ${expiry}. Please contact us to renew. Thank you.`;
-}
-function sendWhatsAppReminder(customerId){
-  const c = customers.find(x => String(x.id) === String(customerId));
-  if(!c){ toast('Customer not found.', 'error'); return; }
-  const phone = normalizeWhatsAppPhone(c.phone);
-  if(!phone || phone.length < 10){
-    toast('This customer does not have a valid phone number for WhatsApp.', 'warn', 3600);
-    return;
-  }
-  const url = `https://wa.me/${phone}?text=${encodeURIComponent(buildWhatsAppExpiryMessage(c))}`;
-  window.open(url, '_blank');
-}
-function csvCell(v){
-  return `"${String(v ?? '').replaceAll('"','""')}"`;
-}
-function downloadCSVFile(filename, rows){
-  const csvStr = "\uFEFF" + rows.map(row => row.map(csvCell).join(',')).join('\n');
-  const blob = new Blob([csvStr], { type:'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
 }
 function addMonthsISO(startISO, months){
   if (!startISO) return "";
@@ -1270,19 +1198,11 @@ function bindUIOnce(){
   });
   $("#periodBtn").addEventListener('click', openPeriodModal);
   $("#xPeriod").addEventListener('click', ()=> $("#modalPeriod").classList.remove('open'));
-  const themeToggle = $("#themeToggle");
-  if(themeToggle){
-    refreshThemeButton();
-    themeToggle.onclick = ()=> applyTheme(currentTheme() === 'dark' ? 'light' : 'dark');
-  }
 
   $("#btnSeedPlans").onclick = seedPlans;
   $("#btnAddPlan").onclick = ()=> openPlanModal();
   $("#btnRunReport").addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); runReport(); });
   $("#btnCsv").addEventListener("click", (e) => { e.preventDefault(); e.stopPropagation(); exportCSV(); });
-  $("#btnExportCustomersBackup").onclick = exportCustomersBackup;
-  $("#btnExportRenewalsBackup").onclick = exportRenewalsBackup;
-  $("#btnExportPlansBackup").onclick = exportPlansBackup;
   $("#btnCleanupOrphans").onclick = cleanupOrphanRenewals;
   $("#repType").addEventListener('change', onRepTypeChange, {passive:true});
   $("#btnTogglePlans").addEventListener('click', ()=>{
@@ -1291,6 +1211,19 @@ function bindUIOnce(){
   });
 
   $("#xCust").onclick = ()=>{ editCustomerId = null; $("#modalCustomer").classList.remove('open'); };
+  $("#btnToggleSmartPaste").onclick = ()=> toggleSmartPastePanel();
+  $("#btnSmartPaste").onclick = autoFillCustomerFromPaste;
+  $("#btnClearSmartPaste").onclick = ()=>{
+    $("#c_smartPaste").value = "";
+    $("#smartPasteMsg").textContent = "";
+    $("#c_smartPaste").focus();
+  };
+  $("#c_smartPaste").addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      autoFillCustomerFromPaste();
+    }
+  });
   $("#xRenew").onclick = ()=> $("#modalRenew").classList.remove('open');
   $("#xPlan").onclick = ()=> $("#modalPlan").classList.remove('open');
 
@@ -1319,11 +1252,7 @@ function bindUIOnce(){
     $("#c_expiry").value = addMonthsISO($("#c_start").value, dur);
   });
 
-  $("#r_stb").addEventListener('change', ()=>{ $("#r_stbBox").classList.toggle('hidden', $("#r_stb").value !== 'yes'); previewRenewal(); });
-  ["#r_actual","#r_cost","#r_wholesale","#r_discName","#r_stbActual","#r_stbCost","#r_stbWholesale","#r_start","#r_expiry","#r_paid"].forEach(sel=>{
-    $(sel).addEventListener('input', previewRenewal);
-    $(sel).addEventListener('change', previewRenewal);
-  });
+  $("#r_stb").addEventListener('change', ()=>{ $("#r_stbBox").classList.toggle('hidden', $("#r_stb").value !== 'yes'); });
 
   const saveBtn = $("#btnSaveCustomer");
   saveBtn.addEventListener('click', async (e) => {
@@ -1743,7 +1672,6 @@ function dashboardAccordionHtml(item, stateKey, includeRenew){
           </div>
         </div>
         <div class="accordion-actions">
-          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp</button>
           ${includeRenew ? `<button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>` : ''}
           <button class="mini-btn ghost" data-action="toggle" data-state="${stateKey}" data-id="${esc(item.c.id)}" type="button">${open ? 'Hide' : 'Open'}</button>
         </div>
@@ -1755,7 +1683,6 @@ function dashboardAccordionHtml(item, stateKey, includeRenew){
           <button class="mini-btn ghost" data-action="edit" data-id="${esc(item.c.id)}" type="button">Edit</button>
           <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
           <button class="mini-btn ghost" data-action="invoice" data-id="${esc(item.c.id)}" type="button">Slip</button>
-          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp Reminder</button>
         </div>
       </div>
     </div>`;
@@ -1774,7 +1701,6 @@ function loyaltyAccordionHtml(item){
           </div>
         </div>
         <div class="accordion-actions">
-          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp</button>
           <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
           <button class="mini-btn ghost" data-action="toggle" data-state="loyalty" data-id="${esc(item.c.id)}" type="button">${open ? 'Hide' : 'Open'}</button>
         </div>
@@ -1786,7 +1712,6 @@ function loyaltyAccordionHtml(item){
           <button class="mini-btn ghost" data-action="edit" data-id="${esc(item.c.id)}" type="button">Edit</button>
           <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
           <button class="mini-btn ghost" data-action="invoice" data-id="${esc(item.c.id)}" type="button">Slip</button>
-          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp Reminder</button>
         </div>
       </div>
     </div>`;
@@ -1819,7 +1744,6 @@ function bindAccordionClicks(root, scope){
   root.querySelectorAll('[data-action="edit"]').forEach(btn=> btn.onclick = ()=> openCustomerModal(btn.dataset.id));
   root.querySelectorAll('[data-action="view"]').forEach(btn=> btn.onclick = ()=> viewCustomer(btn.dataset.id));
   root.querySelectorAll('[data-action="invoice"]').forEach(btn=> btn.onclick = ()=> printInvoice(btn.dataset.id));
-  root.querySelectorAll('[data-action="whatsapp"]').forEach(btn=> btn.onclick = ()=> sendWhatsAppReminder(btn.dataset.id));
   root.querySelectorAll('[data-action="delete"]').forEach(btn=> btn.onclick = async ()=>{
     if(!assertWritable("Deleting customer")) return;
     if(confirm("Delete this customer and all their renewals?")){
@@ -1945,7 +1869,6 @@ function customerAccordionHtml(item){
           </div>
         </div>
         <div class="accordion-actions">
-          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp</button>
           <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
           <button class="mini-btn ghost" data-action="toggle" data-state="customers" data-id="${esc(item.c.id)}" type="button">${open ? 'Hide' : 'Open'}</button>
         </div>
@@ -1958,7 +1881,6 @@ function customerAccordionHtml(item){
           <button class="mini-btn ok" data-action="renew" data-id="${esc(item.c.id)}" type="button">Renew</button>
           <button class="mini-btn ghost" data-action="invoice" data-id="${esc(item.c.id)}" type="button">Slip</button>
           <button class="mini-btn ghost" data-action="delete" data-id="${esc(item.c.id)}" type="button">Delete</button>
-          <button class="mini-btn whatsapp" data-action="whatsapp" data-id="${esc(item.c.id)}" type="button">WhatsApp Reminder</button>
         </div>
       </div>
     </div>`;
@@ -2295,6 +2217,190 @@ function previewTotals(){
   `;
 }
 
+
+function cleanImportedValue(value){
+  const v = String(value || "").trim();
+  const bad = [
+    "type a phone",
+    "select credits",
+    "type your message",
+    "add",
+    "recover"
+  ];
+  return bad.includes(v.toLowerCase()) ? "" : v;
+}
+function normalizeSmartLabel(value){
+  return String(value || "")
+    .replace(/[:：]/g, "")
+    .trim()
+    .toLowerCase();
+}
+function escapeRegExp(value){
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+const SMART_IMPORT_LABELS = [
+  "edit users",
+  "name",
+  "username",
+  "password",
+  "mac",
+  "status",
+  "phone",
+  "comments",
+  "package",
+  "vod package",
+  "stb info",
+  "receiver",
+  "last active",
+  "ip",
+  "expiry",
+  "box model",
+  "created",
+  "watching",
+  "parent pin",
+  "firmware",
+  "favorites",
+  "credits",
+  "select credits",
+  "type",
+  "send message",
+  "type your message",
+  "transaction history",
+  "search",
+  "show"
+];
+function isSmartImportLabel(line){
+  return SMART_IMPORT_LABELS.includes(normalizeSmartLabel(line));
+}
+function getNextImportedValue(lines, label){
+  const wanted = normalizeSmartLabel(label);
+  for(let i = 0; i < lines.length; i++){
+    const line = lines[i];
+    if(normalizeSmartLabel(line) === wanted){
+      const next = cleanImportedValue(lines[i + 1] || "");
+      if(!next || isSmartImportLabel(next)) return "";
+      return next;
+    }
+    const sameLineRegex = new RegExp("^" + escapeRegExp(label) + "\\s*:?\\s*(.+)$", "i");
+    const sameLineMatch = line.match(sameLineRegex);
+    if(sameLineMatch) return cleanImportedValue(sameLineMatch[1]);
+  }
+  return "";
+}
+function getColonImportedValue(raw, label){
+  const regex = new RegExp(escapeRegExp(label) + "\\s*:\\s*([^\\n\\r]+)", "i");
+  const match = String(raw || "").match(regex);
+  return cleanImportedValue(match ? match[1] : "");
+}
+function firstEmailFromText(text){
+  const match = String(text || "").match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  return match ? match[0].toLowerCase() : "";
+}
+function dateOnlyFromText(value){
+  const match = String(value || "").match(/\d{4}-\d{2}-\d{2}/);
+  return match ? match[0] : "";
+}
+function latestPurchasedTransaction(raw){
+  const matches = [...String(raw || "").matchAll(
+    /\bPURCHASED\s+(\d+)\s+(\S+)\s+(\d{4}-\d{2}-\d{2})\s+\d{2}:\d{2}:\d{2}\s+(\d{4}-\d{2}-\d{2})\s+\d{2}:\d{2}:\d{2}/gi
+  )];
+  if(!matches.length) return null;
+  const latest = matches[matches.length - 1];
+  return {
+    months:Number(latest[1] || 0),
+    username:latest[2] || "",
+    startDate:latest[3] || "",
+    expiryDate:latest[4] || ""
+  };
+}
+function selectPlanByMonths(months){
+  if(!months) return false;
+  const match = Object.entries(plans).find(([id, p])=> Number(p.duration_months || 0) === Number(months));
+  if(!match) return false;
+  const [planId, p] = match;
+  $("#c_plan").value = planId;
+  $("#c_actual").value = p.retail_price ?? "";
+  $("#c_cost").value = p.retail_price ?? "";
+  $("#c_wholesale").value = p.wholesale_cost ?? "";
+  return true;
+}
+function toggleSmartPastePanel(forceOpen=null){
+  const panel = $("#smartPastePanel");
+  const btn = $("#btnToggleSmartPaste");
+  if(!panel || !btn) return;
+  const shouldOpen = forceOpen === null ? panel.classList.contains('hidden') : !!forceOpen;
+  panel.classList.toggle('hidden', !shouldOpen);
+  btn.textContent = shouldOpen ? "Hide Paste Box" : "Paste Info";
+  if(shouldOpen) setTimeout(()=> $("#c_smartPaste")?.focus(), 60);
+}
+function resetSmartPasteBox(){
+  const shell = $("#smartPasteShell");
+  const panel = $("#smartPastePanel");
+  const btn = $("#btnToggleSmartPaste");
+  if(shell) shell.classList.remove('hidden');
+  if(panel) panel.classList.add('hidden');
+  if(btn) btn.textContent = "Paste Info";
+  if($("#c_smartPaste")) $("#c_smartPaste").value = "";
+  if($("#smartPasteMsg")) $("#smartPasteMsg").textContent = "";
+}
+function autoFillCustomerFromPaste(){
+  const raw = $("#c_smartPaste").value || "";
+  if(!raw.trim()){
+    toast("Paste customer details first.", "warn");
+    return;
+  }
+  const lines = raw
+    .replace(/\r/g, "")
+    .split("\n")
+    .map(x => x.trim())
+    .filter(Boolean);
+
+  const tx = latestPurchasedTransaction(raw);
+  const name = getNextImportedValue(lines, "Name");
+  const username = getNextImportedValue(lines, "Username") || tx?.username || "";
+  const mac = getNextImportedValue(lines, "MAC");
+  const phone = getNextImportedValue(lines, "Phone");
+  const comments = getNextImportedValue(lines, "Comments");
+  const packageName = getNextImportedValue(lines, "Package");
+  const vodPackage = getNextImportedValue(lines, "VOD Package");
+  const status = getNextImportedValue(lines, "Status");
+  const receiver = getColonImportedValue(raw, "Receiver");
+  const boxModel = getColonImportedValue(raw, "Box Model");
+  const createdDate = dateOnlyFromText(getColonImportedValue(raw, "Created"));
+  const expiryFromStb = dateOnlyFromText(getColonImportedValue(raw, "Expiry"));
+  const detectedEmail = firstEmailFromText(comments) || firstEmailFromText(raw);
+  const startDate = tx?.startDate || createdDate || todayISO();
+  const expiryDate = expiryFromStb || tx?.expiryDate || "";
+
+  if(name) $("#c_name").value = name;
+  if(username) $("#c_userId").value = username;
+  if(mac) $("#c_mac").value = mac.toUpperCase();
+  if(phone) $("#c_phone").value = phone;
+  if(detectedEmail) $("#c_email").value = detectedEmail;
+
+  const noteParts = [];
+  if(comments) noteParts.push(comments);
+  if(packageName) noteParts.push("Package: " + packageName);
+  if(vodPackage) noteParts.push("VOD: " + vodPackage);
+  if(status) noteParts.push("Status: " + status);
+  if(receiver) noteParts.push("Receiver: " + receiver);
+  if(boxModel) noteParts.push("Box Model: " + boxModel);
+  $("#c_comments").value = noteParts.join("\n");
+
+  if(tx?.months) selectPlanByMonths(tx.months);
+  if(startDate) $("#c_start").value = startDate;
+  if(expiryDate){
+    $("#c_expiry").value = expiryDate;
+  }else{
+    const selectedPlan = plans[$("#c_plan").value] || {};
+    $("#c_expiry").value = addMonthsISO($("#c_start").value, selectedPlan.duration_months || 0);
+  }
+  $("#c_paid").value = "yes";
+  previewTotals();
+  $("#smartPasteMsg").textContent = "Auto-filled. Check details, then save.";
+  toast("Customer auto-filled. Please check before saving.", "ok");
+}
+
 function openCustomerModal(id=null){
   editCustomerId = (typeof id === 'string') ? id : null;
   const custModal = $("#modalCustomer");
@@ -2302,14 +2408,26 @@ function openCustomerModal(id=null){
   refreshPlanSelects();
   const firstPlanId = Object.keys(plans)[0] || "";
   const defaults = firstPlanId ? plans[firstPlanId] : null;
-  $("#c_name").value = ""; $("#c_phone").value = ""; $("#c_email").value = ""; $("#c_userId").value = ""; $("#c_mac").value = "";
+  resetSmartPasteBox();
+  $("#smartPasteShell").classList.toggle("hidden", !!id);
+  $("#c_name").value = "";
+  $("#c_phone").value = "";
+  $("#c_email").value = "";
+  $("#c_comments").value = "";
+  $("#c_userId").value = "";
+  $("#c_mac").value = "";
   $("#c_plan").value = firstPlanId; $("#c_actual").value = defaults ? (defaults.retail_price || "") : ""; $("#c_cost").value = defaults ? (defaults.retail_price || "") : ""; $("#c_wholesale").value = defaults ? (defaults.wholesale_cost || "") : "";
   $("#c_discName").value = ""; $("#c_stb").value = "no"; $("#stbBox").classList.add('hidden'); $("#c_stbActual").value = ""; $("#c_stbCost").value = ""; $("#c_stbWholesale").value = "";
   $("#c_start").value = todayISO(); $("#c_expiry").value = defaults ? addMonthsISO($("#c_start").value, defaults.duration_months || 0) : $("#c_start").value; $("#c_paid").value = "yes"; $("#c_preview").textContent = "—";
   if(id){
     const c = customers.find(x=> x.id === id);
     if(c){
-      $("#c_name").value = c.name || ""; $("#c_phone").value = c.phone || ""; $("#c_email").value = c.email || ""; $("#c_userId").value = c.userId || ""; $("#c_mac").value = c.mac || "";
+      $("#c_name").value = c.name || "";
+      $("#c_phone").value = c.phone || "";
+      $("#c_email").value = c.email || "";
+      $("#c_comments").value = c.comments || "";
+      $("#c_userId").value = c.userId || "";
+      $("#c_mac").value = c.mac || "";
       if(c.currentPlan){
         $("#c_plan").value = c.currentPlan.planId || firstPlanId || "";
         $("#c_actual").value = c.currentPlan.actual || "";
@@ -2342,31 +2460,6 @@ function validateCustomerModal(){
   if(!start || !expiry) throw new Error("Start and expiry dates are required.");
   if(expiry < start) throw new Error("Expiry date cannot be before start date.");
   ["#c_actual","#c_cost","#c_wholesale","#c_stbActual","#c_stbCost","#c_stbWholesale"].forEach(sel=>{ const val = $(sel).value; if(val !== "" && !nonNegativeNumber(val)) throw new Error("Prices cannot be negative."); });
-}
-function findDuplicateCustomers(payload){
-  const currentId = editCustomerId ? String(editCustomerId) : '';
-  const email = normalizeEmail(payload.email);
-  const phone = normalizePhoneLoose(payload.phone);
-  const mac = String(payload.mac || '').replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
-  const userId = String(payload.userId || '').trim().toLowerCase();
-  const hits = [];
-  customers.forEach(c=>{
-    if(String(c.id) === currentId) return;
-    const fields = [];
-    if(phone && normalizePhoneLoose(c.phone) === phone) fields.push('phone');
-    if(email && normalizeEmail(c.email) === email) fields.push('email');
-    const cMac = String(c.mac || '').replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
-    if(mac && cMac === mac) fields.push('MAC');
-    if(userId && String(c.userId || '').trim().toLowerCase() === userId) fields.push('User ID');
-    if(fields.length) hits.push({ customer:c, fields });
-  });
-  return hits;
-}
-function confirmDuplicateIfNeeded(payload){
-  const hits = findDuplicateCustomers(payload);
-  if(!hits.length) return true;
-  const detail = hits.slice(0,5).map(h => `• ${h.customer.name || 'Unknown'} matched by ${h.fields.join(', ')}`).join('\n');
-  return confirm(`Possible duplicate customer found:\n\n${detail}\n\nContinue saving anyway?`);
 }
 async function getLatestRenewalDoc(customerId){
   const snap = await safeGetDocs(collection(db, "customers", String(customerId), "renewals"), '[renewals] list latest');
@@ -2405,12 +2498,12 @@ async function saveCustomerFromModal(){
     name,
     phone:$("#c_phone").value.trim(),
     email:normalizeEmail($("#c_email").value),
+    comments:$("#c_comments").value.trim(),
     userId:$("#c_userId").value.trim(),
     mac:$("#c_mac").value.trim().toUpperCase(),
     originalStartDate: (editCustomerId ? (customers.find(x=>x.id===editCustomerId)?.originalStartDate || start) : start),
     currentPlan
   };
-  if(!confirmDuplicateIfNeeded(payload)) return;
   const existingIdForUpdate = editCustomerId;
   const cid = await saveCustomer(payload, existingIdForUpdate ? String(existingIdForUpdate) : null);
   if(!existingIdForUpdate){
@@ -2446,29 +2539,6 @@ function viewCustomer(id){
   alert(`Customer: ${c.name}\nPhone: ${c.phone || '-'}  Email: ${c.email || '-'}\nUser ID: ${c.userId || '-'}  MAC: ${c.mac || '-'}\n\nOriginal Start: ${c.originalStartDate || '-'}\nCurrent Plan: ${cp.planName || '-'} (${cp.durationMonths || 0} mo)\nThis Plan Start: ${cp.startDate || '-'}  Expiry: ${cp.expiryDate || '-'}\nRenewal Count: ${hist.renewalCount}\nTotal Paid: ${fmt(hist.totalSpent)}\n\nThis Plan:\n  Turnover: ${fmt(figs.turnover)}\n  Expense:  ${fmt(figs.expense)}\n  Profit:   ${fmt(figs.profit)}\n  Discount: ${fmt(figs.discountSaved)}${cp.discountName ? ' — ' + cp.discountName : ''}`);
 }
 
-function previewRenewal(){
-  const out = $("#r_preview");
-  if(!out) return;
-  const c = customers.find(x=> String(x.id) === String(renewCustomerId));
-  const oldExpiry = c?.currentPlan?.expiryDate || '';
-  const f = calcFigures({
-    cost:$("#r_cost").value,
-    wholesale:$("#r_wholesale").value,
-    actual:$("#r_actual").value,
-    stbIncluded:$("#r_stb").value,
-    stbCost:$("#r_stbCost").value,
-    stbWholesale:$("#r_stbWholesale").value,
-    stbActual:$("#r_stbActual").value
-  });
-  const discName = ($("#r_discName").value || '').trim();
-  out.innerHTML = `
-    Current expiry: <strong>${esc(humanDate(oldExpiry))}</strong><br>
-    New start: <strong>${esc(humanDate($("#r_start").value))}</strong><br>
-    New expiry: <strong>${esc(humanDate($("#r_expiry").value))}</strong><br>
-    Turnover: <strong>${fmt(f.turnover)}</strong> • Expense: <strong>${fmt(f.expense)}</strong> • Profit: <strong>${fmt(f.profit)}</strong><br>
-    ${f.discountSaved > 0 ? `Customer discount: <strong>${fmt(f.discountSaved)}</strong>${discName ? ` <span class="chip">${esc(discName)}</span>` : ''}` : `<span class="muted">No discount</span>`}
-  `;
-}
 function openRenewModal(id){
   renewCustomerId = id;
   refreshPlanSelects();
@@ -2492,10 +2562,8 @@ function openRenewModal(id){
     if(!cp.actual) $("#r_actual").value = p2.retail_price || "";
     if(!cp.cost) $("#r_cost").value = p2.retail_price || "";
     if(!cp.wholesale) $("#r_wholesale").value = p2.wholesale_cost || "";
-    previewRenewal();
   };
-  $("#r_start").onchange = ()=>{ const p2 = plans[$("#r_plan").value] || {}; $("#r_expiry").value = addMonthsISO($("#r_start").value, p2.duration_months || 0); previewRenewal(); };
-  previewRenewal();
+  $("#r_start").onchange = ()=>{ const p2 = plans[$("#r_plan").value] || {}; $("#r_expiry").value = addMonthsISO($("#r_start").value, p2.duration_months || 0); };
   $("#modalRenew").classList.add('open');
 }
 function validateRenewModal(){
@@ -2564,50 +2632,6 @@ async function seedPlans(){
   catch(e){ showErr('[plans] seed', e); toast("Failed to seed plans.", "error"); }
 }
 
-function exportCustomersBackup(){
-  const rows = [[
-    'Customer ID','Name','Phone','Email','User ID','MAC','Original Start',
-    'Current Plan ID','Current Plan Name','Duration Months','Start Date','Expiry Date',
-    'Plan Actual','Selling Price','Wholesale','STB Included','STB Actual','STB Selling','STB Wholesale',
-    'Payment Received','Discount Name','Status'
-  ]];
-  customers.forEach(c=>{
-    const cp = c.currentPlan || {};
-    rows.push([
-      c.id, c.name, c.phone, c.email, c.userId, c.mac, c.originalStartDate,
-      cp.planId, cp.planName, cp.durationMonths, cp.startDate, cp.expiryDate,
-      cp.actual, cp.cost, cp.wholesale, cp.stbIncluded, cp.stbActual, cp.stbCost, cp.stbWholesale,
-      cp.paymentReceived, cp.discountName, getExpiryStatus(cp.expiryDate).label
-    ]);
-  });
-  downloadCSVFile(`net-cable-customers-backup-${todayISO()}.csv`, rows);
-  toast('Customers backup downloaded.', 'ok');
-}
-function exportRenewalsBackup(){
-  const rows = [[
-    'Renewal ID','Customer ID','Customer Name','Plan ID','Plan Name','Duration Months',
-    'Start Date','Expiry Date','Plan Actual','Selling Price','Wholesale',
-    'STB Included','STB Actual','STB Selling','STB Wholesale','Payment Received','Discount Name','Type'
-  ]];
-  filteredCanonicalRenewals().sort((a,b)=> (a.startDate || '').localeCompare(b.startDate || '')).forEach(r=>{
-    rows.push([
-      r.id, r.customerId, r.customerName, r.planId, r.planName, r.durationMonths,
-      r.startDate, r.expiryDate, r.actual, r.cost, r.wholesale,
-      r.stbIncluded, r.stbActual, r.stbCost, r.stbWholesale, r.paymentReceived, r.discountName, r.renewalType || r.recordType || ''
-    ]);
-  });
-  downloadCSVFile(`net-cable-renewals-backup-${todayISO()}.csv`, rows);
-  toast('Renewals backup downloaded.', 'ok');
-}
-function exportPlansBackup(){
-  const rows = [['Plan ID','Name','Duration Months','Retail Price','Wholesale Cost','Description']];
-  Object.keys(plans).sort().forEach(id=>{
-    const p = plans[id] || {};
-    rows.push([p.id || id, p.name, p.duration_months, p.retail_price, p.wholesale_cost, p.description]);
-  });
-  downloadCSVFile(`net-cable-plans-backup-${todayISO()}.csv`, rows);
-  toast('Plans backup downloaded.', 'ok');
-}
 function onRepTypeChange(){
   const t = $("#repType").value;
   $("#repMonthCol").classList.toggle('hidden', t !== "monthly");
