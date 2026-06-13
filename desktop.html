@@ -611,12 +611,225 @@
   .toast.warn{border-color:#fcd34d}
   .toast.error{border-color:#fda4af}
 
+
+
+  .smart-paste-shell{
+    margin-bottom:14px;
+    border:1px dashed rgba(37,99,235,.32);
+    background:linear-gradient(180deg,rgba(239,246,255,.88),rgba(248,250,252,.9));
+  }
+  html[data-theme="dark"] .smart-paste-shell{
+    background:linear-gradient(180deg,rgba(18,26,58,.92),rgba(15,21,48,.92));
+    border-color:rgba(106,140,255,.34);
+  }
+  .smart-paste-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .smart-paste-title{
+    font-size:15px;
+    font-weight:950;
+    margin:0;
+  }
+  .smart-paste-panel{
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid var(--border);
+  }
+  #c_smartPaste{
+    min-height:175px;
+    font-size:13px;
+    line-height:1.45;
+    resize:vertical;
+  }
+
+
+  .customer-group{
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:12px;
+    background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(248,250,252,.72));
+  }
+  html[data-theme="dark"] .customer-group{background:rgba(15,21,48,.66)}
+  .customer-group + .customer-group{margin-top:12px}
+  .customer-group-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:10px;
+    padding:2px 2px 0;
+  }
+  .customer-group-title{font-size:15px;font-weight:950}
+  .customer-group-note{font-size:12px;color:var(--muted);margin-top:3px}
+  .customer-group-count{
+    min-width:34px;
+    min-height:34px;
+    padding:6px 10px;
+    border-radius:999px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:950;
+    color:#1d4ed8;
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+  }
+  html[data-theme="dark"] .customer-group-count{color:#dbeafe;background:#172554;border-color:#334155}
+  .older-expired-toggle{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    min-height:50px;
+    padding:11px 14px;
+    border-radius:15px;
+    border:1px solid var(--border);
+    background:var(--card2);
+    color:var(--ink);
+    font-weight:900;
+    cursor:pointer;
+    text-align:left;
+  }
+  .older-expired-toggle small{color:var(--muted);font-weight:800}
+  .dashboard-old-expired{
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:0;
+    overflow:hidden;
+    background:var(--card2);
+  }
+  .dashboard-old-expired summary{
+    cursor:pointer;
+    list-style:none;
+    padding:14px 16px;
+    font-weight:900;
+  }
+  .dashboard-old-expired summary::-webkit-details-marker{display:none}
+  .dashboard-old-expired[open] summary{border-bottom:1px solid var(--border)}
+  .dashboard-old-expired > .list-stack{padding:12px}
+
+  .forecast-summary-grid{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:12px;
+  }
+  .forecast-summary-card{
+    padding:16px;
+    border:1px solid var(--border);
+    border-radius:18px;
+    background:linear-gradient(180deg,#fff,#f8fafc);
+    min-width:0;
+  }
+  html[data-theme="dark"] .forecast-summary-card{background:#121a3a}
+  .forecast-summary-label{font-size:12px;color:var(--muted);font-weight:850;line-height:1.3}
+  .forecast-summary-value{font-size:26px;font-weight:950;line-height:1.05;margin-top:8px;letter-spacing:-.4px}
+  .forecast-summary-sub{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.35}
+
+  .forecast-scenario-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+  }
+  .forecast-quality{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:7px 11px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--card2);
+    font-size:12px;
+    font-weight:900;
+  }
+  .forecast-range{
+    margin-top:12px;
+    padding:13px 14px;
+    border:1px solid var(--border);
+    border-radius:16px;
+    background:var(--card2);
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
+  .forecast-range strong{font-size:17px}
+  .forecast-range span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+
+  .forecast-month-chart{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    margin-top:12px;
+  }
+  .forecast-month-row{
+    display:grid;
+    grid-template-columns:84px minmax(0,1fr) 92px;
+    gap:10px;
+    align-items:center;
+  }
+  .forecast-month-name{font-size:12px;font-weight:900}
+  .forecast-month-bar{
+    height:12px;
+    border-radius:999px;
+    background:#e2e8f0;
+    overflow:hidden;
+    border:1px solid var(--border);
+  }
+  html[data-theme="dark"] .forecast-month-bar{background:#0d1330}
+  .forecast-month-fill{
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg,#2563eb,#7c3aed);
+  }
+  .forecast-month-money{text-align:right;font-size:12px;font-weight:900}
+
+  .forecast-table-desktop{display:block}
+  .forecast-mobile-list{display:none}
+  .forecast-mobile-card{
+    padding:14px;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background:var(--card2);
+  }
+  .forecast-mobile-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .forecast-mobile-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:9px;
+  }
+  .forecast-mobile-stat{
+    padding:10px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:var(--card);
+  }
+  .forecast-mobile-stat span{display:block;color:var(--muted);font-size:11px;font-weight:800}
+  .forecast-mobile-stat strong{display:block;margin-top:4px;font-size:15px}
+  .forecast-method-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+  }
+
   @media (max-width: 1100px){
     :root{--shell:980px}
     .nav-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
     .metric-stack{grid-template-columns:1fr}
     .detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .forecast-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .forecast-summary-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .forecast-method-grid{grid-template-columns:1fr}
   }
 
   @media (max-width: 760px){
@@ -636,6 +849,11 @@
     .accordion-head{grid-template-columns:1fr}
     .accordion-actions{justify-content:flex-start}
     .forecast-main-value{font-size:30px}
+    .forecast-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .forecast-range{grid-template-columns:1fr}
+    .forecast-table-desktop{display:none}
+    .forecast-mobile-list{display:flex;flex-direction:column;gap:10px}
+    .forecast-month-row{grid-template-columns:68px minmax(0,1fr) 78px}
     .modal{padding:14px;padding-top:calc(14px + var(--safe-top));padding-bottom:calc(14px + var(--safe-bottom))}
     .modal .body{max-width:480px;padding:16px}
     .toast-wrap{left:14px;right:14px;bottom:calc(14px + var(--safe-bottom));max-width:480px}
@@ -801,11 +1019,32 @@
           <h3 id="custModalTitle">Add Customer</h3>
           <button class="btn ghost" id="xCust" type="button">✕</button>
         </div>
+
+        <div id="smartPasteShell" class="card smart-paste-shell">
+          <div class="smart-paste-top">
+            <div>
+              <p class="smart-paste-title">Quick Customer Import</p>
+              <div class="helper">Paste copied customer info, press Enter or Auto Fill, then check and save.</div>
+            </div>
+            <button id="btnToggleSmartPaste" class="btn ghost" type="button">Paste Info</button>
+          </div>
+          <div id="smartPastePanel" class="smart-paste-panel hidden">
+            <textarea id="c_smartPaste" class="mono" placeholder="Paste customer details here..."></textarea>
+            <div class="flex" style="margin-top:10px">
+              <button id="btnSmartPaste" class="btn ok" type="button">Enter / Auto Fill</button>
+              <button id="btnClearSmartPaste" class="btn ghost" type="button">Clear</button>
+              <span id="smartPasteMsg" class="muted"></span>
+            </div>
+            <div class="helper" style="margin-top:8px">Tip: Press Enter after pasting to auto-fill. Use Shift + Enter only if you need a new line.</div>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col">
             <label>Name</label><input id="c_name">
             <label>Phone</label><input id="c_phone">
             <label>Email</label><input id="c_email" type="email">
+            <label>Comments</label><textarea id="c_comments" rows="2" placeholder="Notes / email from source comments"></textarea>
             <label>User ID (internal)</label><input id="c_userId" placeholder="e.g., CUST-001">
             <label>MAC Address</label><input id="c_mac" placeholder="AA:BB:CC:DD:EE:FF">
           </div>
@@ -1060,13 +1299,24 @@ let dashboardBottomView = '';
 let renewalsLoadedOnce = false;
 let forecastPeriodKey = 'month';
 let forecastMetricKey = 'revenue';
+let forecastScenarioKey = 'expected';
+let forecastShowAllMonths = false;
 let dashboardPeriod = { type:'year', year:new Date().getFullYear() };
 const accordionState = { dashboardView:new Set(), loyalty:new Set(), customers:new Set() };
+
+let canonicalRenewalCache = null;
+let customerHistoryCache = new Map();
+function invalidateAnalyticsCache(){
+  canonicalRenewalCache = null;
+  customerHistoryCache = new Map();
+}
 
 window.customerSearchValue = '';
 window.customerTimeFilter = 'currentYear';
 window.customerStatusFilter = 'all';
 window.customerExpiryFilter = 'all';
+window.showOlderExpired = false;
+window.customerSearchTimer = null;
 
 const authEmail = $("#authEmail");
 const authPass = $("#authPass");
@@ -1155,6 +1405,19 @@ function bindUIOnce(){
   });
 
   $("#xCust").onclick = ()=>{ editCustomerId = null; $("#modalCustomer").classList.remove('open'); };
+  $("#btnToggleSmartPaste").onclick = ()=> toggleSmartPastePanel();
+  $("#btnSmartPaste").onclick = autoFillCustomerFromPaste;
+  $("#btnClearSmartPaste").onclick = ()=>{
+    $("#c_smartPaste").value = "";
+    $("#smartPasteMsg").textContent = "";
+    $("#c_smartPaste").focus();
+  };
+  $("#c_smartPaste").addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      autoFillCustomerFromPaste();
+    }
+  });
   $("#xRenew").onclick = ()=> $("#modalRenew").classList.remove('open');
   $("#xPlan").onclick = ()=> $("#modalPlan").classList.remove('open');
 
@@ -1331,6 +1594,7 @@ async function loadCustomers(){
   customers = [];
   const snap = await safeGetDocs(query(collection(db,"customers"), orderBy("name")), '[customers] getDocs');
   snap.forEach(d=> customers.push({id:d.id, ...d.data()}) );
+  invalidateAnalyticsCache();
 }
 async function saveCustomer(payload, existingId=null){
   if(existingId){
@@ -1371,6 +1635,7 @@ async function loadRenewals(){
     });
   }
   renewalsLoadedOnce = true;
+  invalidateAnalyticsCache();
 }
 async function setCustomerCurrentPlan(customerId, planFields){
   const ref = doc(db, "customers", String(customerId));
@@ -1410,6 +1675,7 @@ function renewalQuality(r){
   return ['cost','wholesale','actual','startDate','expiryDate','planId','durationMonths','paymentReceived','discountName'].reduce((s,k)=> s + (r[k] !== undefined && r[k] !== '' ? 1 : 0), 0) + (r.renewalType ? 4 : 0);
 }
 function canonicalRenewalGroups(){
+  if(canonicalRenewalCache) return canonicalRenewalCache;
   const sigMap = new Map();
   for(const r of renewals){
     const cid = String(r.customerId || '');
@@ -1425,18 +1691,23 @@ function canonicalRenewalGroups(){
     grouped.get(cid).push(r);
   });
   grouped.forEach(list=> list.sort((a,b)=> (a.startDate || '').localeCompare(b.startDate || '') || (a.expiryDate || '').localeCompare(b.expiryDate || '')));
+  canonicalRenewalCache = grouped;
   return grouped;
 }
 function customerHistory(customerId){
+  const cacheKey = String(customerId);
+  if(customerHistoryCache.has(cacheKey)) return customerHistoryCache.get(cacheKey);
   const grouped = canonicalRenewalGroups();
-  const list = grouped.get(String(customerId)) || [];
+  const list = grouped.get(cacheKey) || [];
   const hasTyped = list.some(r => !!(r.renewalType || r.recordType));
   const renewalOnly = hasTyped ? list.filter(r => (r.renewalType || r.recordType) === 'renewal') : list.filter((_, idx) => idx > 0);
   const totalSpent = list.reduce((sum, r)=> sum + calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).turnover, 0);
   const totalExpense = list.reduce((sum, r)=> sum + calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).expense, 0);
   const firstDate = list[0]?.startDate || '';
   const lastDate = list[list.length - 1]?.startDate || '';
-  return { list, renewalOnly, renewalCount: renewalOnly.length, totalSpent, totalExpense, firstDate, lastDate };
+  const result = { list, renewalOnly, renewalCount: renewalOnly.length, totalSpent, totalExpense, firstDate, lastDate };
+  customerHistoryCache.set(cacheKey, result);
+  return result;
 }
 function getExpiryStatus(expISO){
   if(!expISO) return { key:'unknown', label:'No expiry', cls:'badge-muted', days:null };
@@ -1498,7 +1769,9 @@ function renderDashboard(){
     .sort((a,b)=> (a.status.days ?? 9999) - (b.status.days ?? 9999));
   const expiredList = customers.map(customerSummary)
     .filter(x => x.status.key === 'expired')
-    .sort((a,b)=> (a.status.days ?? 0) - (b.status.days ?? 0));
+    .sort((a,b)=> (b.status.days ?? -99999) - (a.status.days ?? -99999));
+  const recentlyExpiredList = expiredList.filter(x => (x.status.days ?? -99999) >= -90);
+  const olderExpiredList = expiredList.filter(x => (x.status.days ?? 0) < -90);
 
   const loyaltyList = customers.map(customerSummary).sort((a,b)=>{
     if(loyaltySortMode === 'renewals'){
@@ -1515,7 +1788,19 @@ function renderDashboard(){
   if(dashboardBottomView === 'near'){
     bottomContent = nearList.length ? nearList.map(item => dashboardAccordionHtml(item, 'dashboardView', true)).join('') : `<div class="empty-state">No customers are expiring soon.</div>`;
   }else if(dashboardBottomView === 'expired'){
-    bottomContent = expiredList.length ? expiredList.map(item => dashboardAccordionHtml(item, 'dashboardView', true)).join('') : `<div class="empty-state">No expired customers right now.</div>`;
+    if(!expiredList.length){
+      bottomContent = `<div class="empty-state">No expired customers right now.</div>`;
+    }else{
+      bottomContent = `
+        ${recentlyExpiredList.length ? recentlyExpiredList.map(item => dashboardAccordionHtml(item, 'dashboardView', true)).join('') : `<div class="empty-state">No customers expired in the last 90 days.</div>`}
+        ${olderExpiredList.length ? `
+          <details class="dashboard-old-expired">
+            <summary>Older expired customers (${olderExpiredList.length}) • more than 90 days ago</summary>
+            <div class="list-stack">${olderExpiredList.map(item => dashboardAccordionHtml(item, 'dashboardView', true)).join('')}</div>
+          </details>
+        ` : ''}
+      `;
+    }
   }else if(dashboardBottomView === 'top'){
     bottomContent = loyaltyList.length ? loyaltyList.map(item => loyaltyAccordionHtml(item)).join('') : `<div class="empty-state">No loyalty data available yet.</div>`;
   }
@@ -1668,7 +1953,7 @@ function bindAccordionClicks(root, scope){
       const stateKey = btn.dataset.state;
       const id = String(btn.dataset.id);
       if(accordionState[stateKey].has(id)) accordionState[stateKey].delete(id); else accordionState[stateKey].add(id);
-      if(scope === 'dashboard') renderDashboard(); else renderCustomers();
+      if(scope === 'dashboard') renderDashboard(); else renderCustomerResults();
     };
   });
   root.querySelectorAll('[data-action="renew"]').forEach(btn=> btn.onclick = ()=> openRenewModal(btn.dataset.id));
@@ -1684,18 +1969,37 @@ function bindAccordionClicks(root, scope){
   });
 }
 
-function renderCustomers(){
+function customerSortComparator(sortMode){
+  return (a,b)=>{
+    switch(sortMode){
+      case 'nameAsc': return (a.c.name || '').localeCompare(b.c.name || '');
+      case 'nameDesc': return (b.c.name || '').localeCompare(a.c.name || '');
+      case 'expirySoon':
+        if(a.status.key === 'expired' && b.status.key === 'expired') return (b.status.days ?? -99999) - (a.status.days ?? -99999);
+        return (a.status.days ?? 99999) - (b.status.days ?? 99999);
+      case 'expiryLate':
+        if(a.status.key === 'expired' && b.status.key === 'expired') return (a.status.days ?? -99999) - (b.status.days ?? -99999);
+        return (b.status.days ?? -99999) - (a.status.days ?? -99999);
+      case 'startNew': return (b.currentPlan.startDate || '').localeCompare(a.currentPlan.startDate || '');
+      case 'startOld': return (a.currentPlan.startDate || '').localeCompare(b.currentPlan.startDate || '');
+      case 'paidMore': return b.history.totalSpent - a.history.totalSpent || (a.c.name || '').localeCompare(b.c.name || '');
+      case 'renewedMore': return b.history.renewalCount - a.history.renewalCount || b.history.totalSpent - a.history.totalSpent;
+      default: return (a.c.name || '').localeCompare(b.c.name || '');
+    }
+  };
+}
+function filteredCustomerList(){
   const q = (window.customerSearchValue || '').toLowerCase().trim();
   const timeFilter = window.customerTimeFilter || 'currentYear';
   const statusFilter = window.customerStatusFilter || 'all';
   const expiryFilter = window.customerExpiryFilter || 'all';
-  const sortMode = customerSortMode;
   const now = new Date();
   const currentYear = now.getFullYear();
 
-  const list = customers.map(customerSummary).filter(item=>{
+  return customers.map(customerSummary).filter(item=>{
     const inText = `${item.c.name||''} ${item.c.phone||''} ${item.c.email||''} ${item.c.userId||''} ${item.c.mac||''}`.toLowerCase();
     if(q && !inText.includes(q)) return false;
+
     const startISO = item.currentPlan.startDate || item.c.originalStartDate || "";
     let withinTime = true;
     if(timeFilter === 'currentYear'){
@@ -1706,79 +2010,160 @@ function renderCustomers(){
       withinTime = !!startISO && Math.floor((now - new Date(startISO + "T00:00:00")) / 86400000) <= 365;
     }
     if(!withinTime) return false;
+
     const paidStr = (item.currentPlan.paymentReceived === 'yes') ? 'paid' : 'unpaid';
     if(statusFilter !== 'all' && paidStr !== statusFilter) return false;
     if(expiryFilter !== 'all' && item.status.key !== expiryFilter) return false;
     return true;
-  }).sort((a,b)=>{
-    switch(sortMode){
-      case 'nameAsc': return (a.c.name || '').localeCompare(b.c.name || '');
-      case 'nameDesc': return (b.c.name || '').localeCompare(a.c.name || '');
-      case 'expirySoon': return (a.status.days ?? 99999) - (b.status.days ?? 99999);
-      case 'expiryLate': return (b.status.days ?? -99999) - (a.status.days ?? -99999);
-      case 'startNew': return (b.currentPlan.startDate || '').localeCompare(a.currentPlan.startDate || '');
-      case 'startOld': return (a.currentPlan.startDate || '').localeCompare(b.currentPlan.startDate || '');
-      case 'paidMore': return b.history.totalSpent - a.history.totalSpent || (a.c.name || '').localeCompare(b.c.name || '');
-      case 'renewedMore': return b.history.renewalCount - a.history.renewalCount || b.history.totalSpent - a.history.totalSpent;
-      default: return (a.status.days ?? 99999) - (b.status.days ?? 99999) || (a.c.name || '').localeCompare(b.c.name || '');
-    }
   });
-
-  sections.customers.innerHTML = `
-    <div class="card">
-      <div class="section-title">
-        <div class="grow">
-          <h2>Customers</h2>
-          <div class="helper">Current year is the default filter so your list appears on first load.</div>
-          ${!renewalsLoadedOnce ? `<div class="helper" style="margin-top:4px">Renewal totals will finish filling in after renewal history loads.</div>` : ``}
+}
+function customerGroupHtml(title, note, items, extraClass=''){
+  if(!items.length) return '';
+  return `
+    <div class="customer-group ${extraClass}">
+      <div class="customer-group-head">
+        <div>
+          <div class="customer-group-title">${esc(title)}</div>
+          <div class="customer-group-note">${esc(note)}</div>
         </div>
-        <button id="btnAddCustomerBar" class="btn ok" type="button">+ Add Customer</button>
+        <span class="customer-group-count">${items.length}</span>
       </div>
-
-      <div class="control-grid three" style="margin-top:10px">
-        <input id="searchCustomersBar" placeholder="Search by name, phone, email, MAC, user ID..." value="${esc(window.customerSearchValue || '')}">
-        <select id="timeFilterBar">
-          <option value="currentYear" ${timeFilter==='currentYear'?'selected':''}>Current Year</option>
-          <option value="30" ${timeFilter==='30'?'selected':''}>Last 30 Days</option>
-          <option value="365" ${timeFilter==='365'?'selected':''}>Last 365 Days</option>
-          <option value="lifetime" ${timeFilter==='lifetime'?'selected':''}>Lifetime</option>
-        </select>
-        <select id="expiryFilterBar">
-          <option value="all" ${expiryFilter==='all'?'selected':''}>All Status</option>
-          <option value="active" ${expiryFilter==='active'?'selected':''}>Active</option>
-          <option value="near" ${expiryFilter==='near'?'selected':''}>Expiring Soon</option>
-          <option value="expired" ${expiryFilter==='expired'?'selected':''}>Expired</option>
-        </select>
-        <select id="statusFilterBar">
-          <option value="all" ${statusFilter==='all'?'selected':''}>All Payments</option>
-          <option value="paid" ${statusFilter==='paid'?'selected':''}>Paid</option>
-          <option value="unpaid" ${statusFilter==='unpaid'?'selected':''}>Unpaid</option>
-        </select>
-        <select id="customerSortBar">
-          <option value="expirySoon" ${sortMode==='expirySoon'?'selected':''}>Expiry Soonest</option>
-          <option value="nameAsc" ${sortMode==='nameAsc'?'selected':''}>Name A–Z</option>
-          <option value="nameDesc" ${sortMode==='nameDesc'?'selected':''}>Name Z–A</option>
-          <option value="expiryLate" ${sortMode==='expiryLate'?'selected':''}>Expiry Latest</option>
-          <option value="startNew" ${sortMode==='startNew'?'selected':''}>Newest Start</option>
-          <option value="startOld" ${sortMode==='startOld'?'selected':''}>Oldest Start</option>
-          <option value="paidMore" ${sortMode==='paidMore'?'selected':''}>Paid More</option>
-          <option value="renewedMore" ${sortMode==='renewedMore'?'selected':''}>Renewed More</option>
-        </select>
-        <div class="card" style="padding:12px"><div class="helper">${list.length} result${list.length === 1 ? '' : 's'} shown</div></div>
-      </div>
-
-      <div class="list-stack" style="margin-top:12px">
-        ${list.length ? list.map(item => customerAccordionHtml(item)).join('') : `<div class="empty-state">No customers match your filters.</div>`}
-      </div>
+      <div class="list-stack">${items.map(item => customerAccordionHtml(item)).join('')}</div>
     </div>`;
+}
+function renderCustomerResults(){
+  const host = $("#customerResultsHost");
+  const resultCount = $("#customerResultCount");
+  if(!host || !resultCount) return;
 
-  $("#btnAddCustomerBar").onclick = ()=> openCustomerModal(null);
-  $("#searchCustomersBar").addEventListener('input', e=>{ window.customerSearchValue = e.target.value; renderCustomers(); });
-  $("#timeFilterBar").addEventListener('change', e=>{ window.customerTimeFilter = e.target.value; renderCustomers(); }, {passive:true});
-  $("#expiryFilterBar").addEventListener('change', e=>{ window.customerExpiryFilter = e.target.value; renderCustomers(); }, {passive:true});
-  $("#statusFilterBar").addEventListener('change', e=>{ window.customerStatusFilter = e.target.value; renderCustomers(); }, {passive:true});
-  $("#customerSortBar").addEventListener('change', e=>{ customerSortMode = e.target.value; renderCustomers(); }, {passive:true});
-  bindAccordionClicks(sections.customers, 'customers');
+  const q = (window.customerSearchValue || '').trim();
+  const expiryFilter = window.customerExpiryFilter || 'all';
+  const comparator = customerSortComparator(customerSortMode);
+  const list = filteredCustomerList();
+  resultCount.textContent = `${list.length} result${list.length === 1 ? '' : 's'} shown`;
+
+  if(!list.length){
+    host.innerHTML = `<div class="empty-state">No customers match your filters.</div>`;
+    return;
+  }
+
+  const recentExpired = list.filter(x => x.status.key === 'expired' && (x.status.days ?? -99999) >= -90).sort(comparator);
+  const olderExpired = list.filter(x => x.status.key === 'expired' && (x.status.days ?? 0) < -90).sort(comparator);
+  const expiringSoon = list.filter(x => x.status.key === 'near').sort(comparator);
+  const active = list.filter(x => x.status.key === 'active').sort(comparator);
+  const unknown = list.filter(x => x.status.key === 'unknown').sort(comparator);
+
+  const forceShowOld = !!q || expiryFilter === 'expired';
+  const showOld = forceShowOld || !!window.showOlderExpired;
+  const chunks = [];
+
+  if(expiryFilter === 'all' || expiryFilter === 'expired'){
+    chunks.push(customerGroupHtml('Recently expired', 'Expired within the last 90 days — shown first for quick follow-up.', recentExpired));
+  }
+  if(expiryFilter === 'all' || expiryFilter === 'near'){
+    chunks.push(customerGroupHtml('Expiring soon', `Due within ${settingNear} days.`, expiringSoon));
+  }
+  if(expiryFilter === 'all' || expiryFilter === 'active'){
+    chunks.push(customerGroupHtml('Active customers', 'Plans with more time remaining.', active));
+  }
+  if(expiryFilter === 'all' && unknown.length){
+    chunks.push(customerGroupHtml('No expiry date', 'Customer records that need an expiry date.', unknown));
+  }
+
+  if((expiryFilter === 'all' || expiryFilter === 'expired') && olderExpired.length){
+    chunks.push(`
+      <div class="customer-group">
+        <button id="toggleOlderExpired" class="older-expired-toggle" type="button">
+          <span>Older expired customers (${olderExpired.length})</span>
+          <small>${showOld ? 'Hide' : 'Show'} • expired more than 90 days ago</small>
+        </button>
+        <div id="olderExpiredResults" class="list-stack ${showOld ? '' : 'hidden'}" style="margin-top:10px">
+          ${showOld ? olderExpired.map(item => customerAccordionHtml(item)).join('') : ''}
+        </div>
+      </div>`);
+  }
+
+  host.innerHTML = chunks.filter(Boolean).join('') || `<div class="empty-state">No customers match your filters.</div>`;
+
+  const toggleOld = $("#toggleOlderExpired");
+  if(toggleOld){
+    toggleOld.onclick = ()=>{
+      window.showOlderExpired = !window.showOlderExpired;
+      renderCustomerResults();
+    };
+  }
+  bindAccordionClicks(host, 'customers');
+}
+function renderCustomers(){
+  const timeFilter = window.customerTimeFilter || 'currentYear';
+  const statusFilter = window.customerStatusFilter || 'all';
+  const expiryFilter = window.customerExpiryFilter || 'all';
+  const sortMode = customerSortMode;
+
+  if(!$("#customerResultsHost")){
+    sections.customers.innerHTML = `
+      <div class="card">
+        <div class="section-title">
+          <div class="grow">
+            <h2>Customers</h2>
+            <div class="helper">Search stays focused while you type. Recently expired customers appear first; records expired more than 90 days ago stay collapsed.</div>
+            ${!renewalsLoadedOnce ? `<div class="helper" style="margin-top:4px">Renewal totals will finish filling in after renewal history loads.</div>` : ``}
+          </div>
+          <button id="btnAddCustomerBar" class="btn ok" type="button">+ Add Customer</button>
+        </div>
+
+        <div class="control-grid three" style="margin-top:10px">
+          <input id="searchCustomersBar" type="search" autocomplete="off" inputmode="search" aria-label="Search customers" placeholder="Search name, phone, email, MAC, user ID..." value="${esc(window.customerSearchValue || '')}">
+          <select id="timeFilterBar">
+            <option value="currentYear" ${timeFilter==='currentYear'?'selected':''}>Current Year</option>
+            <option value="30" ${timeFilter==='30'?'selected':''}>Last 30 Days</option>
+            <option value="365" ${timeFilter==='365'?'selected':''}>Last 365 Days</option>
+            <option value="lifetime" ${timeFilter==='lifetime'?'selected':''}>Lifetime</option>
+          </select>
+          <select id="expiryFilterBar">
+            <option value="all" ${expiryFilter==='all'?'selected':''}>All Status</option>
+            <option value="active" ${expiryFilter==='active'?'selected':''}>Active</option>
+            <option value="near" ${expiryFilter==='near'?'selected':''}>Expiring Soon</option>
+            <option value="expired" ${expiryFilter==='expired'?'selected':''}>Expired</option>
+          </select>
+          <select id="statusFilterBar">
+            <option value="all" ${statusFilter==='all'?'selected':''}>All Payments</option>
+            <option value="paid" ${statusFilter==='paid'?'selected':''}>Paid</option>
+            <option value="unpaid" ${statusFilter==='unpaid'?'selected':''}>Unpaid</option>
+          </select>
+          <select id="customerSortBar">
+            <option value="expirySoon" ${sortMode==='expirySoon'?'selected':''}>Expiry Priority</option>
+            <option value="nameAsc" ${sortMode==='nameAsc'?'selected':''}>Name A–Z</option>
+            <option value="nameDesc" ${sortMode==='nameDesc'?'selected':''}>Name Z–A</option>
+            <option value="expiryLate" ${sortMode==='expiryLate'?'selected':''}>Expiry Latest</option>
+            <option value="startNew" ${sortMode==='startNew'?'selected':''}>Newest Start</option>
+            <option value="startOld" ${sortMode==='startOld'?'selected':''}>Oldest Start</option>
+            <option value="paidMore" ${sortMode==='paidMore'?'selected':''}>Paid More</option>
+            <option value="renewedMore" ${sortMode==='renewedMore'?'selected':''}>Renewed More</option>
+          </select>
+          <div class="card" style="padding:12px"><div id="customerResultCount" class="helper">0 results shown</div></div>
+        </div>
+
+        <div id="customerResultsHost" style="margin-top:12px"></div>
+      </div>`;
+
+    $("#btnAddCustomerBar").onclick = ()=> openCustomerModal(null);
+    $("#searchCustomersBar").addEventListener('input', e=>{
+      window.customerSearchValue = e.target.value;
+      clearTimeout(window.customerSearchTimer);
+      window.customerSearchTimer = setTimeout(renderCustomerResults, 120);
+    });
+    $("#timeFilterBar").addEventListener('change', e=>{ window.customerTimeFilter = e.target.value; renderCustomerResults(); }, {passive:true});
+    $("#expiryFilterBar").addEventListener('change', e=>{ window.customerExpiryFilter = e.target.value; renderCustomerResults(); }, {passive:true});
+    $("#statusFilterBar").addEventListener('change', e=>{ window.customerStatusFilter = e.target.value; renderCustomerResults(); }, {passive:true});
+    $("#customerSortBar").addEventListener('change', e=>{ customerSortMode = e.target.value; renderCustomerResults(); }, {passive:true});
+  }
+
+  const search = $("#searchCustomersBar");
+  if(search && document.activeElement !== search && search.value !== (window.customerSearchValue || '')){
+    search.value = window.customerSearchValue || '';
+  }
+  renderCustomerResults();
 }
 function customerAccordionHtml(item){
   const open = accordionState.customers.has(String(item.c.id));
@@ -1817,265 +2202,606 @@ function customerAccordionHtml(item){
     </div>`;
 }
 
-function recordsForAverageWindow(months){
-  const end = endOfCurrentMonth();
-  const start = new Date(end.getFullYear(), end.getMonth() - (months - 1), 1);
-  const activationRows = [];
-  const grouped = canonicalRenewalGroups();
-  grouped.forEach(list=>{
-    list.forEach((r, idx)=>{
-      const startDate = isoToDate(r.startDate);
-      if(!startDate || startDate < start || startDate > end) return;
-      const typed = r.renewalType || r.recordType || (idx === 0 ? 'activation' : 'renewal');
-      if(typed === 'activation') activationRows.push(r);
+const FORECAST_RECENT_EXPIRED_DAYS = 90;
+const FORECAST_RENEWAL_GRACE_DAYS = 14;
+const FORECAST_MONTHLY_ASSUMPTION = 0.99;
+const FORECAST_OTHER_FALLBACK = 0.85;
+
+function startOfMonthDate(date=new Date()){
+  const d = new Date(date);
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+function endOfMonthDate(date=new Date()){
+  const d = new Date(date);
+  return new Date(d.getFullYear(), d.getMonth()+1, 0, 23, 59, 59, 999);
+}
+function monthKeyFromDate(date){
+  const d = new Date(date);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+function monthLabelFromDate(date){
+  return new Intl.DateTimeFormat('en-CA', { month:'short', year:'numeric' }).format(new Date(date));
+}
+function monthIndexFrom(startMonth, date){
+  const s = startOfMonthDate(startMonth);
+  const d = startOfMonthDate(date);
+  return (d.getFullYear() - s.getFullYear()) * 12 + (d.getMonth() - s.getMonth());
+}
+function addDaysDate(date, days){
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+function recordKind(list, row, index){
+  return row.renewalType || row.recordType || (index === 0 ? 'activation' : 'renewal');
+}
+function rowFigures(row){
+  return calcFigures({
+    cost:row?.cost, wholesale:row?.wholesale, actual:row?.actual,
+    stbIncluded:row?.stbIncluded, stbCost:row?.stbCost,
+    stbWholesale:row?.stbWholesale, stbActual:row?.stbActual
+  });
+}
+function durationForRecord(row){
+  return Math.max(1, +row?.durationMonths || +plans[row?.planId]?.duration_months || 1);
+}
+function planKeyForRecord(row){
+  const duration = durationForRecord(row);
+  return String(row?.planId || `DURATION-${duration}`);
+}
+function recencyOpportunityWeight(expiry){
+  const ageDays = Math.max(0, Math.floor((new Date() - expiry) / 86400000));
+  if(ageDays <= 180) return 1;
+  if(ageDays <= 365) return .75;
+  return .5;
+}
+function forecastActivationRows(){
+  const out = [];
+  canonicalRenewalGroups().forEach(list=>{
+    list.forEach((row, index)=>{
+      if(recordKind(list, row, index) === 'activation') out.push(row);
     });
   });
-  return activationRows;
+  return out;
 }
-function planTypeForecastStats(){
-  const grouped = canonicalRenewalGroups();
-  const today = new Date();
-  const stats = {};
-  grouped.forEach(list=>{
-    for(let i=0;i<list.length;i++){
-      const row = list[i];
-      const duration = +row.durationMonths || +plans[row.planId]?.duration_months || 0;
-      if(!duration) continue;
-      if(!stats[duration]) stats[duration] = { opportunities:0, renewed:0, activeCount:0, avgRenewalTurnover:0, avgRenewalProfit:0, avgActivationTurnover:0, avgActivationProfit:0, renewalRows:[], activationRows:[] };
-      const expiry = isoToDate(row.expiryDate);
-      const next = list[i+1];
-      const type = row.renewalType || row.recordType || (i===0 ? 'activation' : 'renewal');
-      const figures = calcFigures({ cost:row.cost, wholesale:row.wholesale, actual:row.actual, stbIncluded:row.stbIncluded, stbCost:row.stbCost, stbWholesale:row.stbWholesale, stbActual:row.stbActual });
-      if(type === 'renewal') stats[duration].renewalRows.push(figures);
-      else stats[duration].activationRows.push(figures);
-      if(expiry && expiry <= today){
-        stats[duration].opportunities += 1;
-        if(next) stats[duration].renewed += 1;
-      }
-    }
+function forecastHistoryMonths(){
+  const rows = forecastActivationRows().filter(r => isoToDate(r.startDate));
+  if(!rows.length) return 0;
+  const earliest = rows.map(r => isoToDate(r.startDate)).sort((a,b)=> a-b)[0];
+  const previousMonth = new Date(new Date().getFullYear(), new Date().getMonth()-1, 1);
+  return Math.max(1, Math.min(12, monthsBetween(earliest, previousMonth)));
+}
+function activationSeries(months=12){
+  const now = new Date();
+  const end = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+  const start = new Date(end.getFullYear(), end.getMonth() - (months - 1), 1);
+  const counts = Array.from({length:months}, ()=>0);
+  forecastActivationRows().forEach(row=>{
+    const d = isoToDate(row.startDate);
+    if(!d || d < start || d > end) return;
+    const idx = monthIndexFrom(start, d);
+    if(idx >= 0 && idx < counts.length) counts[idx] += 1;
   });
+  return { counts, start, end };
+}
+function simpleExponentialLevel(values, alpha=.45){
+  if(!values.length) return 0;
+  let level = values[0] || 0;
+  for(let i=1;i<values.length;i++) level = alpha * (+values[i] || 0) + (1-alpha) * level;
+  return Math.max(0, level);
+}
+function newCustomerModel(){
+  const series12 = activationSeries(12);
+  const available = forecastHistoryMonths();
+  const usable = available ? series12.counts.slice(Math.max(0, 12-available)) : series12.counts;
+  const smoothed = simpleExponentialLevel(usable, .45);
+  const recent3 = average(usable.slice(-3));
+  const monthlyBase = usable.length ? Math.max(0, smoothed * .65 + recent3 * .35) : 0;
+
+  const recentCutoff = new Date();
+  recentCutoff.setMonth(recentCutoff.getMonth()-12);
+  const recentRows = forecastActivationRows().filter(r=>{
+    const d = isoToDate(r.startDate);
+    return d && d >= recentCutoff;
+  });
+  const sourceRows = recentRows.length ? recentRows : forecastActivationRows();
+  const mixCounts = new Map();
+  sourceRows.forEach(r=>{
+    const key = planKeyForRecord(r);
+    mixCounts.set(key, (mixCounts.get(key) || 0) + 1);
+  });
+  if(!mixCounts.size){
+    customers.forEach(c=>{
+      const cp = c.currentPlan || {};
+      if(!cp.planId && !cp.durationMonths) return;
+      const key = planKeyForRecord(cp);
+      mixCounts.set(key, (mixCounts.get(key) || 0) + 1);
+    });
+  }
+  const totalMix = [...mixCounts.values()].reduce((a,b)=>a+b,0) || 1;
+  const planMix = [...mixCounts.entries()].map(([planKey,count])=>({ planKey, share:count/totalMix }));
+
+  return {
+    monthlyBase,
+    planMix,
+    historyMonths:available,
+    counts:series12.counts,
+    sourceLabel: available >= 12 ? '12 completed months' : `${available || 0} completed month${available === 1 ? '' : 's'}`
+  };
+}
+function forecastEconomicsByPlan(){
+  const map = new Map();
+  const ensure = (key, row={})=>{
+    if(!map.has(key)){
+      map.set(key, {
+        planKey:key,
+        planId:row.planId || (String(key).startsWith('DURATION-') ? '' : key),
+        duration:durationForRecord(row),
+        activation:[],
+        renewal:[]
+      });
+    }
+    return map.get(key);
+  };
+
+  canonicalRenewalGroups().forEach(list=>{
+    list.forEach((row,index)=>{
+      const key = planKeyForRecord(row);
+      const entry = ensure(key,row);
+      const figs = rowFigures(row);
+      if(recordKind(list,row,index) === 'renewal') entry.renewal.push(figs);
+      else entry.activation.push(figs);
+    });
+  });
+
+  customers.forEach(c=>{
+    const cp = c.currentPlan || {};
+    if(!cp.planId && !cp.durationMonths) return;
+    ensure(planKeyForRecord(cp), cp);
+  });
+  Object.entries(plans).forEach(([id,p])=> ensure(String(id), { planId:id, durationMonths:p.duration_months }));
+
+  map.forEach(entry=>{
+    const p = entry.planId ? (plans[entry.planId] || {}) : {};
+    const defaultTurnover = +p.retail_price || 0;
+    const defaultProfit = Math.max(0, defaultTurnover - (+p.wholesale_cost || 0));
+    entry.activationTurnover = average(entry.activation.map(x=>x.turnover)) || average(entry.renewal.map(x=>x.turnover)) || defaultTurnover;
+    entry.activationProfit = average(entry.activation.map(x=>x.profit)) || average(entry.renewal.map(x=>x.profit)) || defaultProfit;
+    entry.renewalTurnover = average(entry.renewal.map(x=>x.turnover)) || average(entry.activation.map(x=>x.turnover)) || defaultTurnover;
+    entry.renewalProfit = average(entry.renewal.map(x=>x.profit)) || average(entry.activation.map(x=>x.profit)) || defaultProfit;
+  });
+  return map;
+}
+function renewalModelStats(){
+  const raw = new Map();
+  const now = new Date();
+  const resolvedCutoff = addDaysDate(now, -FORECAST_RENEWAL_GRACE_DAYS);
+  let globalOpp = 0;
+  let globalRenewed = 0;
+
+  const ensure = duration=>{
+    if(!raw.has(duration)){
+      raw.set(duration, { duration, opportunities:0, renewed:0, activeCount:0, renewalRows:[] });
+    }
+    return raw.get(duration);
+  };
+
+  canonicalRenewalGroups().forEach(list=>{
+    list.forEach((row,index)=>{
+      const duration = durationForRecord(row);
+      const stat = ensure(duration);
+      if(recordKind(list,row,index) === 'renewal') stat.renewalRows.push(rowFigures(row));
+      const expiry = isoToDate(row.expiryDate);
+      if(!expiry || expiry > resolvedCutoff) return;
+      const next = list[index+1];
+      const weight = recencyOpportunityWeight(expiry);
+      stat.opportunities += weight;
+      globalOpp += weight;
+      if(next){
+        stat.renewed += weight;
+        globalRenewed += weight;
+      }
+    });
+  });
+
   customers.forEach(c=>{
     const cp = c.currentPlan || {};
     const duration = +cp.durationMonths || +plans[cp.planId]?.duration_months || 0;
     if(!duration) return;
-    if(!stats[duration]) stats[duration] = { opportunities:0, renewed:0, activeCount:0, avgRenewalTurnover:0, avgRenewalProfit:0, avgActivationTurnover:0, avgActivationProfit:0, renewalRows:[], activationRows:[] };
-    if(getExpiryStatus(cp.expiryDate).key !== 'expired') stats[duration].activeCount += 1;
+    const stat = ensure(duration);
+    if(getExpiryStatus(cp.expiryDate).key !== 'expired') stat.activeCount += 1;
   });
-  Object.keys(stats).forEach(k=>{
-    const s = stats[k];
-    const renewalRate = s.opportunities ? (s.renewed / s.opportunities) : 0.55;
-    s.renewalRate = clamp(renewalRate || 0.55, 0.05, 0.95);
-    s.avgRenewalTurnover = average(s.renewalRows.map(x=> x.turnover)) || average(s.activationRows.map(x=> x.turnover)) || 0;
-    s.avgRenewalProfit = average(s.renewalRows.map(x=> x.profit)) || average(s.activationRows.map(x=> x.profit)) || 0;
-    s.avgActivationTurnover = average(s.activationRows.map(x=> x.turnover)) || s.avgRenewalTurnover || 0;
-    s.avgActivationProfit = average(s.activationRows.map(x=> x.profit)) || s.avgRenewalProfit || 0;
+  Object.values(plans).forEach(p=> ensure(Math.max(1,+p.duration_months || 1)));
+
+  const globalRate = globalOpp > 0 ? clamp(globalRenewed/globalOpp, .25, .995) : FORECAST_OTHER_FALLBACK;
+  raw.forEach(stat=>{
+    const observed = stat.opportunities > 0 ? stat.renewed/stat.opportunities : null;
+    if(stat.duration === 1){
+      const historyWeight = Math.min(.35, stat.opportunities / 40);
+      stat.rate = clamp(FORECAST_MONTHLY_ASSUMPTION * (1-historyWeight) + (observed ?? FORECAST_MONTHLY_ASSUMPTION) * historyWeight, .70, .995);
+      stat.source = stat.opportunities > 0 ? '99% monthly assumption + history' : '99% monthly business assumption';
+    }else{
+      const priorStrength = 4;
+      stat.rate = clamp((stat.renewed + globalRate * priorStrength) / (stat.opportunities + priorStrength), .20, .995);
+      stat.source = stat.opportunities > 0 ? 'Plan history, smoothed for small samples' : 'Overall renewal history fallback';
+    }
+    stat.observedRate = observed;
   });
-  return stats;
+  return { byDuration:raw, globalRate, totalOpportunities:globalOpp, totalRenewed:globalRenewed };
 }
-function newCustomerForecastStats(){
-  const act6 = recordsForAverageWindow(6);
-  const act12 = recordsForAverageWindow(12);
-  const monthlyAvg6 = act6.length / 6;
-  const monthlyAvg12 = act12.length / 12;
-  const monthlyAvg = act12.length ? (monthlyAvg6 + monthlyAvg12) / 2 : monthlyAvg6;
-  const avgTurnover = average([...act6, ...act12].map(r => calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).turnover));
-  const avgProfit = average([...act6, ...act12].map(r => calcFigures({ cost:r.cost, wholesale:r.wholesale, actual:r.actual, stbIncluded:r.stbIncluded, stbCost:r.stbCost, stbWholesale:r.stbWholesale, stbActual:r.stbActual }).profit));
+function scenarioConfig(key){
   return {
-    monthlyAvgNew: monthlyAvg || 0,
-    avgActivationTurnover: avgTurnover || 0,
-    avgActivationProfit: avgProfit || 0,
-    sourceMonths: act12.length ? '6–12 month average' : 'last 6 month average'
+    conservative:{ label:'Conservative', newFactor:.80, renewalMode:'down' },
+    expected:{ label:'Expected', newFactor:1, renewalMode:'base' },
+    growth:{ label:'Growth', newFactor:1.20, renewalMode:'up' }
+  }[key] || { label:'Expected', newFactor:1, renewalMode:'base' };
+}
+function scenarioRenewalRate(baseRate, scenarioKey){
+  if(scenarioKey === 'conservative') return clamp(baseRate - Math.max(.05, (1-baseRate)*.35), .05, .995);
+  if(scenarioKey === 'growth') return clamp(baseRate + (1-baseRate)*.35, .05, .995);
+  return clamp(baseRate, .05, .995);
+}
+function makeForecastRows(monthsAhead){
+  const start = startOfMonthDate(new Date());
+  return Array.from({length:monthsAhead}, (_,index)=>{
+    const monthStart = addMonthsDate(start,index);
+    return {
+      index,
+      key:monthKeyFromDate(monthStart),
+      label:monthLabelFromDate(monthStart),
+      monthStart,
+      expiring:0,
+      overdue:0,
+      expectedRenewals:0,
+      newCustomers:0,
+      activationRevenue:0,
+      activationProfit:0,
+      renewalRevenue:0,
+      renewalProfit:0,
+      revenue:0,
+      profit:0
+    };
+  });
+}
+function forecastPlanMeta(planKey, economics){
+  if(economics.has(planKey)) return economics.get(planKey);
+  const durationMatch = String(planKey).match(/^DURATION-(\d+)$/);
+  const duration = durationMatch ? +durationMatch[1] : Math.max(1,+plans[planKey]?.duration_months || 1);
+  const p = plans[planKey] || {};
+  const turnover = +p.retail_price || 0;
+  return {
+    planKey,
+    planId:String(planKey).startsWith('DURATION-') ? '' : planKey,
+    duration,
+    activationTurnover:turnover,
+    activationProfit:Math.max(0, turnover-(+p.wholesale_cost || 0)),
+    renewalTurnover:turnover,
+    renewalProfit:Math.max(0, turnover-(+p.wholesale_cost || 0))
   };
 }
-function renewalForecastForMonths(monthsAhead){
-  const planStats = planTypeForecastStats();
-  const horizonEnd = addMonthsDate(firstDayOfCurrentMonth(), monthsAhead);
-  let renewalsExpected = 0;
-  let revenue = 0;
-  let profit = 0;
+function buildForecastScenario(monthsAhead, scenarioKey='expected'){
+  const rows = makeForecastRows(monthsAhead);
+  const startMonth = rows[0]?.monthStart || startOfMonthDate(new Date());
+  const economics = forecastEconomicsByPlan();
+  const renewalStats = renewalModelStats();
+  const newModel = newCustomerModel();
+  const scenario = scenarioConfig(scenarioKey);
+
+  const addFutureRenewalStream = ({ dueDate, duration, survival, planKey })=>{
+    let due = new Date(dueDate);
+    let probability = Math.max(0, survival || 0);
+    const meta = forecastPlanMeta(planKey, economics);
+    const stat = renewalStats.byDuration.get(duration);
+    const baseRate = stat?.rate ?? (duration === 1 ? FORECAST_MONTHLY_ASSUMPTION : renewalStats.globalRate);
+    const rate = scenarioRenewalRate(baseRate, scenarioKey);
+
+    while(probability >= .01){
+      const idx = monthIndexFrom(startMonth, due);
+      if(idx >= monthsAhead) break;
+      if(idx >= 0){
+        rows[idx].expiring += probability;
+        const expected = probability * rate;
+        rows[idx].expectedRenewals += expected;
+        rows[idx].renewalRevenue += expected * meta.renewalTurnover;
+        rows[idx].renewalProfit += expected * meta.renewalProfit;
+        probability = expected;
+      }
+      due = addMonthsDate(due, duration);
+      if(idx < 0 && due < startMonth) continue;
+    }
+  };
+
   customers.forEach(c=>{
     const cp = c.currentPlan || {};
-    const duration = +cp.durationMonths || +plans[cp.planId]?.duration_months || 0;
+    const duration = Math.max(1, +cp.durationMonths || +plans[cp.planId]?.duration_months || 0);
     const expiry = isoToDate(cp.expiryDate);
     if(!duration || !expiry) return;
-    const stat = planStats[duration];
-    if(!stat) return;
-    let due = new Date(expiry);
-    let carry = 1;
-    while(due < horizonEnd){
-      const rate = stat.renewalRate;
-      const expectedNow = carry * rate;
-      renewalsExpected += expectedNow;
-      revenue += expectedNow * stat.avgRenewalTurnover;
-      profit += expectedNow * stat.avgRenewalProfit;
-      carry = expectedNow;
-      due = addMonthsDate(due, duration);
-      if(carry < 0.01) break;
+    const planKey = planKeyForRecord(cp);
+
+    if(expiry < startMonth){
+      const overdueDays = Math.floor((startMonth - expiry) / 86400000);
+      if(overdueDays > FORECAST_RECENT_EXPIRED_DAYS) return;
+      const stat = renewalStats.byDuration.get(duration);
+      const baseRate = stat?.rate ?? (duration === 1 ? FORECAST_MONTHLY_ASSUMPTION : renewalStats.globalRate);
+      const recoveryRate = scenarioRenewalRate(baseRate, scenarioKey) * .65;
+      const meta = forecastPlanMeta(planKey, economics);
+      rows[0].overdue += 1;
+      rows[0].expectedRenewals += recoveryRate;
+      rows[0].renewalRevenue += recoveryRate * meta.renewalTurnover;
+      rows[0].renewalProfit += recoveryRate * meta.renewalProfit;
+      addFutureRenewalStream({
+        dueDate:addMonthsDate(startMonth,duration),
+        duration,
+        survival:recoveryRate,
+        planKey
+      });
+      return;
     }
+
+    addFutureRenewalStream({ dueDate:expiry, duration, survival:1, planKey });
   });
-  return { renewalsExpected, revenue, profit, planStats };
+
+  rows.forEach((row,index)=>{
+    const expectedNew = newModel.monthlyBase * scenario.newFactor;
+    row.newCustomers += expectedNew;
+    newModel.planMix.forEach(mix=>{
+      const count = expectedNew * mix.share;
+      const meta = forecastPlanMeta(mix.planKey, economics);
+      row.activationRevenue += count * meta.activationTurnover;
+      row.activationProfit += count * meta.activationProfit;
+      addFutureRenewalStream({
+        dueDate:addMonthsDate(row.monthStart,meta.duration),
+        duration:meta.duration,
+        survival:count,
+        planKey:mix.planKey
+      });
+    });
+  });
+
+  rows.forEach(row=>{
+    row.revenue = row.activationRevenue + row.renewalRevenue;
+    row.profit = row.activationProfit + row.renewalProfit;
+  });
+
+  const totals = rows.reduce((acc,row)=>{
+    acc.expiring += row.expiring;
+    acc.overdue += row.overdue;
+    acc.expectedRenewals += row.expectedRenewals;
+    acc.newCustomers += row.newCustomers;
+    acc.revenue += row.revenue;
+    acc.profit += row.profit;
+    return acc;
+  }, { expiring:0, overdue:0, expectedRenewals:0, newCustomers:0, revenue:0, profit:0 });
+
+  const quality = newModel.historyMonths >= 12 && renewalStats.totalOpportunities >= 20
+    ? { key:'high', label:'Higher confidence' }
+    : (newModel.historyMonths >= 6 || renewalStats.totalOpportunities >= 8)
+      ? { key:'medium', label:'Medium confidence' }
+      : { key:'low', label:'Early estimate' };
+
+  return { rows, totals, newModel, renewalStats, economics, quality, scenario, monthsAhead };
 }
-function forecastBundle(monthsAhead){
-  const newStats = newCustomerForecastStats();
-  const renStats = renewalForecastForMonths(monthsAhead);
-  const newCustomers = newStats.monthlyAvgNew * monthsAhead;
-  const newRevenue = newCustomers * newStats.avgActivationTurnover;
-  const newProfit = newCustomers * newStats.avgActivationProfit;
-  return {
-    monthsAhead,
-    newCustomers,
-    renewalsExpected: renStats.renewalsExpected,
-    predictedRevenue: renStats.revenue + newRevenue,
-    predictedProfit: renStats.profit + newProfit,
-    renewalRevenue: renStats.revenue,
-    renewalProfit: renStats.profit,
-    newRevenue,
-    newProfit,
-    planStats: renStats.planStats,
-    newStats
-  };
+function forecastPeriodMonths(key){
+  return { month:1, six:6, year:12, five:60 }[key] || 1;
 }
 function forecastPeriodLabel(key){
-  return {
-    month:'This Month',
-    six:'6 Months',
-    year:'1 Year',
-    five:'5 Years'
-  }[key] || 'This Month';
+  return { month:'This Month', six:'Next 6 Months', year:'Next 12 Months', five:'Next 5 Years' }[key] || 'This Month';
 }
-function forecastMetricConfig(key){
-  return {
-    revenue: { label:'Predicted Revenue', value:b => fmt(b.predictedRevenue) },
-    profit: { label:'Predicted Profit', value:b => fmt(b.predictedProfit) },
-    renewals: { label:'Expected Renewals', value:b => (+b.renewalsExpected || 0).toFixed(2) },
-    newCustomers: { label:'Expected New Customers', value:b => (+b.newCustomers || 0).toFixed(2) }
-  }[key];
+function peopleNumber(value){
+  const n = +value || 0;
+  return n >= 10 ? n.toFixed(0) : n.toFixed(1);
 }
-function forecastSupportRows(bundle){
-  if(forecastMetricKey === 'revenue'){
-    return [
-      ['Predicted profit', fmt(bundle.predictedProfit)],
-      ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
-      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
-      ['Renewal revenue', fmt(bundle.renewalRevenue)],
-      ['New customer revenue', fmt(bundle.newRevenue)]
-    ];
-  }
-  if(forecastMetricKey === 'profit'){
-    return [
-      ['Predicted revenue', fmt(bundle.predictedRevenue)],
-      ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
-      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
-      ['Renewal profit', fmt(bundle.renewalProfit)],
-      ['New customer profit', fmt(bundle.newProfit)]
-    ];
-  }
-  if(forecastMetricKey === 'renewals'){
-    return [
-      ['Predicted revenue', fmt(bundle.predictedRevenue)],
-      ['Predicted profit', fmt(bundle.predictedProfit)],
-      ['Expected new customers', (+bundle.newCustomers || 0).toFixed(2)],
-      ['Renewal revenue', fmt(bundle.renewalRevenue)],
-      ['Renewal profit', fmt(bundle.renewalProfit)]
-    ];
-  }
-  return [
-    ['Predicted revenue', fmt(bundle.predictedRevenue)],
-    ['Predicted profit', fmt(bundle.predictedProfit)],
-    ['Expected renewals', (+bundle.renewalsExpected || 0).toFixed(2)],
-    ['New customer revenue', fmt(bundle.newRevenue)],
-    ['New customer profit', fmt(bundle.newProfit)]
-  ];
+function forecastPlanRateCards(model){
+  const rates = [...model.renewalStats.byDuration.values()].sort((a,b)=>a.duration-b.duration);
+  if(!rates.length) return `<div class="empty-state">No plan history found yet.</div>`;
+  return rates.map(stat=>`
+    <div class="plan-rate-item">
+      <div class="metric-top">
+        <strong>${stat.duration === 1 ? 'Monthly plan' : `${stat.duration}-month plan`}</strong>
+        <strong>${(stat.rate*100).toFixed(1)}%</strong>
+      </div>
+      <div class="helper">Renews every ${stat.duration === 1 ? 'month' : `${stat.duration} months`} • Active now: ${stat.activeCount}</div>
+      <div class="track" style="margin-top:10px"><div class="fill" style="width:${metricWidth(stat.rate,1)}%"></div></div>
+      <div class="helper" style="margin-top:10px">${esc(stat.source)} • Resolved opportunities: ${stat.opportunities.toFixed(1)}</div>
+    </div>
+  `).join('');
+}
+function forecastMonthlyTableRows(rows){
+  return rows.map(row=>`
+    <tr>
+      <td><strong>${esc(row.label)}</strong></td>
+      <td>${peopleNumber(row.expiring)}</td>
+      <td>${peopleNumber(row.overdue)}</td>
+      <td>${peopleNumber(row.expectedRenewals)}</td>
+      <td>${peopleNumber(row.newCustomers)}</td>
+      <td>${fmt(row.revenue)}</td>
+      <td>${fmt(row.profit)}</td>
+    </tr>
+  `).join('');
+}
+function forecastMobileCards(rows){
+  return rows.map(row=>`
+    <div class="forecast-mobile-card">
+      <div class="forecast-mobile-head">
+        <strong>${esc(row.label)}</strong>
+        <span class="chip">${fmt(row.revenue)}</span>
+      </div>
+      <div class="forecast-mobile-grid">
+        <div class="forecast-mobile-stat"><span>Expiring</span><strong>${peopleNumber(row.expiring)}</strong></div>
+        <div class="forecast-mobile-stat"><span>Expected renewals</span><strong>${peopleNumber(row.expectedRenewals)}</strong></div>
+        <div class="forecast-mobile-stat"><span>New customers</span><strong>${peopleNumber(row.newCustomers)}</strong></div>
+        <div class="forecast-mobile-stat"><span>Expected profit</span><strong>${fmt(row.profit)}</strong></div>
+      </div>
+      ${row.overdue > 0 ? `<div class="helper" style="margin-top:9px">Includes ${peopleNumber(row.overdue)} recently expired follow-up opportunit${row.overdue === 1 ? 'y' : 'ies'}.</div>` : ''}
+    </div>
+  `).join('');
 }
 function renderForecast(){
-  const bundles = {
-    month: forecastBundle(1),
-    six: forecastBundle(6),
-    year: forecastBundle(12),
-    five: forecastBundle(60)
-  };
-  const bundle = bundles[forecastPeriodKey] || bundles.month;
-  const config = forecastMetricConfig(forecastMetricKey);
-  const planStats = planTypeForecastStats();
-  const rates = Object.keys(planStats).sort((a,b)=> +a - +b);
+  const monthsAhead = forecastPeriodMonths(forecastPeriodKey);
+  const expected = buildForecastScenario(monthsAhead,'expected');
+  const conservative = buildForecastScenario(monthsAhead,'conservative');
+  const growth = buildForecastScenario(monthsAhead,'growth');
+  const selected = forecastScenarioKey === 'conservative' ? conservative : forecastScenarioKey === 'growth' ? growth : expected;
+  const visibleRows = (forecastPeriodKey === 'five' && !forecastShowAllMonths) ? selected.rows.slice(0,12) : selected.rows;
+  const maxRevenue = Math.max(...visibleRows.map(r=>r.revenue),1);
+  const avgMonthlyRevenue = selected.totals.revenue / Math.max(1,monthsAhead);
+  const avgMonthlyProfit = selected.totals.profit / Math.max(1,monthsAhead);
 
   sections.forecast.innerHTML = `
     <div class="card">
       <div class="section-title">
         <div>
           <h2>Forecast</h2>
-          <div class="helper">
-            ${renewalsLoadedOnce
-              ? `Read-only forecast using past 6–12 month averages for new customers, plus plan-type renewal behavior from your existing data.`
-              : `Renewal history is still loading. Forecast starts with basic numbers and updates automatically.`}
-          </div>
+          <div class="helper">Read-only projection. It uses your existing customers, expiry dates, renewal history, prices and plan duration. It does not change or migrate Firebase data.</div>
         </div>
+        <span class="forecast-quality">${esc(selected.quality.label)}</span>
       </div>
 
       <div class="forecast-shell">
-        <div class="forecast-btn-grid">
-          <button class="btn ${forecastPeriodKey === 'month' ? 'ok' : 'ghost'}" data-forecast-period="month" type="button">This Month</button>
-          <button class="btn ${forecastPeriodKey === 'six' ? 'ok' : 'ghost'}" data-forecast-period="six" type="button">6 Months</button>
-          <button class="btn ${forecastPeriodKey === 'year' ? 'ok' : 'ghost'}" data-forecast-period="year" type="button">1 Year</button>
-          <button class="btn ${forecastPeriodKey === 'five' ? 'ok' : 'ghost'}" data-forecast-period="five" type="button">5 Years</button>
+        <div>
+          <div class="helper" style="margin-bottom:7px">Forecast period</div>
+          <div class="forecast-btn-grid">
+            <button class="btn ${forecastPeriodKey === 'month' ? 'ok' : 'ghost'}" data-forecast-period="month" type="button">This Month</button>
+            <button class="btn ${forecastPeriodKey === 'six' ? 'ok' : 'ghost'}" data-forecast-period="six" type="button">6 Months</button>
+            <button class="btn ${forecastPeriodKey === 'year' ? 'ok' : 'ghost'}" data-forecast-period="year" type="button">1 Year</button>
+            <button class="btn ${forecastPeriodKey === 'five' ? 'ok' : 'ghost'}" data-forecast-period="five" type="button">5 Years</button>
+          </div>
         </div>
 
-        <div class="forecast-btn-grid">
-          <button class="btn ${forecastMetricKey === 'revenue' ? 'ok' : 'ghost'}" data-forecast-metric="revenue" type="button">Revenue</button>
-          <button class="btn ${forecastMetricKey === 'profit' ? 'ok' : 'ghost'}" data-forecast-metric="profit" type="button">Profit</button>
-          <button class="btn ${forecastMetricKey === 'renewals' ? 'ok' : 'ghost'}" data-forecast-metric="renewals" type="button">Renewals</button>
-          <button class="btn ${forecastMetricKey === 'newCustomers' ? 'ok' : 'ghost'}" data-forecast-metric="newCustomers" type="button">New Customers</button>
+        <div>
+          <div class="helper" style="margin-bottom:7px">Scenario</div>
+          <div class="forecast-scenario-grid">
+            <button class="btn ${forecastScenarioKey === 'conservative' ? 'warn' : 'ghost'}" data-forecast-scenario="conservative" type="button">Conservative</button>
+            <button class="btn ${forecastScenarioKey === 'expected' ? 'ok' : 'ghost'}" data-forecast-scenario="expected" type="button">Expected</button>
+            <button class="btn ${forecastScenarioKey === 'growth' ? '' : 'ghost'}" data-forecast-scenario="growth" type="button">Growth</button>
+          </div>
         </div>
 
         <div class="forecast-main-card">
-          <div class="chip">${esc(forecastPeriodLabel(forecastPeriodKey))}</div>
-          <div class="forecast-main-label">${esc(config.label)}</div>
-          <div class="forecast-main-value">${esc(config.value(bundle))}</div>
-          <div class="forecast-note">
-            One focused view at a time so mobile stays clean. Use the buttons above to switch period or metric.
+          <div class="flex" style="justify-content:space-between">
+            <div>
+              <div class="chip">${esc(forecastPeriodLabel(forecastPeriodKey))}</div>
+              <div class="forecast-main-label">${esc(selected.scenario.label)} revenue forecast</div>
+              <div class="forecast-main-value">${fmt(selected.totals.revenue)}</div>
+            </div>
+            <div class="right">
+              <div class="forecast-main-label">Expected profit</div>
+              <div class="forecast-big">${fmt(selected.totals.profit)}</div>
+            </div>
           </div>
 
-          <div class="forecast-stat-grid">
-            ${forecastSupportRows(bundle).map(([label, value]) => `
-              <div class="detail-box">
-                <div class="detail-label">${esc(label)}</div>
-                <div class="detail-value">${esc(value)}</div>
-              </div>
-            `).join('')}
+          <div class="forecast-range">
+            <div>
+              <strong>${fmt(conservative.totals.revenue)} – ${fmt(growth.totals.revenue)}</strong>
+              <span>Revenue range across conservative and growth scenarios</span>
+            </div>
+            <div>
+              <strong>${fmt(conservative.totals.profit)} – ${fmt(growth.totals.profit)}</strong>
+              <span>Profit range across conservative and growth scenarios</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="forecast-summary-grid">
+          <div class="forecast-summary-card">
+            <div class="forecast-summary-label">Scheduled expiries</div>
+            <div class="forecast-summary-value">${peopleNumber(selected.totals.expiring)}</div>
+            <div class="forecast-summary-sub">Includes repeat future due dates after expected renewals.</div>
+          </div>
+          <div class="forecast-summary-card">
+            <div class="forecast-summary-label">Expected renewals</div>
+            <div class="forecast-summary-value">${peopleNumber(selected.totals.expectedRenewals)}</div>
+            <div class="forecast-summary-sub">Monthly renews monthly; yearly renews yearly.</div>
+          </div>
+          <div class="forecast-summary-card">
+            <div class="forecast-summary-label">Expected new customers</div>
+            <div class="forecast-summary-value">${peopleNumber(selected.totals.newCustomers)}</div>
+            <div class="forecast-summary-sub">${esc(selected.newModel.sourceLabel)} with recent months weighted more.</div>
+          </div>
+          <div class="forecast-summary-card">
+            <div class="forecast-summary-label">Average monthly revenue</div>
+            <div class="forecast-summary-value">${fmt(avgMonthlyRevenue)}</div>
+            <div class="forecast-summary-sub">Selected scenario average.</div>
+          </div>
+          <div class="forecast-summary-card">
+            <div class="forecast-summary-label">Average monthly profit</div>
+            <div class="forecast-summary-value">${fmt(avgMonthlyProfit)}</div>
+            <div class="forecast-summary-sub">${peopleNumber(selected.totals.overdue)} recently expired follow-ups included.</div>
           </div>
         </div>
 
         <div class="row">
           <div class="col">
             <div class="forecast-card">
-              <h4>What drives this</h4>
-              <div class="helper">New customers use your ${esc(bundle.newStats.sourceMonths)}. Renewals use plan type only, not customer-by-customer history.</div>
-              <div class="list-stack" style="margin-top:10px">
-                <div class="detail-box"><div class="detail-label">Avg new customers / month</div><div class="detail-value">${(+bundle.newStats.monthlyAvgNew || 0).toFixed(2)}</div></div>
-                <div class="detail-box"><div class="detail-label">Avg new revenue / customer</div><div class="detail-value">${fmt(bundle.newStats.avgActivationTurnover)}</div></div>
-                <div class="detail-box"><div class="detail-label">Avg new profit / customer</div><div class="detail-value">${fmt(bundle.newStats.avgActivationProfit)}</div></div>
+              <div class="section-title">
+                <div>
+                  <h3>Monthly outlook</h3>
+                  <div class="helper">Revenue by calendar month for the selected scenario.</div>
+                </div>
+              </div>
+              <div class="forecast-month-chart">
+                ${visibleRows.map(row=>`
+                  <div class="forecast-month-row">
+                    <div class="forecast-month-name">${esc(row.label)}</div>
+                    <div class="forecast-month-bar"><div class="forecast-month-fill" style="width:${metricWidth(row.revenue,maxRevenue)}%"></div></div>
+                    <div class="forecast-month-money">${fmt(row.revenue)}</div>
+                  </div>
+                `).join('')}
               </div>
             </div>
           </div>
           <div class="col">
             <div class="forecast-card">
-              <h4>Renewal Rate by Plan Type</h4>
-              <div class="plan-rate-list">
-                ${rates.length ? rates.map(m=> {
-                  const s = planStats[m];
-                  return `
-                    <div class="plan-rate-item">
-                      <div class="metric-top">
-                        <strong>${esc(m)} month plan</strong>
-                        <strong>${(s.renewalRate * 100).toFixed(0)}%</strong>
-                      </div>
-                      <div class="helper">Expired opportunities: ${s.opportunities} • Renewed: ${s.renewed} • Active now: ${s.activeCount}</div>
-                      <div class="track" style="margin-top:10px"><div class="fill" style="width:${metricWidth(s.renewalRate, 1)}%"></div></div>
-                      <div class="helper" style="margin-top:10px">Avg renewal revenue ${fmt(s.avgRenewalTurnover)} • Avg renewal profit ${fmt(s.avgRenewalProfit)}</div>
-                    </div>`;
-                }).join('') : `<div class="empty-state">No plan history found yet for forecasting.</div>`}
-              </div>
+              <h3 style="margin-top:0">Renewal cycle by plan</h3>
+              <div class="helper">The model schedules each customer again only after their own plan duration. Your 1-month plan starts from a 99% monthly renewal assumption and blends in recorded history.</div>
+              <div class="plan-rate-list">${forecastPlanRateCards(selected)}</div>
             </div>
+          </div>
+        </div>
+
+        <div class="forecast-card">
+          <div class="section-title">
+            <div>
+              <h3>Month-by-month forecast</h3>
+              <div class="helper">Scheduled expiries, expected renewals, expected new customers, revenue and profit.</div>
+            </div>
+            ${forecastPeriodKey === 'five' ? `<button id="toggleForecastMonths" class="btn ghost" type="button">${forecastShowAllMonths ? 'Show First 12 Months' : 'Show All 60 Months'}</button>` : ''}
+          </div>
+
+          <div class="forecast-table-desktop table-scroll">
+            <table class="grid" style="min-width:860px">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Expiring</th>
+                  <th>Overdue follow-up</th>
+                  <th>Expected renewals</th>
+                  <th>New customers</th>
+                  <th>Revenue</th>
+                  <th>Profit</th>
+                </tr>
+              </thead>
+              <tbody>${forecastMonthlyTableRows(visibleRows)}</tbody>
+            </table>
+          </div>
+          <div class="forecast-mobile-list">${forecastMobileCards(visibleRows)}</div>
+        </div>
+
+        <div class="forecast-method-grid">
+          <div class="detail-box">
+            <div class="detail-label">New-customer baseline</div>
+            <div class="detail-value">${peopleNumber(selected.newModel.monthlyBase)} / month</div>
+            <div class="helper" style="margin-top:6px">Exponential smoothing gives more weight to recent completed months.</div>
+          </div>
+          <div class="detail-box">
+            <div class="detail-label">Renewal evidence</div>
+            <div class="detail-value">${selected.renewalStats.totalOpportunities.toFixed(1)} resolved opportunities</div>
+            <div class="helper" style="margin-top:6px">Very recent expiries get a grace period before being treated as non-renewals.</div>
+          </div>
+          <div class="detail-box">
+            <div class="detail-label">Data safety</div>
+            <div class="detail-value">Read-only calculation</div>
+            <div class="helper" style="margin-top:6px">No new collection, migration, deletion or forecast write-back.</div>
           </div>
         </div>
       </div>
@@ -2085,15 +2811,23 @@ function renderForecast(){
   sections.forecast.querySelectorAll('[data-forecast-period]').forEach(btn=>{
     btn.onclick = ()=>{
       forecastPeriodKey = btn.dataset.forecastPeriod;
+      forecastShowAllMonths = false;
       renderForecast();
     };
   });
-  sections.forecast.querySelectorAll('[data-forecast-metric]').forEach(btn=>{
+  sections.forecast.querySelectorAll('[data-forecast-scenario]').forEach(btn=>{
     btn.onclick = ()=>{
-      forecastMetricKey = btn.dataset.forecastMetric;
+      forecastScenarioKey = btn.dataset.forecastScenario;
       renderForecast();
     };
   });
+  const toggleMonths = $("#toggleForecastMonths");
+  if(toggleMonths){
+    toggleMonths.onclick = ()=>{
+      forecastShowAllMonths = !forecastShowAllMonths;
+      renderForecast();
+    };
+  }
 }
 
 function renderPlans(){
@@ -2148,6 +2882,190 @@ function previewTotals(){
   `;
 }
 
+
+function cleanImportedValue(value){
+  const v = String(value || "").trim();
+  const bad = [
+    "type a phone",
+    "select credits",
+    "type your message",
+    "add",
+    "recover"
+  ];
+  return bad.includes(v.toLowerCase()) ? "" : v;
+}
+function normalizeSmartLabel(value){
+  return String(value || "")
+    .replace(/[:：]/g, "")
+    .trim()
+    .toLowerCase();
+}
+function escapeRegExp(value){
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+const SMART_IMPORT_LABELS = [
+  "edit users",
+  "name",
+  "username",
+  "password",
+  "mac",
+  "status",
+  "phone",
+  "comments",
+  "package",
+  "vod package",
+  "stb info",
+  "receiver",
+  "last active",
+  "ip",
+  "expiry",
+  "box model",
+  "created",
+  "watching",
+  "parent pin",
+  "firmware",
+  "favorites",
+  "credits",
+  "select credits",
+  "type",
+  "send message",
+  "type your message",
+  "transaction history",
+  "search",
+  "show"
+];
+function isSmartImportLabel(line){
+  return SMART_IMPORT_LABELS.includes(normalizeSmartLabel(line));
+}
+function getNextImportedValue(lines, label){
+  const wanted = normalizeSmartLabel(label);
+  for(let i = 0; i < lines.length; i++){
+    const line = lines[i];
+    if(normalizeSmartLabel(line) === wanted){
+      const next = cleanImportedValue(lines[i + 1] || "");
+      if(!next || isSmartImportLabel(next)) return "";
+      return next;
+    }
+    const sameLineRegex = new RegExp("^" + escapeRegExp(label) + "\\s*:?\\s*(.+)$", "i");
+    const sameLineMatch = line.match(sameLineRegex);
+    if(sameLineMatch) return cleanImportedValue(sameLineMatch[1]);
+  }
+  return "";
+}
+function getColonImportedValue(raw, label){
+  const regex = new RegExp(escapeRegExp(label) + "\\s*:\\s*([^\\n\\r]+)", "i");
+  const match = String(raw || "").match(regex);
+  return cleanImportedValue(match ? match[1] : "");
+}
+function firstEmailFromText(text){
+  const match = String(text || "").match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  return match ? match[0].toLowerCase() : "";
+}
+function dateOnlyFromText(value){
+  const match = String(value || "").match(/\d{4}-\d{2}-\d{2}/);
+  return match ? match[0] : "";
+}
+function latestPurchasedTransaction(raw){
+  const matches = [...String(raw || "").matchAll(
+    /\bPURCHASED\s+(\d+)\s+(\S+)\s+(\d{4}-\d{2}-\d{2})\s+\d{2}:\d{2}:\d{2}\s+(\d{4}-\d{2}-\d{2})\s+\d{2}:\d{2}:\d{2}/gi
+  )];
+  if(!matches.length) return null;
+  const latest = matches[matches.length - 1];
+  return {
+    months:Number(latest[1] || 0),
+    username:latest[2] || "",
+    startDate:latest[3] || "",
+    expiryDate:latest[4] || ""
+  };
+}
+function selectPlanByMonths(months){
+  if(!months) return false;
+  const match = Object.entries(plans).find(([id, p])=> Number(p.duration_months || 0) === Number(months));
+  if(!match) return false;
+  const [planId, p] = match;
+  $("#c_plan").value = planId;
+  $("#c_actual").value = p.retail_price ?? "";
+  $("#c_cost").value = p.retail_price ?? "";
+  $("#c_wholesale").value = p.wholesale_cost ?? "";
+  return true;
+}
+function toggleSmartPastePanel(forceOpen=null){
+  const panel = $("#smartPastePanel");
+  const btn = $("#btnToggleSmartPaste");
+  if(!panel || !btn) return;
+  const shouldOpen = forceOpen === null ? panel.classList.contains('hidden') : !!forceOpen;
+  panel.classList.toggle('hidden', !shouldOpen);
+  btn.textContent = shouldOpen ? "Hide Paste Box" : "Paste Info";
+  if(shouldOpen) setTimeout(()=> $("#c_smartPaste")?.focus(), 60);
+}
+function resetSmartPasteBox(){
+  const shell = $("#smartPasteShell");
+  const panel = $("#smartPastePanel");
+  const btn = $("#btnToggleSmartPaste");
+  if(shell) shell.classList.remove('hidden');
+  if(panel) panel.classList.add('hidden');
+  if(btn) btn.textContent = "Paste Info";
+  if($("#c_smartPaste")) $("#c_smartPaste").value = "";
+  if($("#smartPasteMsg")) $("#smartPasteMsg").textContent = "";
+}
+function autoFillCustomerFromPaste(){
+  const raw = $("#c_smartPaste").value || "";
+  if(!raw.trim()){
+    toast("Paste customer details first.", "warn");
+    return;
+  }
+  const lines = raw
+    .replace(/\r/g, "")
+    .split("\n")
+    .map(x => x.trim())
+    .filter(Boolean);
+
+  const tx = latestPurchasedTransaction(raw);
+  const name = getNextImportedValue(lines, "Name");
+  const username = getNextImportedValue(lines, "Username") || tx?.username || "";
+  const mac = getNextImportedValue(lines, "MAC");
+  const phone = getNextImportedValue(lines, "Phone");
+  const comments = getNextImportedValue(lines, "Comments");
+  const packageName = getNextImportedValue(lines, "Package");
+  const vodPackage = getNextImportedValue(lines, "VOD Package");
+  const status = getNextImportedValue(lines, "Status");
+  const receiver = getColonImportedValue(raw, "Receiver");
+  const boxModel = getColonImportedValue(raw, "Box Model");
+  const createdDate = dateOnlyFromText(getColonImportedValue(raw, "Created"));
+  const expiryFromStb = dateOnlyFromText(getColonImportedValue(raw, "Expiry"));
+  const detectedEmail = firstEmailFromText(comments) || firstEmailFromText(raw);
+  const startDate = tx?.startDate || createdDate || todayISO();
+  const expiryDate = expiryFromStb || tx?.expiryDate || "";
+
+  if(name) $("#c_name").value = name;
+  if(username) $("#c_userId").value = username;
+  if(mac) $("#c_mac").value = mac.toUpperCase();
+  if(phone) $("#c_phone").value = phone;
+  if(detectedEmail) $("#c_email").value = detectedEmail;
+
+  const noteParts = [];
+  if(comments) noteParts.push(comments);
+  if(packageName) noteParts.push("Package: " + packageName);
+  if(vodPackage) noteParts.push("VOD: " + vodPackage);
+  if(status) noteParts.push("Status: " + status);
+  if(receiver) noteParts.push("Receiver: " + receiver);
+  if(boxModel) noteParts.push("Box Model: " + boxModel);
+  $("#c_comments").value = noteParts.join("\n");
+
+  if(tx?.months) selectPlanByMonths(tx.months);
+  if(startDate) $("#c_start").value = startDate;
+  if(expiryDate){
+    $("#c_expiry").value = expiryDate;
+  }else{
+    const selectedPlan = plans[$("#c_plan").value] || {};
+    $("#c_expiry").value = addMonthsISO($("#c_start").value, selectedPlan.duration_months || 0);
+  }
+  $("#c_paid").value = "yes";
+  previewTotals();
+  $("#smartPasteMsg").textContent = "Auto-filled. Check details, then save.";
+  toast("Customer auto-filled. Please check before saving.", "ok");
+}
+
 function openCustomerModal(id=null){
   editCustomerId = (typeof id === 'string') ? id : null;
   const custModal = $("#modalCustomer");
@@ -2155,14 +3073,26 @@ function openCustomerModal(id=null){
   refreshPlanSelects();
   const firstPlanId = Object.keys(plans)[0] || "";
   const defaults = firstPlanId ? plans[firstPlanId] : null;
-  $("#c_name").value = ""; $("#c_phone").value = ""; $("#c_email").value = ""; $("#c_userId").value = ""; $("#c_mac").value = "";
+  resetSmartPasteBox();
+  $("#smartPasteShell").classList.toggle("hidden", !!id);
+  $("#c_name").value = "";
+  $("#c_phone").value = "";
+  $("#c_email").value = "";
+  $("#c_comments").value = "";
+  $("#c_userId").value = "";
+  $("#c_mac").value = "";
   $("#c_plan").value = firstPlanId; $("#c_actual").value = defaults ? (defaults.retail_price || "") : ""; $("#c_cost").value = defaults ? (defaults.retail_price || "") : ""; $("#c_wholesale").value = defaults ? (defaults.wholesale_cost || "") : "";
   $("#c_discName").value = ""; $("#c_stb").value = "no"; $("#stbBox").classList.add('hidden'); $("#c_stbActual").value = ""; $("#c_stbCost").value = ""; $("#c_stbWholesale").value = "";
   $("#c_start").value = todayISO(); $("#c_expiry").value = defaults ? addMonthsISO($("#c_start").value, defaults.duration_months || 0) : $("#c_start").value; $("#c_paid").value = "yes"; $("#c_preview").textContent = "—";
   if(id){
     const c = customers.find(x=> x.id === id);
     if(c){
-      $("#c_name").value = c.name || ""; $("#c_phone").value = c.phone || ""; $("#c_email").value = c.email || ""; $("#c_userId").value = c.userId || ""; $("#c_mac").value = c.mac || "";
+      $("#c_name").value = c.name || "";
+      $("#c_phone").value = c.phone || "";
+      $("#c_email").value = c.email || "";
+      $("#c_comments").value = c.comments || "";
+      $("#c_userId").value = c.userId || "";
+      $("#c_mac").value = c.mac || "";
       if(c.currentPlan){
         $("#c_plan").value = c.currentPlan.planId || firstPlanId || "";
         $("#c_actual").value = c.currentPlan.actual || "";
@@ -2233,6 +3163,7 @@ async function saveCustomerFromModal(){
     name,
     phone:$("#c_phone").value.trim(),
     email:normalizeEmail($("#c_email").value),
+    comments:$("#c_comments").value.trim(),
     userId:$("#c_userId").value.trim(),
     mac:$("#c_mac").value.trim().toUpperCase(),
     originalStartDate: (editCustomerId ? (customers.find(x=>x.id===editCustomerId)?.originalStartDate || start) : start),
