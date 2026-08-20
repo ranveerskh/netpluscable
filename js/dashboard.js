@@ -3,6 +3,7 @@ import { customers, customerSummary } from "./customers.js";
 import { renewals, canonicalRenewalGroups, openRenewModal } from "./renewals.js";
 import { openCustomerModal, viewCustomer } from "./customers.js";
 import { printInvoice } from "./invoices.js";
+import { settingNear } from "./app.js";
 
 export let dashboardPeriod = { type:'year', year:new Date().getFullYear() };
 export let loyaltySortMode = 'spent';
@@ -177,9 +178,11 @@ export function renderDashboard(){
   const dashboard = $("#tab-dashboard");
   if(!dashboard) return;
   const boxCustomers = getDashboardBaseCustomers();
-  const activeCount = boxCustomers.filter(c => daysLeft((c.currentPlan || {}).expiryDate) >= 0).length;
-  const nearCount = boxCustomers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= 30; }).length;
-  const expiredCount = boxCustomers.filter(c => daysLeft((c.currentPlan || {}).expiryDate) < 0).length;
+  
+  const activeCount = customers.filter(c => daysLeft((c.currentPlan || {}).expiryDate) >= 0).length;
+  const nearCount = customers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length;
+  const expiredCount = customers.filter(c => daysLeft((c.currentPlan || {}).expiryDate) < 0).length;
+  
   const financials = dashboardFinancials();
   const maxMetric = Math.max(financials.turnover, financials.expense, financials.profit, 1);
 
