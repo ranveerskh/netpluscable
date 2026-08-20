@@ -6,7 +6,7 @@ import { isDemoMode, settingNear, renderAll } from "./app.js";
 import { detailGridHtml, accordionState } from "./dashboard.js";
 import { printInvoice } from "./invoices.js";
 
-export let customers = [];
+export const customers = [];
 export let editCustomerId = null;
 export let customerSortMode = 'expirySoon';
 
@@ -18,22 +18,22 @@ window.showOlderExpired = false;
 window.customerSearchTimer = null;
 
 export async function loadCustomers(){
-  customers = [];
+  customers.length = 0;
   const snap = await safeGetDocs(query(collection(db,"customers"), orderBy("name")), '[customers] getDocs');
-  snap.forEach(d=> customers.push({id:d.id, ...d.data()}) );
+  snap.forEach(d => customers.push({ id: d.id, ...d.data() }));
   invalidateAnalyticsCache();
 }
 
 export async function saveCustomer(payload, existingId=null){
   if(existingId){
     const idStr = String(existingId);
-    const ref = doc(db,"customers", idStr);
+    const ref = doc(db, "customers", idStr);
     payload.updatedAt = serverTimestamp();
     await safeUpdateDoc(ref, payload, '[customers] updateDoc');
     await loadCustomers();
     return idStr;
   }else{
-    const ref = await safeAddDoc(collection(db,"customers"), { ...payload, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }, '[customers] addDoc');
+    const ref = await safeAddDoc(collection(db, "customers"), { ...payload, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }, '[customers] addDoc');
     await loadCustomers();
     return String(ref.id);
   }
@@ -274,7 +274,7 @@ export function openCustomerModal(id=null){
   $("#c_preview").textContent = "—";
 
   if(id){
-    const c = customers.find(x=> x.id === id);
+    const c = customers.find(x => x.id === id);
     if(c){
       $("#c_name").value = c.name || "";
       $("#c_phone").value = c.phone || "";
@@ -350,7 +350,7 @@ export async function saveCustomerFromModal(){
     comments:$("#c_comments").value.trim(),
     userId:$("#c_userId").value.trim(),
     mac:$("#c_mac").value.trim().toUpperCase(),
-    originalStartDate: (editCustomerId ? (customers.find(x=>x.id===editCustomerId)?.originalStartDate || start) : start),
+    originalStartDate: (editCustomerId ? (customers.find(x => x.id === editCustomerId)?.originalStartDate || start) : start),
     currentPlan
   };
   const existingIdForUpdate = editCustomerId;
@@ -391,7 +391,7 @@ export async function saveCustomerFromModal(){
 }
 
 export function viewCustomer(id){
-  const c = customers.find(x=>x.id===id);
+  const c = customers.find(x => x.id === id);
   if(!c){ toast("Customer not found.", "error"); return; }
   const cp = c.currentPlan || {};
   const figs = calcFigures({ cost:cp.cost, wholesale:cp.wholesale, actual:cp.actual, stbIncluded:cp.stbIncluded, stbCost:cp.stbCost, stbWholesale:cp.stbWholesale, stbActual:cp.stbActual });
