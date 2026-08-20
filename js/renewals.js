@@ -64,7 +64,6 @@ export async function addRenewal(customerId, ren){
 }
 
 export async function loadRenewals(){
-  // Reference sync theek rakhn layi .length = 0 use kita hai
   renewals.length = 0;
   renewalsLoadedOnce = false;
   try{
