@@ -68,7 +68,11 @@ export async function loadRenewals(){
   renewalsLoadedOnce = false;
   try{
     const snap = await safeGetDocs(collectionGroup(db, "renewals"), '[renewals] collectionGroup');
-    snap.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+    snap.forEach(d=> {
+      const data = d.data() || {};
+      const cid = data.customerId || d.ref.parent?.parent?.id || '';
+      renewals.push({id:d.id, customerId:cid, ...data, _path: d.ref.path});
+    });
   }catch(e){
     showErr('[renewals] collectionGroup failed', e);
     const resultList = await Promise.allSettled(
@@ -76,7 +80,11 @@ export async function loadRenewals(){
     );
     resultList.forEach((result, index)=>{
       if(result.status === 'fulfilled'){
-        result.value.forEach(d=> renewals.push({id:d.id, ...d.data(), _path: d.ref.path}) );
+        result.value.forEach(d=> {
+          const data = d.data() || {};
+          const cid = data.customerId || customers[index]?.id || '';
+          renewals.push({id:d.id, customerId:cid, ...data, _path: d.ref.path});
+        });
       }else{
         showErr(`[renewals] fallback ${customers[index]?.id || index}`, result.reason);
       }
