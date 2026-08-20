@@ -47,7 +47,6 @@ export function renderSettingsPlansState(){
 }
 
 export function renderKPIs(){
-  // "Expiring Soon" count across ALL customers
   const topNear = customers.filter(c => { 
     const d = daysLeft((c.currentPlan || {}).expiryDate); 
     return d >= 0 && d <= settingNear; 
@@ -96,22 +95,14 @@ export async function loadApp(){
   const repTbody = $("#repGrid tbody");
   if(repTbody) setEmptyRow(repTbody, 8, "Run a report to view results.");
 
-  if(sections.dashboard) sections.dashboard.innerHTML = `<div class="card"><div class="empty-state">Loading dashboard…</div></div>`;
+  if(sections.dashboard) sections.dashboard.innerHTML = `<div class="card"><div class="empty-state">Loading dashboard & financials…</div></div>`;
   if(sections.customers) sections.customers.innerHTML = `<div class="card"><div class="empty-state">Loading customers…</div></div>`;
   if(sections.forecast) sections.forecast.innerHTML = `<div class="card"><div class="empty-state">Loading forecast…</div></div>`;
 
   try{
-    await Promise.all([loadPlans(), loadCustomers()]);
+    await Promise.all([loadPlans(), loadCustomers(), loadRenewals()]);
     onRepTypeChange();
     renderAll();
-    try{
-      await loadRenewals();
-      renderAll();
-    }catch(e){
-      showErr('[load renewals]', e);
-      toast("Renewal history loaded partially or slowly.", "warn", 3800);
-      renderAll();
-    }
   }catch(e){
     showErr('[loadApp]', e);
     toast("Some data could not load completely. Check console.", "warn", 3500);
