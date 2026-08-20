@@ -179,15 +179,20 @@ export function renderDashboard(){
   if(!dashboard) return;
   const boxCustomers = getDashboardBaseCustomers();
   
-  const activeCount = customers.filter(c => daysLeft((c.currentPlan || {}).expiryDate) >= 0).length;
-  const nearCount = customers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length;
-  const expiredCount = customers.filter(c => daysLeft((c.currentPlan || {}).expiryDate) < 0).length;
+  // Real-time period calculation (match: 57 Active + 6 Expired = 63 Total for 2026)
+  const activeCount = boxCustomers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0; }).length;
+  const nearCount = boxCustomers.filter(c => { const d = daysLeft((c.currentPlan || {}).expiryDate); return d >= 0 && d <= settingNear; }).length;
+  const expiredCount = boxCustomers.filter(c => daysLeft((c.currentPlan || {}).expiryDate) < 0).length;
   
   const financials = dashboardFinancials();
   const maxMetric = Math.max(financials.turnover, financials.expense, financials.profit, 1);
 
-  const nearList = customers.map(customerSummary).filter(x => x.status.key === 'near').sort((a,b)=> (a.status.days ?? 9999) - (b.status.days ?? 9999));
-  const expiredList = customers.map(customerSummary).filter(x => x.status.key === 'expired').sort((a,b)=> (b.status.days ?? -99999) - (a.status.days ?? -99999));
+  const nearList = customers.map(customerSummary)
+    .filter(x => x.status.key === 'near')
+    .sort((a,b)=> (a.status.days ?? 9999) - (b.status.days ?? 9999));
+  const expiredList = customers.map(customerSummary)
+    .filter(x => x.status.key === 'expired')
+    .sort((a,b)=> (b.status.days ?? -99999) - (a.status.days ?? -99999));
   const recentlyExpiredList = expiredList.filter(x => (x.status.days ?? -99999) >= -90);
   const olderExpiredList = expiredList.filter(x => (x.status.days ?? 0) < -90);
 
