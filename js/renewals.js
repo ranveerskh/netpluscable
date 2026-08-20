@@ -1,11 +1,11 @@
-import { db, doc, collection, addDoc, updateDoc, safeGetDocs, safeAddDoc, safeUpdateDoc, collectionGroup, writeBatch, serverTimestamp } from "./firebase.js";
+import { db, doc, collection, safeGetDocs, safeAddDoc, safeUpdateDoc, collectionGroup, writeBatch, serverTimestamp } from "./firebase.js";
 import { $, todayISO, addMonthsISO, calcFigures, nonNegativeNumber, toast, showErr } from "./utils.js";
 import { plans, refreshPlanSelects } from "./plans.js";
 import { customers, loadCustomers } from "./customers.js";
 import { isDemoMode, renderAll } from "./app.js";
 import { printInvoice } from "./invoices.js";
 
-export let renewals = [];
+export const renewals = [];
 export let renewalsLoadedOnce = false;
 
 let canonicalRenewalCache = null;
@@ -64,7 +64,8 @@ export async function addRenewal(customerId, ren){
 }
 
 export async function loadRenewals(){
-  renewals = [];
+  // Reference sync theek rakhn layi .length = 0 use kita hai
+  renewals.length = 0;
   renewalsLoadedOnce = false;
   try{
     const snap = await safeGetDocs(collectionGroup(db, "renewals"), '[renewals] collectionGroup');
